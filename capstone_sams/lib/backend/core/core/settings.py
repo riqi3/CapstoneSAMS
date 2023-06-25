@@ -45,22 +45,6 @@ INSTALLED_APPS = [
     'api',
 ]
 
-AUTHENTICATION_BACKENDS = [
-    'api.authbackend.AccountBackend',
-    'django.contrib.auth.backends.ModelBackend',
-]
-
-AUTH_USER_MODEL = 'api.Account'
-
-ROOT_URLCONF = 'core.urls'
-
-REST_FRAMEWORK = {
- 
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
-}
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -70,6 +54,24 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+AUTHENTICATION_BACKENDS = [
+    'api.auth_backends.AccountBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+AUTH_USER_MODEL = 'api.Account'
+
+ROOT_URLCONF = 'core.urls'
+
+# REST_FRAMEWORK = {
+ 
+#     'DEFAULT_PERMISSION_CLASSES': [
+#         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+#     ]
+# }
+
+
 
 ROOT_URLCONF = 'core.urls'
 

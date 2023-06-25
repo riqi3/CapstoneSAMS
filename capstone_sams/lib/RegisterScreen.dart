@@ -1,6 +1,13 @@
  
+import 'dart:convert';
+
 import 'package:flutter/gestures.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
+
+import 'Env.dart';
+import 'models/Account.dart';
  
  
 
@@ -14,18 +21,49 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
  final _formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+     TextEditingController usernameController = TextEditingController();
+    TextEditingController passwordController = TextEditingController();
+    TextEditingController firstNameController = TextEditingController();
+    TextEditingController lastNameController = TextEditingController();
 
- 
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-
-    super.dispose();
+   Future<void> showFailure(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: ((context) {
+          return AlertDialog(
+            title: const Text(
+              "Error",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 25,
+                color: Colors.red,
+              ),
+            ),
+            content: const Text("Failed to register.",
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.purple,
+                )),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text("OK"),
+              )
+            ],
+          );
+        }),);
   }
+
+  // @override
+  // void dispose() {
+  //   _emailController.dispose();
+  //   _passwordController.dispose();
+
+  //   super.dispose();
+  // }
 
  
 
@@ -50,15 +88,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                
                       TextFormField(
                         
-                        controller: _emailController,
+                        controller: usernameController,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                          
                         decoration: const InputDecoration(
-                          hintText: 'email',
+                          hintText: 'username',
                         ),
                       ),
                       TextFormField(
-                        controller: _passwordController,
+                        
+                        controller: firstNameController,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                         
+                        decoration: const InputDecoration(
+                          hintText: 'firstname',
+                        ),
+                      ),
+                      TextFormField(
+                        
+                        controller: lastNameController,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                         
+                        decoration: const InputDecoration(
+                          hintText: 'lastname',
+                        ),
+                      ),
+                      TextFormField(
+                        controller: passwordController,
                         obscureText: false,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: (value) =>
@@ -72,7 +128,36 @@ class _RegisterScreenState extends State<RegisterScreen> {
                      
                       TextButton(
                         onPressed: () async {
- 
+ if (usernameController.text.isNotEmpty &&
+                      passwordController.text.isNotEmpty &&
+                      firstNameController.text.isNotEmpty &&
+                      lastNameController.text.isNotEmpty) {
+                    String id = const Uuid().v4();
+                    Account newAccount = Account(
+                        accountID: id,
+                        username: usernameController.text,
+                        password: passwordController.text,
+                        firstName: firstNameController.text,
+                        lastName: lastNameController.text,
+                        accountRole: 'User',
+                        isActive: true,
+                        isStaff: false,
+                        isSuperuser: false);
+                    Map<String, String> headers = {
+                      'Content-type': 'application/json',
+                      'Accept': 'application/json',
+                    };
+
+                    String url = '${Env.prefix}/register/';
+
+                    http.post(Uri.parse(url),
+                        headers: headers,
+                        body: jsonEncode(newAccount.toJson()));
+
+                    Navigator.pop(context);
+                  } else {
+                    showFailure(context);
+                  }
                         },
                         child: const Text(
                           "Sign Up",
