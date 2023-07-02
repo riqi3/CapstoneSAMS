@@ -1,12 +1,20 @@
 import 'package:capstone_sams/theme/pallete.dart';
 import 'package:flutter/material.dart';
- 
+
 class AppTheme {
-  static ThemeData theme = ThemeData.dark().copyWith(
+  static ThemeData theme = ThemeData(
+    textTheme: TextTheme(
+      bodyText1: TextStyle(),
+      bodyText2: TextStyle(),
+    ).apply(
+      bodyColor: Pallete.textColor,
+    ),
+    fontFamily: 'Poppins',
     scaffoldBackgroundColor: Pallete.backgroundColor,
     appBarTheme: const AppBarTheme(
       backgroundColor: Pallete.mainColor,
-      elevation: 0,
+      shadowColor: Colors.green,
+      elevation: 1,
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: Pallete.mainColor,
