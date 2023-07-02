@@ -1,7 +1,6 @@
+import 'package:capstone_sams/screens/home/widgets/Sections.dart';
 import 'package:capstone_sams/theme/pallete.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import 'widgets/AppBarSAMS.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -22,12 +21,17 @@ class _HomeScreenState extends State<HomeScreen> {
           textColor: Pallete.textColor,
           backgroundColor: Pallete.whiteColor,
         ),
-        preferredSize: Size.fromHeight(
-          kToolbarHeight,
-        ),
+        preferredSize: Size.fromHeight(kToolbarHeight),
       ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
+        child: Row(
+          children: [
+            HomeSection(title: 'title',  location: 'testing 12313232', deliverTime: 122, rating: 3, press: (){
+              print('object');
+            })
+          ],
+        ),
       ),
     );
   }

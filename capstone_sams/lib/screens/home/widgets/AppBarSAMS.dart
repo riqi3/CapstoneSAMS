@@ -18,83 +18,61 @@ class HomeAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          
-          child: AppBar(
-            automaticallyImplyLeading: false,
-            title: Row(
-              children: <Widget>[
-                CircleAvatar(
-                radius: 30,
+    return Container(
+      child: AppBar(
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        elevation: 0,
+        backgroundColor: backgroundColor,
+        actions: [
+          IconButton(
+            onPressed: () {
+              print('dashboard');
+            },
+            icon: FaIcon(
+              FontAwesomeIcons.alignJustify,
+              color: Pallete.textColor,
+            ),
+          ),
+        ],
+        title: Row(
+          children: <Widget>[
+            GestureDetector(
+              onTap: () {
+                print('profile');
+              },
+              child: CircleAvatar(
+                radius: 20,
                 backgroundImage: NetworkImage(profile),
                 backgroundColor: Colors.transparent,
               ),
-              SizedBox(width: 20,),
-                Text(
-                  'Welcome ',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Pallete.textColor,
-                  ),
-                ),
-                Text(
-                  'NAME',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Pallete.mainColor,
-                  ),
-                ),
-              ],
             ),
-            elevation: 0,
-            backgroundColor: backgroundColor,
-          ),
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Pallete.greyColor.withOpacity(.5),
-                offset: Offset(0, 7.0),
-                blurRadius: 4.0,
+            SizedBox(
+              width: 20,
+            ),
+            Text(
+              'Welcome ',
+              style: TextStyle(
+                fontSize: Sizing.fsAppBar,
+                color: Pallete.textColor,
               ),
-            ],
-          ),
+            ),
+            Text(
+              'NAME',
+              style: TextStyle(
+                fontSize: Sizing.fsAppBar,
+                color: Pallete.mainColor,
+              ),
+            ),
+            Text(
+              '!',
+              style: TextStyle(
+                fontSize: Sizing.fsAppBar,
+                color: Pallete.textColor,
+              ),
+            ),
+          ],
         ),
-      ],
-    );
-  }
-}
-
-//dynamic appbar
-class AppBarSAMS extends StatelessWidget {
-  const AppBarSAMS({
-    super.key,
-    required this.icon,
-    required this.textColor,
-    required this.backgroundColor,
-  });
-
-  final Color textColor, backgroundColor;
-  final FaIcon icon;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: AppBar(
-        leading: IconButton(
-          onPressed: () {},
-          icon: icon,
-        ),
-        title: Text(
-          'data',
-          style: TextStyle(
-            color: textColor,
-          ),
-        ),
-        elevation: 0,
-        backgroundColor: backgroundColor,
       ),
       decoration: BoxDecoration(
         boxShadow: [
