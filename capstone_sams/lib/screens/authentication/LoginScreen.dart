@@ -1,15 +1,15 @@
 import 'dart:convert';
 
 import 'package:capstone_sams/AdminScreen.dart';
-import 'package:capstone_sams/RegisterScreen.dart';
+import 'package:capstone_sams/screens/authentication/RegisterScreen.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'Env.dart';
-import 'HomeScreen.dart';
-import 'models/Account.dart';
-import 'providers/AccountProvider.dart';
+import '../../constants/Env.dart';
+import '../home/HomeScreen.dart';
+import '../../models/Account.dart';
+import '../../providers/AccountProvider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -130,10 +130,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           usernameController.clear();
                           passwordController.clear();
                           if (context.read<AccountProvider>().role == 'User') {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const HomeScreen(
-                                      title: 'hellooo',
-                                    )));
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const HomeScreen(),
+                              ),
+                            );
                           } else {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => const AdminScreen()));

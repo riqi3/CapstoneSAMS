@@ -6,8 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
-import 'Env.dart';
-import 'models/Account.dart';
+import '../../constants/Env.dart';
+import '../../models/Account.dart';
  
  
 

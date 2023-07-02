@@ -1,7 +1,8 @@
-import 'package:capstone_sams/LoginScreen.dart';
+import 'package:capstone_sams/screens/authentication/LoginScreen.dart';
 import 'package:flutter/material.dart';
 
-import 'HomeScreen.dart';
+import 'screens/home/HomeScreen.dart';
+import 'theme/app_theme.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,13 +16,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
- 
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const LoginScreen( ),
+      title: 'Capstone S.A.M.S. Prototype',
+      theme: AppTheme.theme,
+      home: const HomeScreen( ),
     );
   }
 }
