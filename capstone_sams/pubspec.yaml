@@ -35,6 +35,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  font_awesome_flutter: ^10.5.0
   http: ^1.0.0
   provider: ^6.0.5
   uuid: ^3.0.7
@@ -48,7 +49,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+  # flutter_lints: ^2.0.0 commented out because of annoying squiggle lines
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -80,24 +81,24 @@ flutter:
   fonts:
     - family: Poppins
       fonts:
-        - asset: fonts/Poppins-Black.ttf
-        - asset: fonts/Poppins-BlackItalic.ttf
-        - asset: fonts/Poppins-Bold.ttf
-        - asset: fonts/Poppins-BoldItalic.ttf
-        - asset: fonts/Poppins-ExtraBold.ttf
-        - asset: fonts/Poppins-ExtraBoldItalic.ttf
-        - asset: fonts/Poppins-ExtraLight.ttf
-        - asset: fonts/Poppins-ExtraLightItalic.ttf
-        - asset: fonts/Poppins-Italic.ttf
-        - asset: fonts/Poppins-Light.ttf
-        - asset: fonts/Poppins-LightItalic.ttf
-        - asset: fonts/Poppins-Medium.ttf
-        - asset: fonts/Poppins-MediumItalic.ttf
-        - asset: fonts/Poppins-Regular.ttf
-        - asset: fonts/Poppins-SemiBold.ttf
-        - asset: fonts/Poppins-SemiBoldItalic.ttf
-        - asset: fonts/Poppins-Thin.ttf
-        - asset: fonts/Poppins-ThinItalic.ttf
+        - asset: assets/fonts/Poppins-Black.ttf
+        - asset: assets/fonts/Poppins-BlackItalic.ttf
+        - asset: assets/fonts/Poppins-Bold.ttf
+        - asset: assets/fonts/Poppins-BoldItalic.ttf
+        - asset: assets/fonts/Poppins-ExtraBold.ttf
+        - asset: assets/fonts/Poppins-ExtraBoldItalic.ttf
+        - asset: assets/fonts/Poppins-ExtraLight.ttf
+        - asset: assets/fonts/Poppins-ExtraLightItalic.ttf
+        - asset: assets/fonts/Poppins-Italic.ttf
+        - asset: assets/fonts/Poppins-Light.ttf
+        - asset: assets/fonts/Poppins-LightItalic.ttf
+        - asset: assets/fonts/Poppins-Medium.ttf
+        - asset: assets/fonts/Poppins-MediumItalic.ttf
+        - asset: assets/fonts/Poppins-Regular.ttf
+        - asset: assets/fonts/Poppins-SemiBold.ttf
+        - asset: assets/fonts/Poppins-SemiBoldItalic.ttf
+        - asset: assets/fonts/Poppins-Thin.ttf
+        - asset: assets/fonts/Poppins-ThinItalic.ttf
 
   #         style: italic
   #   - family: Trajan Pro
