@@ -1,50 +1,51 @@
-
 //dynamic appbar
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../theme/pallete.dart';
+import '../theme/sizing.dart';
 
 class TitleAppBar extends StatelessWidget {
   const TitleAppBar({
     super.key,
     required this.text,
-    required this.icon,
-    required this.textColor,
     required this.iconColor,
     required this.backgroundColor,
   });
 
-  final Color textColor, backgroundColor, iconColor;
-  final FaIcon icon;
+  final Color backgroundColor, iconColor;
+
   final String text;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: AppBar(
-        actions: [
-          IconButton(
-              onPressed: () {
-                print('dashboard');
-              },
-              icon: FaIcon(
-                FontAwesomeIcons.alignJustify,
-                color: Pallete.textColor,
-              ))
-        ],
-        leading: IconButton(
-          onPressed: () {},
-          icon: icon,color:iconColor,
+        iconTheme: IconThemeData(
+          color: Pallete.whiteColor,
+          size: 30,
+        ),
+        backgroundColor: backgroundColor,
+        elevation: 8,
+        shadowColor: Pallete.greyColor,
+        leading: Padding(
+          padding: const EdgeInsets.only(
+            left: 20.0,
+          ),
+          child: IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: FaIcon(
+              FontAwesomeIcons.arrowLeft,
+              color: iconColor,
+              size: Sizing.iconAppBarSize,
+            ),
+          ),
         ),
         title: Text(
           text,
-          style: TextStyle(
-            color: textColor,
-          ),
         ),
-        elevation: 0,
-        backgroundColor: backgroundColor,
       ),
       decoration: BoxDecoration(
         boxShadow: [
