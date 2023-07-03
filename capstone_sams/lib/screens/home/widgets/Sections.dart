@@ -17,9 +17,7 @@ class HomeSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final currentWidth = MediaQuery.of(context).size.width;
-    final double minWidth = 300; 
-    final double maxWidth = 600; 
+
 
     return InkWell(
       borderRadius: BorderRadius.all(Radius.circular(20)),
