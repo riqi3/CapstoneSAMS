@@ -5,16 +5,17 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../theme/pallete.dart';
 
-class AppBarSAMS extends StatelessWidget {
-  const AppBarSAMS({
+class TitleAppBar extends StatelessWidget {
+  const TitleAppBar({
     super.key,
     required this.text,
     required this.icon,
     required this.textColor,
+    required this.iconColor,
     required this.backgroundColor,
   });
 
-  final Color textColor, backgroundColor;
+  final Color textColor, backgroundColor, iconColor;
   final FaIcon icon;
   final String text;
 
@@ -34,7 +35,7 @@ class AppBarSAMS extends StatelessWidget {
         ],
         leading: IconButton(
           onPressed: () {},
-          icon: icon,
+          icon: icon,color:iconColor,
         ),
         title: Text(
           text,
