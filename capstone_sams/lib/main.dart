@@ -1,5 +1,6 @@
 
 import 'package:capstone_sams/screens/authentication/LoginScreen.dart';
+import 'package:capstone_sams/screens/patient-record/PatientRecordScreen.dart';
 import 'package:flutter/material.dart';
 
 import 'screens/home/HomeScreen.dart';
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Capstone S.A.M.S. Prototype',
       theme: AppTheme.theme,
-      home: const HomeScreen( ),
+      home: const PatientRecordScreen(),
     );
   }
 }
