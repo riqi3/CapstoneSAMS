@@ -5,8 +5,8 @@ import 'package:capstone_sams/theme/pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class EHRList extends StatelessWidget {
-  const EHRList({super.key});
+class EHRListScreen extends StatelessWidget {
+  const EHRListScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

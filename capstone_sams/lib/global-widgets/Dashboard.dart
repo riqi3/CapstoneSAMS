@@ -1,4 +1,4 @@
-import 'package:capstone_sams/screens/ehr-list/EHRList.dart';
+import 'package:capstone_sams/screens/ehr-list/EHRListScreen.dart';
 import 'package:capstone_sams/screens/home/HomeScreen.dart';
 import 'package:capstone_sams/screens/patient-record/PatientRecordScreen.dart';
 import 'package:capstone_sams/theme/sizing.dart';
@@ -83,7 +83,7 @@ class Dashboard extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const EHRList(),
+                  builder: (context) => const EHRListScreen(),
                 ),
               );
               print('ehr');
