@@ -1,8 +1,10 @@
+import 'package:capstone_sams/theme/sizing.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../theme/pallete.dart';
-import '../../../theme/sizing.dart';
+
+import 'SearchPatientDelegate.dart';
 
 //home app bar
 class SearchBarTabs extends StatefulWidget {
@@ -14,8 +16,9 @@ class SearchBarTabs extends StatefulWidget {
   State<SearchBarTabs> createState() => _SearchBarTabsState();
 }
 
-class _SearchBarTabsState extends State<SearchBarTabs>with SingleTickerProviderStateMixin  {
-    int pageIndex = 0;
+class _SearchBarTabsState extends State<SearchBarTabs>
+    with SingleTickerProviderStateMixin {
+  int pageIndex = 0;
 
   List<Widget> pageList = <Widget>[
     // StudentHome(),
@@ -63,7 +66,8 @@ class _SearchBarTabsState extends State<SearchBarTabs>with SingleTickerProviderS
             },
             icon: FaIcon(
               FontAwesomeIcons.arrowLeft,
-              color: Pallete.textColor,
+              color: Pallete.greyColor,
+              size: Sizing.iconAppBarSize,
             ),
           ),
         ),
@@ -75,16 +79,20 @@ class _SearchBarTabsState extends State<SearchBarTabs>with SingleTickerProviderS
             SizedBox(
               width: 5,
             ),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: Container(
-                width: currentWidth < 600 ? minWidth : maxWidth,
-                height: 40,
-                color: Pallete.lightGreyColor,
-                child: GestureDetector(
-                  onTap: () {
-                    print('search patient');
-                  },
+            GestureDetector(
+              onTap: () {
+                showSearch(
+                  context: context,
+                  delegate: SearchPatientDelegate(),
+                );
+                print('search patient');
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Container(
+                  width: currentWidth < 600 ? minWidth : maxWidth,
+                  height: 40,
+                  color: Pallete.lightGreyColor,
                   child: SearchBarDesign(),
                 ),
               ),
@@ -98,10 +106,10 @@ class _SearchBarTabsState extends State<SearchBarTabs>with SingleTickerProviderS
           labelColor: Pallete.mainColor,
           tabs: [
             Tab(
-              child: Text('EHR' ),
+              child: Text('EHR'),
             ),
             Tab(
-              child: Text('LABS' ),
+              child: Text('LABS'),
             ),
           ],
         ),

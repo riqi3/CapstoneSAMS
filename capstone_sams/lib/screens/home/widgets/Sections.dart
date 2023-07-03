@@ -3,8 +3,8 @@ import 'package:capstone_sams/theme/sizing.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class HomeSection extends StatelessWidget {
-  const HomeSection({
+class EHRSection extends StatelessWidget {
+  const EHRSection({
     super.key,
     required this.title,
     required this.press,
@@ -12,13 +12,9 @@ class HomeSection extends StatelessWidget {
 
   final String title;
   final VoidCallback press;
-  
 
   @override
   Widget build(BuildContext context) {
-
-
-
     return InkWell(
       borderRadius: BorderRadius.all(Radius.circular(20)),
       onTap: press,
@@ -26,7 +22,7 @@ class HomeSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal:9.0),
+            padding: const EdgeInsets.symmetric(horizontal: 9.0),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: Container(
@@ -34,7 +30,9 @@ class HomeSection extends StatelessWidget {
                 // width: currentWidth < 600 ?   minWidth : maxWidth,
                 color: Pallete.mainColor,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: Sizing.sectionSymmPadding,),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: Sizing.sectionSymmPadding,
+                  ),
                   child: Row(
                     children: [
                       FaIcon(
@@ -54,7 +52,6 @@ class HomeSection extends StatelessWidget {
                         FontAwesomeIcons.chevronRight,
                         color: Pallete.whiteColor,
                         size: Sizing.sectionIconSize,
-                        
                       ),
                     ],
                   ),
