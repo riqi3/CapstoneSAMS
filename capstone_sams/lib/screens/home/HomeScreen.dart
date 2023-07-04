@@ -1,5 +1,6 @@
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/screens/ehr-list/EHRListScreen.dart';
+import 'package:capstone_sams/screens/ehr-list/ehr_list_page.dart';
 import 'package:capstone_sams/screens/home/widgets/Sections.dart';
 
 import 'package:flutter/material.dart';
@@ -30,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const EHRListScreen(),
+                    builder: (context) => EHRListScreen(),
                   ),
                 );
                 print('object');
