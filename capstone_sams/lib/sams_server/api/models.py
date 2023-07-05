@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import  AbstractBaseUser, BaseUserManager, PermissionsMixin 
-
+# Create your models here.
 class AccountManager(BaseUserManager):
     def create_user(self, username, password=None, **extra_fields):
         if not username:
@@ -16,18 +16,24 @@ class AccountManager(BaseUserManager):
         return self.create_user(username, password, **extra_fields)
     
 class Account(AbstractBaseUser, PermissionsMixin):
+    ACCOUNT_ROLE_CHOICES = [
+        ('physician', 'Physician'),
+        ('medtech', 'MedTech'),
+        ('nurse', 'Nurse'),
+        ('admin', 'Admin'),
+    ]
     accountID = models.CharField(max_length=100, primary_key=True)
     username = models.CharField(max_length=100, unique=True)
     password = models.CharField(max_length=100)
     firstName = models.CharField(max_length=100)
     lastName = models.CharField(max_length=100)
-    accountRole = models.CharField(max_length=100)
+    accountRole = models.CharField(max_length=100, choices=ACCOUNT_ROLE_CHOICES)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['accountRole']
+    REQUIRED_FIELDS = ['accountID','accountRole']
 
     objects = AccountManager()
 
@@ -40,4 +46,4 @@ class Account(AbstractBaseUser, PermissionsMixin):
     
     @property
     def is_authenticated(self):
-        return True
+        return Trues
