@@ -46,4 +46,4 @@ class Account(AbstractBaseUser, PermissionsMixin):
     
     @property
     def is_authenticated(self):
-        return Trues
+        return True
