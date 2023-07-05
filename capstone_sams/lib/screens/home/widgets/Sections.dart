@@ -1,3 +1,4 @@
+import 'package:capstone_sams/screens/home/widgets/HomeAppBar.dart';
 import 'package:capstone_sams/theme/pallete.dart';
 import 'package:capstone_sams/theme/sizing.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,8 @@ class EHRSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
     return InkWell(
       borderRadius: BorderRadius.all(Radius.circular(20)),
       onTap: press,
@@ -26,7 +29,7 @@ class EHRSection extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: Container(
-                height: 150,
+                
                 // width: currentWidth < 600 ?   minWidth : maxWidth,
                 color: Pallete.mainColor,
                 child: Padding(
