@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import  AbstractBaseUser, BaseUserManager, PermissionsMixin 
-
+# Create your models here.
 class AccountManager(BaseUserManager):
     def create_user(self, username, password=None, **extra_fields):
         if not username:
@@ -27,7 +27,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     is_superuser = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['accountRole']
+    REQUIRED_FIELDS = ['accountID','accountRole']
 
     objects = AccountManager()
 
