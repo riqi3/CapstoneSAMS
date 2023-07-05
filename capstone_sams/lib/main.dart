@@ -1,17 +1,40 @@
 
  
+import 'package:capstone_sams/providers/patient_provider.dart';
 import 'package:capstone_sams/screens/home/HomeScreen.dart';
-import 'package:capstone_sams/screens/patient-record/PatientRecordScreen.dart';
-import 'package:flutter/material.dart';
  
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+ 
+import 'providers/medical_notes_provider.dart';
 import 'theme/app_theme.dart';
 
-void main() {
-  runApp(const MyApp());
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+   
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => PatientProvider(),
+          child: const SAMSApp(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => TodosProvider(),
+          child: const SAMSApp(),
+        ),
+ 
+      ],
+      child: const SAMSApp(),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+ 
+
+class SAMSApp extends StatelessWidget {
+  const SAMSApp({super.key});
 
   // This widget is the root of your application.
   @override

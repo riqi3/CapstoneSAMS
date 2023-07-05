@@ -1,9 +1,11 @@
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
-import 'package:capstone_sams/screens/ehr-list/EHRListScreen.dart';
+ 
 import 'package:capstone_sams/screens/ehr-list/ehr_list_page.dart';
 import 'package:capstone_sams/screens/home/widgets/Sections.dart';
 
 import 'package:flutter/material.dart';
+
+import '../../theme/sizing.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       endDrawer: ValueDashboard(),
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight),
+        preferredSize: Size.fromHeight(Sizing.headerHeight),
         child: ValueHomeAppBar(),
       ),
       body: SingleChildScrollView(

@@ -4,4 +4,5 @@ class Sizing {
   static const double iconAppBarSize = 20.0;
   static const double sectionIconSize = 50.0;
   static const double sectionSymmPadding = 40.0;
+  static const double headerHeight = 60.0;
 }

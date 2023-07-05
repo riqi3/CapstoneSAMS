@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
-import '../models/todo.dart';
+import '../models/medical_notes.dart';
+ 
 
 class TodosProvider extends ChangeNotifier {
   final List<Todo> _todos = [

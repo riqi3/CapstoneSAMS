@@ -11,10 +11,11 @@ class TitleAppBar extends StatelessWidget {
     required this.text,
     required this.iconColor,
     required this.backgroundColor,
+    this.bottom,
   });
 
   final Color backgroundColor, iconColor;
-
+  final PreferredSize? bottom;
   final String text;
 
   @override
@@ -46,7 +47,9 @@ class TitleAppBar extends StatelessWidget {
         title: Text(
           text,
         ),
+        bottom: bottom,
       ),
+      
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(

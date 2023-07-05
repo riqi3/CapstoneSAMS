@@ -1,11 +1,13 @@
 import 'package:capstone_sams/screens/ehr-list/EHRListScreen.dart';
 import 'package:capstone_sams/screens/home/HomeScreen.dart';
+import 'package:capstone_sams/screens/medical_notes/medical_notes_page.dart';
 import 'package:capstone_sams/screens/patient-record/PatientRecordScreen.dart';
 import 'package:capstone_sams/theme/sizing.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
  
+import '../screens/ehr-list/ehr_list_page.dart';
 import 'search-bar/SearchPatientDelegate.dart';
 
 class Dashboard extends StatelessWidget {
@@ -84,7 +86,7 @@ class Dashboard extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const EHRListScreen(),
+                  builder: (context) =>  EHRListScreen(),
                 ),
               );
               print('ehr');
@@ -101,6 +103,12 @@ class Dashboard extends StatelessWidget {
             leading: FaIcon(FontAwesomeIcons.notesMedical),
             title: const Text('Medical Notes'),
             onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>  MedicalNotes(),
+                ),
+              );
               print('med notes');
             },
           ),
