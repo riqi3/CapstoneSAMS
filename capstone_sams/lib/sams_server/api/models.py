@@ -16,12 +16,18 @@ class AccountManager(BaseUserManager):
         return self.create_user(username, password, **extra_fields)
     
 class Account(AbstractBaseUser, PermissionsMixin):
+    ACCOUNT_ROLE_CHOICES = [
+        ('physician', 'Physician'),
+        ('medtech', 'MedTech'),
+        ('nurse', 'Nurse'),
+        ('admin', 'Admin'),
+    ]
     accountID = models.CharField(max_length=100, primary_key=True)
     username = models.CharField(max_length=100, unique=True)
     password = models.CharField(max_length=100)
     firstName = models.CharField(max_length=100)
     lastName = models.CharField(max_length=100)
-    accountRole = models.CharField(max_length=100)
+    accountRole = models.CharField(max_length=100, choices=ACCOUNT_ROLE_CHOICES)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
@@ -40,4 +46,4 @@ class Account(AbstractBaseUser, PermissionsMixin):
     
     @property
     def is_authenticated(self):
-        return True
+        return Trues
