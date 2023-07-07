@@ -76,11 +76,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'sams_db',
-        'USER': 'root',
+        'USER': 'postgres',
         'PASSWORD': 'root',
         'HOST': 'localhost',
-        'PORT': '3306',
-        'OPTIONS': {'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"},
+        'PORT': '5432',
     }
 }
 

@@ -4,7 +4,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-from api.models import Account
+from api.models import Account, Patient
 
 COMMON_PASSWORDS = ['password', '12345678', 'qwerty', 'abc123']
 
@@ -109,3 +109,4 @@ admin.site.register(Account, UserAdmin)
 # ... and, since we're not using Django's built-in permissions,
 # unregister the Group model from admin.
 admin.site.unregister(Group)
+admin.site.register(Patient)
