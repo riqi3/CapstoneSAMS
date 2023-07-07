@@ -27,9 +27,10 @@ class Account(AbstractBaseUser, PermissionsMixin):
     ]
     accountID = models.CharField(max_length=100, primary_key=True)
     username = models.CharField(max_length=100, unique=True)
-    password = models.CharField(max_length=100)
-    firstName = models.CharField(max_length=100)
-    lastName = models.CharField(max_length=100)
+    password = models.CharField(max_length=100, blank = False)
+    firstName = models.CharField(max_length=100, blank = False)
+    middleName = models.CharField(max_length=100, blank = False)
+    lastName = models.CharField(max_length=100, blank = False)
     accountRole = models.CharField(max_length=100, choices=ACCOUNT_ROLE_CHOICES)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -87,3 +88,60 @@ class UploadLabResult(forms.ModelForm):
 
 class pdfJson(models.Model):
     text = models.TextField()
+
+class Patient(models.Model):
+
+    GENDER_OPTIONS = {
+        ('M', 'Male'),
+        ('F', 'Female')
+    }
+
+    #Patient Indentification
+    patientID = models.CharField(max_length=100, primary_key=True)
+    firstName = models.CharField(max_length=100, blank = False)
+    middleName = models.CharField(max_length=100, blank = False)
+    lastName = models.CharField(max_length=100, blank = False)
+    gender = models.CharField(choices = GENDER_OPTIONS)
+    birthDate = models.DateField(blank = False)
+    phone = models.CharField(max_length = 20, blank = True)
+    email = models.CharField(max_length = 50, blank = True)
+
+class Data_Logs(models.Model):
+    #Log Attributes
+    logNum = models.AutoField(primary_key = True) #Auto incrementing field
+    event = models.CharField(max_length = 500)
+    date = models.DateTimeField()
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+
+class Health_Record(models.Model):
+    #Health Record Attributes
+    recordNum = models.CharField(primary_key = True)
+    patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
+
+class Comment(models.Model):
+    #Comment Attributes
+    comNum = models.AutoField(primary_key = True)
+    content = models.CharField(max_length = 3000)
+    account = models.ForeignKey(Account, on_delete = models.CASCADE)
+    health_record = models.ForeignKey(Health_Record, on_delete = models.CASCADE)
+
+class Prescription(models.Model):
+    #Prescription Attributes
+    presNum = models.AutoField(primary_key = True)
+    dosage = models.PositiveIntegerField(blank = False)
+    timeFrame = models.DateTimeField(blank = False)
+    amount = models.PositiveIntegerField(blank = False)
+    account = models.ForeignKey(Account, on_delete = models.CASCADE)
+    health_record = models.ForeignKey(Health_Record, on_delete = models.CASCADE)
+
+class Medicine(models.Model):
+    #Medicine Attributes
+    drugId = models.CharField(primary_key = True)
+    drugCode = models.CharField(blank = False)
+    drugName = models.CharField(blank = False)
+
+class Personal_Notes(models.Model):
+    noteNum = models.AutoField(primary_key = True)
+    title = models.CharField(max_length = 20)
+    content = models.CharField(max_length = 3000)
+    account = models.ForeignKey(Account, on_delete = models.CASCADE)
