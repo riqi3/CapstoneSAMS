@@ -145,3 +145,16 @@ class Personal_Notes(models.Model):
     title = models.CharField(max_length = 20)
     content = models.CharField(max_length = 3000)
     account = models.ForeignKey(Account, on_delete = models.CASCADE)
+
+class Symptoms(models.Model):
+    sympNum = models.AutoField(primary_key = True)
+    symptom = models.CharField(max_length = 3000)
+
+class Medical_History(models.Model):
+    histNum = models.AutoField(primary_key = True)
+    health_record = models.ForeignKey(Health_Record, on_delete = models.CASCADE)
+
+class Patient_Symptoms(models.Model):
+    sympID = models.AutoField(primary_key = True)
+    medical_history = models.ForeignKey(Medical_History, on_delete = models.CASCADE)
+        
