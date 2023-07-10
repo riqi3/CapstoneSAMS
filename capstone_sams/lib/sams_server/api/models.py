@@ -134,21 +134,26 @@ class Prescription(models.Model):
     account = models.ForeignKey(Account, on_delete = models.CASCADE)
     health_record = models.ForeignKey(Health_Record, on_delete = models.CASCADE)
 
+
 class Medicine(models.Model):
     #Medicine Attributes
     drugId = models.CharField(primary_key = True)
     drugCode = models.CharField(blank = False)
     drugName = models.CharField(blank = False)
 
+class Prescribed_Medicine(models.Model):
+    prescription = models.ForeignKey(Prescription, on_delete=models.CASCADE)
+    medicine = models.ForeignKey(Medicine, on_delete=models.CASCADE)
+    
 class Personal_Notes(models.Model):
     noteNum = models.AutoField(primary_key = True)
-    title = models.CharField(max_length = 20)
-    content = models.CharField(max_length = 3000)
+    title = models.CharField(max_length = 20, blank = False)
+    content = models.CharField(max_length = 3000, blank = False)
     account = models.ForeignKey(Account, on_delete = models.CASCADE)
 
 class Symptoms(models.Model):
     sympNum = models.AutoField(primary_key = True)
-    symptom = models.CharField(max_length = 3000)
+    symptom = models.CharField(max_length = 3000, blank = False)
 
 class Medical_History(models.Model):
     histNum = models.AutoField(primary_key = True)
