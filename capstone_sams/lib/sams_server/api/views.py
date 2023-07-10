@@ -1,13 +1,20 @@
+import pandas as pd
+import json
+
 from django.shortcuts import render,redirect
+from api.serializers import PatientSerializer, MedicineSerializer
 from tabula.io import read_pdf
 from django.contrib import messages
-import pandas as pd
 from django.http import JsonResponse
 
-from .models import UploadLabResult, UploadLabResult
+from api.models import Patient, Medicine, Health_Record, Patient_Symptoms, Medical_History, Comment, Account, Symptoms, Prescription, UploadLabResult, UploadLabResult
 # from somewhere import handle_uploaded_file
 from django.http import HttpResponseRedirect, HttpResponse
-   
+
+from rest_framework import viewsets
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
 # def process_pdf(request):
 #     # file_path = "\Users\nulltest\ocr\cbc.pdf"
 #     df = read_pdf(file_path, pages='all', encoding='cp1252')
@@ -57,3 +64,78 @@ def process_pdf(request):
     json_data = dfs[1].to_json(orient='columns')
     print(json_data)
     dfs[0].to_json('output.json', orient='columns')
+
+class PatientView(viewsets.ModelViewSet):
+
+    @api_view(['POST'])
+    def create_patient(request):
+        try:
+            patient_data = json.loads(request.body)
+            patient = Patient.objects.create(
+                patientID=patient_data['patientID'],
+                firstName=patient_data['firstName'],
+                middleName=patient_data['middleName'],
+                lastName=patient_data['lastName'],
+                gender=patient_data['gender'],
+                birthDate=patient_data['birthDate'],
+                phone=patient_data['phone'],
+                email=patient_data['email']
+            )
+            return Response({"message": "Patient created successfully."})
+        except Exception as e:
+            return Response({"message": "Failed to create patient.", "error": str(e)})
+
+
+    @api_view(['GET'])
+    def fetch_patient():
+        try:
+            queryset = Patient.objects.all()
+            serializer = PatientSerializer(queryset, many=True)
+            return Response({"message": "Patients fetched successfully.", "data": serializer.data})
+        except Exception as e:
+            return Response({"message": "Failed to fetch patients.", "error": str(e)})
+    
+    @api_view(['PUT'])
+    def update_patient(request):
+        try:
+            patient_data = json.loads(request.body)
+            patient_id = patient_data['patientID']
+            patient = Patient.objects.get(pk=patient_id)
+            patient.firstName = patient_data['firstName']
+            patient.middleName = patient_data['middleName']
+            patient.lastName = patient_data['lastName']
+            patient.gender = patient_data['gender']
+            patient.birthDate = patient_data['birthDate']
+            patient.phone = patient_data['phone']
+            patient.email = patient_data['email']
+            patient.save()
+            return Response({"message": "Patient updated successfully."})
+        except Patient.DoesNotExist:
+            return Response({"message": "Patient does not exist."})
+        except Exception as e:
+            return Response({"message": "Failed to update patient.", "error": str(e)})
+
+class MedicineView(viewsets.ModelViewSet):
+
+    @api_view(['GET'])
+    def fetch_medicine():
+        try:
+            queryset = Medicine.objects.all()
+            serializer = MedicineSerializer(queryset, many=True)
+            return Response({"message": "Medicines fetched successfully.", "data": serializer.data})
+        except Exception as e:
+            return Response({"message": "Failed to fetch patients.", "error": str(e)})
+
+class HealthRecordView(viewsets.ModelViewSet):
+
+    @api_view(['POST'])
+    def fetch_record(request, recordNum):
+        recordNum = recordNum
+        record = Health_Record.objects.get(pk = recordNum)
+        history = Medical_History.objects.filter(health_record = record)
+        patient_symptoms = Patient_Symptoms.objects.filter(medical_history = history)
+        symptoms = Symptoms.objects.filter(sympNum = patient_symptoms)
+        comments = Comment.objects.filter(health_record = record)
+        physician = Account.objects.filter(accountID = comments.accountID)
+        prescription = Prescription.objects.filter(health_record = record)
+    
