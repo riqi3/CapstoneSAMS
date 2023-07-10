@@ -106,7 +106,7 @@ class Patient(models.Model):
     phone = models.CharField(max_length = 20, blank = True)
     email = models.CharField(max_length = 50, blank = True)
 
-class Data_Logs(models.Model):
+class Data_Log(models.Model):
     #Log Attributes
     logNum = models.AutoField(primary_key = True) #Auto incrementing field
     event = models.CharField(max_length = 500)
@@ -134,27 +134,32 @@ class Prescription(models.Model):
     account = models.ForeignKey(Account, on_delete = models.CASCADE)
     health_record = models.ForeignKey(Health_Record, on_delete = models.CASCADE)
 
+
 class Medicine(models.Model):
     #Medicine Attributes
     drugId = models.CharField(primary_key = True)
     drugCode = models.CharField(blank = False)
     drugName = models.CharField(blank = False)
 
-class Personal_Notes(models.Model):
+class Prescribed_Medicine(models.Model):
+    prescription = models.ForeignKey(Prescription, on_delete=models.CASCADE)
+    medicine = models.ForeignKey(Medicine, on_delete=models.CASCADE)
+    
+class Personal_Note(models.Model):
     noteNum = models.AutoField(primary_key = True)
-    title = models.CharField(max_length = 20)
-    content = models.CharField(max_length = 3000)
+    title = models.CharField(max_length = 20, blank = False)
+    content = models.CharField(max_length = 3000, blank = False)
     account = models.ForeignKey(Account, on_delete = models.CASCADE)
 
-class Symptoms(models.Model):
+class Symptom(models.Model):
     sympNum = models.AutoField(primary_key = True)
-    symptom = models.CharField(max_length = 3000)
+    symptom = models.CharField(max_length = 3000, blank = False)
 
 class Medical_History(models.Model):
     histNum = models.AutoField(primary_key = True)
     health_record = models.ForeignKey(Health_Record, on_delete = models.CASCADE)
 
-class Patient_Symptoms(models.Model):
+class Patient_Symptom(models.Model):
     sympID = models.AutoField(primary_key = True)
     medical_history = models.ForeignKey(Medical_History, on_delete = models.CASCADE)
         

@@ -1,4 +1,4 @@
-from api.models import Account, Patient, Data_Logs, Health_Record, Comment, Prescription, Medicine, Personal_Notes
+from api.models import Account, Patient, Data_Log, Health_Record, Comment, Prescription, Medicine, Personal_Note, Symptom
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 
@@ -22,9 +22,9 @@ class PatientSerializer(serializers.ModelSerializer):
                   'lastName', 'gender', 'birthDate',
                   'phone', 'email']
 
-class DataLogsSerializer(serializers.ModelSerializer):
+class DataLogSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Data_Logs
+        model = Data_Log
         fields = ['logNum', 'event', 'date', 'account']
 
 class HealthRecordSerializer(serializers.ModelSerializer):
@@ -47,8 +47,13 @@ class MedicineSerializer(serializers.ModelSerializer):
         model = Medicine
         fields = ['drugId', 'drugCode', 'drugName']
 
-class PersonalNotesSerializer(serializers.ModelSerializer):
+class PersonalNoteSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Personal_Notes
+        model = Personal_Note
         fields = ['noteNum', 'title', 'content', 'account']
+
+class SymptomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Symptom
+        fields = ['sympNum', 'symptom']
    
