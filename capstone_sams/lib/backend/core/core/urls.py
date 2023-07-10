@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path 
-from api.views import AccountView
+from api.views import AccountView, predict
  
  
 urlpatterns = [
@@ -25,4 +25,5 @@ urlpatterns = [
     path('login/', AccountView.getLogIn, name = 'Log In'),
     path('account/update/', AccountView.updateAccount, name = 'Account Update'),
     path('register/', AccountView.register, name = 'Register'),
+    path('predict/', predict),
 ]

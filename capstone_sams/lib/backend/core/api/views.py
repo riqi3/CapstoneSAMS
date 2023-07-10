@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils import timezone
 import json
@@ -7,6 +8,7 @@ from api.serializers import AccountSerializer
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from disease_prediction.prediction_model import predict_disease
 
 # Create your views here.
 class AccountView(viewsets.ModelViewSet):
@@ -66,3 +68,13 @@ class AccountView(viewsets.ModelViewSet):
         account.is_staff = account_data['is_staff']
         account.is_superuser = account_data['is_superuser']
         account.save()
+
+def predict(request):
+    # Get symptoms from GET parameters
+    symptoms = request.GET.getlist('symptoms')
+
+    # Predict the disease
+    prediction = predict_disease(symptoms)
+
+    # Return prediction as JSON
+    return JsonResponse({'prediction': prediction})
