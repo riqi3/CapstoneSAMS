@@ -3,12 +3,12 @@ import json
 from rest_framework import status
 
 from django.shortcuts import render, redirect
-from api.serializers import AccountSerializer, PatientSerializer, MedicineSerializer, HealthRecordSerializer, SymptomsSerializer, CommentSerializer, PrescriptionSerializer, MedicineSerializer, PersonalNotesSerializer
+from api.serializers import AccountSerializer, PatientSerializer, MedicineSerializer, HealthRecordSerializer, SymptomSerializer, CommentSerializer, PrescriptionSerializer, MedicineSerializer, PersonalNoteSerializer
 from tabula.io import read_pdf
 from django.contrib import messages
 from django.http import JsonResponse
 
-from api.models import Patient, Medicine, Health_Record, Patient_Symptoms, Medical_History, Comment, Account, Symptoms, Prescription, Prescribed_Medicine, Personal_Notes, UploadLabResult, UploadLabResult
+from api.models import Patient, Medicine, Health_Record, Patient_Symptom, Medical_History, Comment, Account, Symptom, Prescription, Prescribed_Medicine, Personal_Note, UploadLabResult, UploadLabResult
 # from somewhere import handle_uploaded_file
 from django.http import HttpResponseRedirect, HttpResponse
 
@@ -159,9 +159,9 @@ class HealthRecordView(viewsets.ModelViewSet):
             records = Health_Record.objects.all()
             for record in records:
                 history = HealthRecordSerializer(record).data
-                patient_symptoms = Patient_Symptoms.objects.filter(
+                patient_symptoms = Patient_Symptom.objects.filter(
                 medical_history__in=history)
-                symptoms = Symptoms.objects.filter(
+                symptoms = Symptom.objects.filter(
                     patient_symptoms__in=patient_symptoms)
                 comments = Comment.objects.filter(health_record=record)
                 physician = Account.objects.filter(comment__in=comments)
@@ -174,7 +174,7 @@ class HealthRecordView(viewsets.ModelViewSet):
 
             # Serialize the data
             history_data = HealthRecordSerializer(record).data
-            symptoms_data = SymptomsSerializer(symptoms, many=True)
+            symptoms_data = SymptomSerializer(symptoms, many=True)
             comments_data = CommentSerializer(comments, many=True)
             physician_data = AccountSerializer(physician, many=True)
             prescription_data = PrescriptionSerializer(prescription, many=True)
@@ -198,9 +198,9 @@ class HealthRecordView(viewsets.ModelViewSet):
         try:
             record = Health_Record.objects.get(pk=recordNum)
             history = Medical_History.objects.filter(health_record=record)
-            patient_symptoms = Patient_Symptoms.objects.filter(
+            patient_symptoms = Patient_Symptom.objects.filter(
                 medical_history__in=history)
-            symptoms = Symptoms.objects.filter(
+            symptoms = Symptom.objects.filter(
                 patient_symptoms__in=patient_symptoms)
             comments = Comment.objects.filter(health_record=record)
             physician = Account.objects.filter(comment__in=comments)
@@ -212,7 +212,7 @@ class HealthRecordView(viewsets.ModelViewSet):
 
             history_data = HealthRecordSerializer(record)
             physician_data = AccountSerializer(physician, many=True)
-            symptoms_data = SymptomsSerializer(symptoms, many=True)
+            symptoms_data = SymptomSerializer(symptoms, many=True)
             comments_data = CommentSerializer(comments, many=True)
             prescription_data = PrescriptionSerializer(prescription, many=True)
             medicines_data = MedicineSerializer(medicines, many=True)
@@ -236,8 +236,8 @@ class SymptomsView(viewsets.ModelViewSet):
     @api_view(['GET'])
     def fetch_symptoms(request):
         try:
-            symptoms = Symptoms.objects.all()
-            serializer = SymptomsSerializer(symptoms, many=True)
+            symptoms = Symptom.objects.all()
+            serializer = SymptomSerializer(symptoms, many=True)
             return Response(serializer.dart, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"message": "Failed to fetch symptoms", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
@@ -245,8 +245,8 @@ class SymptomsView(viewsets.ModelViewSet):
     @api_view(['GET'])
     def fetch_symptoms_by_num(request, sympNum):
         try:
-            symptoms = Symptoms.objects.get(pk=sympNum)
-            serializer = SymptomsSerializer(symptoms)
+            symptoms = Symptom.objects.get(pk=sympNum)
+            serializer = SymptomSerializer(symptoms)
             return Response(serializer.dart, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"message": "Failed to fetch symptoms", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
@@ -256,8 +256,8 @@ class PersonalNotesView(viewsets.ModelViewSet):
     @api_view(['GET'])
     def fetch_personal_notes(request, accountID):
         try:
-            personal_notes = Personal_Notes.objects.filter(account__accountID=accountID)
-            serializer = PersonalNotesSerializer(personal_notes, many=True)
+            personal_notes = Personal_Note.objects.filter(account__accountID=accountID)
+            serializer = PersonalNoteSerializer(personal_notes, many=True)
             return Response({"message": "Notes fetched successfully"}, serializer.data, status=status.HTTP_200_OKs)
         except Exception as e:
             return Response({"message": "Failed to fetch personal notes"}, status=status.HTTP_400_BAD_REQUEST)
@@ -266,7 +266,7 @@ class PersonalNotesView(viewsets.ModelViewSet):
     def create_personal_note(request):
         try:
             notes_data = json.load(request.body)
-            note = Personal_Notes.objects.create(
+            note = Personal_Note.objects.create(
                 title = notes_data['title'],
                 content = notes_data['content'],
                 account = notes_data['account']
@@ -279,7 +279,7 @@ class PersonalNotesView(viewsets.ModelViewSet):
     def update_personal_note(request, noteNum):
         try:
             notes_data = json.load(request.body)
-            note = Personal_Notes.objects.get(pk=noteNum)
+            note = Personal_Note.objects.get(pk=noteNum)
             note.title = notes_data['title']
             note.content = notes_data['content']
             note.account = notes_data['account']
@@ -291,7 +291,7 @@ class PersonalNotesView(viewsets.ModelViewSet):
     @api_view(['DELETE'])
     def delete_personal_note(request, noteNum):
         try:
-            note = Personal_Notes.objects.get(pk=noteNum)
+            note = Personal_Note.objects.get(pk=noteNum)
             note.delete()
             return Response({"message": "Note successfully deleted"}, status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
