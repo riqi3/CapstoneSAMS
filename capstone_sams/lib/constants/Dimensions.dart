@@ -1,5 +1,5 @@
- 
-const mobileWidth = 480;
-const tabletWidth = 800;
-const desktopWidth = 1440;
-
+class Dimensions {
+  static const double mobileWidth = 420;
+  static const double tabletWidth = 600;
+  static const double desktopWidth = 1280;
+}
