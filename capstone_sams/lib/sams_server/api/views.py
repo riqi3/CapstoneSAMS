@@ -15,7 +15,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-
+from disease_prediction.prediction_model import predict_disease
 # def process_pdf(request):
 #     # file_path = "\Users\nulltest\ocr\cbc.pdf"
 #     df = read_pdf(file_path, pages='all', encoding='cp1252')
@@ -296,3 +296,13 @@ class PersonalNotesView(viewsets.ModelViewSet):
             return Response({"message": "Note successfully deleted"}, status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
              return Response({"message": "Failed to delete note", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+def predict(request):
+    # Get symptoms from GET parameters
+    symptoms = request.GET.getlist('symptoms')
+
+    # Predict the disease
+    prediction = predict_disease(symptoms)
+
+    # Return prediction as JSON
+    return JsonResponse({'prediction': prediction})
