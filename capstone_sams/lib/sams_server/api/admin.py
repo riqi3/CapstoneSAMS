@@ -4,7 +4,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-from api.models import Account, Patient
+from api.models import Account, Patient, Data_Log, Prescription, Medicine, Symptom, Health_Record, Comment, Prescribed_Medicine, Patient_Symptom
 
 COMMON_PASSWORDS = ['password', '12345678', 'qwerty', 'abc123']
 
@@ -103,10 +103,83 @@ class UserAdmin(BaseUserAdmin):
     ordering = ('username',)
     filter_horizontal = ()
 
+class PatientAdminForm(forms.ModelForm):
+    class Meta:
+        model = Patient
+        fields = '__all__'
+
+
+class PatientAdmin(admin.ModelAdmin):
+    form = PatientAdminForm
+    list_display = ('patientID', 'firstName', 'middleName', 'lastName', 'gender', 'birthDate', 'phone', 'email')
+    list_filter = ('patientID', 'gender')
+    search_fields = ('patientID', 'firstName', 'middleName', 'lastName', 'birthDate', 'email')
+
+class DataLogsAdminForm(forms.ModelForm):
+    class Meta:
+        model = Data_Log
+        fields = '__all__'
+
+class DataLogsAdmin(admin.ModelAdmin):
+    form = DataLogsAdminForm
+    list_display = ('logNum', 'event', 'date', 'account')
+    list_filter = ('event', 'date', 'account')
+    search_fields = ('event', 'date', 'account')
+
+class MedicineAdminForm(forms.ModelForm):
+    class Meta:
+        model = Medicine
+        fields = '__all__'
+
+class MedicineAdmin(admin.ModelAdmin):
+    form = MedicineAdminForm
+    list_display = ('drugId', 'drugCode', 'drugName')
+    search_fields = ('drugId', 'drugCode', 'drugName')
+
+class HealthRecordAdminForm(forms.ModelForm):
+    class Meta:
+        model = Health_Record
+        fields = '__all__' 
+
+class HealthRecordAdmin(admin.ModelAdmin):
+    form = HealthRecordAdminForm
+    list_display = ('recordNum', 'patient')
+    search_fields = ('recordNum',)
+    autocomplete_fields = ['patient']
+
+
+class PrescriptionAdminForm(forms.ModelForm):
+    class Meta:
+        model = Prescription
+        fields = '__all__'
+
+class PrescriptionAdmin(admin.ModelAdmin):
+    form = PrescriptionAdminForm
+    autocomplete_fields = ['health_record']
+    list_display = ('presNum', 'dosage', 'timeFrame', 'amount', 'account', 'health_record')
+    list_filter = ('timeFrame', 'account', 'health_record')
+    search_fields = ('presNum',)
+    autocomplete_fields = ['account', 'health_record']
+
+class SymptomsAdminForm(forms.ModelForm):
+    class Meta:
+        model = Symptom
+        fields = '__all__'
+
+class SymptomsAdmin(admin.ModelAdmin):
+    form = SymptomsAdminForm
+    list_display = ('sympNum', 'symptom')
+    search_fields = ('sympNum','symptom') 
+
 
 # Now register the new UserAdmin...
 admin.site.register(Account, UserAdmin)
+admin.site.register(Patient, PatientAdmin)
+admin.site.register(Data_Log, DataLogsAdmin)
+admin.site.register(Medicine, MedicineAdmin)
+admin.site.register(Health_Record, HealthRecordAdmin)
+admin.site.register(Prescription, PrescriptionAdmin)
+admin.site.register(Symptom, SymptomsAdmin)
 # ... and, since we're not using Django's built-in permissions,
 # unregister the Group model from admin.
 admin.site.unregister(Group)
-admin.site.register(Patient)
