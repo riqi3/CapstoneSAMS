@@ -4,18 +4,18 @@ from rest_framework import status
 
 from django.shortcuts import render, redirect
 from api.serializers import AccountSerializer, PatientSerializer, MedicineSerializer, HealthRecordSerializer, SymptomSerializer, CommentSerializer, PrescriptionSerializer, MedicineSerializer, PersonalNoteSerializer
-# from tabula.io import read_pdf
+from tabula.io import read_pdf
+import csv
 from django.contrib import messages
 from django.http import JsonResponse
 
-from api.models import Patient, Medicine, Health_Record, Comment, Patient_Symptom, Medical_History, Comment, Account, Symptom, Prescription, Prescribed_Medicine, Personal_Note, UploadLabResult, UploadLabResult
+from api.models import DrugModel, UploadDrugFile, Patient, Medicine, Health_Record, Patient_Symptom, Medical_History, Comment, Account, Symptom, Prescription, Prescribed_Medicine, Personal_Note, UploadLabResult 
 # from somewhere import handle_uploaded_file
 from django.http import HttpResponseRedirect, HttpResponse
 
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-
 from django.http import JsonResponse
 from rest_framework.views import APIView
 import pickle
@@ -27,17 +27,9 @@ from scipy.stats import mode
 #     df = df[2].to_json(orient='records')
 #     return JsonResponse(df, safe=False)
 
-# def laboratories(request):
-#     if request.method == 'POST':
-#          pdf = UploadFileForm()
-#          pdf.name = request.POST.get('lab-result-title')
-#          pdf.comments = request.POST.get('lab-results-comments')
-#          if len(request.FILES) !=0:
-#              pdf.file = request.FILES['lab-result-file']
-#          pdf.save()
-#          messages.success(request, 'File added successfully!')
-#          return redirect('/')
-#     return render(request, 'ocr.html')
+def decode_utf8(line_iterator):
+    for line in line_iterator:
+        yield line.decode('utf-8')
 
 # def handle_uploaded_file(f):
 #     with open('C:\Users\nulltest\ocr\upload', 'wb+') as destination:
@@ -55,24 +47,32 @@ from scipy.stats import mode
 #     return render(request, 'upload.html', {'form': form})
 
 
-# def ViewLabResult(request):
-#     if request.method == 'POST':
-#         form = UploadLabResult(request.POST, request.FILES)
-#         if form.is_valid():
-#             form.save()
-#             return HttpResponse('The file is saved')
-#     else:
-#         form = UploadLabResult()
-#     return render(request, 'ocr.html', {'form': form})
+def ViewLabResult(request):
+    if request.method == 'POST':
+        form = UploadLabResult(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return HttpResponse('The file is saved')
+    else:
+        form = UploadLabResult()
+    return render(request, 'ocr.html', {'form': form})
 
+def ViewUploadCSV(request):
+    if request.method == 'GET':
+        form = UploadDrugFile()
+        return render(request, 'addDrug.html', {'form': form})
+    form = UploadDrugFile(request.POST, request.FILES)
+    if form.is_valid():
+        drugs_file = csv.reader(decode_utf8(request.FILES['sent_file']))
+        next(drugs_file)
 
-# def process_pdf(request):
-#     pdf_path = "cbc.pdf"
-#     dfs = read_pdf(pdf_path, pages='all', encoding='cp1252',
-#                    pandas_options={'header': True})
-#     json_data = dfs[1].to_json(orient='columns')
-#     print(json_data)
-#     dfs[0].to_json('output.json', orient='columns')
+def process_pdf(request):
+    pdf_path = "cbc.pdf"
+    dfs = read_pdf(pdf_path, pages='all', encoding='cp1252',
+                   pandas_options={'header': True})
+    json_data = dfs[1].to_json(orient='columns')
+    print(json_data)
+    dfs[0].to_json('output.json', orient='columns')
 
 
 class PatientView(viewsets.ModelViewSet):
@@ -405,6 +405,9 @@ class PrescriptionView(viewsets.ViewSet):
         except Exception as e:
              return Response({"message": "Failed to fetch prescription", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+#def predict(request):
+    # Get symptoms from GET parameters
+#     symptoms = request.GET.getlist('symptoms')
 
 class PredictDisease(APIView):
     def get(self, request):
@@ -415,27 +418,24 @@ class PredictDisease(APIView):
         final_nb_model = pickle.load(open('final_nb_model.pkl', 'rb'))
         final_rf_model = pickle.load(open('final_rf_model.pkl', 'rb'))
         encoder = pickle.load(open('encoder.pkl', 'rb'))
-
         symptomslist=["itching","skin rash","nodal skin eruptions","continuous sneezing","shivering","chills","joint pain","stomach pain","acidity","ulcers on tongue","muscle wasting","vomiting","burning micturition","spotting urination","fatigue","weight gain","anxiety","cold hands and feets","mood swings","weight loss","restlessness","lethargy","patches in throat","irregular sugar level","cough",
         "high fever","sunken eyes","breathlessness","sweating","dehydration","indigestion","headache","yellowish skin","dark urine","nausea","loss of appetite","pain behind the eyes","back pain","constipation","abdominal pain","diarrhoea","mild fever","yellow urine","yellowing of eyes","acute liver failure","fluid overload","swelling of stomach","swelled lymph nodes","malaise","blurred and distorted vision",
+
         "phlegm","throat irritation","redness of eyes","sinus pressure","runny nose","congestion","chest pain","weakness in limbs","fast heart rate","pain during bowel movements","pain in anal region","bloody stool","irritation in anus","neck pain","dizziness","cramps","bruising","obesity","swollen legs","swollen blood vessels","puffy face and eyes","enlarged thyroid","brittle nails","swollen extremeties",
         "excessive hunger","extra-marital contacts","drying and tingling lips","slurred speech","knee pain","hip joint pain","muscle weakness","stiff neck","swelling joints","movement stiffness","spinning movements","loss of balance","unsteadiness","weakness of one body side","loss of smell","bladder discomfort","foul smell of urine","continuous feel of urine","passage of gases","internal itching",
         "toxic look (typhos)","depression","irritability","muscle pain","altered sensorium","red spots over body","belly pain","abnormal menstruation","dischromic patches","watering from eyes","increased appetite","polyuria","family history","mucoid sputum","rusty sputum","lack of concentration","visual disturbances","receiving blood transfusion","receiving unsterile injections","coma","stomach bleeding",
         "distention of abdomen","history of alcohol consumption","fluid overload","blood in sputum","prominent veins on calf","palpitations","painful walking","pus-filled pimples","blackheads","scurring","skin peeling","silver-like dusting","small dents in nails","inflammatory nails","blister","red sore around nose","yellow crust ooze"]
-
         # Prepare the input data
         input_data = [0] * len(symptomslist)
         for symptom in symptoms:
             index = symptomslist.index(symptom)
             input_data[index] = 1
         input_data = np.array(input_data).reshape(1,-1)
-
         # Make the predictions
         svm_prediction = encoder.classes_[final_svm_model.predict(input_data)[0]]
         nb_prediction = encoder.classes_[final_nb_model.predict(input_data)[0]]
         rf_prediction = encoder.classes_[final_rf_model.predict(input_data)[0]]
         final_prediction = mode([svm_prediction, nb_prediction, rf_prediction])[0][0]
-
         # Return the predictions
         return JsonResponse({
             "svm_prediction": svm_prediction,

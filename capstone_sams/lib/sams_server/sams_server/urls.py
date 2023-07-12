@@ -9,10 +9,10 @@ from api.views import  PatientView, MedicineView, SymptomsView, PersonalNotesVie
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    # path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     # path('api/ocr/', process_pdf, name='process_pdf'),
-    # path('api/ocr/', ViewLabResult, name='ViewLabResult'),
+    path('api/ocr/', ViewLabResult, name='ViewLabResult'),
     path('api/patients/create/', PatientView.create_patient, name='create_patient'),
     path('api/patients/', PatientView.fetch_patients, name='fetch_patients'),
     path('api/patients/<str:patientID>', PatientView.fetch_patient_by_id, name='fetch_patient'),

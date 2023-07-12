@@ -51,24 +51,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     @property
     def is_authenticated(self):
         return True
-    
-
-
-# def filepath(request, filename):
-#     old_filename  =filename
-#     timeNow = datetime.datetime.now().strftime('%Y%m%d%H:%M:%S')
-#     filename = '%%' % (timeNow, old_filename)
-#     return os.path.join('uploads/', filename)
-
-# class LabResult(models.Model):
-#     name = models.TextField(max_length=128)
-#     comment = models.TextField(max_length=512)
-#     pdf = models.
-
-# class UploadFileForm(forms.Form):
-#     name = forms.CharField(max_length=50)
-#     comments = forms.TimeField()
-#     file = forms.FileField(upload_to=filepath, null=True, blank=True)
+ 
 
 class LabResult(models.Model):
     title = models.CharField(max_length=128)
@@ -85,6 +68,40 @@ class UploadLabResult(forms.ModelForm):
     class Meta:
         model = LabResult
         fields = ('title', 'comment','pdf')
+
+class DrugModel(models.Model):
+ 
+    bnf = models.CharField(max_length=20)
+    description = models.CharField(max_length=128)
+    
+    class Meta:
+        ordering = ['bnf']
+     
+    def __str__(self):
+        return f"{self.bnf}"
+    
+# class InsertDrug(forms.ModelForm):
+#     class Meta:
+#         model = DrugModel
+#         fields = ( 'bnf','description' )
+
+
+class CSVDrug(models.Model):
+    title = models.CharField(max_length=128)
+    description = models.TextField(max_length=512)
+    csv = models.FileField(upload_to='upload/')
+
+    class Meta:
+        ordering = ['title']
+     
+    def __str__(self):
+        return f"{self.title}"
+    
+class UploadDrugFile(forms.Form):
+    csv_file = forms.FileField(required=False, widget=forms.FileInput(attrs={'class':'form-control', 'placeholder':'Upload csv file', 'help_text': 'Choose a .csv file to upload the list of drugs in bulk'}))
+    # class Meta:
+    #     model = CSVDrug
+    #     fields = ('title', 'description', 'csv')
 
 class pdfJson(models.Model):
     text = models.TextField()

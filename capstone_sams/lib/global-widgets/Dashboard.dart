@@ -6,7 +6,6 @@ import 'package:capstone_sams/theme/sizing.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
- 
 import '../screens/ehr-list/ehr_list_page.dart';
 import 'search-bar/SearchPatientDelegate.dart';
 
@@ -55,15 +54,15 @@ class Dashboard extends StatelessWidget {
           SizedBox(
             height: Sizing.padding,
           ),
-           ListTile(
+          ListTile(
             leading: FaIcon(FontAwesomeIcons.magnifyingGlass),
             title: const Text('Search A Patient'),
             onTap: () {
               showSearch(
-                  context: context,
-                  delegate: SearchPatientDelegate(),
-                );
-                print('search patient');
+                context: context,
+                delegate: SearchPatientDelegate(),
+              );
+              print('search patient');
             },
           ),
           ListTile(
@@ -81,12 +80,12 @@ class Dashboard extends StatelessWidget {
           ),
           ListTile(
             leading: FaIcon(FontAwesomeIcons.solidAddressCard),
-            title: const Text('Electronic Health Records'),
+            title: const Text('Health Records'),
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>  EHRListScreen(),
+                  builder: (context) => EHRListScreen(),
                 ),
               );
               print('ehr');
@@ -100,13 +99,20 @@ class Dashboard extends StatelessWidget {
             },
           ),
           ListTile(
+            leading: FaIcon(FontAwesomeIcons.prescription),
+            title: const Text('Physician Order Entry'),
+            onTap: () {
+              print('cpoe');
+            },
+          ),
+          ListTile(
             leading: FaIcon(FontAwesomeIcons.notesMedical),
             title: const Text('Medical Notes'),
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>  MedicalNotes(),
+                  builder: (context) => MedicalNotes(),
                 ),
               );
               print('med notes');
