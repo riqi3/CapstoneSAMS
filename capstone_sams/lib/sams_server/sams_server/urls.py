@@ -4,7 +4,7 @@
 # )
 from django.contrib import admin
 from django.urls import path, include
-from api.views import  PatientView, MedicineView, HealthRecordView, SymptomsView, PersonalNotesView
+from api.views import  PatientView, MedicineView, HealthRecordView, SymptomsView, PersonalNotesView, PredictDisease
 # process_pdf, ViewLabResult, predict
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,5 +26,5 @@ urlpatterns = [
     path('api/notes/create/', PersonalNotesView.create_personal_note, name='create_personal_note'),
     path('api/notes/update/<int:noteNum>', PersonalNotesView.update_personal_note, name='update_personal_note'),
     path('api/notes/delete/<int:noteNum>', PersonalNotesView.delete_personal_note, name='delete_personal_note'),
-    # path('predict/', predict),
+    path('predict/', PredictDisease.as_view(), name='predict'),
 ]
