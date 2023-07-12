@@ -164,8 +164,8 @@ class Prescribed_Medicine(models.Model):
     
 class Personal_Note(models.Model):
     noteNum = models.AutoField(primary_key = True)
-    title = models.CharField(max_length = 20, blank = False)
-    content = models.CharField(max_length = 3000, blank = False)
+    title = models.CharField(max_length = 20)
+    content = models.CharField(max_length = 3000)
     account = models.ForeignKey(Account, on_delete = models.CASCADE)
 
 class Symptom(models.Model):
@@ -179,4 +179,5 @@ class Medical_History(models.Model):
 class Patient_Symptom(models.Model):
     sympID = models.AutoField(primary_key = True)
     medical_history = models.ForeignKey(Medical_History, on_delete = models.CASCADE)
+    symptom =  models.ForeignKey(Symptom, on_delete = models.CASCADE)
         
