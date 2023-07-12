@@ -18,7 +18,7 @@ class UserCreationForm(forms.ModelForm):
 
     class Meta:
         model = Account
-        fields = ('accountID', 'username', 'firstName', 'lastName', 'accountRole',
+        fields = ('accountID', 'username', 'firstName', 'middleName', 'lastName', 'accountRole',
                   'is_active', 'is_staff', 'is_superuser')
 
     def clean_password2(self):
@@ -63,7 +63,7 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = Account
-        fields = ('username', 'password', 'firstName', 'lastName', 'accountRole',
+        fields = ('username', 'password', 'firstName', 'middleName', 'lastName', 'accountRole',
                   'is_active', 'is_staff', 'is_superuser')
 
     def clean_password(self):
@@ -81,13 +81,13 @@ class UserAdmin(BaseUserAdmin):
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ('username', 'firstName', 'lastName', 'accountRole',
+    list_display = ('username', 'firstName', 'middleName', 'lastName', 'accountRole',
                     'is_active', 'is_staff', 'is_superuser')
     list_filter = ('accountRole', 'is_staff', 'is_superuser')
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
         ('Personal info', {
-         'fields': ('firstName', 'lastName', 'accountRole',)}),
+         'fields': ('firstName', 'middleName','lastName', 'accountRole',)}),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser')}),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
@@ -95,7 +95,7 @@ class UserAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('accountID', 'username', 'firstName', 'lastName', 'accountRole',
+            'fields': ('accountID', 'username', 'firstName', 'middleName', 'lastName', 'accountRole',
                        'is_active', 'is_staff', 'is_superuser', 'password1', 'password2')}
          ),
     )
