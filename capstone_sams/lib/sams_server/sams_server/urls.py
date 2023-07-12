@@ -4,15 +4,17 @@
 # )
 from django.contrib import admin
 from django.urls import path, include
-from api.views import  PatientView, MedicineView, SymptomsView, PersonalNotesView, CommentView
-# process_pdf, ViewLabResult, predict HealthRecordView,
+from api.views import    ViewUploadCSV, PredictDisease, PatientView, MedicineView, SymptomsView, PersonalNotesView, CommentView,ViewLabResult
+# process_pdf,  predict HealthRecordView,
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    # path('api/ocr/', process_pdf, name='process_pdf'),
+    # path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    # path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+     
     path('api/ocr/', ViewLabResult, name='ViewLabResult'),
+    path('api/addDrug/', ViewUploadCSV, name='ViewUploadCSV'),
+    # path('api/drugDetail/<int:pk>/', drug_detail, name='drug_detail'),
     path('api/patients/create/', PatientView.create_patient, name='create_patient'),
     path('api/patients/', PatientView.fetch_patients, name='fetch_patients'),
     path('api/patients/<str:patientID>', PatientView.fetch_patient_by_id, name='fetch_patient'),
