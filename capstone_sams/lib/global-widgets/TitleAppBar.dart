@@ -44,12 +44,14 @@ class TitleAppBar extends StatelessWidget {
             ),
           ),
         ),
-        title: Text(
-          text,
+        title: Flexible(
+          child: Text(
+            text,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
         bottom: bottom,
       ),
-      
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(

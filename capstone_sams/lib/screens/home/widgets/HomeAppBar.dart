@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../theme/pallete.dart';
-import '../../../theme/sizing.dart';
 
 //home app bar
 class HomeAppBar extends StatelessWidget {

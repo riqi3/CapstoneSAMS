@@ -111,6 +111,9 @@ class _SearchBarTabsState extends State<SearchBarTabs>
             Tab(
               child: Text('LABS'),
             ),
+            Tab(
+              child: Text('CPOE'),
+            ),
           ],
         ),
       ),

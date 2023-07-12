@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
           physics: BouncingScrollPhysics(),
           child: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
-              if (constraints.maxWidth > Dimensions.mobileWidth) {
+              if (constraints.maxWidth >= Dimensions.mobileWidth) {
                 return _tabletView(context, ehrTitle, medNotesTitle);
               } else {
                 return _mobileView(context, ehrTitle, medNotesTitle);

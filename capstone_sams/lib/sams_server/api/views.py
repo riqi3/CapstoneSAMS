@@ -5,60 +5,98 @@ from rest_framework import status
 from django.shortcuts import render, redirect
 from api.serializers import AccountSerializer, PatientSerializer, MedicineSerializer, HealthRecordSerializer, SymptomSerializer, CommentSerializer, PrescriptionSerializer, MedicineSerializer, PersonalNoteSerializer
 from tabula.io import read_pdf
+import csv
 from django.contrib import messages
 from django.http import JsonResponse
 
-from api.models import Patient, Medicine, Health_Record, Patient_Symptom, Medical_History, Comment, Account, Symptom, Prescription, Prescribed_Medicine, Personal_Note, UploadLabResult, UploadLabResult
+from api.models import DrugModel, UploadDrugFile, Patient, Medicine, Health_Record, Patient_Symptom, Medical_History, Comment, Account, Symptom, Prescription, Prescribed_Medicine, Personal_Note, UploadLabResult 
 # from somewhere import handle_uploaded_file
 from django.http import HttpResponseRedirect, HttpResponse
 
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from disease_prediction.prediction_model import predict_disease
-# def process_pdf(request):
-#     # file_path = "\Users\nulltest\ocr\cbc.pdf"
-#     df = read_pdf(file_path, pages='all', encoding='cp1252')
-#     df = df[2].to_json(orient='records')
-#     return JsonResponse(df, safe=False)
+# from disease_prediction.prediction_model import predict_disease
+ 
 
-# def laboratories(request):
-#     if request.method == 'POST':
-#          pdf = UploadFileForm()
-#          pdf.name = request.POST.get('lab-result-title')
-#          pdf.comments = request.POST.get('lab-results-comments')
-#          if len(request.FILES) !=0:
-#              pdf.file = request.FILES['lab-result-file']
-#          pdf.save()
-#          messages.success(request, 'File added successfully!')
-#          return redirect('/')
-#     return render(request, 'ocr.html')
+def decode_utf8(line_iterator):
+    for line in line_iterator:
+        yield line.decode('utf-8')
 
-# def handle_uploaded_file(f):
-#     with open('C:\Users\nulltest\ocr\upload', 'wb+') as destination:
-#         for chunk in f.chunks():
-#             destination.write(chunk)
-
-# def upload_pdf(request):
-#     if request.method == 'POST':
-#         form = UploadFileForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             handle_uploaded_file(request.FILES['file'])
-#             return HttpResponseRedirect('/success/url/')
-#     else:
-#         form = UploadFileForm()
-#     return render(request, 'upload.html', {'form': form})
-
-
-def ViewLabResult(request):
+def ViewUploadPDF(request):
     if request.method == 'POST':
         form = UploadLabResult(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return HttpResponse('The file is saved')
+            messages.success(request, 'pdf file saved successfully!')
+            return redirect('/show-table-pdf')
+            # return HttpResponse('The pdf file is saved')
     else:
         form = UploadLabResult()
     return render(request, 'ocr.html', {'form': form})
+
+def ViewUploadCSV(request):
+    if request.method == 'GET':
+        form = UploadDrugFile()
+        return render(request, 'addDrug.html', {'form': form})
+    form = UploadDrugFile(request.POST, request.FILES)
+    if form.is_valid():
+        drugs_file = csv.reader(decode_utf8(request.FILES['sent_file']))
+        next(drugs_file)
+
+        for counter , line in enumerate(drugs_file):
+ 
+            bnf = line[0]
+            description = line[1]
+
+            drug = DrugModel()
+ 
+            drug.bnf = bnf
+            drug.description = description
+            drug.save()
+
+            # form.save()
+        messages.success(request, 'csv file saved successfully!')
+        return redirect('/show-table-csv')
+
+    # if request.method == 'POST':
+    #     form = UploadDrugFile(request.POST, request.FILES)
+    #     if form.is_valid():
+    #         drugs_file = csv.reader(decode_utf8(request.FILES['sent_file']))
+    #         next(drugs_file)
+
+    #         for counter , line in enumerate(drugs_file):
+    #             drugID = line[0]
+    #             bnf = line[1]
+    #             description = line[2]
+
+    #             drug = DrugModel()
+    #             drug.drugID = drugID
+    #             drug.bnf = bnf
+    #             drug.description = description
+    #             drug.save()
+
+    #         # form.save()
+    #         messages.success(request, 'csv file saved successfully!')
+    #         return redirect('/show-table-csv')
+    #         # return HttpResponse('The csv file is saved')
+    else:
+        form = UploadDrugFile()
+    return render(request, 'addDrug.html', {'form': form})
+
+def drug_detail(request, pk):
+    bnf_obj = DrugModel.objects.get(pk=pk)
+    description_obj = DrugModel.objects.get(bnf=bnf_obj.description)
+    d = DrugModel()
+    d.bnf = bnf_obj
+    d.description =description_obj
+    d.save()
+    # context ={
+    #     'bnf': bnf_obj,
+    #     'descrption': description_obj
+    # }
+
+    return render(request, 'drugDetail.html', {'drugDetail':d})
 
 
 def process_pdf(request):
@@ -297,12 +335,12 @@ class PersonalNotesView(viewsets.ModelViewSet):
         except Exception as e:
              return Response({"message": "Failed to delete note", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-def predict(request):
-    # Get symptoms from GET parameters
-    symptoms = request.GET.getlist('symptoms')
+# def predict(request):
+#     # Get symptoms from GET parameters
+#     symptoms = request.GET.getlist('symptoms')
 
-    # Predict the disease
-    prediction = predict_disease(symptoms)
+#     # Predict the disease
+#     prediction = predict_disease(symptoms)
 
-    # Return prediction as JSON
-    return JsonResponse({'prediction': prediction})
+#     # Return prediction as JSON
+#     return JsonResponse({'prediction': prediction})

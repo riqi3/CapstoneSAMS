@@ -58,12 +58,18 @@ class PatientCard extends StatelessWidget {
                       SizedBox(width: 16.0),
                       Text('Age: ${patient.age}'),
                       SizedBox(width: 16.0),
-                      Text('Birthdate: ${patient.birthdate}'),
+                      Flexible(
+                        child: Text(
+                          'Birthdate: ${patient.birthdate}',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
                     ],
                   ),
                   SizedBox(height: 12.0),
                   Text(
                     'Date of Registration: ${patient.datereg}',
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: Pallete.mainColor,
                     ),
