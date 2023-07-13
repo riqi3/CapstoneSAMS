@@ -35,5 +35,7 @@ urlpatterns = [
     path('api/notes/create/', PersonalNotesView.create_personal_note, name='create_personal_note'),
     path('api/notes/update/<int:noteNum>', PersonalNotesView.update_personal_note, name='update_personal_note'),
     path('api/notes/delete/<int:noteNum>', PersonalNotesView.delete_personal_note, name='delete_personal_note'),
-    path('predict/', PredictDisease.as_view(), name='predict'),
+    # path('predict/<str:symptoms>', PredictDisease.get, name='predict'),
+    path('predict/', PredictDisease.as_view(), name='predict')
+
 ]

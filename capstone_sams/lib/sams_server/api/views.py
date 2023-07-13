@@ -1,7 +1,7 @@
 import pandas as pd
 import json
 from rest_framework import status
-
+import os
 from django.shortcuts import render, redirect
 from api.serializers import (
     AccountSerializer,
@@ -44,7 +44,9 @@ from django.http import JsonResponse
 from rest_framework.views import APIView
 import pickle
 import numpy as np
-from scipy.stats import mode
+# from scipy.stats import mode
+from statistics import mode
+
 
 # def process_pdf(request):
 #     # file_path = "\Users\nulltest\ocr\cbc.pdf"
@@ -508,14 +510,24 @@ class PrescriptionView(viewsets.ViewSet):
 
 
 class PredictDisease(APIView):
-    def get(self, request):
-        symptoms = request.GET.get("symptoms").split(",")
 
-        # Load the models from disk
-        final_svm_model = pickle.load(open("final_svm_model.pkl", "rb"))
-        final_nb_model = pickle.load(open("final_nb_model.pkl", "rb"))
-        final_rf_model = pickle.load(open("final_rf_model.pkl", "rb"))
-        encoder = pickle.load(open("encoder.pkl", "rb"))
+    def post(self, request):
+        symptoms = request.data["symptoms"]
+
+        base_dir = os.path.dirname(__file__)
+        
+        svm_model_path = os.path.join(base_dir, 'final_svm_model.pkl')
+        final_svm_model = pickle.load(open(svm_model_path, "rb"))
+
+        nb_model_path = os.path.join(base_dir, 'final_nb_model.pkl')
+        final_nb_model = pickle.load(open(nb_model_path, "rb"))
+
+        rf_model_path = os.path.join(base_dir, 'final_rf_model.pkl')
+        final_rf_model = pickle.load(open(rf_model_path, "rb"))
+
+        encoder_path = os.path.join(base_dir, 'encoder.pkl')
+        encoder = pickle.load(open(encoder_path, "rb"))
+                              
         symptomslist = [
             "itching",
             "skin rash",
@@ -660,7 +672,7 @@ class PredictDisease(APIView):
         svm_prediction = encoder.classes_[final_svm_model.predict(input_data)[0]]
         nb_prediction = encoder.classes_[final_nb_model.predict(input_data)[0]]
         rf_prediction = encoder.classes_[final_rf_model.predict(input_data)[0]]
-        final_prediction = mode([svm_prediction, nb_prediction, rf_prediction])[0][0]
+        final_prediction = mode([svm_prediction, nb_prediction, rf_prediction])
         # Return the predictions
         return JsonResponse(
             {
