@@ -4,16 +4,16 @@
 # )
 from django.contrib import admin
 from django.urls import path, include
-from api.views import    ViewUploadCSV, PredictDisease, PatientView, MedicineView, SymptomsView, PersonalNotesView, CommentView,ViewLabResult
-# process_pdf,  predict HealthRecordView,
+from api.views import PredictDisease, PatientView, MedicineView, SymptomsView, PersonalNotesView, CommentView
+# process_pdf,  predict HealthRecordView,ViewUploadCSV, ViewLabResult
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     # path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     # path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
      
-    path('api/ocr/', ViewLabResult, name='ViewLabResult'),
-    path('api/addDrug/', ViewUploadCSV, name='ViewUploadCSV'),
+    # path('api/ocr/', ViewLabResult, name='ViewLabResult'),
+    # path('api/addDrug/', ViewUploadCSV, name='ViewUploadCSV'),
     # path('api/drugDetail/<int:pk>/', drug_detail, name='drug_detail'),
     path('api/patients/create/', PatientView.create_patient, name='create_patient'),
     path('api/patients/', PatientView.fetch_patients, name='fetch_patients'),
@@ -35,5 +35,7 @@ urlpatterns = [
     path('api/notes/create/', PersonalNotesView.create_personal_note, name='create_personal_note'),
     path('api/notes/update/<int:noteNum>', PersonalNotesView.update_personal_note, name='update_personal_note'),
     path('api/notes/delete/<int:noteNum>', PersonalNotesView.delete_personal_note, name='delete_personal_note'),
-    path('predict/', PredictDisease.as_view(), name='predict'),
+    # path('predict/<str:symptoms>', PredictDisease.get, name='predict'),
+    path('predict/', PredictDisease.as_view(), name='predict')
+
 ]
