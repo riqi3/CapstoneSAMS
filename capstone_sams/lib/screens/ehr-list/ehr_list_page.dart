@@ -1,4 +1,3 @@
-import 'package:capstone_sams/constants/Dimensions.dart';
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/global-widgets/TitleAppBar.dart';
 import 'package:capstone_sams/models/patient.dart';
@@ -8,62 +7,44 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:capstone_sams/theme/pallete.dart';
 
-class EHRListScreen extends StatelessWidget {
+class EHRListScreen extends StatefulWidget {
+  @override
+  State<EHRListScreen> createState() => _EHRListScreenState();
+}
+
+class _EHRListScreenState extends State<EHRListScreen> {
+  late Future<List<Patient>> patients;
+
+  @override
+  void initState() {
+    super.initState();
+    patients = context.read<PatientProvider>().fetchPatients();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final patientProvider = Provider.of<PatientProvider>(context);
-    final patientList = patientProvider.patientList;
-
     return Scaffold(
       endDrawer: ValueDashboard(),
       appBar: PreferredSize(
         child: TitleAppBar(
-            text: 'Health Records',
+            text: 'Electronic Health Records',
             iconColor: Pallete.whiteColor,
             backgroundColor: Pallete.mainColor),
         preferredSize: Size.fromHeight(kToolbarHeight),
       ),
-      body: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-        if (constraints.maxWidth >= Dimensions.tabletWidth) {
-          return _tabletView(patientList);
-        } else {
-          return _mobileView(patientList);
-        }
-      }),
-    );
-  }
-
-  // ListView _tabletView(List<Patient> patientList) {
-  //   return ListView.builder(
-  //     itemCount: patientList.length,
-  //     itemBuilder: (context, index) {
-  //       final patient = patientList[index];
-  //       return PatientCard(patient: patient);
-  //     },
-  //   );
-  // }
-
-  GridView _tabletView(List<Patient> patientList) {
-    return GridView.count(
-      crossAxisCount: 2,
-      children: List.generate(
-        patientList.length,
-        (index) {
-          final patient = patientList[index];
-          return PatientCard(patient: patient);
+      body: FutureBuilder(
+        future: patients,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return const CircularProgressIndicator();
+          return ListView.builder(
+            itemCount: snapshot.data?.length,
+            itemBuilder: (context, index) {
+              final patient = snapshot.data![index];
+              return PatientCard(patient: patient);
+            },
+          );
         },
       ),
-    );
-  }
-
-  ListView _mobileView(List<Patient> patientList) {
-    return ListView.builder(
-      itemCount: patientList.length,
-      itemBuilder: (context, index) {
-        final patient = patientList[index];
-        return PatientCard(patient: patient);
-      },
     );
   }
 }
