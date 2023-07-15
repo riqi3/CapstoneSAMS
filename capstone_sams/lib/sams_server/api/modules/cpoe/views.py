@@ -4,7 +4,7 @@ from rest_framework.response import Response
 import json
 from rest_framework import status
 
-from api.modules.user.Account import Account
+from api.modules.user.models import Account
 from api.modules.user.serializers import AccountSerializer
 from api.modules.patient.serializers import Health_Record
 from api.modules.cpoe.models import Comment, Medicine, Prescribed_Medicine, Prescription

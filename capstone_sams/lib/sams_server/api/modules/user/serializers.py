@@ -1,5 +1,5 @@
 
-from api.modules.user.Account import Account, Personal_Note, Data_Log
+from api.modules.user.models import Account, Personal_Note, Data_Log
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 

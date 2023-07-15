@@ -1,6 +1,6 @@
 
 from django.db import models
-from api.modules.user.Account import Account
+from api.modules.user.models import Account
 from api.modules.patient.models import Health_Record
 
 class Comment(models.Model):

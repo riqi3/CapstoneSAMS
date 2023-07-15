@@ -4,7 +4,7 @@ from rest_framework.response import Response
 import json
 from rest_framework import status
 
-from api.modules.user.Account import Personal_Note, Account
+from api.modules.user.models import Personal_Note, Account
 from api.modules.user.serializers import PersonalNoteSerializer
 
 
