@@ -17,7 +17,6 @@ urlpatterns = [
     path('api/', include('api.modules.user.urls')),
     path('predict/', PredictDisease.as_view(), name='predict')
 
- 
     # path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     # path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     # path('api/ocr/', ViewLabResult, name='ViewLabResult'),
