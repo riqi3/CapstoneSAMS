@@ -8,7 +8,8 @@ from django.urls import path, include
 from api.modules.patient.views import PatientView, SymptomsView
 from api.modules.cpoe.views import CommentView, MedicineView
 from api.modules.user.views import PersonalNotesView
-from disease_prediction.cdssModel.views import PredictDisease
+from api.modules.disease_prediction.cdssModel.views import PredictDisease
+# from api.modules.drug.views import 
 # process_pdf,  predict HealthRecordView,ViewUploadCSV, ViewLabResult
 
 urlpatterns = [
