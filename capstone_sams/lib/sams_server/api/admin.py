@@ -4,7 +4,12 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-from api.models import Account, Patient, Data_Log, Prescription, Medicine, Symptom, Health_Record, Comment, Prescribed_Medicine, Patient_Symptom
+from api.modules.user.models import Account, Data_Log
+from api.modules.patient.models import Patient, Health_Record, Symptom
+from api.modules.cpoe.models import Medicine, Prescription
+# from api.models import Account, Patient, Data_Log, Prescription, Medicine, Symptom, Health_Record, Comment, Prescribed_Medicine, Patient_Symptom
+
+
 
 COMMON_PASSWORDS = ['password', '12345678', 'qwerty', 'abc123']
 

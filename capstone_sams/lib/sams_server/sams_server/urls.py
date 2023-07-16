@@ -4,7 +4,12 @@
 # )
 from django.contrib import admin
 from django.urls import path, include
-from api.views import PredictDisease, PatientView, MedicineView, SymptomsView, PersonalNotesView, CommentView
+# from api.views import PredictDisease, PatientView, MedicineView, SymptomsView, PersonalNotesView, CommentView
+from api.modules.patient.views import PatientView, SymptomsView
+from api.modules.cpoe.views import CommentView, MedicineView
+from api.modules.user.views import PersonalNotesView
+from api.modules.disease_prediction.cdssModel.views import PredictDisease
+# from api.modules.drug.views import 
 # process_pdf,  predict HealthRecordView,ViewUploadCSV, ViewLabResult
 
 urlpatterns = [
