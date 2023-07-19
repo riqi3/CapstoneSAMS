@@ -1,3 +1,4 @@
+import 'package:capstone_sams/global-widgets/search-bar/widgets/SearchBarWidget.dart';
 import 'package:capstone_sams/theme/sizing.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -79,24 +80,25 @@ class _SearchBarTabsState extends State<SearchBarTabs>
             SizedBox(
               width: 5,
             ),
-            GestureDetector(
-              onTap: () {
-                showSearch(
-                  context: context,
-                  delegate: SearchPatientDelegate(),
-                );
-                print('search patient');
-              },
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Container(
-                  width: currentWidth < 600 ? minWidth : maxWidth,
-                  height: 40,
-                  color: Pallete.lightGreyColor,
-                  child: SearchBarDesign(),
-                ),
-              ),
-            ),
+            SearchBarWidget(),
+            // GestureDetector(
+            //   onTap: () {
+            //     showSearch(
+            //       context: context,
+            //       delegate: SearchPatientDelegate(),
+            //     );
+            //     print('search patient');
+            //   },
+            //   child: ClipRRect(
+            //     borderRadius: BorderRadius.circular(20),
+            //     child: Container(
+            //       width: currentWidth < 600 ? minWidth : maxWidth,
+            //       height: 40,
+            //       color: Pallete.lightGreyColor,
+            //       child: SearchBarDesign(),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
         bottom: TabBar(

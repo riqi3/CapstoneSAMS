@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:capstone_sams/theme/pallete.dart';
 
+import '../../global-widgets/search-bar/widgets/SearchBarWidget.dart';
 import '../../theme/sizing.dart';
 
 class EHRListScreen extends StatefulWidget {
@@ -41,7 +42,6 @@ class _EHRListScreenState extends State<EHRListScreen> {
             return Center(
               child: const CircularProgressIndicator(),
             );
-
           return Padding(
             padding: const EdgeInsets.all(Sizing.sectionSymmPadding),
             child: GridView.builder(
