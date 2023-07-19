@@ -2,6 +2,7 @@
 
 import 'package:capstone_sams/models/patient.dart';
 import 'package:capstone_sams/screens/patient-record/PatientRecordScreen.dart';
+import 'package:capstone_sams/theme/sizing.dart';
 import 'package:flutter/material.dart';
 import 'package:capstone_sams/theme/pallete.dart';
 import 'package:intl/intl.dart';
@@ -9,7 +10,9 @@ import 'package:intl/intl.dart';
 class PatientCard extends StatelessWidget {
   final Patient patient;
 
-  PatientCard({required this.patient});
+  PatientCard({
+    required this.patient,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,16 +25,15 @@ class PatientCard extends StatelessWidget {
           ),
         );
       },
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-        child: Card(
-          elevation: 4,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-            child: ListTile(
+      child: Card(
+        elevation: Sizing.cardElevation,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(Sizing.borderRadius),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ListTile(
               title: Text(
                 'Hospital No. ${patient.patientId}',
                 style: TextStyle(
@@ -45,7 +47,7 @@ class PatientCard extends StatelessWidget {
                 children: [
                   SizedBox(height: 8.0),
                   Text(
-                    "${patient.firstName} ${patient.middleName != null ? patient.middleName![0] + '.' : ''} ${patient.middleName == null ? '' + patient.lastName : patient.lastName}",
+                    "${patient.firstName}  ${patient.middleName != null ? patient.middleName![0] + '.' : ''} ${patient.middleName == null ? '' + patient.lastName : patient.lastName}",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20.0,
@@ -73,7 +75,7 @@ class PatientCard extends StatelessWidget {
                 ],
               ),
             ),
-          ),
+          ],
         ),
       ),
     );

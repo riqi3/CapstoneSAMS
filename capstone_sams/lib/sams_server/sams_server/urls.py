@@ -12,9 +12,9 @@ from api.modules.disease_prediction.cdssModel.views import PredictDisease
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('api.modules.patient.urls')),
-    path('api/', include('api.modules.cpoe.urls')),
-    path('api/', include('api.modules.user.urls')),
+    path('patient/', include('api.modules.patient.urls')),
+    path('cpoe/', include('api.modules.cpoe.urls')),
+    path('user/', include('api.modules.user.urls')),
     path('predict/', PredictDisease.as_view(), name='predict')
 
     # path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
