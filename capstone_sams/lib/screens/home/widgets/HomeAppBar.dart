@@ -22,7 +22,8 @@ class HomeAppBar extends StatelessWidget {
           padding: const EdgeInsets.only(left: 20.0),
           child: CircleAvatar(
             radius: 30,
-            backgroundImage: NetworkImage(profile),
+            backgroundImage: AssetImage(profile),
+            // backgroundImage: NetworkImage(profile),
             backgroundColor: Colors.transparent,
           ),
         ),
