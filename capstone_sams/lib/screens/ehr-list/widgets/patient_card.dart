@@ -18,10 +18,11 @@ class PatientCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        print(patient.firstName);
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const PatientRecordScreen(),
+            builder: (context) => PatientRecordScreen(patient: patient),
           ),
         );
       },

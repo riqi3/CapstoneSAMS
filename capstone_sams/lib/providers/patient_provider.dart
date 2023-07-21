@@ -36,11 +36,22 @@ class PatientProvider extends ChangeNotifier {
         _patients = data.map((e) => Patient.fromJson(e)).toList();
 
         if (query != null) {
-          _patients = _patients
-              .where((element) => element.firstName!
-                  .toLowerCase()
-                  .contains((query.toLowerCase())))
-              .toList();
+          _patients = _patients.where(
+            (element) {
+              return element.firstName!
+                      .toLowerCase()
+                      .contains((query.toLowerCase())) ||
+                  element.lastName!
+                      .toLowerCase()
+                      .contains((query.toLowerCase())) ||
+                  element.middleName!
+                      .toLowerCase()
+                      .contains((query.toLowerCase())) ||
+                  element.patientId!
+                      .toLowerCase()
+                      .contains((query.toLowerCase()));
+            },
+          ).toList();
         } else {
           print('Patient not found!');
         }

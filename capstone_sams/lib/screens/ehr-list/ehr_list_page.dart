@@ -1,9 +1,12 @@
+import 'package:capstone_sams/constants/Dimensions.dart';
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/global-widgets/TitleAppBar.dart';
 import 'package:capstone_sams/models/patient.dart';
 import 'package:capstone_sams/providers/patient_provider.dart';
 import 'package:capstone_sams/screens/ehr-list/widgets/patient_card.dart';
+import 'package:capstone_sams/screens/patient-record/PatientRecordScreen.dart';
 import 'package:flutter/material.dart';
+
 import 'package:provider/provider.dart';
 import 'package:capstone_sams/theme/pallete.dart';
 
@@ -30,6 +33,7 @@ class _EHRListScreenState extends State<EHRListScreen> {
       appBar: PreferredSize(
         child: TitleAppBar(
             text: 'Electronic Health Records',
+            // text: '',
             iconColor: Pallete.whiteColor,
             backgroundColor: Pallete.mainColor),
         preferredSize: Size.fromHeight(kToolbarHeight),
@@ -41,37 +45,22 @@ class _EHRListScreenState extends State<EHRListScreen> {
             return Center(
               child: const CircularProgressIndicator(),
             );
-
           return Padding(
-            padding: const EdgeInsets.all(Sizing.sectionSymmPadding),
-            child: GridView.builder(
-              itemCount: snapshot.data?.length,
-              itemBuilder: (context, index) {
-                final patient = snapshot.data![index];
-                return PatientCard(patient: patient);
+            padding: const EdgeInsets.only(
+              left: Sizing.sectionSymmPadding,
+              right: Sizing.sectionSymmPadding,
+              top: Sizing.sectionSymmPadding,
+            ),
+            child: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                if (constraints.maxWidth >= Dimensions.mobileWidth) {
+                  return _tabletView(snapshot);
+                } else {
+                  return _mobileView(snapshot);
+                }
               },
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-                childAspectRatio: 16 / 8,
-              ),
-              // gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              //   maxCrossAxisExtent: 500,
-              //   childAspectRatio: 16 / 8,
-              //   crossAxisSpacing: 5,
-              //   mainAxisSpacing: 5,
-              // ),
             ),
           );
-
-          // return ListView.builder(
-          //   itemCount: snapshot.data?.length,
-          //   itemBuilder: (context, index) {
-          //     final patient = snapshot.data![index];
-          //     return PatientCard(patient: patient);
-          //   },
-          // );
         },
       ),
 
@@ -88,6 +77,52 @@ class _EHRListScreenState extends State<EHRListScreen> {
       //     );
       //   },
       // ),
+    );
+  }
+
+  // ListView _mobileView(AsyncSnapshot<List<Patient>> snapshot) {
+  //   return ListView.builder(
+  //     itemCount: snapshot.data?.length,
+  //     itemBuilder: (context, index) {
+  //       final patient = snapshot.data![index];
+  //       return PatientCard(patient: patient);
+  //     },
+  //   );
+  // }
+
+  GridView _mobileView(AsyncSnapshot<List<Patient>> snapshot) {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const BouncingScrollPhysics(),
+      itemCount: snapshot.data?.length,
+      itemBuilder: (context, index) {
+        final patient = snapshot.data![index];
+        return PatientCard(patient: patient);
+      },
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 1,
+        mainAxisSpacing: 10,
+        crossAxisSpacing: 10,
+        childAspectRatio: 16 / 8,
+      ),
+    );
+  }
+
+  GridView _tabletView(AsyncSnapshot<List<Patient>> snapshot) {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const BouncingScrollPhysics(),
+      itemCount: snapshot.data?.length,
+      itemBuilder: (context, index) {
+        final patient = snapshot.data![index];
+        return PatientCard(patient: patient);
+      },
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 10,
+        crossAxisSpacing: 10,
+        childAspectRatio: 16 / 8,
+      ),
     );
   }
 }

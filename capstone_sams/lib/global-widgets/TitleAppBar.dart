@@ -1,4 +1,5 @@
 //dynamic appbar
+import 'package:capstone_sams/global-widgets/search-bar/widgets/SearchBarWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -20,6 +21,7 @@ class TitleAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentWidth = MediaQuery.of(context).size.width;
     return Container(
       child: AppBar(
         iconTheme: IconThemeData(
@@ -44,11 +46,22 @@ class TitleAppBar extends StatelessWidget {
             ),
           ),
         ),
-        title: Flexible(
-          child: Text(
-            text,
-            overflow: TextOverflow.ellipsis,
-          ),
+        title: Row(
+          mainAxisAlignment: currentWidth < 300
+              ? MainAxisAlignment.center
+              : MainAxisAlignment.end,
+          children: <Widget>[
+            Flexible(
+              child: Text(
+                text,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            SearchBarWidget(),
+          ],
         ),
         bottom: bottom,
       ),

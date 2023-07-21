@@ -60,7 +60,7 @@ Widget _mobileView(context, medNotesTitle, ehrTitle) {
                 builder: (context) => EHRListScreen(),
               ),
             );
-            print('object');
+            print('to ehr list');
           },
         ),
       ),
