@@ -5,7 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../theme/pallete.dart';
 
-import 'SearchPatientDelegate.dart';
+ 
 
 //home app bar
 class SearchBarTabs extends StatefulWidget {
@@ -28,12 +28,10 @@ class _SearchBarTabsState extends State<SearchBarTabs>
 
   TabController? _controller;
 
-  int _selectedIndex = 0;
-
   @override
   void initState() {
     super.initState();
-    _controller = TabController(length: 2, vsync: this);
+    _controller = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -45,8 +43,7 @@ class _SearchBarTabsState extends State<SearchBarTabs>
   @override
   Widget build(BuildContext context) {
     final currentWidth = MediaQuery.of(context).size.width;
-    final double minWidth = 250;
-    final double maxWidth = 400;
+
     return Container(
       alignment: Alignment.center,
       child: AppBar(
@@ -81,24 +78,7 @@ class _SearchBarTabsState extends State<SearchBarTabs>
               width: 5,
             ),
             SearchBarWidget(),
-            // GestureDetector(
-            //   onTap: () {
-            //     showSearch(
-            //       context: context,
-            //       delegate: SearchPatientDelegate(),
-            //     );
-            //     print('search patient');
-            //   },
-            //   child: ClipRRect(
-            //     borderRadius: BorderRadius.circular(20),
-            //     child: Container(
-            //       width: currentWidth < 600 ? minWidth : maxWidth,
-            //       height: 40,
-            //       color: Pallete.lightGreyColor,
-            //       child: SearchBarDesign(),
-            //     ),
-            //   ),
-            // ),
+
           ],
         ),
         bottom: TabBar(

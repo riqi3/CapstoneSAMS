@@ -21,6 +21,7 @@ class TitleAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentWidth = MediaQuery.of(context).size.width;
     return Container(
       child: AppBar(
         iconTheme: IconThemeData(
@@ -46,7 +47,10 @@ class TitleAppBar extends StatelessWidget {
           ),
         ),
         title: Row(
-          children: [
+          mainAxisAlignment: currentWidth < 300
+              ? MainAxisAlignment.center
+              : MainAxisAlignment.end,
+          children: <Widget>[
             Flexible(
               child: Text(
                 text,
@@ -54,7 +58,7 @@ class TitleAppBar extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: Sizing.appbarElementSpacing,
+              width: 5,
             ),
             SearchBarWidget(),
           ],

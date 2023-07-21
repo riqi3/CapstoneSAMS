@@ -59,12 +59,15 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
         SizedBox(
           width: 5,
         ),
-        Text(
-          'Search A Patient...',
-          style: TextStyle(
-            fontSize: 18,
-            color: Pallete.greyColor,
-            fontWeight: FontWeight.normal,
+        Flexible(
+          child: Text(
+            'Search A Patient...',
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 18,
+              color: Pallete.greyColor,
+              fontWeight: FontWeight.normal,
+            ),
           ),
         ),
       ],
