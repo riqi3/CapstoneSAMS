@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class Pallete {
   static const Color backgroundColor = Color(0xFFF6F6FA);
   static const Color mainColor = Color(0xFFFF6969);
+  static const Color deselected = Color.fromARGB(255, 131, 89, 89);
   static const Color textColor = Color(0xFF323232);
   static const Color whiteColor = Color(0xFFffffff);
   static const Color greyColor = Color(0xFFa1a1a1);

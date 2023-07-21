@@ -1,7 +1,7 @@
 import 'package:capstone_sams/constants/Dimensions.dart';
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
 
-import 'package:capstone_sams/screens/ehr-list/ehr_list_page.dart';
+import 'package:capstone_sams/screens/ehr-list/EHRListScreen.dart';
 import 'package:capstone_sams/screens/home/widgets/PatientSection.dart';
 
 import 'package:flutter/material.dart';

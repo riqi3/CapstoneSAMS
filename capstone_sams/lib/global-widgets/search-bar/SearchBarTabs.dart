@@ -5,8 +5,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../theme/pallete.dart';
 
- 
-
 //home app bar
 class SearchBarTabs extends StatefulWidget {
   const SearchBarTabs({
@@ -17,33 +15,12 @@ class SearchBarTabs extends StatefulWidget {
   State<SearchBarTabs> createState() => _SearchBarTabsState();
 }
 
-class _SearchBarTabsState extends State<SearchBarTabs>
-    with SingleTickerProviderStateMixin {
-  int pageIndex = 0;
+class _SearchBarTabsState extends State<SearchBarTabs> {
 
-  List<Widget> pageList = <Widget>[
-    // StudentHome(),
-    // UserProfile(),
-  ];
-
-  TabController? _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TabController(length: 3, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _controller!.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     final currentWidth = MediaQuery.of(context).size.width;
-
     return Container(
       alignment: Alignment.center,
       child: AppBar(
@@ -78,26 +55,25 @@ class _SearchBarTabsState extends State<SearchBarTabs>
               width: 5,
             ),
             SearchBarWidget(),
-
           ],
         ),
-        bottom: TabBar(
-          indicatorColor: Pallete.mainColor,
-          controller: _controller,
-          isScrollable: true,
-          labelColor: Pallete.mainColor,
-          tabs: [
-            Tab(
-              child: Text('EHR'),
-            ),
-            Tab(
-              child: Text('LABS'),
-            ),
-            Tab(
-              child: Text('CPOE'),
-            ),
-          ],
-        ),
+        // bottom: TabBar(
+        //   indicatorColor: Pallete.mainColor,
+        //   controller: _controller,
+        //   isScrollable: true,
+        //   labelColor: Pallete.mainColor,
+        //   tabs: [
+        //     Tab(
+        //       child: Text('EHR'),
+        //     ),
+        //     Tab(
+        //       child: Text('LABS'),
+        //     ),
+        //     Tab(
+        //       child: Text('CPOE'),
+        //     ),
+        //   ],
+        // ),
       ),
     );
   }
