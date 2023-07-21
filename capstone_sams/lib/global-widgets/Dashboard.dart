@@ -1,11 +1,16 @@
 import 'package:capstone_sams/screens/home/HomeScreen.dart';
+import 'package:capstone_sams/screens/lab/LabScreen.dart';
+import 'package:capstone_sams/screens/lab/LabTabsScreen.dart';
 import 'package:capstone_sams/screens/medical_notes/medical_notes_page.dart';
+import 'package:capstone_sams/screens/order-entry/CPOEScreen.dart';
 
 import 'package:capstone_sams/theme/sizing.dart';
+import 'package:capstone_sams/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../screens/ehr-list/ehr_list_page.dart';
+import '../models/patient.dart';
+import '../screens/ehr-list/EHRListScreen.dart';
 import 'search-bar/SearchPatientDelegate.dart';
 
 class Dashboard extends StatelessWidget {
@@ -91,20 +96,34 @@ class Dashboard extends StatelessWidget {
               print('ehr');
             },
           ),
-          ListTile(
-            leading: FaIcon(FontAwesomeIcons.flask),
-            title: const Text('Laboratories'),
-            onTap: () {
-              print('laboratories');
-            },
-          ),
-          ListTile(
-            leading: FaIcon(FontAwesomeIcons.prescription),
-            title: const Text('Physician Order Entry'),
-            onTap: () {
-              print('cpoe');
-            },
-          ),
+          // ListTile(
+          //   leading: FaIcon(FontAwesomeIcons.flask),
+          //   title: const Text('Laboratories'),
+          //   onTap: () {
+          //     // Navigator.push(
+          //     //   context,
+          //     //   MaterialPageRoute(
+          //     //     builder: (context) => LabTabsScreen(patient: ,
+
+          //     //     ),
+          //     //   ),
+          //     // );
+          //     print('laboratories');
+          //   },
+          // ),
+          // ListTile(
+          //   leading: FaIcon(FontAwesomeIcons.prescription),
+          //   title: const Text('Physician Order Entry'),
+          //   onTap: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (context) => const CPOEScreen(),
+          //       ),
+          //     );
+          //     print('cpoe');
+          //   },
+          // ),
           ListTile(
             leading: FaIcon(FontAwesomeIcons.notesMedical),
             title: const Text('Medical Notes'),

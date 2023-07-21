@@ -10,12 +10,13 @@ class TitleAppBar extends StatelessWidget {
   const TitleAppBar({
     super.key,
     required this.text,
-    required this.iconColor,
+    required this.iconColorLeading,
+    required this.iconColorTrailing,
     required this.backgroundColor,
     this.bottom,
   });
 
-  final Color backgroundColor, iconColor;
+  final Color backgroundColor, iconColorLeading, iconColorTrailing;
   final PreferredSize? bottom;
   final String text;
 
@@ -25,7 +26,7 @@ class TitleAppBar extends StatelessWidget {
     return Container(
       child: AppBar(
         iconTheme: IconThemeData(
-          color: Pallete.whiteColor,
+          color: iconColorTrailing,
           size: 30,
         ),
         backgroundColor: backgroundColor,
@@ -41,15 +42,13 @@ class TitleAppBar extends StatelessWidget {
             },
             icon: FaIcon(
               FontAwesomeIcons.arrowLeft,
-              color: iconColor,
+              color: iconColorLeading,
               size: Sizing.iconAppBarSize,
             ),
           ),
         ),
         title: Row(
-          mainAxisAlignment: currentWidth < 300
-              ? MainAxisAlignment.center
-              : MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             Flexible(
               child: Text(

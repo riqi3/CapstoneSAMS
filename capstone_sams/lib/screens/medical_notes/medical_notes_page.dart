@@ -1,12 +1,14 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
- 
+
 import 'package:capstone_sams/screens/medical_notes/add_todo_page.dart';
 import 'package:capstone_sams/screens/medical_notes/widgets/completed_list_widget.dart';
 import 'package:capstone_sams/screens/medical_notes/widgets/todo_list_widget.dart';
- 
+
 import 'package:flutter/material.dart';
+
+import '../../theme/sizing.dart';
 
 class MedicalNotes extends StatefulWidget {
   const MedicalNotes({Key? key}) : super(key: key);
@@ -36,10 +38,11 @@ class _MedicalNotesState extends State<MedicalNotes>
     return Scaffold(
       endDrawer: ValueDashboard(),
       appBar: PreferredSize(
-          preferredSize: Size.fromHeight(100),
-          child: ValueMedNotes(
-            tabController: tabController,
-          )),
+        preferredSize: Size.fromHeight(Sizing.appbarHeight),
+        child: ValueMedNotes(
+          tabController: tabController,
+        ),
+      ),
       body: TabBarView(
         controller: tabController,
         children: [

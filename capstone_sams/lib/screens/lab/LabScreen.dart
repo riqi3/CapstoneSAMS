@@ -6,7 +6,7 @@ class LaboratoriesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.amber,
+      color: Colors.greenAccent,
       child: Text('LABORATORIEAS'),
     );
   }

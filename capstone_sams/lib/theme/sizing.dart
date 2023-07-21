@@ -11,4 +11,5 @@ class Sizing {
   static const double headerHeight = 60.0;
   static const double cardElevation = 4.0;
   static const double borderRadius = 20;
+  static const double appbarHeight = 110;
 }

@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:capstone_sams/models/patient.dart';
-import 'package:capstone_sams/screens/patient-record/PatientRecordScreen.dart';
+import 'package:capstone_sams/screens/patient-record/PatientTabsScreen.dart';
 import 'package:capstone_sams/theme/sizing.dart';
 import 'package:flutter/material.dart';
 import 'package:capstone_sams/theme/pallete.dart';
@@ -22,7 +22,7 @@ class PatientCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => PatientRecordScreen(patient: patient),
+            builder: (context) => PatientTabsScreen(patient: patient),
           ),
         );
       },
