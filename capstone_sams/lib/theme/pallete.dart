@@ -10,6 +10,8 @@ class Pallete {
   static const Color lightGreyColor = Color(0xFFF6F6F6);
   static const Color greenColor = Color(0xFF55BA98);
   static const Color redColor = Color(0xFFF62121);
+  static const Color paleblueColor = Color(0xFF9EC6FA);
+  static const Color palegrayColor = Color.fromARGB(255, 202, 201, 201);
 }
 
 

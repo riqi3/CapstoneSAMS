@@ -2,7 +2,7 @@ import 'package:capstone_sams/screens/home/HomeScreen.dart';
 import 'package:capstone_sams/screens/lab/LabScreen.dart';
 import 'package:capstone_sams/screens/lab/LabTabsScreen.dart';
 import 'package:capstone_sams/screens/medical_notes/medical_notes_page.dart';
-import 'package:capstone_sams/screens/order-entry/CPOEScreen.dart';
+import 'package:capstone_sams/screens/order-entry/CPOE_analyze_page.dart';
 
 import 'package:capstone_sams/theme/sizing.dart';
 import 'package:capstone_sams/theme/theme.dart';

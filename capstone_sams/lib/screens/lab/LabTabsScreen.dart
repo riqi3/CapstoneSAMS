@@ -5,10 +5,9 @@ import 'package:flutter/material.dart';
 
 import '../../models/patient.dart';
 import '../../theme/sizing.dart';
- 
-import '../order-entry/CPOEScreen.dart';
+
+import '../order-entry/CPOE_analyze_page.dart';
 import 'LabScreen.dart';
- 
 
 class LabTabsScreen extends StatefulWidget {
   final Patient patient;
@@ -53,7 +52,7 @@ class _LabTabsScreenState extends State<LabTabsScreen>
         children: [
           PatientTabsScreen(patient: widget.patient),
           const LaboratoriesScreen(),
-          const CPOEScreen(),
+          CPOEScreen(),
         ],
       ),
     );
