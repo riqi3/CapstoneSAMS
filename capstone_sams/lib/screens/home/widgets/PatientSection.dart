@@ -88,7 +88,6 @@ class EHRSection extends StatelessWidget {
                           ),
                         ),
                       ),
- 
                       Expanded(
                         child: Container(
                           alignment: Alignment.centerRight,
@@ -97,7 +96,6 @@ class EHRSection extends StatelessWidget {
                             FontAwesomeIcons.chevronRight,
                             color: Pallete.whiteColor,
                             size: Sizing.sectionIconSize,
-                            
                           ),
                         ),
                       ),
