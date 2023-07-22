@@ -106,12 +106,6 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                           initialValue: _editedMedicine.instructions,
                           onSaved: (value) =>
                               _editedMedicine.instructions = value,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter instructions';
-                            }
-                            return null;
-                          },
                         ),
                       ),
                       SizedBox(height: 10),
@@ -154,12 +148,6 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                                         .split(' ')[0]
                                     : '',
                               ),
-                              validator: (value) {
-                                if (_selectedStartDate == null) {
-                                  return 'Please enter an start date';
-                                }
-                                return null;
-                              },
                             ),
                           ),
                           SizedBox(width: 10),
@@ -198,12 +186,6 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                                     ? _selectedEndDate.toString().split(' ')[0]
                                     : '',
                               ),
-                              validator: (value) {
-                                if (_selectedEndDate == null) {
-                                  return 'Please enter an end date';
-                                }
-                                return null;
-                              },
                             ),
                           ),
                         ],
@@ -228,12 +210,6 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                                   _editedMedicine.quantity?.toString() ?? '',
                               onSaved: (value) => _editedMedicine.quantity =
                                   int.tryParse(value ?? ''),
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Please enter quantity';
-                                }
-                                return null;
-                              },
                             ),
                           ),
                           SizedBox(width: 10),
@@ -254,12 +230,6 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                                   _editedMedicine.refills?.toString() ?? '',
                               onSaved: (value) => _editedMedicine.refills =
                                   int.tryParse(value ?? ''),
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Please enter refills';
-                                }
-                                return null;
-                              },
                             ),
                           ),
                         ],

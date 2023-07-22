@@ -91,12 +91,6 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                           maxLines: null,
                           keyboardType: TextInputType.multiline,
                           onSaved: (value) => _medicine.instructions = value,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter instructions';
-                            }
-                            return null;
-                          },
                         ),
                       ),
                       SizedBox(height: 10),
@@ -139,12 +133,6 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                                         .split(' ')[0]
                                     : '',
                               ),
-                              validator: (value) {
-                                if (_selectedStartDate == null) {
-                                  return 'Please enter an start date';
-                                }
-                                return null;
-                              },
                             ),
                           ),
                           SizedBox(width: 10),
@@ -187,12 +175,6 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                                         .split(' ')[0]
                                     : '',
                               ),
-                              validator: (value) {
-                                if (_selectedEndDate == null) {
-                                  return 'Please enter a end date';
-                                }
-                                return null;
-                              },
                             ),
                           ),
                         ],
@@ -215,12 +197,6 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                               keyboardType: TextInputType.number,
                               onSaved: (value) => _medicine.quantity =
                                   int.tryParse(value ?? ''),
-                              validator: (value) {
-                                if (_medicine.quantity == null) {
-                                  return 'Please enter quantity';
-                                }
-                                return null;
-                              },
                             ),
                           ),
                           SizedBox(width: 10),
@@ -239,12 +215,6 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                               keyboardType: TextInputType.number,
                               onSaved: (value) =>
                                   _medicine.refills = int.tryParse(value ?? ''),
-                              validator: (value) {
-                                if (_medicine.refills == null) {
-                                  return 'Please enter refills';
-                                }
-                                return null;
-                              },
                             ),
                           ),
                         ],
