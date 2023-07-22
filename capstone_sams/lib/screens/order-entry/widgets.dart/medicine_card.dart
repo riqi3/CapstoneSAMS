@@ -3,6 +3,7 @@ import 'package:capstone_sams/providers/medicine_provider.dart';
 import 'package:capstone_sams/screens/order-entry/widgets.dart/edit_medicine_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:capstone_sams/theme/pallete.dart';
 
 class MedicineCard extends StatelessWidget {
   final Medicine medicine;
@@ -39,25 +40,30 @@ class MedicineCard extends StatelessWidget {
               children: [
                 Text(
                   '${_formatDate(medicine.startDate)} - ${_formatDate(medicine.endDate)}',
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: Pallete.mainColor,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 5),
                 Text(
-                  'Medicine: ${medicine.name}',
-                  style: TextStyle(fontSize: 12),
+                  '${medicine.name}',
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 5),
                 Text(
-                  'Instructions: ${medicine.instructions}',
+                  '${medicine.instructions}',
                   style: TextStyle(fontSize: 12),
-                  maxLines: null, // Allow unlimited lines for the instructions
+                  maxLines: null,
                 ),
                 SizedBox(height: 5),
                 Row(
                   children: [
                     Text(
                       'Quantity: ${medicine.quantity}',
-                      style: TextStyle(fontSize: 12),
+                      style: TextStyle(
+                        fontSize: 12,
+                      ),
                     ),
                     SizedBox(width: 10),
                     Text(
@@ -71,7 +77,7 @@ class MedicineCard extends StatelessWidget {
           ),
           Row(
             children: [
-              IconButton(
+              ElevatedButton.icon(
                 onPressed: () {
                   showDialog(
                     context: context,
@@ -82,12 +88,29 @@ class MedicineCard extends StatelessWidget {
                   );
                 },
                 icon: Icon(Icons.edit),
+                label: Text('Edit'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Pallete.greenColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  elevation: 5,
+                ),
               ),
-              IconButton(
+              SizedBox(width: 10),
+              ElevatedButton.icon(
                 onPressed: () {
                   medicineProvider.removeMedicine(index);
                 },
                 icon: Icon(Icons.delete),
+                label: Text('Remove'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  elevation: 5,
+                ),
               ),
             ],
           ),

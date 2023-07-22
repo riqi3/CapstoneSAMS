@@ -1,9 +1,10 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:capstone_sams/providers/medicine_provider.dart';
 import 'package:capstone_sams/providers/symptoms_fields_provider.dart';
 import 'package:capstone_sams/screens/order-entry/widgets.dart/add_medicine_dialog.dart';
 import 'package:capstone_sams/screens/order-entry/widgets.dart/medicine_card.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:capstone_sams/theme/pallete.dart';
 
 class Cpoeform extends StatelessWidget {
   final String finalPrediction;
@@ -54,13 +55,14 @@ class Cpoeform extends StatelessWidget {
                   style: TextStyle(fontSize: 16),
                 ),
                 SizedBox(height: 10),
-                ElevatedButton(
+                ElevatedButton.icon(
                   onPressed: () {
                     Provider.of<SymptomFieldsProvider>(context, listen: false)
                         .reset();
                     Navigator.pop(context);
                   },
-                  child: Text('Analyze Again'),
+                  icon: Icon(Icons.search),
+                  label: Text('Analyze Again'),
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15.0),
@@ -93,7 +95,10 @@ class Cpoeform extends StatelessWidget {
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 if (medicineProvider.medicines.isEmpty)
-                  Text('\n\nNo Orders\n\n')
+                  Text(
+                    '\n\nNo Orders\n\n',
+                    style: TextStyle(color: Pallete.greyColor),
+                  )
                 else
                   Column(
                     children: [
@@ -109,12 +114,18 @@ class Cpoeform extends StatelessWidget {
                       Text(
                         'Comment Section',
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                            color: Pallete.paleblueColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
                       ),
                       SizedBox(height: 2),
                       TextFormField(
                         decoration: InputDecoration(
-                          border: OutlineInputBorder(),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFF9EC6FA)),
+                          ),
+                          filled: true,
+                          fillColor: Pallete.palegrayColor,
                         ),
                         maxLines: null,
                         keyboardType: TextInputType.multiline,
@@ -131,26 +142,22 @@ class Cpoeform extends StatelessWidget {
                       },
                       child: Text('Submit'),
                       style: ElevatedButton.styleFrom(
+                        backgroundColor: Pallete.mainColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
                         ),
                       ),
                     ),
                     SizedBox(width: 10),
-                    ElevatedButton(
+                    ElevatedButton.icon(
                       onPressed: () => showDialog(
                         context: context,
                         builder: (ctx) => AddMedicineDialog(),
                       ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.add),
-                          SizedBox(width: 8),
-                          Text('Add Medicine'),
-                        ],
-                      ),
+                      icon: Icon(Icons.edit),
+                      label: Text('Write Rx'),
                       style: ElevatedButton.styleFrom(
+                        backgroundColor: Pallete.mainColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
                         ),

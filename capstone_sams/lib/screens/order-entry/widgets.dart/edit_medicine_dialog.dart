@@ -1,5 +1,6 @@
 import 'package:capstone_sams/models/medicine_model.dart';
 import 'package:capstone_sams/providers/medicine_provider.dart';
+import 'package:capstone_sams/theme/pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -70,7 +71,13 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                       TextFormField(
                         decoration: InputDecoration(
                           labelText: 'Medication',
-                          border: OutlineInputBorder(),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Pallete.paleblueColor,
+                            ),
+                          ),
+                          filled: true,
+                          fillColor: Pallete.palegrayColor,
                         ),
                         initialValue: _editedMedicine.name,
                         onSaved: (value) => _editedMedicine.name = value,
@@ -86,13 +93,25 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                         child: TextFormField(
                           decoration: InputDecoration(
                             labelText: 'Instructions',
-                            border: OutlineInputBorder(),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Pallete.paleblueColor,
+                              ),
+                            ),
+                            filled: true,
+                            fillColor: Pallete.palegrayColor,
                           ),
                           maxLines: null,
                           keyboardType: TextInputType.multiline,
                           initialValue: _editedMedicine.instructions,
                           onSaved: (value) =>
                               _editedMedicine.instructions = value,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please enter instructions';
+                            }
+                            return null;
+                          },
                         ),
                       ),
                       SizedBox(height: 10),
@@ -102,7 +121,13 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                             child: TextFormField(
                               decoration: InputDecoration(
                                 labelText: 'Start Date',
-                                border: OutlineInputBorder(),
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Pallete.paleblueColor,
+                                  ),
+                                ),
+                                filled: true,
+                                fillColor: Pallete.palegrayColor,
                                 suffixIcon: Icon(Icons.calendar_today),
                               ),
                               readOnly: true,
@@ -129,6 +154,12 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                                         .split(' ')[0]
                                     : '',
                               ),
+                              validator: (value) {
+                                if (_selectedStartDate == null) {
+                                  return 'Please enter an start date';
+                                }
+                                return null;
+                              },
                             ),
                           ),
                           SizedBox(width: 10),
@@ -136,7 +167,13 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                             child: TextFormField(
                               decoration: InputDecoration(
                                 labelText: 'End Date',
-                                border: OutlineInputBorder(),
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Pallete.paleblueColor,
+                                  ),
+                                ),
+                                filled: true,
+                                fillColor: Pallete.palegrayColor,
                                 suffixIcon: Icon(Icons.calendar_today),
                               ),
                               readOnly: true,
@@ -161,6 +198,12 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                                     ? _selectedEndDate.toString().split(' ')[0]
                                     : '',
                               ),
+                              validator: (value) {
+                                if (_selectedEndDate == null) {
+                                  return 'Please enter an end date';
+                                }
+                                return null;
+                              },
                             ),
                           ),
                         ],
@@ -172,13 +215,25 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                             child: TextFormField(
                               decoration: InputDecoration(
                                 labelText: 'Quantity',
-                                border: OutlineInputBorder(),
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Pallete.paleblueColor,
+                                  ),
+                                ),
+                                filled: true,
+                                fillColor: Pallete.palegrayColor,
                               ),
                               keyboardType: TextInputType.number,
                               initialValue:
                                   _editedMedicine.quantity?.toString() ?? '',
                               onSaved: (value) => _editedMedicine.quantity =
                                   int.tryParse(value ?? ''),
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Please enter quantity';
+                                }
+                                return null;
+                              },
                             ),
                           ),
                           SizedBox(width: 10),
@@ -186,13 +241,25 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                             child: TextFormField(
                               decoration: InputDecoration(
                                 labelText: 'Refills',
-                                border: OutlineInputBorder(),
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Pallete.paleblueColor,
+                                  ),
+                                ),
+                                filled: true,
+                                fillColor: Pallete.palegrayColor,
                               ),
                               keyboardType: TextInputType.number,
                               initialValue:
                                   _editedMedicine.refills?.toString() ?? '',
                               onSaved: (value) => _editedMedicine.refills =
                                   int.tryParse(value ?? ''),
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Please enter refills';
+                                }
+                                return null;
+                              },
                             ),
                           ),
                         ],
@@ -205,6 +272,7 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                             child: Text('Cancel'),
                             onPressed: () => Navigator.pop(context),
                             style: ElevatedButton.styleFrom(
+                              backgroundColor: Pallete.greyColor,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15.0),
                               ),
@@ -226,6 +294,7 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                               }
                             },
                             style: ElevatedButton.styleFrom(
+                              backgroundColor: Pallete.mainColor,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15.0),
                               ),

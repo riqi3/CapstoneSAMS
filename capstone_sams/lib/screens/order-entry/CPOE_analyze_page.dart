@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:capstone_sams/theme/pallete.dart';
 
 class CPOEScreen extends StatefulWidget {
   @override
@@ -84,8 +85,10 @@ class _CPOEScreenState extends State<CPOEScreen> {
                   children: <Widget>[
                     Text(
                       'Symptoms',
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Pallete.mainColor),
                     ),
                     SizedBox(height: 10),
                     ListView.builder(
@@ -197,8 +200,10 @@ class _CPOEScreenState extends State<CPOEScreen> {
                                 );
                               }
                             : null,
-                        child: Text('Add symptom'),
+                        child: Text('Add symptom',
+                            style: TextStyle(color: Pallete.backgroundColor)),
                         style: ElevatedButton.styleFrom(
+                          backgroundColor: Pallete.mainColor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15.0),
                           ),
@@ -210,8 +215,12 @@ class _CPOEScreenState extends State<CPOEScreen> {
                       child: ElevatedButton(
                         onPressed:
                             isAnalyzeButtonEnabled ? _analyzeSymptoms : null,
-                        child: Text('Analyze'),
+                        child: Text(
+                          'Analyze',
+                          style: TextStyle(color: Pallete.backgroundColor),
+                        ),
                         style: ElevatedButton.styleFrom(
+                          backgroundColor: Pallete.mainColor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15.0),
                           ),
