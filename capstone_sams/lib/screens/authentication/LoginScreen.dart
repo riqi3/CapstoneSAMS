@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:capstone_sams/AdminScreen.dart';
-import 'package:capstone_sams/screens/authentication/RegisterScreen.dart';
+ 
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,24 +22,24 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  Future<Account?> _login() async {
-    final url = Uri.parse('${Env.prefix}/login/');
-    final response = await http.post(url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8'
-        },
-        body: jsonEncode(<String, String>{
-          'username': usernameController.text,
-          'password': passwordController.text
-        }));
-    if (response.statusCode == 200) {
-      final jsonBody = json.decode(response.body);
-      final account = Account.fromJson(jsonBody);
-      return account;
-    } else {
-      return null;
-    }
-  }
+  // Future<Account?> _login() async {
+  //   final url = Uri.parse('${Env.prefix}/login/');
+  //   final response = await http.post(url,
+  //       headers: <String, String>{
+  //         'Content-Type': 'application/json; charset=UTF-8'
+  //       },
+  //       body: jsonEncode(<String, String>{
+  //         'username': usernameController.text,
+  //         'password': passwordController.text
+  //       }));
+  //   if (response.statusCode == 200) {
+  //     final jsonBody = json.decode(response.body);
+  //     final account = Account.fromJson(jsonBody);
+  //     return account;
+  //   } else {
+  //     return null;
+  //   }
+  // }
 
   Future<void> showFailure(BuildContext context) async {
     return showDialog(
@@ -108,9 +108,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextFormField(
                       controller: usernameController,
                       validator: (value) =>
-                          value == '' ? 'Please input email' : null,
+                          value == '' ? 'Please input username' : null,
                       decoration: const InputDecoration(
-                        hintText: 'email',
+                        hintText: 'username',
                       ),
                     ),
                     TextFormField(
@@ -124,20 +124,59 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     TextButton(
                       onPressed: () async {
-                        Account? account = await _login();
-                        if (account != null) {
-                          context.read<AccountProvider>().setAccount(account);
+                        final username = usernameController.text;
+                        final password = passwordController.text;
+                        final success = await context
+                            .read<AccountProvider>()
+                            .login(username, password);
+                        if (success) {
                           usernameController.clear();
                           passwordController.clear();
-                          if (context.read<AccountProvider>().role == 'User') {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const HomeScreen(),
-                              ),
-                            );
-                          } else {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const AdminScreen()));
+                          // if (context.read<AccountProvider>().role ==
+                          //     'Physician') {
+                          //   Navigator.of(context).push(
+                          //     MaterialPageRoute(
+                          //       builder: (context) => const HomeScreen(),
+                          //     ),
+                          //   );
+                          // } else {
+                          //   Navigator.of(context).push(MaterialPageRoute(
+                          //       builder: (context) => const AdminScreen()));
+                          // }
+                          switch (context.read<AccountProvider>().role) {
+                            case 'Physician':
+                              {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => const HomeScreen(),
+                                  ),
+                                );
+                              }
+                              break;
+                            case 'MedTech':
+                              {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => const HomeScreen(),
+                                  ),
+                                );
+                              }
+                              break;
+                            case 'Nurse':
+                              {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => const HomeScreen(),
+                                  ),
+                                );
+                              }
+                              break;
+                            default:
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const AdminScreen(),
+                                ),
+                              );
                           }
                         } else {
                           showFailure(context);
@@ -149,22 +188,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: TextStyle(),
                       ),
                     ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('register????'),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const RegisterScreen(),
-                          ),
-                        );
-                      },
-                      child: Text('signuppp'),
-                    )
                   ],
                 ),
               ],
