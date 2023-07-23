@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:capstone_sams/AdminScreen.dart';
-import 'package:capstone_sams/screens/authentication/RegisterScreen.dart';
+ 
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -151,7 +151,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     builder: (context) => const HomeScreen(),
                                   ),
                                 );
-                              } break;
+                              }
+                              break;
                             case 'MedTech':
                               {
                                 Navigator.of(context).push(
@@ -159,7 +160,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     builder: (context) => const HomeScreen(),
                                   ),
                                 );
-                              } break;
+                              }
+                              break;
                             case 'Nurse':
                               {
                                 Navigator.of(context).push(
@@ -167,9 +169,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                     builder: (context) => const HomeScreen(),
                                   ),
                                 );
-                              } break;
-                            default: Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const AdminScreen()));
+                              }
+                              break;
+                            default:
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const AdminScreen(),
+                                ),
+                              );
                           }
                         } else {
                           showFailure(context);
@@ -181,22 +188,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: TextStyle(),
                       ),
                     ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('register????'),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const RegisterScreen(),
-                          ),
-                        );
-                      },
-                      child: Text('signuppp'),
-                    )
                   ],
                 ),
               ],
