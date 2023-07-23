@@ -4,15 +4,14 @@ import 'package:http/http.dart' as http;
 
 import '../constants/Env.dart';
 
- 
-
 class Account {
   final String accountID;
   final String username;
-  final String password;
+  final String? password;
   final String firstName;
   final String lastName;
   final String accountRole;
+  String? token;
   final bool isActive;
   final bool isStaff;
   final bool isSuperuser;
@@ -24,6 +23,7 @@ class Account {
     required this.firstName,
     required this.lastName,
     required this.accountRole,
+    this.token,
     required this.isActive,
     required this.isStaff,
     required this.isSuperuser,
@@ -37,6 +37,7 @@ class Account {
       firstName: json['firstName'],
       lastName: json['lastName'],
       accountRole: json['accountRole'],
+      token: json['token'],
       isActive: json['is_active'],
       isStaff: json['is_staff'],
       isSuperuser: json['is_superuser'],
@@ -50,6 +51,7 @@ class Account {
         'firstName': firstName,
         'lastName': lastName,
         'accountRole': accountRole,
+        'token': token,
         'is_active': isActive,
         'is_staff': isStaff,
         'is_superuser': isSuperuser,

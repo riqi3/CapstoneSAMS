@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import  AbstractBaseUser, BaseUserManager, PermissionsMixin 
+from rest_framework_simplejwt.tokens import RefreshToken
 
 class AccountManager(BaseUserManager):
     def create_user(self, username, password=None, **extra_fields):
@@ -29,6 +30,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     middleName = models.CharField(max_length=100, blank = False)
     lastName = models.CharField(max_length=100, blank = False)
     accountRole = models.CharField(max_length=100, choices=ACCOUNT_ROLE_CHOICES)
+    token = models.CharField(max_length=255, blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
@@ -48,6 +50,12 @@ class Account(AbstractBaseUser, PermissionsMixin):
     @property
     def is_authenticated(self):
         return True
+    
+    def generate_token(self):
+        refresh = RefreshToken.for_user(self)
+        self.token = str(refresh.access_token)
+        self.save()
+        return self.token
 
 class Personal_Note(models.Model):
     noteNum = models.AutoField(primary_key = True)
