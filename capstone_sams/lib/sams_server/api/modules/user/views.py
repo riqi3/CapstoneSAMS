@@ -10,7 +10,7 @@ from django.contrib.auth import authenticate
 import json
 
 from api.modules.user.models import Personal_Note, Account
-from api.modules.user.serializers import PersonalNoteSerializer
+from api.modules.user.serializers import PersonalNoteSerializer, AccountSerializer
 
 
 class ObtainTokenView(APIView):
@@ -37,11 +37,30 @@ class ObtainTokenView(APIView):
             user.generate_token()
 
             # Return the access token and refresh token in the response
-            return Response({'access_token': access_token, 'refresh_token': refresh_token})
+            return Response({'access_token': access_token, 'refresh_token': refresh_token}, status=status.HTTP_200_OK)
         else:
             # If authentication fails, return an error response
             return Response({'error': 'Invalid credentials'}, status=400)
     
+
+class LogInView(viewsets.ModelViewSet):
+    @api_view(['POST'])
+    def login(request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+
+        user = authenticate(username=username, password=password)
+
+        if user is not None:
+            user.generate_token()
+            
+            serializer = AccountSerializer(user)
+
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Invalid credentials'}, status=400)
+
+
 
 class PersonalNotesView(viewsets.ModelViewSet):
     
