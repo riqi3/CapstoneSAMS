@@ -1,12 +1,47 @@
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-import json
 from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.permissions import AllowAny
+from django.contrib.auth import authenticate
+
+import json
 
 from api.modules.user.models import Personal_Note, Account
 from api.modules.user.serializers import PersonalNoteSerializer
 
+
+class ObtainTokenView(APIView):
+    permission_classes = [AllowAny]
+
+    @api_view(['POST'])
+    def get_token(request):
+        # Get the username and password from the request data
+        username = request.data.get('username')
+        password = request.data.get('password')
+
+        # Authenticate the user using the provided credentials
+        user = authenticate(username=username, password=password)
+
+        # Check if the user is valid
+        if user is not None:
+            # Generate the access token and refresh token
+            refresh = RefreshToken.for_user(user)
+            access_token = str(refresh.access_token)
+            refresh_token = str(refresh)
+
+            # Optionally, you can also store the access_token in the Account model
+            # If you want to store it, you can do it here:
+            user.generate_token()
+
+            # Return the access token and refresh token in the response
+            return Response({'access_token': access_token, 'refresh_token': refresh_token})
+        else:
+            # If authentication fails, return an error response
+            return Response({'error': 'Invalid credentials'}, status=400)
+    
 
 class PersonalNotesView(viewsets.ModelViewSet):
     
