@@ -10,10 +10,10 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from api.modules.user.models import Account, Data_Log
-from api.modules.drug.models import Mims
-from api.modules.drug.form import CsvImportForm
+from api.modules.patient.form import CsvImportPatientForm
 from api.modules.patient.models import Patient, Health_Record, Symptom
 from api.modules.cpoe.models import Medicine, Prescription
+from api.modules.cpoe.form import CsvImportMedicineForm
 
 # from api.models import Account, Patient, Data_Log, Prescription, Medicine, Symptom, Health_Record, Comment, Prescribed_Medicine, Patient_Symptom
 
@@ -191,7 +191,7 @@ class PatientAdmin(admin.ModelAdmin):
         "phone",
         "email",
     )
-    list_filter = ("patientID", "gender")
+    list_filter = ("patientID", "gender",'registration')
     search_fields = (
         "patientID",
         "firstName",
@@ -201,6 +201,39 @@ class PatientAdmin(admin.ModelAdmin):
         "email",
     )
 
+
+    def get_urls(self):
+        urls = super().get_urls()
+        new_urls = [path('upload-csv/', self.upload_csv),]
+        return new_urls + urls
+    
+    def upload_csv(self, request):
+        if request.method == "POST":
+            csv_file = request.FILES["csv_upload"]
+            if not csv_file.name.endswith('.csv'):
+                messages.warning(request, 'The wrong file type was uploaded')
+                return HttpResponseRedirect(request.path_info)
+            file_data = csv_file.read().decode("utf-8")
+            csv_data = file_data.split("\n")
+            for x in csv_data:
+                fields = x.split(",")
+                created = Patient.objects.update_or_create(
+                    patientID = fields[0],
+                    firstName = fields[1],
+                    middleName = fields[2],
+                    lastName = fields[3],
+                    age = fields[4],
+                    gender = fields[5],
+                    birthDate = fields[6],
+                    registration = fields[7],
+                    phone = fields[8],
+                    email = fields[9],
+                    )
+            url = reverse('admin:index')
+            return HttpResponseRedirect(url)
+        form = CsvImportPatientForm()
+        data = {"form": form}
+        return render(request, "admin/csv_upload.html", data)
 
 class DataLogsAdminForm(forms.ModelForm):
     class Meta:
@@ -225,6 +258,33 @@ class MedicineAdmin(admin.ModelAdmin):
     form = MedicineAdminForm
     list_display = ("drugId", "drugCode", "drugName")
     search_fields = ("drugId", "drugCode", "drugName")
+
+
+    def get_urls(self):
+        urls = super().get_urls()
+        new_urls = [path('upload-csv/', self.upload_csv),]
+        return new_urls + urls
+    
+    def upload_csv(self, request):
+        if request.method == "POST":
+            csv_file = request.FILES["csv_upload"]
+            if not csv_file.name.endswith('.csv'):
+                messages.warning(request, 'The wrong file type was uploaded')
+                return HttpResponseRedirect(request.path_info)
+            file_data = csv_file.read().decode("utf-8")
+            csv_data = file_data.split("\n")
+            for x in csv_data:
+                fields = x.split(",")
+                created = Medicine.objects.update_or_create(
+                    drugId = fields[0],
+                    drugCode = fields[1],
+                    drugName = fields[2],
+                    )
+            url = reverse('admin:index')
+            return HttpResponseRedirect(url)
+        form = CsvImportMedicineForm()
+        data = {"form": form}
+        return render(request, "admin/csv_upload.html", data)
 
 
 class HealthRecordAdminForm(forms.ModelForm):
@@ -274,41 +334,6 @@ class SymptomsAdmin(admin.ModelAdmin):
     search_fields = ("sympNum", "symptom")
 
 
-class CsvUploadAdmin(admin.ModelAdmin):
-    list_display = ('bnf', 'description')
- 
-    search_fields = (
-        "bnf",
-        "description",
-    )
-
-
-    def get_urls(self):
-        urls = super().get_urls()
-        new_urls = [path('upload-csv/', self.upload_csv),]
-        return new_urls + urls
-    
-    def upload_csv(self, request):
-        if request.method == "POST":
-            csv_file = request.FILES["csv_upload"]
-            if not csv_file.name.endswith('.csv'):
-                messages.warning(request, 'The wrong file type was uploaded')
-                return HttpResponseRedirect(request.path_info)
-            file_data = csv_file.read().decode("utf-8")
-            csv_data = file_data.split("\n")
-            for x in csv_data:
-                fields = x.split(",")
-                created = Mims.objects.update_or_create(
-                    bnf = fields[0],
-                    description = fields[1],
-                    )
-            url = reverse('admin:index')
-            return HttpResponseRedirect(url)
-        form = CsvImportForm()
-        data = {"form": form}
-        return render(request, "admin/csv_upload.html", data)
-#     
-
 # Now register the new UserAdmin...
 admin.site.register(Account, UserAdmin)
 admin.site.register(Patient, PatientAdmin)
@@ -317,7 +342,7 @@ admin.site.register(Medicine, MedicineAdmin)
 admin.site.register(Health_Record, HealthRecordAdmin)
 admin.site.register(Prescription, PrescriptionAdmin)
 admin.site.register(Symptom, SymptomsAdmin)
-admin.site.register(Mims, CsvUploadAdmin)
+ 
 # ... and, since we're not using Django's built-in permissions,
 # unregister the Group model from admin.
 admin.site.unregister(Group)
