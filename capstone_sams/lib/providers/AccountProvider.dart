@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
 
- 
 import '../constants/Env.dart';
 import '../models/Account.dart';
 
@@ -20,7 +19,7 @@ class AccountProvider extends ChangeNotifier {
 
   Future<bool> login(String username, String password) async {
     final response = await http.post(
-      Uri.parse('${Env.prefix}/login/'),
+      Uri.parse('${Env.prefix}/user/login/'),
       body: {
         'username': username,
         'password': password,
@@ -30,7 +29,7 @@ class AccountProvider extends ChangeNotifier {
     if (response.statusCode == 200) {
       // The user was authenticated, so store the account data in the provider
       final data = jsonDecode(response.body);
-      final account = Account.fromJson(data['account']);
+      final account = Account.fromJson(data);
       setAccount(account);
       return true;
     } else {
@@ -39,6 +38,7 @@ class AccountProvider extends ChangeNotifier {
     }
   }
 
+  
   void setAccount(Account account) {
     _account = account;
     notifyListeners();

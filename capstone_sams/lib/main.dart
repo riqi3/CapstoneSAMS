@@ -1,6 +1,8 @@
+import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/medicine_provider.dart';
 import 'package:capstone_sams/providers/patient_provider.dart';
 import 'package:capstone_sams/providers/symptoms_fields_provider.dart';
+import 'package:capstone_sams/screens/authentication/LoginScreen.dart';
 import 'package:capstone_sams/screens/home/HomeScreen.dart';
 
 import 'package:flutter/material.dart';
@@ -15,6 +17,10 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(
+          create: (context) => AccountProvider(),
+          child: const SAMSApp(),
+        ),
         ChangeNotifierProvider(
           create: (context) => PatientProvider(),
           child: const SAMSApp(),
@@ -41,11 +47,12 @@ class SAMSApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp( 
       debugShowCheckedModeBanner: false,
       title: 'Capstone S.A.M.S. Prototype',
       theme: AppTheme.theme,
-      home: const HomeScreen(),
+      // home: const HomeScreen(),
+      home: LoginScreen(),
     );
   }
 }
