@@ -15,7 +15,9 @@ class TodoWidget extends StatelessWidget {
 
   void deleteTodo(BuildContext context, Todo todo) {
     final provider = Provider.of<TodosProvider>(context, listen: false);
-    provider.removeTodo(todo);
+    provider.removeTodo(
+        todo, 'accountID'); // Replace 'accountID' with actual account ID
+
     const snackBar = SnackBar(
       content: Text('Deleted the note'),
     );
@@ -37,7 +39,7 @@ class TodoWidget extends StatelessWidget {
             ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child: Slidable(
-            key: Key(todo.id),
+            key: Key(todo.noteNum),
             endActionPane: ActionPane(
               motion: const ScrollMotion(),
               dismissible: DismissiblePane(onDismissed: () {}),
@@ -63,7 +65,8 @@ class TodoWidget extends StatelessWidget {
                     onChanged: (_) {
                       final provider =
                           Provider.of<TodosProvider>(context, listen: false);
-                      final isDone = provider.toggleTodoStatus(todo);
+                      final isDone =
+                          provider.toggleTodoStatus(todo, 'accountID');
 
                       if (isDone == true) {
                         const snackBar = SnackBar(
@@ -121,11 +124,11 @@ class TodoWidget extends StatelessWidget {
                             ),
                           ],
                         ),
-                        if (todo.description.isNotEmpty)
+                        if (todo.content.isNotEmpty)
                           Container(
                             margin: const EdgeInsets.only(top: 4),
                             child: Text(
-                              todo.description,
+                              todo.content,
                               style: const TextStyle(
                                 fontSize: 10,
                                 height: 1.5,
