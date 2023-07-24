@@ -1,16 +1,17 @@
+import 'package:capstone_sams/screens/order-entry/widgets.dart/AddMedicineDialog.dart';
+import 'package:capstone_sams/screens/order-entry/widgets.dart/MedicineCard.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:capstone_sams/providers/medicine_provider.dart';
 import 'package:capstone_sams/providers/symptoms_fields_provider.dart';
-import 'package:capstone_sams/screens/order-entry/widgets.dart/add_medicine_dialog.dart';
-import 'package:capstone_sams/screens/order-entry/widgets.dart/medicine_card.dart';
+
 import 'package:capstone_sams/theme/pallete.dart';
 
-class Cpoeform extends StatelessWidget {
+class CpoeFormScreen extends StatelessWidget {
   final String finalPrediction;
   final double finalConfidence;
 
-  Cpoeform({
+  CpoeFormScreen({
     required this.finalPrediction,
     required this.finalConfidence,
   });

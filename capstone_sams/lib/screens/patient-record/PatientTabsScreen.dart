@@ -1,12 +1,15 @@
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
 
+import 'package:capstone_sams/screens/order-entry/OrderEntryScreen.dart';
+
 import 'package:flutter/material.dart';
 
 import '../../models/patient.dart';
 import '../../theme/sizing.dart';
 import '../lab/LabScreen.dart';
-import '../order-entry/CPOE_analyze_page.dart';
-import 'HealthRecord.dart';
+
+import '../order-entry/CpoeAnalyzeScreen.dart';
+import 'HealthRecordScreen.dart';
 
 class PatientTabsScreen extends StatefulWidget {
   final Patient patient;
@@ -53,7 +56,8 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
             patient: widget.patient,
           ),
           const LaboratoriesScreen(),
-          CPOEScreen(),
+          OrderEntryScreen(),
+          // CpoeAnalyzeScreen(),
         ],
       ),
     );

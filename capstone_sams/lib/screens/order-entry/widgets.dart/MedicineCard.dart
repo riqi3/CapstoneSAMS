@@ -1,6 +1,6 @@
 import 'package:capstone_sams/models/medicine_model.dart';
 import 'package:capstone_sams/providers/medicine_provider.dart';
-import 'package:capstone_sams/screens/order-entry/widgets.dart/edit_medicine_dialog.dart';
+import 'package:capstone_sams/screens/order-entry/widgets.dart/EditMedicineDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:capstone_sams/theme/pallete.dart';

@@ -4,11 +4,13 @@ import 'package:capstone_sams/providers/patient_provider.dart';
 import 'package:capstone_sams/providers/symptoms_fields_provider.dart';
 import 'package:capstone_sams/screens/authentication/LoginScreen.dart';
 import 'package:capstone_sams/screens/home/HomeScreen.dart';
+import 'package:capstone_sams/screens/order-entry/CpoeAnalyzeScreen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/medical_notes_provider.dart';
+import 'screens/patient-record/PatientTabsScreen.dart';
 import 'theme/app_theme.dart';
 
 void main() async {
@@ -47,12 +49,12 @@ class SAMSApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp( 
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Capstone S.A.M.S. Prototype',
       theme: AppTheme.theme,
-      // home: const HomeScreen(),
-      home: LoginScreen(),
+      home: const HomeScreen(),
+      // home: PatientTabsScreen(),
     );
   }
 }

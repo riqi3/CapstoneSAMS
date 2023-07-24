@@ -2,7 +2,7 @@ import 'package:capstone_sams/providers/medical_notes_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'todo_widget.dart';
+import 'TodoWidget.dart';
 
 class CompletedListWidget extends StatelessWidget {
   const CompletedListWidget({super.key});
