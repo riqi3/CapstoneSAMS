@@ -23,7 +23,7 @@ class TodosProvider extends ChangeNotifier {
     };
     final response = await http.get(
       Uri.parse(
-        _getUrl('user/notes/get/$accountID/'),
+        _getUrl('user/notes/get/$accountID'),
       ),
       headers: headers,
     );
@@ -93,7 +93,7 @@ class TodosProvider extends ChangeNotifier {
     };
     final response = await http.put(
         Uri.parse(
-          _getUrl('notes/update/${todo.noteNum}'),
+          _getUrl('user/notes/update/${todo.noteNum}'),
         ),
         headers: headers,
         body: jsonEncode(todo.toJson()));
@@ -110,7 +110,7 @@ class TodosProvider extends ChangeNotifier {
       'Content-Type': 'application/json; charset=UTF-8',
     };
     final response = await http.put(
-      Uri.parse(_getUrl('notes/done/${todo.noteNum}')),
+      Uri.parse(_getUrl('user/notes/done/${todo.noteNum}')),
       headers: headers,
       body: jsonEncode(<String, dynamic>{
         'isDone': !todo.isDone,
@@ -127,7 +127,7 @@ class TodosProvider extends ChangeNotifier {
 
   Future removeTodo(Todo todo, String accountID) async {
     final response = await http.delete(
-      Uri.parse(_getUrl('notes/delete/${todo.noteNum}')),
+      Uri.parse(_getUrl('user/notes/delete/${todo.noteNum}')),
     );
     if (response.statusCode == 204) {
       fetchTodos(accountID);
