@@ -1,11 +1,16 @@
 import 'package:capstone_sams/constants/Dimensions.dart';
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
+import 'package:capstone_sams/providers/medicine_provider.dart';
 
 import 'package:capstone_sams/screens/ehr-list/EhrListScreen.dart';
 import 'package:capstone_sams/screens/home/widgets/PatientSection.dart';
+import 'package:dio/dio.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 import 'package:flutter/material.dart';
 
+import '../../constants/Env.dart';
+import '../../models/medicine_model.dart';
 import '../../theme/sizing.dart';
 import '../medical_notes/MedicalNotesScreen.dart';
 import 'widgets/NotesSection.dart';
@@ -50,6 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
 Widget _mobileView(context, medNotesTitle, ehrTitle) {
   return Column(
     children: [
+      
       Center(
         child: EHRSection(
           title: ehrTitle,

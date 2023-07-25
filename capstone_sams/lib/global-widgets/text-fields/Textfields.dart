@@ -19,30 +19,36 @@ class ShortTextfield extends StatelessWidget {
       validator: (value) => value == '' ? validator : null,
       decoration: InputDecoration(
         hintText: hintText,
+        filled: true,
+        fillColor: Pallete.palegrayColor,
       ),
     );
   }
 }
 
 class TextAreaField extends StatelessWidget {
-  const TextAreaField({
+  TextAreaField({
     super.key,
-    required this.controller,
     required this.validator,
     required this.hintText,
+    required this.onSaved,
   });
 
-  final TextEditingController controller;
   final String validator, hintText;
+  late final String? onSaved;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: controller,
-      maxLines: 4,
+      keyboardType: TextInputType.multiline,
+      minLines: 5,
+      maxLines: null,
+      onSaved: (value) => onSaved = value,
       validator: (value) => value == '' ? validator : null,
       decoration: InputDecoration(
         hintText: hintText,
+        filled: true,
+        fillColor: Pallete.palegrayColor,
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
             width: 1,
@@ -79,6 +85,8 @@ class PasswordTextfield extends StatelessWidget {
       validator: (value) => value == '' ? validator : null,
       decoration: InputDecoration(
         hintText: hintText,
+        filled: true,
+        fillColor: Pallete.palegrayColor,
       ),
     );
   }

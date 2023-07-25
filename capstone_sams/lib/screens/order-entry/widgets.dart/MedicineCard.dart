@@ -47,7 +47,7 @@ class MedicineCard extends StatelessWidget {
                 ),
                 SizedBox(height: 5),
                 Text(
-                  '${medicine.name}',
+                  '${medicine.name.toString()}',
                   style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 5),
