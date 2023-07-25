@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:capstone_sams/AdminScreen.dart';
- 
+
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -143,41 +143,47 @@ class _LoginScreenState extends State<LoginScreen> {
                           //   Navigator.of(context).push(MaterialPageRoute(
                           //       builder: (context) => const AdminScreen()));
                           // }
-                          switch (context.read<AccountProvider>().role) {
-                            case 'Physician':
-                              {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => const HomeScreen(),
-                                  ),
-                                );
-                              }
-                              break;
-                            case 'MedTech':
-                              {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => const HomeScreen(),
-                                  ),
-                                );
-                              }
-                              break;
-                            case 'Nurse':
-                              {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => const HomeScreen(),
-                                  ),
-                                );
-                              }
-                              break;
-                            default:
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => const AdminScreen(),
-                                ),
-                              );
-                          }
+
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const HomeScreen(),
+                            ),
+                          );
+                          // switch (context.read<AccountProvider>().role) {
+                          //   case 'Physician':
+                          //     {
+                          //       Navigator.of(context).push(
+                          //         MaterialPageRoute(
+                          //           builder: (context) => const HomeScreen(),
+                          //         ),
+                          //       );
+                          //     }
+                          //     break;
+                          //   case 'MedTech':
+                          //     {
+                          //       Navigator.of(context).push(
+                          //         MaterialPageRoute(
+                          //           builder: (context) => const HomeScreen(),
+                          //         ),
+                          //       );
+                          //     }
+                          //     break;
+                          //   case 'Nurse':
+                          //     {
+                          //       Navigator.of(context).push(
+                          //         MaterialPageRoute(
+                          //           builder: (context) => const HomeScreen(),
+                          //         ),
+                          //       );
+                          //     }
+                          //     break;
+                          //   default:
+                          //     Navigator.of(context).push(
+                          //       MaterialPageRoute(
+                          //         builder: (context) => const AdminScreen(),
+                          //       ),
+                          //     );
+                          // }
                         } else {
                           showFailure(context);
                         }

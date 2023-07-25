@@ -23,7 +23,7 @@ class TodosProvider extends ChangeNotifier {
     };
     final response = await http.get(
       Uri.parse(
-        _getUrl('notes/get/$accountID'),
+        _getUrl('user/notes/get/$accountID/'),
       ),
       headers: headers,
     );
@@ -62,10 +62,11 @@ class TodosProvider extends ChangeNotifier {
     };
 
     final response = await http.post(
-      Uri.parse(_getUrl('notes/create')),
+      Uri.parse(_getUrl('user/notes/create/')),
       headers: headers,
       body: jsonEncode(todo.toJson()),
     );
+    // print(_getUrl('notes/create'));
     // print('POST request to ${_getUrl('notes/create/')}');
     // print('Headers: ${jsonEncode(<String, String>{
     //       'Content-Type': 'application/json; charset=UTF-8',
@@ -82,7 +83,7 @@ class TodosProvider extends ChangeNotifier {
       fetchTodos(accountID);
     } else {
       throw Exception(
-          'Failed to add todo. Server responded with status code ${response.statusCode}');
+          'Failed to add todo. Server responded with status code ${response.statusCode} ${jsonDecode(response.body)}');
     }
   }
 

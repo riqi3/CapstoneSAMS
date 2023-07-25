@@ -80,6 +80,7 @@ class PersonalNotesView(viewsets.ModelViewSet):
             account_id = notes_data['account']
             account = Account.objects.get(accountID=account_id)
             note = Personal_Note.objects.create(
+                noteNum=notes_data['noteNum'],
                 title=notes_data['title'],
                 content=notes_data['content'],
                 account=account,
