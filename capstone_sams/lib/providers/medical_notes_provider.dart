@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import '../models/medical_notes.dart';
+import '../constants/Env.dart';
 
 class TodosProvider extends ChangeNotifier {
   List<Todo> _todos = [];
@@ -13,15 +14,24 @@ class TodosProvider extends ChangeNotifier {
       _todos.where((todo) => todo.isDone == true).toList();
 
   String _getUrl(String endpoint) {
-    final baseUrl = 'http://10.0.2.2:8000';
-    return '$baseUrl/$endpoint';
+    return '${Env.prefix}/$endpoint';
   }
 
   Future fetchTodos(String accountID) async {
-    final response = await http.get(Uri.parse(_getUrl('notes/get/$accountID')));
+    final headers = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
+    final response = await http.get(
+      Uri.parse(
+        _getUrl('notes/get/$accountID'),
+      ),
+      headers: headers,
+    );
 
     if (response.statusCode == 200) {
-      List<Todo> list = parseTodos(response.body);
+      // List<Todo> list = parseTodos(response.body);
+      final items = json.decode(response.body).cast<Map<String, dynamic>>();
+      List<Todo> list = items.map<Todo>((json) => Todo.fromJson(json)).toList();
       _todos = list;
       notifyListeners();
     } else {
@@ -29,34 +39,43 @@ class TodosProvider extends ChangeNotifier {
     }
   }
 
-  List<Todo> parseTodos(String responseBody) {
-    final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
-    return parsed.map<Todo>((json) => Todo.fromJson(json)).toList();
-  }
+  // List<Todo> parseTodos(dynamic responseBody) {
+  //   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+  //   return parsed.map<Todo>((json) => Todo.fromJson(json)).toList();
+  // }
 
   Future addTodo(Todo todo, String accountID) async {
+    // final response = await http.post(
+    //   Uri.parse(_getUrl('notes/create/')),
+    //   headers: <String, String>{
+    //     'Content-Type': 'application/json; charset=UTF-8',
+    //   },
+    //   body: jsonEncode(<String, dynamic>{
+    //     'title': todo.title,
+    //     'content': todo.content,
+    //     'iscomplete': todo.isDone.toString(),
+    //     'accountID': accountID,
+    //   }),
+    // );
+    final headers = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
+
     final response = await http.post(
-      Uri.parse(_getUrl('notes/create/')),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'title': todo.title,
-        'content': todo.content,
-        'iscomplete': todo.isDone.toString(),
-        'accountID': accountID,
-      }),
+      Uri.parse(_getUrl('notes/create')),
+      headers: headers,
+      body: jsonEncode(todo.toJson()),
     );
-    print('POST request to ${_getUrl('notes/create/')}');
-    print('Headers: ${jsonEncode(<String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        })}');
-    print('Body: ${jsonEncode(<String, dynamic>{
-          'title': todo.title,
-          'content': todo.content,
-          'iscomplete': todo.isDone,
-          'account': accountID,
-        })}');
+    // print('POST request to ${_getUrl('notes/create/')}');
+    // print('Headers: ${jsonEncode(<String, String>{
+    //       'Content-Type': 'application/json; charset=UTF-8',
+    //     })}');
+    // print('Body: ${jsonEncode(<String, dynamic>{
+    //       'title': todo.title,
+    //       'content': todo.content,
+    //       'iscomplete': todo.isDone,
+    //       'account': accountID,
+    //     })}');
     print('Response status code: ${response.statusCode}');
     print('Response body: ${response.body}');
     if (response.statusCode == 201) {
@@ -68,17 +87,15 @@ class TodosProvider extends ChangeNotifier {
   }
 
   Future updateTodo(Todo todo, String accountID) async {
+    final headers = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
     final response = await http.put(
-      Uri.parse(_getUrl('notes/update/${todo.noteNum}')),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'title': todo.title,
-        'content': todo.content,
-        'iscomplete': todo.isDone.toString(),
-      }),
-    );
+        Uri.parse(
+          _getUrl('notes/update/${todo.noteNum}'),
+        ),
+        headers: headers,
+        body: jsonEncode(todo.toJson()));
 
     if (response.statusCode == 204) {
       fetchTodos(accountID);
@@ -88,13 +105,14 @@ class TodosProvider extends ChangeNotifier {
   }
 
   Future toggleTodoStatus(Todo todo, String accountID) async {
+    final headers = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
     final response = await http.put(
-      Uri.parse(_getUrl('notes/update/${todo.noteNum}')),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'isDone': (!todo.isDone).toString(),
+      Uri.parse(_getUrl('notes/done/${todo.noteNum}')),
+      headers: headers,
+      body: jsonEncode(<String, dynamic>{
+        'isDone': !todo.isDone,
       }),
     );
 
@@ -108,9 +126,8 @@ class TodosProvider extends ChangeNotifier {
 
   Future removeTodo(Todo todo, String accountID) async {
     final response = await http.delete(
-      Uri.parse(_getUrl('notes/delete/int:noteNum')),
+      Uri.parse(_getUrl('notes/delete/${todo.noteNum}')),
     );
-
     if (response.statusCode == 204) {
       fetchTodos(accountID);
     } else {

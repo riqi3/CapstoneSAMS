@@ -101,6 +101,17 @@ class PersonalNotesView(viewsets.ModelViewSet):
             return Response({"message": "Note successfully updated"}, status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
             return Response({"message": "Failed to update note", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+    @api_view(['PUT'])
+    def set_done(request, noteNum):
+        try:
+            notes_data = json.loads(request.body)
+            note = Personal_Note.objects.get(pk=noteNum)
+            note.isDone = notes_data['isDone']  
+            note.save()
+            return Response({"message": "Note successfully updated"}, status=status.HTTP_204_NO_CONTENT)
+        except Exception as e:
+            return Response({"message": "Failed to update note", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     @api_view(['DELETE'])
     def delete_personal_note(request, noteNum):
