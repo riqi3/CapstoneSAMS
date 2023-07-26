@@ -29,7 +29,6 @@ class TodosProvider extends ChangeNotifier {
     );
 
     if (response.statusCode == 200) {
-      // List<Todo> list = parseTodos(response.body);
       final items = json.decode(response.body).cast<Map<String, dynamic>>();
       List<Todo> list = items.map<Todo>((json) => Todo.fromJson(json)).toList();
       _todos = list;
@@ -39,24 +38,7 @@ class TodosProvider extends ChangeNotifier {
     }
   }
 
-  // List<Todo> parseTodos(dynamic responseBody) {
-  //   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
-  //   return parsed.map<Todo>((json) => Todo.fromJson(json)).toList();
-  // }
-
   Future addTodo(Todo todo, String accountID) async {
-    // final response = await http.post(
-    //   Uri.parse(_getUrl('notes/create/')),
-    //   headers: <String, String>{
-    //     'Content-Type': 'application/json; charset=UTF-8',
-    //   },
-    //   body: jsonEncode(<String, dynamic>{
-    //     'title': todo.title,
-    //     'content': todo.content,
-    //     'iscomplete': todo.isDone.toString(),
-    //     'accountID': accountID,
-    //   }),
-    // );
     final headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     };
@@ -66,21 +48,12 @@ class TodosProvider extends ChangeNotifier {
       headers: headers,
       body: jsonEncode(todo.toJson()),
     );
-    // print(_getUrl('notes/create'));
-    // print('POST request to ${_getUrl('notes/create/')}');
-    // print('Headers: ${jsonEncode(<String, String>{
-    //       'Content-Type': 'application/json; charset=UTF-8',
-    //     })}');
-    // print('Body: ${jsonEncode(<String, dynamic>{
-    //       'title': todo.title,
-    //       'content': todo.content,
-    //       'iscomplete': todo.isDone,
-    //       'account': accountID,
-    //     })}');
+
     print('Response status code: ${response.statusCode}');
     print('Response body: ${response.body}');
     if (response.statusCode == 201) {
       fetchTodos(accountID);
+      notifyListeners();
     } else {
       throw Exception(
           'Failed to add todo. Server responded with status code ${response.statusCode} ${jsonDecode(response.body)}');
@@ -100,6 +73,7 @@ class TodosProvider extends ChangeNotifier {
 
     if (response.statusCode == 204) {
       fetchTodos(accountID);
+      notifyListeners();
     } else {
       throw Exception('Failed to update todo');
     }
@@ -120,6 +94,7 @@ class TodosProvider extends ChangeNotifier {
     if (response.statusCode == 204) {
       todo.isDone = !todo.isDone;
       fetchTodos(accountID);
+      notifyListeners();
     } else {
       throw Exception('Failed to update todo status');
     }
@@ -131,6 +106,7 @@ class TodosProvider extends ChangeNotifier {
     );
     if (response.statusCode == 204) {
       fetchTodos(accountID);
+      notifyListeners();
     } else {
       throw Exception('Failed to delete todo');
     }

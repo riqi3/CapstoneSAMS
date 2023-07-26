@@ -1,12 +1,15 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
-
+import 'package:capstone_sams/providers/AccountProvider.dart';
+import 'package:capstone_sams/providers/medical_notes_provider.dart';
 import 'package:capstone_sams/screens/medical_notes/add_todo_page.dart';
+
 import 'package:capstone_sams/screens/medical_notes/widgets/CompletedListWidget.dart';
 import 'package:capstone_sams/screens/medical_notes/widgets/TodoListWidget.dart';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../theme/sizing.dart';
 
@@ -25,6 +28,10 @@ class _MedicalNotesState extends State<MedicalNotes>
   void initState() {
     super.initState();
     tabController = TabController(length: 2, vsync: this);
+
+    final provider = Provider.of<TodosProvider>(context, listen: false);
+    final accountID = context.read<AccountProvider>().id;
+    provider.fetchTodos(accountID!);
   }
 
   @override

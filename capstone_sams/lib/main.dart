@@ -53,7 +53,7 @@ class SAMSApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Capstone S.A.M.S. Prototype',
       theme: AppTheme.theme,
-      home: const HomeScreen(),
+      home: const LoginScreen(),
       // home: PatientTabsScreen(),
     );
   }
