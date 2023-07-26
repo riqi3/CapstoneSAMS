@@ -59,7 +59,7 @@ class _EditTodoPageState extends State<EditTodoPage> {
           ),
           IconButton(
               onPressed: () {
-                final accountID = context.read<AccountProvider>().id;
+                final accountID = context.read<AccountProvider>().id!;
                 final provider =
                     Provider.of<TodosProvider>(context, listen: false);
                 provider.removeTodo(widget.todo, accountID!);
