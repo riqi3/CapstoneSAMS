@@ -1,5 +1,6 @@
 import 'package:capstone_sams/global-widgets/Dashboard.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../global-widgets/TitleAppBar.dart';
 import '../models/patient.dart';
@@ -7,13 +8,12 @@ import '../screens/home/widgets/HomeAppBar.dart';
 import '../theme/pallete.dart';
 
 class ValueDashboard extends StatelessWidget {
- 
-  const ValueDashboard({super.key });
+  const ValueDashboard({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Dashboard(
-      profile: 'assets/images/profile1.png' ,
+      profile: 'assets/images/profile1.png',
       // profile:
       //     'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
     );
@@ -76,27 +76,36 @@ class BottomPatientTabs extends StatelessWidget {
               width: MediaQuery.of(context).size.width / 2 - 10,
               child: Tab(
                 child: Align(
-                  alignment: Alignment.center,
-                  child: Text('Health Record', style: TextStyle(fontSize: 12)),
-                ),
+                    alignment: Alignment.center,
+                    child: FaIcon(
+                      FontAwesomeIcons.fileMedical,
+                    )
+                    // Text('Health Record', style: TextStyle(fontSize: 12)),
+                    ),
               ),
             ),
             SizedBox(
               width: MediaQuery.of(context).size.width / 2 - 10,
               child: Tab(
                 child: Align(
-                  alignment: Alignment.center,
-                  child: Text('Laboratory', style: TextStyle(fontSize: 12)),
-                ),
+                    alignment: Alignment.center,
+                    child: FaIcon(
+                      FontAwesomeIcons.flaskVial,
+                    )
+                    // Text('Laboratory', style: TextStyle(fontSize: 12)),
+                    ),
               ),
             ),
             SizedBox(
               width: MediaQuery.of(context).size.width / 2 - 10,
               child: Tab(
                 child: Align(
-                  alignment: Alignment.center,
-                  child: Text('Order Entry', style: TextStyle(fontSize: 12)),
-                ),
+                    alignment: Alignment.center,
+                    child: FaIcon(
+                      FontAwesomeIcons.prescription,
+                    )
+                    // Text('Order Entry', style: TextStyle(fontSize: 12)),
+                    ),
               ),
             ),
           ],

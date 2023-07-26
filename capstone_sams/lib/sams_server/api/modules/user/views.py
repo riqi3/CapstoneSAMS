@@ -63,7 +63,7 @@ class LogInView(viewsets.ModelViewSet):
 
 
 class PersonalNotesView(viewsets.ModelViewSet):
-    
+
     @api_view(['GET'])
     def fetch_personal_notes(request, accountID):
         try:
@@ -78,11 +78,13 @@ class PersonalNotesView(viewsets.ModelViewSet):
         try:
             notes_data = json.loads(request.body)
             account_id = notes_data['account']
-            account = Account.objects.get(accountID = account_id)
+            account = Account.objects.get(accountID=account_id)
             note = Personal_Note.objects.create(
-                title = notes_data['title'],
-                content = notes_data['content'],
-                account = account
+                noteNum=notes_data['noteNum'],
+                title=notes_data['title'],
+                content=notes_data['content'],
+                account=account,
+                isDone=notes_data['isDone'],  
             )
             return Response({"message": "Note successfully created"}, status=status.HTTP_201_CREATED)
         except Exception as e:
@@ -95,8 +97,20 @@ class PersonalNotesView(viewsets.ModelViewSet):
             note = Personal_Note.objects.get(pk=noteNum)
             note.title = notes_data['title']
             note.content = notes_data['content']
+            note.isDone = notes_data['isDone']  
             note.save()
-            return Response({"message": "Note successfully update"}, status=status.HTTP_204_NO_CONTENT)
+            return Response({"message": "Note successfully updated"}, status=status.HTTP_204_NO_CONTENT)
+        except Exception as e:
+            return Response({"message": "Failed to update note", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+    @api_view(['PUT'])
+    def set_done(request, noteNum):
+        try:
+            notes_data = json.loads(request.body)
+            note = Personal_Note.objects.get(pk=noteNum)
+            note.isDone = notes_data['isDone']  
+            note.save()
+            return Response({"message": "Note successfully updated"}, status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
             return Response({"message": "Failed to update note", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -108,4 +122,3 @@ class PersonalNotesView(viewsets.ModelViewSet):
             return Response({"message": "Note successfully deleted"}, status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
              return Response({"message": "Failed to delete note", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        

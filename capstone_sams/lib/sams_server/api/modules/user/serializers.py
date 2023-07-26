@@ -20,7 +20,7 @@ class AccountSerializer(serializers.ModelSerializer):
 class PersonalNoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Personal_Note
-        fields = ['noteNum', 'title', 'content', 'account']
+        fields = ['noteNum', 'title', 'content', 'isDone', 'account']
 
 
 

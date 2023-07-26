@@ -4,7 +4,7 @@ import 'package:capstone_sams/global-widgets/TitleAppBar.dart';
 import 'package:capstone_sams/models/patient.dart';
 import 'package:capstone_sams/providers/patient_provider.dart';
 import 'package:capstone_sams/screens/ehr-list/widgets/patient_card.dart';
- 
+
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -12,12 +12,12 @@ import 'package:capstone_sams/theme/pallete.dart';
 
 import '../../theme/sizing.dart';
 
-class EHRListScreen extends StatefulWidget {
+class EhrListScreen extends StatefulWidget {
   @override
-  State<EHRListScreen> createState() => _EHRListScreenState();
+  State<EhrListScreen> createState() => _EhrListScreenState();
 }
 
-class _EHRListScreenState extends State<EHRListScreen> {
+class _EhrListScreenState extends State<EhrListScreen> {
   late Future<List<Patient>> patients;
 
   @override

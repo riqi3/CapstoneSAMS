@@ -1,12 +1,13 @@
 import 'dart:convert';
 
 import 'package:capstone_sams/AdminScreen.dart';
- 
+
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../constants/Env.dart';
+import '../../global-widgets/text-fields/Textfields.dart';
 import '../home/HomeScreen.dart';
 import '../../models/Account.dart';
 import '../../providers/AccountProvider.dart';
@@ -97,30 +98,15 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 Column(
                   children: [
-                    // TextFormField(
-                    //   controller: _nameController,
-                    //   validator: (value) =>
-                    //       value == '' ? 'Please input username' : null,
-                    //   decoration: const InputDecoration(
-                    //     hintText: 'user name',
-                    //   ),
-                    // ),
-                    TextFormField(
+                    ShortTextfield(
                       controller: usernameController,
-                      validator: (value) =>
-                          value == '' ? 'Please input username' : null,
-                      decoration: const InputDecoration(
-                        hintText: 'username',
-                      ),
+                      validator: 'Please input username',
+                      hintText: 'user name',
                     ),
-                    TextFormField(
+                    PasswordTextfield(
                       controller: passwordController,
-                      // obscureText: true,
-                      validator: (value) =>
-                          value == '' ? 'Please input password' : null,
-                      decoration: const InputDecoration(
-                        hintText: 'password',
-                      ),
+                      validator: 'Please input password',
+                      hintText: 'password',
                     ),
                     TextButton(
                       onPressed: () async {
@@ -143,41 +129,46 @@ class _LoginScreenState extends State<LoginScreen> {
                           //   Navigator.of(context).push(MaterialPageRoute(
                           //       builder: (context) => const AdminScreen()));
                           // }
-                          switch (context.read<AccountProvider>().role) {
-                            case 'Physician':
-                              {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => const HomeScreen(),
-                                  ),
-                                );
-                              }
-                              break;
-                            case 'MedTech':
-                              {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => const HomeScreen(),
-                                  ),
-                                );
-                              }
-                              break;
-                            case 'Nurse':
-                              {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => const HomeScreen(),
-                                  ),
-                                );
-                              }
-                              break;
-                            default:
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => const AdminScreen(),
-                                ),
-                              );
-                          }
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const HomeScreen(),
+                            ),
+                          );
+                          // switch (context.read<AccountProvider>().role) {
+                          //   case 'Physician':
+                          //     {
+                          //       Navigator.of(context).push(
+                          //         MaterialPageRoute(
+                          //           builder: (context) => const HomeScreen(),
+                          //         ),
+                          //       );
+                          //     }
+                          //     break;
+                          //   case 'MedTech':
+                          //     {
+                          //       Navigator.of(context).push(
+                          //         MaterialPageRoute(
+                          //           builder: (context) => const HomeScreen(),
+                          //         ),
+                          //       );
+                          //     }
+                          //     break;
+                          //   case 'Nurse':
+                          //     {
+                          //       Navigator.of(context).push(
+                          //         MaterialPageRoute(
+                          //           builder: (context) => const HomeScreen(),
+                          //         ),
+                          //       );
+                          //     }
+                          //     break;
+                          //   default:
+                          //     Navigator.of(context).push(
+                          //       MaterialPageRoute(
+                          //         builder: (context) => const AdminScreen(),
+                          //       ),
+                          //     );
+                          // }
                         } else {
                           showFailure(context);
                         }
@@ -198,3 +189,24 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+
+// class ShortTextfield extends StatelessWidget {
+//   const ShortTextfield({
+//     super.key,
+//     required this.usernameController,
+//   });
+
+//   final TextEditingController usernameController;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return TextFormField(
+//       controller: usernameController,
+//       validator: (value) =>
+//           value == '' ? 'Please input username' : null,
+//       decoration: const InputDecoration(
+//         hintText: 'username',
+//       ),
+//     );
+//   }
+// }
