@@ -58,10 +58,11 @@ class Account(AbstractBaseUser, PermissionsMixin):
         return self.token
 
 class Personal_Note(models.Model):
-    noteNum = models.AutoField(primary_key = True)
+    noteNum = models.CharField(max_length=100, primary_key = True)
     title = models.CharField(max_length = 20)
     content = models.CharField(max_length = 3000)
     account = models.ForeignKey(Account, on_delete = models.CASCADE)
+    isDone = models.BooleanField(default=False)
 
 class Data_Log(models.Model):
     #Log Attributes

@@ -1,8 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:capstone_sams/screens/medical_notes/widgets/TodoFormWidget.dart';
+import 'package:capstone_sams/providers/AccountProvider.dart';
+import 'package:capstone_sams/screens/medical_notes/widgets/todo_form_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../models/medical_notes.dart';
 import '../../providers/medical_notes_provider.dart';
@@ -62,14 +64,17 @@ class _AddTodoPageState extends State<AddTodoPage> {
     if (!isValid) {
       return;
     } else {
+      final accountID = context.read<AccountProvider>().id;
       final todo = Todo(
-          createdTime: DateTime.now(),
           title: title,
-          description: description,
-          id: DateTime.now().toIso8601String());
+          content: description,
+          noteNum: Uuid().v4(),
+          isDone: false,
+          account: accountID!);
 
       final provider = Provider.of<TodosProvider>(context, listen: false);
-      provider.addTodo(todo);
+      provider.addTodo(
+          todo, accountID); // Replace 'accountID' with actual account ID
       Navigator.of(context).pop();
     }
   }
