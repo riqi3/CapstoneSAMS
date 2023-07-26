@@ -1,8 +1,12 @@
 from django import forms
 from django.contrib import admin, messages
+from django.contrib.admin.models import LogEntry
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.contrib.auth.signals import user_logged_in, user_logged_out
+from django.db.models.signals import post_save, pre_delete
+from django.dispatch import receiver
 from django.urls import path
 from io import StringIO as io
 import csv
@@ -16,6 +20,53 @@ from api.modules.cpoe.models import Medicine, Prescription
 from api.modules.cpoe.form import CsvImportMedicineForm
 
 # from api.models import Account, Patient, Data_Log, Prescription, Medicine, Symptom, Health_Record, Comment, Prescribed_Medicine, Patient_Symptom
+@receiver(user_logged_in)
+def log_admin_login(sender, request, user, **kwargs):
+    data_log = Data_Log(
+        event=f"Admin logged in: {user.username}",
+        type="Admin Login",
+        account=user,
+    )
+    data_log.save()
+
+
+@receiver(user_logged_out)
+def log_admin_logout(sender, request, user, **kwargs):
+    data_log = Data_Log(
+        event=f"Admin logged out: {user.username}",
+        type="Admin Logout",
+        account=user,
+    )
+    data_log.save()
+
+@receiver(post_save, sender=LogEntry)
+def create_data_log_instance(sender, instance, created, **kwargs):
+    if created:
+        # Get the admin user associated with this LogEntry
+        admin_account = instance.user
+
+        if admin_account:
+            # Set the account attribute of the Data_Log instance
+            data_log = Data_Log(
+                event=f"Admin added/changed a model: {instance}",
+                type="Added/Changed Model",
+                account=admin_account,
+            )
+        data_log.save()
+
+@receiver(pre_delete)
+def create_data_log_for_deletion(sender, instance, using, **kwargs):
+    # Get the admin account associated with this deletion event (LogEntry model)
+    admin_account = instance.user
+
+    if admin_account:
+        # Set the account attribute of the Data_Log instance
+        data_log = Data_Log(
+            event=f"Admin deleted a model: {instance}",
+            type="Deleted Model",
+            account=admin_account,
+        )
+        data_log.save()
 
 
 COMMON_PASSWORDS = ["password", "12345678", "qwerty", "abc123"]
@@ -243,8 +294,8 @@ class DataLogsAdminForm(forms.ModelForm):
 
 class DataLogsAdmin(admin.ModelAdmin):
     form = DataLogsAdminForm
-    list_display = ("logNum", "event", "date", "account")
-    list_filter = ("event", "date", "account")
+    list_display = ("logNum", "event", "date", "type", "account")
+    list_filter = ("event", "date", "account", "type")
     search_fields = ("event", "date", "account")
 
 
@@ -333,7 +384,6 @@ class SymptomsAdmin(admin.ModelAdmin):
     list_display = ("sympNum", "symptom")
     search_fields = ("sympNum", "symptom")
 
-
 # Now register the new UserAdmin...
 admin.site.register(Account, UserAdmin)
 admin.site.register(Patient, PatientAdmin)
@@ -346,3 +396,7 @@ admin.site.register(Symptom, SymptomsAdmin)
 # ... and, since we're not using Django's built-in permissions,
 # unregister the Group model from admin.
 admin.site.unregister(Group)
+post_save.connect(create_data_log_instance, sender=LogEntry)
+user_logged_in.connect(log_admin_login)
+user_logged_out.connect(log_admin_logout)
+pre_delete.connect(create_data_log_for_deletion)

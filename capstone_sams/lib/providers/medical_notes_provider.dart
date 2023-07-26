@@ -35,7 +35,7 @@ class TodosProvider extends ChangeNotifier {
       _todos = list;
       notifyListeners();
     } else {
-      throw Exception('Failed to load todos');
+      throw Exception('Failed to load todos  ${jsonDecode(response.body)}');
     }
   }
 
@@ -109,30 +109,39 @@ class TodosProvider extends ChangeNotifier {
     final headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     };
+    final body = jsonEncode({
+      'account': todo.account,
+      'isDone': !todo.isDone,
+    });
     final response = await http.put(
       Uri.parse(_getUrl('user/notes/done/${todo.noteNum}')),
       headers: headers,
-      body: jsonEncode(<String, dynamic>{
-        'isDone': !todo.isDone,
-      }),
+      body: body,
     );
 
     if (response.statusCode == 204) {
       todo.isDone = !todo.isDone;
-      fetchTodos(accountID);
+      fetchTodos(todo.account);
     } else {
-      throw Exception('Failed to update todo status');
+      throw Exception(
+          'Failed to update todo status  ${jsonDecode(response.body)}');
     }
   }
 
   Future removeTodo(Todo todo, String accountID) async {
+    final headers = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
+    final body = jsonEncode({'account': todo.account});
     final response = await http.delete(
       Uri.parse(_getUrl('user/notes/delete/${todo.noteNum}')),
+      headers: headers,
+      body: body,
     );
     if (response.statusCode == 204) {
-      fetchTodos(accountID);
+      fetchTodos(todo.account);
     } else {
-      throw Exception('Failed to delete todo');
+      throw Exception('Failed to delete todo ${jsonDecode(response.body)}');
     }
   }
 }

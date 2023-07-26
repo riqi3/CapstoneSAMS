@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:capstone_sams/providers/AccountProvider.dart';
-import 'package:capstone_sams/screens/medical_notes/widgets/todo_form_widget.dart';
+import 'package:capstone_sams/screens/medical_notes/widgets/TodoFormWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
@@ -66,7 +66,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
     } else {
       final accountID = context.read<AccountProvider>().id;
       final todo = Todo(
-          title: title,
+          title: title, 
           content: description,
           noteNum: Uuid().v4(),
           isDone: false,
