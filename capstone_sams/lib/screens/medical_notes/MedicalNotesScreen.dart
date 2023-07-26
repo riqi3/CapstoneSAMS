@@ -2,7 +2,7 @@
 
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
 
-import 'package:capstone_sams/screens/medical_notes/AddTodoScreen.dart';
+import 'package:capstone_sams/screens/medical_notes/add_todo_page.dart';
 import 'package:capstone_sams/screens/medical_notes/widgets/CompletedListWidget.dart';
 import 'package:capstone_sams/screens/medical_notes/widgets/TodoListWidget.dart';
 

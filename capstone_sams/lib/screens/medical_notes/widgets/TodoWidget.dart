@@ -2,7 +2,7 @@
 
 import 'package:capstone_sams/models/medical_notes.dart';
 import 'package:capstone_sams/providers/medical_notes_provider.dart';
-import 'package:capstone_sams/screens/medical_notes/EditTodoScreen.dart';
+import 'package:capstone_sams/screens/medical_notes/edit_todo_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
