@@ -2,8 +2,13 @@
 import 'package:capstone_sams/models/medicine_model.dart';
 import 'package:capstone_sams/providers/medicine_provider.dart';
 import 'package:capstone_sams/theme/pallete.dart';
+import 'package:dio/dio.dart';
+import 'package:dropdown_search/dropdown_search.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../../constants/Env.dart';
 
 class AddMedicineDialog extends StatefulWidget {
   @override
@@ -16,8 +21,31 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
   DateTime? _selectedStartDate;
   DateTime? _selectedEndDate;
 
+  late Future<List<Medicine>> medicines;
+
   @override
   Widget build(BuildContext context) {
+    TextEditingController textController = TextEditingController();
+
+    _printLatestValue() {
+      print("text field: ${textController.text}");
+    }
+
+    @override
+    void initState() {
+      super.initState();
+      // Start listening to changes.
+      textController.addListener(_printLatestValue);
+    }
+
+    @override
+    void dispose() {
+      // Clean up the controller when the widget is removed from the
+      // widget tree.
+      textController.dispose();
+      super.dispose();
+    }
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
@@ -26,7 +54,7 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Container(
-            width: MediaQuery.of(context).size.width * 0.7,
+            width: MediaQuery.of(context).size.width,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -56,25 +84,67 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Medication',
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Pallete.paleblueColor,
-                            ),
-                          ),
-                          filled: true,
-                          fillColor: Pallete.palegrayColor,
+                      DropdownSearch<Medicine>(
+                        dropdownDecoratorProps: DropDownDecoratorProps(
+                          dropdownSearchDecoration:
+                              InputDecoration(labelText: "Medication"),
                         ),
-                        onSaved: (value) => _medicine.name = value,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter a medicine';
-                          }
-                          return null;
+                        clearButtonProps: ClearButtonProps(isVisible: true),
+                        popupProps: PopupProps.modalBottomSheet(
+                          showSearchBox: true,
+                          showSelectedItems: true,
+                        ),
+                        asyncItems: (String filter) async {
+                          var response = await Dio().get(
+                            '${Env.prefix}/cpoe/medicines/',
+                            queryParameters: {"filter": filter},
+                          );
+                          // var models = Medicine.fromJson(response.data);
+                          var models = List<Medicine>.from(response.data
+                              .map((json) => Medicine.fromJson(json)));
+                          return models;
+                        },
+                        itemAsString: (Medicine medicine) =>
+                            medicine.name.toString(),
+                        onChanged: (Medicine? data) {
+                          _medicine.name = data?.name.toString();
+                          print('MEDICATION: ${data?.name.toString()}');
+                        },
+                        onSaved: (value) {
+                          _medicine.name;
                         },
                       ),
+                      // DropdownSearch<int>(
+                      //   items: List.generate(3, (i) => i),
+                      //   dropdownDecoratorProps: DropDownDecoratorProps(
+                      //     dropdownSearchDecoration:
+                      //         InputDecoration(labelText: "Medication"),
+                      //   ),
+                      //   clearButtonProps: ClearButtonProps(isVisible: true),
+                      //   popupProps: PopupProps.modalBottomSheet(
+                      //     showSearchBox: true,
+                      //     showSelectedItems: true,
+                      //   ),
+                      //   asyncItems: (String filter) async {
+                      //     var response = await Dio().get(
+                      //       '${Env.prefix}/cpoe/medicines/',
+                      //       queryParameters: {"filter": filter},
+                      //     );
+                      //     // var models = Medicine.fromJson(response.data);
+                      //     var models = List<Medicine>.from(response.data
+                      //         .map((json) => Medicine.fromJson(json)));
+                      //     return models;
+                      //   },
+                      //   itemAsString: (Medicine medicine) =>
+                      //       medicine.name.toString(),
+                      //   onChanged: (Medicine? data) {
+                      //     _medicine.name = data?.name.toString();
+                      //     print('MEDICATION: ${data?.name.toString()}');
+                      //   },
+                      //   onSaved: (value) {
+                      //     _medicine.name;
+                      //   },
+                      // ),
                       SizedBox(height: 10),
                       Flexible(
                         child: TextFormField(
@@ -88,6 +158,7 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                             filled: true,
                             fillColor: Pallete.palegrayColor,
                           ),
+                          minLines: 4,
                           maxLines: null,
                           keyboardType: TextInputType.multiline,
                           onSaved: (value) => _medicine.instructions = value,

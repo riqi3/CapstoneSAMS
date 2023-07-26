@@ -1,18 +1,20 @@
 import 'package:capstone_sams/models/symptoms_models.dart';
 import 'package:capstone_sams/providers/symptoms_fields_provider.dart';
-import 'package:capstone_sams/screens/order-entry/cpoe_form_page.dart';
+ 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:capstone_sams/theme/pallete.dart';
 
-class CPOEScreen extends StatefulWidget {
+import 'CpoeFormScreen.dart';
+
+class CpoeAnalyzeScreen extends StatefulWidget {
   @override
-  _CPOEScreenState createState() => _CPOEScreenState();
+  _CpoeAnalyzeScreenState createState() => _CpoeAnalyzeScreenState();
 }
 
-class _CPOEScreenState extends State<CPOEScreen> {
+class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
   void _analyzeSymptoms() async {
     var symptomFieldsProvider =
         Provider.of<SymptomFieldsProvider>(context, listen: false);
@@ -38,7 +40,7 @@ class _CPOEScreenState extends State<CPOEScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => Cpoeform(
+            builder: (context) => CpoeFormScreen(
               finalPrediction: finalPrediction,
               finalConfidence: finalConfidence,
             ),

@@ -43,6 +43,7 @@ class SearchPatientDelegate extends SearchDelegate {
         }
         List<Patient>? patient = snapshot.data;
         return ListView.builder(
+          physics: BouncingScrollPhysics(),
           itemCount: patient?.length,
           itemBuilder: (context, index) {
             return Padding(
