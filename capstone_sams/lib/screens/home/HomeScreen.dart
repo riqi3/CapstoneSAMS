@@ -1,5 +1,8 @@
 import 'package:capstone_sams/constants/Dimensions.dart';
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
+import 'package:capstone_sams/models/medical_notes.dart';
+import 'package:capstone_sams/providers/AccountProvider.dart';
+import 'package:capstone_sams/providers/medical_notes_provider.dart';
 import 'package:capstone_sams/providers/medicine_provider.dart';
 
 import 'package:capstone_sams/screens/ehr-list/EhrListScreen.dart';
@@ -8,6 +11,7 @@ import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../constants/Env.dart';
 import '../../models/medicine_model.dart';
@@ -16,15 +20,33 @@ import '../medical_notes/MedicalNotesScreen.dart';
 import 'widgets/NotesSection.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  List<Todo> _userTodos = [];
   String ehrTitle = 'Health Records';
   String medNotesTitle = 'Your Notes';
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserTodos();
+  }
+
+  Future<void> _fetchUserTodos() async {
+    final provider = Provider.of<TodosProvider>(context, listen: false);
+    final accountID = context.read<AccountProvider>().id;
+    await provider.fetchTodos(accountID!);
+
+    setState(() {
+      _userTodos = provider.todos;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -50,49 +72,14 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-}
 
-Widget _mobileView(context, medNotesTitle, ehrTitle) {
-  return Column(
-    children: [
-      
-      Center(
-        child: EHRSection(
-          title: ehrTitle,
-          press: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => EhrListScreen(),
-              ),
-            );
-            print('to ehr list');
-          },
-        ),
-      ),
-      Center(
-        child: NotesSection(
-          title: medNotesTitle,
-          press: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MedicalNotes(),
-              ),
-            );
-          },
-        ),
-      ),
-    ],
-  );
-}
+  Widget _mobileView(context, medNotesTitle, ehrTitle) {
+    final todosPreview =
+        _userTodos.length > 3 ? _userTodos.sublist(0, 3) : _userTodos;
 
-Widget _tabletView(context, ehrTitle, medNotesTitle) {
-  return Center(
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: <Widget>[
-        Expanded(
+    return Column(
+      children: [
+        Center(
           child: EHRSection(
             title: ehrTitle,
             press: () {
@@ -102,11 +89,10 @@ Widget _tabletView(context, ehrTitle, medNotesTitle) {
                   builder: (context) => EhrListScreen(),
                 ),
               );
-              print('object');
             },
           ),
         ),
-        Expanded(
+        Center(
           child: NotesSection(
             title: medNotesTitle,
             press: () {
@@ -117,9 +103,51 @@ Widget _tabletView(context, ehrTitle, medNotesTitle) {
                 ),
               );
             },
+            todosPreview: todosPreview,
           ),
         ),
       ],
-    ),
-  );
+    );
+  }
+
+  Widget _tabletView(context, ehrTitle, medNotesTitle) {
+    final todosPreview =
+        _userTodos.length > 3 ? _userTodos.sublist(0, 3) : _userTodos;
+
+    return Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          Expanded(
+            child: EHRSection(
+              title: ehrTitle,
+              press: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EhrListScreen(),
+                  ),
+                );
+                print('object');
+              },
+            ),
+          ),
+          Expanded(
+            child: NotesSection(
+              title: medNotesTitle,
+              press: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MedicalNotes(),
+                  ),
+                );
+              },
+              todosPreview: todosPreview,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
