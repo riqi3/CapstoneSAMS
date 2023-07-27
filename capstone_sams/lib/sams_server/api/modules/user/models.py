@@ -71,5 +71,5 @@ class Data_Log(models.Model):
     logNum = models.AutoField(primary_key = True) #Auto incrementing field
     event = models.CharField(max_length = 500)
     date = models.DateTimeField(default=timezone.now)
-    type = models.CharField()
+    type = models.CharField(max_length = 1000)
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
