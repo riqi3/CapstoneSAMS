@@ -6,11 +6,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:capstone_sams/models/medical_notes.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 
-import 'package:capstone_sams/theme/pallete.dart';
-import 'package:capstone_sams/theme/sizing.dart';
-import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:capstone_sams/models/medical_notes.dart';
 import 'package:provider/provider.dart';
 
 class NotesSection extends StatelessWidget {
