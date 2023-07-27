@@ -74,26 +74,26 @@ class PersonalNotesView(viewsets.ModelViewSet):
     @api_view(['GET'])
     def fetch_personal_notes(request, accountID):
         try:
-        #     personal_notes = Personal_Note.objects.filter(account__pk=accountID)
-        #     account = Account.objects.filter(pk=accountID)
-        #     data_log = Data_Log.objects.create(
-        #         event = f"User logged in: {account.username}",
-        #         type = "User Login",
-        #         account = account
-        #     )
+            personal_notes = Personal_Note.objects.filter(account__pk=accountID)
+            # account = Account.objects.filter(pk=accountID)
+            # data_log = Data_Log.objects.create(
+            #     event = f"User logged in: {account.username}",
+            #     type = "User Login",
+            #     account = account
+            # )
         
         # Retrieve the Account instance using get_object_or_404
-            account = get_object_or_404(Account, pk=accountID)
+        #     account = get_object_or_404(Account, pk=accountID)
 
-        # Fetch personal notes for the given accountID
-            personal_notes = Personal_Note.objects.filter(account__pk=accountID)
+        # # Fetch personal notes for the given accountID
+        #     personal_notes = Personal_Note.objects.filter(account__pk=accountID)
 
-        # Create Data_Log instance after retrieving the username from the Account instance
-            data_log = Data_Log.objects.create(
-                event=f"User {account.username} fetches notes",
-                type="User Fetches Personal Note",
-                account=account
-            )
+        # # Create Data_Log instance after retrieving the username from the Account instance
+        #     data_log = Data_Log.objects.create(
+        #         event=f"User {account.username} fetches notes",
+        #         type="User Fetches Personal Note",
+        #         account=account
+        #     )
             serializer = PersonalNoteSerializer(personal_notes, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
