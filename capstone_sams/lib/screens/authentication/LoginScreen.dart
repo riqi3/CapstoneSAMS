@@ -200,7 +200,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           elevation: 6,
-                          minimumSize: Size(100, 50),
+                          minimumSize: Size(100, 30),
                         ),
                       ),
                     ],
