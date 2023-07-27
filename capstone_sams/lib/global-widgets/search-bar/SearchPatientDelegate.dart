@@ -1,8 +1,9 @@
 import 'package:capstone_sams/theme/pallete.dart';
 import 'package:flutter/material.dart';
 
-import '../../models/patient.dart';
-import '../../providers/patient_provider.dart';
+import '../../models/PatientModel.dart';
+ 
+import '../../providers/PatientProvider.dart';
 import '../../theme/sizing.dart';
 
 class SearchPatientDelegate extends SearchDelegate {

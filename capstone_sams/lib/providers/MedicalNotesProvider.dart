@@ -3,7 +3,7 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-import '../models/medical_notes.dart';
+import '../models/MedicalNotesModel.dart';
 import '../constants/Env.dart';
 
 class TodosProvider extends ChangeNotifier {

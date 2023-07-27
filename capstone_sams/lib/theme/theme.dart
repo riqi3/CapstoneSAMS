@@ -1,2 +1,2 @@
-export './app_theme.dart';
+export 'AppTheme.dart';
 export './pallete.dart';

@@ -1,4 +1,4 @@
-import 'package:capstone_sams/providers/medical_notes_provider.dart';
+import 'package:capstone_sams/providers/MedicalNotesProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

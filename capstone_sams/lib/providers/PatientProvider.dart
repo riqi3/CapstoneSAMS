@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:capstone_sams/constants/Env.dart';
-import 'package:capstone_sams/models/patient.dart';
+ 
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+
+import '../models/PatientModel.dart';
 
 class PatientProvider extends ChangeNotifier {
   var data = [];

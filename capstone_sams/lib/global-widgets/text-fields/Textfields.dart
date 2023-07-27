@@ -1,4 +1,4 @@
-import 'package:capstone_sams/theme/theme.dart';
+import 'package:capstone_sams/theme/Theme.dart';
 import 'package:flutter/material.dart';
 
 class ShortTextfield extends StatelessWidget {
@@ -26,6 +26,7 @@ class ShortTextfield extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class TextAreaField extends StatelessWidget {
   TextAreaField({
     super.key,
@@ -35,7 +36,7 @@ class TextAreaField extends StatelessWidget {
   });
 
   final String validator, hintText;
-  late final String? onSaved;
+  String? onSaved;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +44,7 @@ class TextAreaField extends StatelessWidget {
       keyboardType: TextInputType.multiline,
       minLines: 5,
       maxLines: null,
-      onSaved: (value) => onSaved = value,
+      onChanged: (value) => onSaved = value,
       validator: (value) => value == '' ? validator : null,
       decoration: InputDecoration(
         hintText: hintText,
