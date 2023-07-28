@@ -1,10 +1,12 @@
 
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 import json
 from rest_framework import status
 
+from api.modules.user.models import Account, Data_Log
 from api.modules.patient.models import Patient, Symptom
 from api.modules.patient.serializers import PatientSerializer, SymptomSerializer
 
@@ -25,6 +27,14 @@ class PatientView(viewsets.ModelViewSet):
                 registration=patient_data['registration'],
                 phone=patient_data['phone'],
                 email=patient_data['email']
+            )
+            data = json.loads(request.body)
+            accountID = data['account']
+            account = get_object_or_404(Account, pk=accountID)
+            data_log = Data_Log.objects.create(
+                event = f"{account.username} created patient",
+                type = "User Created Patient",
+                account = account
             )
             return Response({"message": "Patient created successfully."}, status=status.HTTP_201_CREATED)
         except Exception as e:
@@ -63,6 +73,13 @@ class PatientView(viewsets.ModelViewSet):
             patient.phone = patient_data['phone']
             patient.email = patient_data['email']
             patient.save()
+            accountID = patient_data['account']
+            account = get_object_or_404(Account, pk=accountID)
+            data_log = Data_Log.objects.create(
+                event = f"{account.username} updated patient id {patient_id}",
+                type = "User Update Patient Data",
+                account = account
+            )
             return Response({"message": "Patient updated successfully."}, status=status.HTTP_200_OK)
         except Patient.DoesNotExist:
             return Response({"message": "Patient does not exist."}, status=status.HTTP_404_NOT_FOUND)
