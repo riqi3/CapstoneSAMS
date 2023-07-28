@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:capstone_sams/constants/Env.dart';
- 
+
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
@@ -25,6 +25,17 @@ class PatientProvider extends ChangeNotifier {
       return patients;
     } else {
       throw Exception('Failed to fetch patients');
+    }
+  }
+
+  Future<Patient> fetchPatient() async {
+    final response =
+        await http.get(Uri.parse('${Env.prefix}/patient/patients/${int}'));
+
+    if (response.statusCode == 200) {
+      return Patient.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to load album');
     }
   }
 
@@ -65,4 +76,6 @@ class PatientProvider extends ChangeNotifier {
     }
     return _patients;
   }
+
+  
 }

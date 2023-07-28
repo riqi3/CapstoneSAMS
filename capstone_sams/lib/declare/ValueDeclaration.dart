@@ -100,12 +100,12 @@ class BottomPatientTabs extends StatelessWidget {
               width: MediaQuery.of(context).size.width / 2 - 10,
               child: Tab(
                 child: Align(
-                    alignment: Alignment.center,
-                    child: FaIcon(
-                      FontAwesomeIcons.prescription,
-                    )
-                    // Text('Order Entry', style: TextStyle(fontSize: 12)),
-                    ),
+                  alignment: Alignment.center,
+                  child: FaIcon(
+                    FontAwesomeIcons.prescription,
+                  ),
+                  // Text('Order Entry', style: TextStyle(fontSize: 12)),
+                ),
               ),
             ),
           ],
