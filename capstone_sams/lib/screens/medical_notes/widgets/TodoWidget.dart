@@ -1,8 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:capstone_sams/models/medical_notes.dart';
-import 'package:capstone_sams/providers/medical_notes_provider.dart';
-import 'package:capstone_sams/screens/medical_notes/edit_todo_page.dart';
+import 'package:capstone_sams/models/MedicalNotesModel.dart';
+import 'package:capstone_sams/providers/MedicalNotesProvider.dart';
+import 'package:capstone_sams/screens/medical_notes/EditTodoScreen.dart';
 import 'package:capstone_sams/theme/pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';

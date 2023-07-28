@@ -1,9 +1,9 @@
-import 'package:capstone_sams/providers/medical_notes_provider.dart';
+import 'package:capstone_sams/providers/MedicalNotesProvider.dart';
 import 'package:capstone_sams/theme/pallete.dart';
 import 'package:capstone_sams/theme/sizing.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:capstone_sams/models/medical_notes.dart';
+import 'package:capstone_sams/models/MedicalNotesModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 
 import 'package:provider/provider.dart';

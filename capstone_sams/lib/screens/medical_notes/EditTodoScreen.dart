@@ -3,8 +3,8 @@ import 'package:capstone_sams/screens/medical_notes/widgets/TodoFormWidget.dart'
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/medical_notes.dart';
-import '../../providers/medical_notes_provider.dart';
+import '../../models/MedicalNotesModel.dart';
+import '../../providers/MedicalNotesProvider.dart';
 
 class EditTodoPage extends StatefulWidget {
   final Todo todo;

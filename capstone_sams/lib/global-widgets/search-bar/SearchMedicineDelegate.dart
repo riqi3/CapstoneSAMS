@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:capstone_sams/providers/medicine_provider.dart';
+import 'package:capstone_sams/providers/MedicineProvider.dart';
 
 import 'package:flutter/material.dart';
 
-import '../../models/medicine_model.dart';
+import '../../models/MedicineModel.dart';
 
 import '../../theme/sizing.dart';
 

@@ -1,5 +1,5 @@
-import 'package:capstone_sams/models/symptoms_models.dart';
-import 'package:capstone_sams/providers/symptoms_fields_provider.dart';
+import 'package:capstone_sams/models/SymptomsModel.dart';
+import 'package:capstone_sams/providers/SymptomsFieldsProvider.dart';
  
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

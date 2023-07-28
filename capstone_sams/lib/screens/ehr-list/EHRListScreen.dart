@@ -1,15 +1,16 @@
 import 'package:capstone_sams/constants/Dimensions.dart';
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/global-widgets/TitleAppBar.dart';
-import 'package:capstone_sams/models/patient.dart';
-import 'package:capstone_sams/providers/patient_provider.dart';
-import 'package:capstone_sams/screens/ehr-list/widgets/patient_card.dart';
+import 'package:capstone_sams/models/PatientModel.dart';
+
+import 'package:capstone_sams/screens/ehr-list/widgets/PatientCard.dart';
 
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 import 'package:capstone_sams/theme/pallete.dart';
 
+import '../../providers/PatientProvider.dart';
 import '../../theme/sizing.dart';
 
 class EhrListScreen extends StatefulWidget {

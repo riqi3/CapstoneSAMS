@@ -2,8 +2,8 @@
 
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
-import 'package:capstone_sams/providers/medical_notes_provider.dart';
-import 'package:capstone_sams/screens/medical_notes/add_todo_page.dart';
+import 'package:capstone_sams/providers/MedicalNotesProvider.dart';
+import 'package:capstone_sams/screens/medical_notes/AddTodoScreen.dart';
 
 import 'package:capstone_sams/screens/medical_notes/widgets/CompletedListWidget.dart';
 import 'package:capstone_sams/screens/medical_notes/widgets/TodoListWidget.dart';

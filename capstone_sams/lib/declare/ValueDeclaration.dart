@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../global-widgets/TitleAppBar.dart';
-import '../models/patient.dart';
+
 import '../screens/home/widgets/HomeAppBar.dart';
 import '../theme/pallete.dart';
 
@@ -100,12 +100,12 @@ class BottomPatientTabs extends StatelessWidget {
               width: MediaQuery.of(context).size.width / 2 - 10,
               child: Tab(
                 child: Align(
-                    alignment: Alignment.center,
-                    child: FaIcon(
-                      FontAwesomeIcons.prescription,
-                    )
-                    // Text('Order Entry', style: TextStyle(fontSize: 12)),
-                    ),
+                  alignment: Alignment.center,
+                  child: FaIcon(
+                    FontAwesomeIcons.prescription,
+                  ),
+                  // Text('Order Entry', style: TextStyle(fontSize: 12)),
+                ),
               ),
             ),
           ],
