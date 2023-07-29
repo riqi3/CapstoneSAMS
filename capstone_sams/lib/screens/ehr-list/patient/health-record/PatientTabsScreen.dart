@@ -52,7 +52,9 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
           HealthRecordsScreen(
             patient: widget.patient,
           ),
-          const LaboratoriesScreen(),
+          LaboratoriesScreen(
+            patient: widget.patient,
+          ),
           // OrderEntryScreen(),
           CpoeAnalyzeScreen(),
         ],
