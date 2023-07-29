@@ -1,13 +1,101 @@
 import 'package:flutter/material.dart';
 
-class LaboratoriesScreen extends StatelessWidget {
-  const LaboratoriesScreen({super.key});
+import '../../../../models/PatientModel.dart';
+import '../health-record/widgets/PatientInfoCard.dart';
+
+class LaboratoriesScreen extends StatefulWidget {
+  final Patient patient;
+  const LaboratoriesScreen({super.key, required this.patient});
 
   @override
+  State<LaboratoriesScreen> createState() => _LaboratoriesScreenState();
+}
+
+class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.greenAccent,
-      child: Text('LABORATORIEAS'),
+    return Scaffold(
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        physics: BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            PatientInfoCard(
+              patient: widget.patient,
+            ),
+            Container(
+              width: 100,
+              height: 100,
+              color: Colors.green,
+            ),
+            Container(
+              width: 100,
+              height: 100,
+              color: Colors.red,
+            ),
+            Container(
+              width: 100,
+              height: 100,
+              color: Colors.amber,
+            ),
+            Container(
+              width: 100,
+              height: 100,
+              color: Colors.red,
+            ),
+            Container(
+              width: 100,
+              height: 100,
+              color: Colors.amber,
+            ),
+            Container(
+              width: 100,
+              height: 100,
+              color: Colors.red,
+            ),
+            Container(
+              width: 100,
+              height: 100,
+              color: Colors.blue,
+            ),
+            Container(
+              width: 100,
+              height: 100,
+              color: Colors.red,
+            ),
+            Container(
+              width: 100,
+              height: 100,
+              color: Colors.amber,
+            ),
+            Container(
+              width: 100,
+              height: 100,
+              color: Colors.red,
+            ),
+            Container(
+              width: 100,
+              height: 100,
+              color: Colors.amber,
+            ),
+            Container(
+              width: 100,
+              height: 100,
+              color: Colors.purple,
+            ),
+            Container(
+              width: 100,
+              height: 100,
+              color: Colors.amber,
+            ),
+            Container(
+              width: 100,
+              height: 100,
+              color: Colors.red,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

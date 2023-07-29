@@ -16,12 +16,34 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          PatientInfoCard(
-            patient: widget.patient,
-          ),
-        ],
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        physics: BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            PatientInfoCard(
+              patient: widget.patient,
+            ),
+            PatientInfoCard(
+              patient: widget.patient,
+            ),
+            PatientInfoCard(
+              patient: widget.patient,
+            ),
+            PatientInfoCard(
+              patient: widget.patient,
+            ),
+            PatientInfoCard(
+              patient: widget.patient,
+            ),
+            PatientInfoCard(
+              patient: widget.patient,
+            ),
+            PatientInfoCard(
+              patient: widget.patient,
+            ),
+          ],
+        ),
       ),
     );
   }
