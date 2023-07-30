@@ -3,6 +3,7 @@ import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/Pat
 import 'package:flutter/material.dart';
 
 import '../../../../models/PatientModel.dart';
+import '../../../../theme/Sizing.dart';
 
 class HealthRecordsScreen extends StatefulWidget {
   final Patient patient;
@@ -17,6 +18,12 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
+        padding: EdgeInsets.only(
+          left: Sizing.sectionSymmPadding,
+          right: Sizing.sectionSymmPadding,
+          top: Sizing.sectionSymmPadding,
+          bottom: Sizing.sectionSymmPadding * 4,
+        ),
         scrollDirection: Axis.vertical,
         physics: BouncingScrollPhysics(),
         child: Column(

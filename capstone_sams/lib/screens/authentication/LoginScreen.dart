@@ -101,7 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ShortTextfield(
                       controller: usernameController,
                       validator: 'Please input username',
-                      hintText: 'user name',
+                      hintText: 'user namerdDDDDDDDrr',
                     ),
                     PasswordTextfield(
                       controller: passwordController,

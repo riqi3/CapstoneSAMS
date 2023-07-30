@@ -47,7 +47,7 @@ class NotesSection extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: Pallete.textColor,
-                    fontSize: Sizing.textSizeSection,
+                    fontSize: Sizing.header4,
                     fontWeight: FontWeight.w600,
                   ),
                 ),

@@ -32,7 +32,7 @@ class EHRSection extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: Pallete.textColor,
-                    fontSize: Sizing.textSizeSection,
+                    fontSize: Sizing.header4,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -82,7 +82,7 @@ class EHRSection extends StatelessWidget {
                           title,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            fontSize: Sizing.textSizeSection,
+                            fontSize: Sizing.header4,
                             color: Pallete.whiteColor,
                             fontWeight: FontWeight.w600,
                           ),
