@@ -15,8 +15,10 @@ urlpatterns = [
     path('patient/', include('api.modules.patient.urls')),
     path('cpoe/', include('api.modules.cpoe.urls')),
     path('user/', include('api.modules.user.urls')),
-    # path('upload/', include('api.modules.drug.urls')),
+    path('laboratory/', include('api.modules.laboratory.urls')),
     path('predict/', PredictDisease.as_view(), name='predict')
+    # path('upload/', include('api.modules.drug.urls')),
+    
 
     # path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     # path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

@@ -4,6 +4,8 @@ import 'package:capstone_sams/theme/pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../../theme/Sizing.dart';
+
 class EditMedicineDialog extends StatefulWidget {
   final Medicine medicine;
   final int index;
@@ -32,7 +34,7 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
+        borderRadius: BorderRadius.circular(Sizing.borderRadius),
       ),
       child: SingleChildScrollView(
         child: Padding(

@@ -11,6 +11,7 @@ import 'package:capstone_sams/screens/medical_notes/widgets/TodoListWidget.dart'
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../theme/Pallete.dart';
 import '../../theme/sizing.dart';
 
 class MedicalNotes extends StatefulWidget {
@@ -59,7 +60,7 @@ class _MedicalNotesState extends State<MedicalNotes>
       ),
       floatingActionButton: FloatingActionButton(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        backgroundColor: Color(0xFFFF6969),
+        backgroundColor: Pallete.mainColor,
         onPressed: () => showDialog(
           context: context,
           builder: (_) => AddTodoPage(),
