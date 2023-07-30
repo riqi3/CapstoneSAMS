@@ -18,7 +18,7 @@ class Todo {
       noteNum: json['noteNum'],
       title: json['title'],
       content: json['content'],
-      isDone: json['iscomplete'],
+      isDone: json['isDone'],
       account: json['account'],
     );
   }
@@ -28,6 +28,7 @@ class Todo {
       'noteNum': noteNum,
       'title': title,
       'content': content,
+      'isDone': isDone,
       'account': account,
     };
   }
