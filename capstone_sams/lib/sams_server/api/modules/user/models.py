@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from django.contrib.auth.models import  AbstractBaseUser, BaseUserManager, PermissionsMixin 
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -62,11 +63,13 @@ class Personal_Note(models.Model):
     title = models.CharField(max_length = 20)
     content = models.CharField(max_length = 3000)
     account = models.ForeignKey(Account, on_delete = models.CASCADE)
+    user = models.CharField(null=True)
     isDone = models.BooleanField(default=False)
 
 class Data_Log(models.Model):
     #Log Attributes
     logNum = models.AutoField(primary_key = True) #Auto incrementing field
     event = models.CharField(max_length = 500)
-    date = models.DateTimeField()
+    date = models.DateTimeField(default=timezone.now)
+    type = models.CharField(max_length = 1000)
     account = models.ForeignKey(Account, on_delete=models.CASCADE)

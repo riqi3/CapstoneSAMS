@@ -3,7 +3,7 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-import '../models/medical_notes.dart';
+import '../models/MedicalNotesModel.dart';
 import '../constants/Env.dart';
 
 class TodosProvider extends ChangeNotifier {
@@ -29,34 +29,16 @@ class TodosProvider extends ChangeNotifier {
     );
 
     if (response.statusCode == 200) {
-      // List<Todo> list = parseTodos(response.body);
       final items = json.decode(response.body).cast<Map<String, dynamic>>();
       List<Todo> list = items.map<Todo>((json) => Todo.fromJson(json)).toList();
       _todos = list;
       notifyListeners();
     } else {
-      throw Exception('Failed to load todos');
+      throw Exception('Failed to load todos  ${jsonDecode(response.body)}');
     }
   }
 
-  // List<Todo> parseTodos(dynamic responseBody) {
-  //   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
-  //   return parsed.map<Todo>((json) => Todo.fromJson(json)).toList();
-  // }
-
   Future addTodo(Todo todo, String accountID) async {
-    // final response = await http.post(
-    //   Uri.parse(_getUrl('notes/create/')),
-    //   headers: <String, String>{
-    //     'Content-Type': 'application/json; charset=UTF-8',
-    //   },
-    //   body: jsonEncode(<String, dynamic>{
-    //     'title': todo.title,
-    //     'content': todo.content,
-    //     'iscomplete': todo.isDone.toString(),
-    //     'accountID': accountID,
-    //   }),
-    // );
     final headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     };
@@ -66,21 +48,12 @@ class TodosProvider extends ChangeNotifier {
       headers: headers,
       body: jsonEncode(todo.toJson()),
     );
-    // print(_getUrl('notes/create'));
-    // print('POST request to ${_getUrl('notes/create/')}');
-    // print('Headers: ${jsonEncode(<String, String>{
-    //       'Content-Type': 'application/json; charset=UTF-8',
-    //     })}');
-    // print('Body: ${jsonEncode(<String, dynamic>{
-    //       'title': todo.title,
-    //       'content': todo.content,
-    //       'iscomplete': todo.isDone,
-    //       'account': accountID,
-    //     })}');
+
     print('Response status code: ${response.statusCode}');
     print('Response body: ${response.body}');
     if (response.statusCode == 201) {
       fetchTodos(accountID);
+      notifyListeners();
     } else {
       throw Exception(
           'Failed to add todo. Server responded with status code ${response.statusCode} ${jsonDecode(response.body)}');
@@ -100,6 +73,7 @@ class TodosProvider extends ChangeNotifier {
 
     if (response.statusCode == 204) {
       fetchTodos(accountID);
+      notifyListeners();
     } else {
       throw Exception('Failed to update todo');
     }
@@ -109,30 +83,39 @@ class TodosProvider extends ChangeNotifier {
     final headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     };
+    final body = jsonEncode({
+      'account': todo.account,
+      'isDone': !todo.isDone,
+    });
     final response = await http.put(
       Uri.parse(_getUrl('user/notes/done/${todo.noteNum}')),
       headers: headers,
-      body: jsonEncode(<String, dynamic>{
-        'isDone': !todo.isDone,
-      }),
+      body: body,
     );
 
     if (response.statusCode == 204) {
       todo.isDone = !todo.isDone;
-      fetchTodos(accountID);
+      fetchTodos(todo.account);
     } else {
-      throw Exception('Failed to update todo status');
+      throw Exception(
+          'Failed to update todo status  ${jsonDecode(response.body)}');
     }
   }
 
   Future removeTodo(Todo todo, String accountID) async {
+    final headers = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
+    final body = jsonEncode({'account': todo.account});
     final response = await http.delete(
       Uri.parse(_getUrl('user/notes/delete/${todo.noteNum}')),
+      headers: headers,
+      body: body,
     );
     if (response.statusCode == 204) {
-      fetchTodos(accountID);
+      fetchTodos(todo.account);
     } else {
-      throw Exception('Failed to delete todo');
+      throw Exception('Failed to delete todo ${jsonDecode(response.body)}');
     }
   }
 }

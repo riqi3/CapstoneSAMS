@@ -1,11 +1,8 @@
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
-
-import 'package:capstone_sams/screens/order-entry/OrderEntryScreen.dart';
-
 import 'package:flutter/material.dart';
 
-import '../../models/patient.dart';
-import '../../theme/sizing.dart';
+import '../../../../models/PatientModel.dart';
+import '../../../../theme/Sizing.dart';
 import '../lab/LabScreen.dart';
 
 import '../order-entry/CpoeAnalyzeScreen.dart';
@@ -55,7 +52,9 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
           HealthRecordsScreen(
             patient: widget.patient,
           ),
-          const LaboratoriesScreen(),
+          LaboratoriesScreen(
+            patient: widget.patient,
+          ),
           // OrderEntryScreen(),
           CpoeAnalyzeScreen(),
         ],

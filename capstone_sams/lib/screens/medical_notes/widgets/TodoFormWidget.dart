@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 
-class TodoFormWidget extends StatelessWidget {
+class TodoFormWidget extends StatefulWidget {
   final String title;
   final String description;
   final ValueChanged<String> onChangedTitle;
@@ -19,13 +19,26 @@ class TodoFormWidget extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _TodoFormWidgetState createState() => _TodoFormWidgetState();
+}
+
+class _TodoFormWidgetState extends State<TodoFormWidget> {
+  late TextEditingController _descriptionController;
+
+  @override
+  void initState() {
+    super.initState();
+    _descriptionController = TextEditingController(text: widget.description);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextFormField(
-          initialValue: title,
-          onChanged: onChangedTitle,
+          initialValue: widget.title,
+          onChanged: widget.onChangedTitle,
           validator: (title) {
             if (title!.isEmpty) {
               return 'The title cannot be empty';
@@ -41,8 +54,9 @@ class TodoFormWidget extends StatelessWidget {
         ),
         SizedBox(height: 16),
         TextFormField(
+          controller: _descriptionController,
           maxLines: 3,
-          onChanged: onChangedDescription,
+          onChanged: widget.onChangedDescription,
           decoration: InputDecoration(
             hintText: 'Description',
             border: InputBorder.none,

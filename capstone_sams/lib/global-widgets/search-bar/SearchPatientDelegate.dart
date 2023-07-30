@@ -1,8 +1,9 @@
 import 'package:capstone_sams/theme/pallete.dart';
 import 'package:flutter/material.dart';
 
-import '../../models/patient.dart';
-import '../../providers/patient_provider.dart';
+import '../../models/PatientModel.dart';
+ 
+import '../../providers/PatientProvider.dart';
 import '../../theme/sizing.dart';
 
 class SearchPatientDelegate extends SearchDelegate {
@@ -75,7 +76,7 @@ class SearchPatientDelegate extends SearchDelegate {
                             child: Text(
                               '${patient?[index].patientId}',
                               style: TextStyle(
-                                  fontSize: Sizing.textSizeSection,
+                                  fontSize: Sizing.header4,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white),
                               overflow: TextOverflow.clip,
@@ -91,7 +92,7 @@ class SearchPatientDelegate extends SearchDelegate {
                                 Text(
                                   '${patient?[index].firstName}',
                                   style: TextStyle(
-                                    fontSize: Sizing.textSize,
+                                    fontSize: Sizing.header5,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -99,7 +100,7 @@ class SearchPatientDelegate extends SearchDelegate {
                                 Text(
                                   '${patient?[index].middleName}',
                                   style: TextStyle(
-                                    fontSize: Sizing.textSize,
+                                    fontSize: Sizing.header5,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -107,7 +108,7 @@ class SearchPatientDelegate extends SearchDelegate {
                                 Text(
                                   '${patient?[index].lastName}',
                                   style: TextStyle(
-                                    fontSize: Sizing.textSize,
+                                    fontSize: Sizing.header5,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -116,7 +117,7 @@ class SearchPatientDelegate extends SearchDelegate {
                             Text(
                               '${patient?[index].birthDate}',
                               style: TextStyle(
-                                  fontSize: Sizing.textSize,
+                                  fontSize: Sizing.header5,
                                   fontWeight: FontWeight.normal),
                             ),
                           ],

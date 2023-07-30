@@ -1,11 +1,15 @@
-import 'package:capstone_sams/screens/order-entry/widgets.dart/AddMedicineDialog.dart';
-import 'package:capstone_sams/screens/order-entry/widgets.dart/MedicineCard.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/AddMedicineDialog.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/MedicineCard.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:capstone_sams/providers/medicine_provider.dart';
-import 'package:capstone_sams/providers/symptoms_fields_provider.dart';
+
+import 'package:capstone_sams/providers/SymptomsFieldsProvider.dart';
 
 import 'package:capstone_sams/theme/pallete.dart';
+
+import '../../../../global-widgets/text-fields/Textfields.dart';
+import '../../../../models/MedicineModel.dart';
+import '../../../../providers/MedicineProvider.dart';
 
 class CpoeFormScreen extends StatelessWidget {
   final String finalPrediction;
@@ -19,7 +23,7 @@ class CpoeFormScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final medicineProvider = Provider.of<MedicineProvider>(context);
-
+    final _medicine = Medicine();
     return Scaffold(
       appBar: AppBar(
         title: Text('Analyze Page'),
@@ -120,6 +124,13 @@ class CpoeFormScreen extends StatelessWidget {
                             fontWeight: FontWeight.bold),
                       ),
                       SizedBox(height: 2),
+                      // Flexible(
+                      //   child: TextAreaField(
+                      //     validator: 'pls input',
+                      //     hintText: 'Instructions',
+                      //     onSaved: _medicine.instructions,
+                      //   ),
+                      // ),
                       TextFormField(
                         decoration: InputDecoration(
                           border: OutlineInputBorder(

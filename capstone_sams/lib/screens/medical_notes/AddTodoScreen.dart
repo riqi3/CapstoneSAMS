@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../models/medical_notes.dart';
-import '../../providers/medical_notes_provider.dart';
+import '../../models/MedicalNotesModel.dart';
+import '../../providers/MedicalNotesProvider.dart';
 
 class AddTodoPage extends StatefulWidget {
   const AddTodoPage({Key? key}) : super(key: key);
@@ -66,7 +66,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
     } else {
       final accountID = context.read<AccountProvider>().id;
       final todo = Todo(
-          title: title,
+          title: title, 
           content: description,
           noteNum: Uuid().v4(),
           isDone: false,

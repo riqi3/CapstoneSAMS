@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:capstone_sams/providers/medicine_provider.dart';
+import 'package:capstone_sams/providers/MedicineProvider.dart';
 
 import 'package:flutter/material.dart';
 
-import '../../models/medicine_model.dart';
+import '../../models/MedicineModel.dart';
 
 import '../../theme/sizing.dart';
 
@@ -79,7 +79,7 @@ class SearchMedicineDelegate extends SearchDelegate<String> {
                         Text(
                           '${medicine[index].drugCode}',
                           style: TextStyle(
-                            fontSize: Sizing.textSize,
+                            fontSize: Sizing.header5,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -87,7 +87,7 @@ class SearchMedicineDelegate extends SearchDelegate<String> {
                         Text(
                           '${medicine[index].name}',
                           style: TextStyle(
-                            fontSize: Sizing.textSize,
+                            fontSize: Sizing.header5,
                             fontWeight: FontWeight.normal,
                           ),
                         ),

@@ -1,17 +1,17 @@
 import 'package:capstone_sams/providers/AccountProvider.dart';
-import 'package:capstone_sams/providers/medicine_provider.dart';
-import 'package:capstone_sams/providers/patient_provider.dart';
-import 'package:capstone_sams/providers/symptoms_fields_provider.dart';
+import 'package:capstone_sams/providers/MedicineProvider.dart';
+import 'package:capstone_sams/providers/PatientProvider.dart';
+
+import 'package:capstone_sams/providers/SymptomsFieldsProvider.dart';
 import 'package:capstone_sams/screens/authentication/LoginScreen.dart';
 import 'package:capstone_sams/screens/home/HomeScreen.dart';
-import 'package:capstone_sams/screens/order-entry/CpoeAnalyzeScreen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'providers/medical_notes_provider.dart';
-import 'screens/patient-record/PatientTabsScreen.dart';
-import 'theme/app_theme.dart';
+import 'providers/MedicalNotesProvider.dart';
+
+import 'theme/AppTheme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -53,8 +53,7 @@ class SAMSApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Capstone S.A.M.S. Prototype',
       theme: AppTheme.theme,
-      home: const HomeScreen(),
-      // home: PatientTabsScreen(),
+      home: const LoginScreen(),
     );
   }
 }

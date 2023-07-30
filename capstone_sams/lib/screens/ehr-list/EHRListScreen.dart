@@ -1,15 +1,16 @@
 import 'package:capstone_sams/constants/Dimensions.dart';
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/global-widgets/TitleAppBar.dart';
-import 'package:capstone_sams/models/patient.dart';
-import 'package:capstone_sams/providers/patient_provider.dart';
-import 'package:capstone_sams/screens/ehr-list/widgets/patient_card.dart';
+import 'package:capstone_sams/models/PatientModel.dart';
+
+import 'package:capstone_sams/screens/ehr-list/widgets/PatientCard.dart';
 
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 import 'package:capstone_sams/theme/pallete.dart';
 
+import '../../providers/PatientProvider.dart';
 import '../../theme/sizing.dart';
 
 class EhrListScreen extends StatefulWidget {
@@ -46,21 +47,14 @@ class _EhrListScreenState extends State<EhrListScreen> {
             return Center(
               child: const CircularProgressIndicator(),
             );
-          return Padding(
-            padding: const EdgeInsets.only(
-              left: Sizing.sectionSymmPadding,
-              right: Sizing.sectionSymmPadding,
-              top: Sizing.sectionSymmPadding,
-            ),
-            child: LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-                if (constraints.maxWidth >= Dimensions.mobileWidth) {
-                  return _tabletView(snapshot);
-                } else {
-                  return _mobileView(snapshot);
-                }
-              },
-            ),
+          return LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              if (constraints.maxWidth >= Dimensions.mobileWidth) {
+                return _tabletView(snapshot);
+              } else {
+                return _mobileView(snapshot);
+              }
+            },
           );
         },
       ),
@@ -94,6 +88,12 @@ class _EhrListScreenState extends State<EhrListScreen> {
   GridView _mobileView(AsyncSnapshot<List<Patient>> snapshot) {
     return GridView.builder(
       shrinkWrap: true,
+      padding: EdgeInsets.only(
+        left: Sizing.sectionSymmPadding,
+        right: Sizing.sectionSymmPadding,
+        top: Sizing.sectionSymmPadding * 2,
+        bottom: Sizing.sectionSymmPadding * 4,
+      ),
       physics: const BouncingScrollPhysics(),
       itemCount: snapshot.data?.length,
       itemBuilder: (context, index) {
@@ -112,6 +112,12 @@ class _EhrListScreenState extends State<EhrListScreen> {
   GridView _tabletView(AsyncSnapshot<List<Patient>> snapshot) {
     return GridView.builder(
       shrinkWrap: true,
+      padding: EdgeInsets.only(
+        left: Sizing.sectionSymmPadding,
+        right: Sizing.sectionSymmPadding,
+        top: Sizing.sectionSymmPadding * 2,
+        bottom: Sizing.sectionSymmPadding * 4,
+      ),
       physics: const BouncingScrollPhysics(),
       itemCount: snapshot.data?.length,
       itemBuilder: (context, index) {
@@ -122,7 +128,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
         crossAxisCount: 2,
         mainAxisSpacing: 10,
         crossAxisSpacing: 10,
-        childAspectRatio: 16 / 8,
+        childAspectRatio: 16 / 10,
       ),
     );
   }

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:capstone_sams/models/medicine_model.dart';
-import 'package:dio/dio.dart';
+import 'package:capstone_sams/models/MedicineModel.dart';
+ 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../constants/Env.dart';

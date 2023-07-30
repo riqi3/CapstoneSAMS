@@ -3,8 +3,8 @@ import 'package:capstone_sams/screens/medical_notes/widgets/TodoFormWidget.dart'
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/medical_notes.dart';
-import '../../providers/medical_notes_provider.dart';
+import '../../models/MedicalNotesModel.dart';
+import '../../providers/MedicalNotesProvider.dart';
 
 class EditTodoPage extends StatefulWidget {
   final Todo todo;
@@ -59,11 +59,10 @@ class _EditTodoPageState extends State<EditTodoPage> {
           ),
           IconButton(
               onPressed: () {
-                final accountID = context.read<AccountProvider>().id;
+                final accountID = context.read<AccountProvider>().id!;
                 final provider =
                     Provider.of<TodosProvider>(context, listen: false);
-                provider.removeTodo(widget.todo,
-                    accountID!); // Replace 'accountID' with actual account ID
+                provider.removeTodo(widget.todo, accountID!);
                 Navigator.of(context).pop();
               },
               icon: const Icon(Icons.delete))
