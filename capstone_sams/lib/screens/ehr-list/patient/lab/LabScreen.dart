@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../models/PatientModel.dart';
+import '../../../../theme/Sizing.dart';
 import '../health-record/widgets/PatientInfoCard.dart';
 
 class LaboratoriesScreen extends StatefulWidget {
@@ -16,6 +17,12 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
+        padding: EdgeInsets.only(
+          left: Sizing.sectionSymmPadding,
+          right: Sizing.sectionSymmPadding,
+          top: Sizing.sectionSymmPadding * 2,
+          bottom: Sizing.sectionSymmPadding * 4,
+        ),
         scrollDirection: Axis.vertical,
         physics: BouncingScrollPhysics(),
         child: Column(

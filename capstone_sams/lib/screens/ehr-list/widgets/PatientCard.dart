@@ -34,42 +34,49 @@ class _PatientCardState extends State<PatientCard> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(Sizing.borderRadius),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ListTile(
-              title: Text(
-                'Hospital No. ${widget.patient.patientId}',
-                style: TextStyle(
-                  color: Pallete.mainColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12,
-                ),
-              ),
-              subtitle: Column(
+        child: Container(
+          padding: EdgeInsets.all(Sizing.padding - 5),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 8.0),
+                  Text(
+                    'Hospital No. ${widget.patient.patientId}',
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Pallete.mainColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: Sizing.header6,
+                    ),
+                  ),
+                  SizedBox(height: Sizing.spacing),
                   Text(
                     "${widget.patient.firstName}  ${widget.patient.middleName != null ? widget.patient.middleName![0] + '.' : ''} ${widget.patient.middleName == null ? '' + widget.patient.lastName : widget.patient.lastName}",
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 20.0,
+                      fontSize: Sizing.header4,
                       color: Pallete.textColor,
                     ),
                   ),
-                  SizedBox(height: 12.0),
+                  SizedBox(height: Sizing.spacing),
                   Row(
                     children: [
                       Text('Sex: ${widget.patient.gender}'),
-                      SizedBox(width: 16.0),
+                      SizedBox(width: Sizing.spacing),
                       Text('Age: ${widget.patient.age}'),
-                      SizedBox(width: 16.0),
-                      Text(
-                          'Birthdate: ${DateFormat.yMMMd('en_US').format(widget.patient.birthDate)}'),
+                      SizedBox(width: Sizing.spacing),
+                      Flexible(
+                        child: Text(
+                          'Birthdate: ${DateFormat.yMMMd('en_US').format(widget.patient.birthDate)}',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
                     ],
                   ),
-                  SizedBox(height: 12.0),
+                  SizedBox(height: Sizing.spacing),
                   Text(
                     'Date of Registration: ${DateFormat.yMMMd('en_US').format(widget.patient.registration)}',
                     style: TextStyle(
@@ -78,8 +85,8 @@ class _PatientCardState extends State<PatientCard> {
                   ),
                 ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

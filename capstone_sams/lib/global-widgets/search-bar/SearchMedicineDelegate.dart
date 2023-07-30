@@ -79,7 +79,7 @@ class SearchMedicineDelegate extends SearchDelegate<String> {
                         Text(
                           '${medicine[index].drugCode}',
                           style: TextStyle(
-                            fontSize: Sizing.textSize,
+                            fontSize: Sizing.header5,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -87,7 +87,7 @@ class SearchMedicineDelegate extends SearchDelegate<String> {
                         Text(
                           '${medicine[index].name}',
                           style: TextStyle(
-                            fontSize: Sizing.textSize,
+                            fontSize: Sizing.header5,
                             fontWeight: FontWeight.normal,
                           ),
                         ),

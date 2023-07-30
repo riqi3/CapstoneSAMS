@@ -76,7 +76,7 @@ class SearchPatientDelegate extends SearchDelegate {
                             child: Text(
                               '${patient?[index].patientId}',
                               style: TextStyle(
-                                  fontSize: Sizing.textSizeSection,
+                                  fontSize: Sizing.header4,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white),
                               overflow: TextOverflow.clip,
@@ -92,7 +92,7 @@ class SearchPatientDelegate extends SearchDelegate {
                                 Text(
                                   '${patient?[index].firstName}',
                                   style: TextStyle(
-                                    fontSize: Sizing.textSize,
+                                    fontSize: Sizing.header5,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -100,7 +100,7 @@ class SearchPatientDelegate extends SearchDelegate {
                                 Text(
                                   '${patient?[index].middleName}',
                                   style: TextStyle(
-                                    fontSize: Sizing.textSize,
+                                    fontSize: Sizing.header5,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -108,7 +108,7 @@ class SearchPatientDelegate extends SearchDelegate {
                                 Text(
                                   '${patient?[index].lastName}',
                                   style: TextStyle(
-                                    fontSize: Sizing.textSize,
+                                    fontSize: Sizing.header5,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -117,7 +117,7 @@ class SearchPatientDelegate extends SearchDelegate {
                             Text(
                               '${patient?[index].birthDate}',
                               style: TextStyle(
-                                  fontSize: Sizing.textSize,
+                                  fontSize: Sizing.header5,
                                   fontWeight: FontWeight.normal),
                             ),
                           ],
