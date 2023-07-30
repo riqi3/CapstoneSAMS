@@ -8,18 +8,20 @@ from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from django.urls import path
-from io import StringIO as io
-import csv
+# from io import StringIO as io
+# import csv
 from django.urls import reverse
 from django.http import HttpResponseRedirect
-from django.shortcuts import redirect, render
-from api.modules.user.models import Account, Data_Log
+from django.shortcuts import render
 from api.modules.patient.form import CsvImportPatientForm
+from api.modules.cpoe.form import CsvImportMedicineForm
+from api.modules.laboratory.form import PdfImportLabResultForm
+from api.modules.user.models import Account, Data_Log
 from api.modules.patient.models import Patient, Health_Record, Symptom
 from api.modules.cpoe.models import Medicine, Prescription
-from api.modules.cpoe.form import CsvImportMedicineForm
-
+from api.modules.laboratory.models import LabResult
 # from api.models import Account, Patient, Data_Log, Prescription, Medicine, Symptom, Health_Record, Comment, Prescribed_Medicine, Patient_Symptom
+
 @receiver(user_logged_in)
 def log_admin_login(sender, request, user, **kwargs):
     data_log = Data_Log(
@@ -285,12 +287,34 @@ class PatientAdmin(admin.ModelAdmin):
         form = CsvImportPatientForm()
         data = {"form": form}
         return render(request, "admin/csv_upload.html", data)
+    
+class LabResultAdminForm(forms.ModelForm):
+    class Meta:
+        model = LabResult
+        fields = '__all__'
 
+class LabResultAdmin(admin.ModelAdmin):
+    form = LabResultAdminForm
+    list_display = ("pdfId", "title", "comment")
+
+    def get_urls(self):
+        urls = super().get_urls()
+        new_urls = [path('upload-pdf/', self.upload_pdf),]
+        return new_urls + urls
+    
+    def upload_pdf(self, request):
+        if request.method == "POST":
+            pdf_file = request.FILES["pdf_upload"]
+            if not pdf_file.name.endswith('.pdf'):
+                messages.warning(request, 'The wrong file type was uploaded')
+                return HttpResponseRedirect(request.path_info)
+            form = PdfImportLabResultForm()
+            data = {"form": form}
+            
 class DataLogsAdminForm(forms.ModelForm):
     class Meta:
         model = Data_Log
         fields = "__all__"
-
 
 class DataLogsAdmin(admin.ModelAdmin):
     form = DataLogsAdminForm
@@ -392,6 +416,7 @@ admin.site.register(Medicine, MedicineAdmin)
 admin.site.register(Health_Record, HealthRecordAdmin)
 admin.site.register(Prescription, PrescriptionAdmin)
 admin.site.register(Symptom, SymptomsAdmin)
+admin.site.register(LabResult, LabResultAdmin)
  
 # ... and, since we're not using Django's built-in permissions,
 # unregister the Group model from admin.

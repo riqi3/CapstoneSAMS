@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../global-widgets/TitleAppBar.dart';
 
 import '../screens/home/widgets/HomeAppBar.dart';
+import '../theme/Sizing.dart';
 import '../theme/pallete.dart';
 
 class ValueDashboard extends StatelessWidget {
@@ -75,36 +76,56 @@ class BottomPatientTabs extends StatelessWidget {
             SizedBox(
               width: MediaQuery.of(context).size.width / 2 - 10,
               child: Tab(
-                child: Align(
-                    alignment: Alignment.center,
-                    child: FaIcon(
-                      FontAwesomeIcons.fileMedical,
-                    )
-                    // Text('Health Record', style: TextStyle(fontSize: 12)),
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: FaIcon(
+                        FontAwesomeIcons.clipboardUser,
+                      ),
                     ),
+                    Text(
+                      'Health Record',
+                      style: TextStyle(fontSize: Sizing.header6),
+                    ),
+                  ],
+                ),
               ),
             ),
             SizedBox(
               width: MediaQuery.of(context).size.width / 2 - 10,
               child: Tab(
-                child: Align(
-                    alignment: Alignment.center,
-                    child: FaIcon(
-                      FontAwesomeIcons.flaskVial,
-                    )
-                    // Text('Laboratory', style: TextStyle(fontSize: 12)),
+                child: Column(
+                  children: [
+                    Align(
+                        alignment: Alignment.center,
+                        child: FaIcon(
+                          FontAwesomeIcons.flaskVial,
+                        )),
+                    Text(
+                      'Laboratory',
+                      style: TextStyle(fontSize: Sizing.header6),
                     ),
+                  ],
+                ),
               ),
             ),
             SizedBox(
               width: MediaQuery.of(context).size.width / 2 - 10,
               child: Tab(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: FaIcon(
-                    FontAwesomeIcons.prescription,
-                  ),
-                  // Text('Order Entry', style: TextStyle(fontSize: 12)),
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: FaIcon(
+                        FontAwesomeIcons.prescription,
+                      ),
+                    ),
+                    Text(
+                      'Order Entry',
+                      style: TextStyle(fontSize: Sizing.header6),
+                    ),
+                  ],
                 ),
               ),
             ),

@@ -9,8 +9,9 @@ import 'package:provider/provider.dart';
 
 import '../../constants/Env.dart';
 import '../../global-widgets/text-fields/Textfields.dart';
+import '../../theme/Sizing.dart';
 import '../home/HomeScreen.dart';
-import '../../models/Account.dart';
+import '../../models/AccountModel.dart';
 import '../../providers/AccountProvider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -85,6 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double elementWidth = MediaQuery.of(context).size.width / 1.5;
     return Scaffold(
       backgroundColor: Pallete.mainColor,
       body: LayoutBuilder(builder: (context, cons) {
@@ -95,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: SingleChildScrollView(
             child: Center(
               child: Container(
-                width: MediaQuery.of(context).size.width / 1.5,
+                width: elementWidth,
                 child: Column(
                   children: [
                     Column(
@@ -202,8 +204,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
                             ),
-                            elevation: 6,
-                            minimumSize: Size(100, 30),
+                            elevation: Sizing.cardElevation,
+                            minimumSize: Size(elementWidth, elementWidth / 8),
                           ),
                         ),
                       ],
