@@ -94,118 +94,122 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           child: SingleChildScrollView(
             child: Center(
-              child: Column(
-                children: [
-                  Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 150.0, bottom: 20),
-                        child:
-                            Image.asset('assets/images/logo2.png', height: 180),
-                      ),
-                      Text(
-                        "SAMS",
-                        style: TextStyle(
-                          fontSize: 35,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+              child: Container(
+                width: MediaQuery.of(context).size.width / 1.5,
+                child: Column(
+                  children: [
+                    Column(
+                      children: [
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(top: 150.0, bottom: 20),
+                          child: Image.asset('assets/images/logo2.png',
+                              height: 180),
                         ),
-                      ),
-                      SizedBox(height: 30),
-                      ShortTextfield(
-                        controller: usernameController,
-                        validator: 'Please input username',
-                        hintText: 'Username',
-                      ),
-                      SizedBox(height: 10),
-                      PasswordTextfield(
-                        controller: passwordController,
-                        validator: 'Please input password',
-                        hintText: 'Password',
-                      ),
-                      SizedBox(height: 20),
-                      TextButton(
-                        onPressed: () async {
-                          final username = usernameController.text;
-                          final password = passwordController.text;
-                          final success = await context
-                              .read<AccountProvider>()
-                              .login(username, password);
-                          if (success) {
-                            usernameController.clear();
-                            passwordController.clear();
-                            // if (context.read<AccountProvider>().role ==
-                            //     'Physician') {
-                            //   Navigator.of(context).push(
-                            //     MaterialPageRoute(
-                            //       builder: (context) => const HomeScreen(),
-                            //     ),
-                            //   );
-                            // } else {
-                            //   Navigator.of(context).push(MaterialPageRoute(
-                            //       builder: (context) => const AdminScreen()));
-                            // }
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const HomeScreen(),
-                              ),
-                            );
-                            // switch (context.read<AccountProvider>().role) {
-                            //   case 'Physician':
-                            //     {
-                            //       Navigator.of(context).push(
-                            //         MaterialPageRoute(
-                            //           builder: (context) => const HomeScreen(),
-                            //         ),
-                            //       );
-                            //     }
-                            //     break;
-                            //   case 'MedTech':
-                            //     {
-                            //       Navigator.of(context).push(
-                            //         MaterialPageRoute(
-                            //           builder: (context) => const HomeScreen(),
-                            //         ),
-                            //       );
-                            //     }
-                            //     break;
-                            //   case 'Nurse':
-                            //     {
-                            //       Navigator.of(context).push(
-                            //         MaterialPageRoute(
-                            //           builder: (context) => const HomeScreen(),
-                            //         ),
-                            //       );
-                            //     }
-                            //     break;
-                            //   default:
-                            //     Navigator.of(context).push(
-                            //       MaterialPageRoute(
-                            //         builder: (context) => const AdminScreen(),
-                            //       ),
-                            //     );
-                            // }
-                          } else {
-                            showFailure(context);
-                          }
-                          print('login');
-                        },
-                        child: const Text(
-                          "Login",
-                          style: TextStyle(color: Pallete.mainColor),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Pallete.whiteColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+                        Text(
+                          "SAMS",
+                          style: TextStyle(
+                            fontSize: 35,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
-                          elevation: 6,
-                          minimumSize: Size(100, 30),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                        SizedBox(height: 30),
+                        ShortTextfield(
+                          controller: usernameController,
+                          validator: 'Please input username',
+                          hintText: 'Username',
+                        ),
+                        SizedBox(height: 10),
+                        PasswordTextfield(
+                          controller: passwordController,
+                          validator: 'Please input password',
+                          hintText: 'Password',
+                        ),
+                        SizedBox(height: 20),
+                        TextButton(
+                          onPressed: () async {
+                            final username = usernameController.text;
+                            final password = passwordController.text;
+                            final success = await context
+                                .read<AccountProvider>()
+                                .login(username, password);
+                            if (success) {
+                              usernameController.clear();
+                              passwordController.clear();
+                              // if (context.read<AccountProvider>().role ==
+                              //     'Physician') {
+                              //   Navigator.of(context).push(
+                              //     MaterialPageRoute(
+                              //       builder: (context) => const HomeScreen(),
+                              //     ),
+                              //   );
+                              // } else {
+                              //   Navigator.of(context).push(MaterialPageRoute(
+                              //       builder: (context) => const AdminScreen()));
+                              // }
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const HomeScreen(),
+                                ),
+                              );
+                              // switch (context.read<AccountProvider>().role) {
+                              //   case 'Physician':
+                              //     {
+                              //       Navigator.of(context).push(
+                              //         MaterialPageRoute(
+                              //           builder: (context) => const HomeScreen(),
+                              //         ),
+                              //       );
+                              //     }
+                              //     break;
+                              //   case 'MedTech':
+                              //     {
+                              //       Navigator.of(context).push(
+                              //         MaterialPageRoute(
+                              //           builder: (context) => const HomeScreen(),
+                              //         ),
+                              //       );
+                              //     }
+                              //     break;
+                              //   case 'Nurse':
+                              //     {
+                              //       Navigator.of(context).push(
+                              //         MaterialPageRoute(
+                              //           builder: (context) => const HomeScreen(),
+                              //         ),
+                              //       );
+                              //     }
+                              //     break;
+                              //   default:
+                              //     Navigator.of(context).push(
+                              //       MaterialPageRoute(
+                              //         builder: (context) => const AdminScreen(),
+                              //       ),
+                              //     );
+                              // }
+                            } else {
+                              showFailure(context);
+                            }
+                            print('login');
+                          },
+                          child: const Text(
+                            "Login",
+                            style: TextStyle(color: Pallete.mainColor),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Pallete.whiteColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            elevation: 6,
+                            minimumSize: Size(100, 30),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
