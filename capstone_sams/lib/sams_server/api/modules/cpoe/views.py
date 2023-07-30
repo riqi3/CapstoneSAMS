@@ -1,10 +1,11 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 import json
 from rest_framework import status
 
-from api.modules.user.models import Account
+from api.modules.user.models import Account, Data_Log
 from api.modules.user.serializers import AccountSerializer
 from api.modules.patient.serializers import Health_Record
 from api.modules.cpoe.models import Comment, Medicine, Prescribed_Medicine, Prescription
@@ -23,6 +24,11 @@ class CommentView(viewsets.ModelViewSet):
                 content = comment_data['content'],
                 account = account,
                 health_record = record
+            )
+            data_log = Data_Log.objects.create(
+                event = f"{account.username} created comment",
+                type = "User Created Comment",
+                account = account
             )
             return Response({"message": "Comment successfully created"}, status=status.HTTP_201_CREATED)
         except Exception as e:
@@ -60,6 +66,13 @@ class CommentView(viewsets.ModelViewSet):
             comment = Comment.objects.get(pk = comNum)
             comment.content = comments_data['content']
             comment.save()
+            accountID = comments_data['account']
+            account = get_object_or_404(Account, pk=accountID)
+            data_log = Data_Log.objects.create(
+                event = f"{account.username} updated comment code {comNum}",
+                type = "User Update Comment",
+                account = account
+            )
             return Response({"message": "Comment successfully update"}, status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
             return Response({"message": "Failed to update comment", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
@@ -69,6 +82,11 @@ class CommentView(viewsets.ModelViewSet):
         try:
             comment = Comment.objects.get(pk = comNum)
             comment.delete()
+            data_log = Data_Log.objects.create(
+                event = f"{comment.account.username} deleted personal note code {comNum}",
+                type = "User Deleted Personal Note",
+                account = comment.account 
+            )
             return Response({"message": "Comment successfully deleted"}, status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
              return Response({"message": "Failed to delete comment", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
