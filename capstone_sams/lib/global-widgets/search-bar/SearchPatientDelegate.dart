@@ -2,8 +2,9 @@ import 'package:capstone_sams/theme/pallete.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/PatientModel.dart';
- 
+
 import '../../providers/PatientProvider.dart';
+import '../../screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
 import '../../theme/sizing.dart';
 
 class SearchPatientDelegate extends SearchDelegate {
@@ -43,86 +44,99 @@ class SearchPatientDelegate extends SearchDelegate {
           );
         }
         List<Patient>? patient = snapshot.data;
+
         return ListView.builder(
           physics: BouncingScrollPhysics(),
           itemCount: patient?.length,
           itemBuilder: (context, index) {
-            return Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: Sizing.sectionSymmPadding, vertical: 4),
-              child: Card(
-                elevation: Sizing.cardElevation,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(
-                    Sizing.borderRadius / 2,
+            final patient1 = snapshot.data![index];
+            return GestureDetector(
+              onTap: () {
+                // print(patient.firstName);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PatientTabsScreen(patient: patient1),
                   ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: Sizing.sectionSymmPadding / 2,
+                );
+              },
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: Sizing.sectionSymmPadding, vertical: 4),
+                child: Card(
+                  elevation: Sizing.cardElevation,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                      Sizing.borderRadius / 2,
+                    ),
                   ),
-                  child: ListTile(
-                    title: Row(
-                      children: [
-                        Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: Pallete.mainColor,
-                            borderRadius:
-                                BorderRadius.circular(Sizing.borderRadius / 2),
-                          ),
-                          child: Center(
-                            child: Text(
-                              '${patient?[index].patientId}',
-                              style: TextStyle(
-                                  fontSize: Sizing.header4,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                              overflow: TextOverflow.clip,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: Sizing.sectionSymmPadding / 2,
+                    ),
+                    child: ListTile(
+                      title: Row(
+                        children: [
+                          Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: Pallete.mainColor,
+                              borderRadius: BorderRadius.circular(
+                                  Sizing.borderRadius / 2),
+                            ),
+                            child: Center(
+                              child: Text(
+                                '${patient?[index].patientId}',
+                                style: TextStyle(
+                                    fontSize: Sizing.header4,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                                overflow: TextOverflow.clip,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(width: 10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  '${patient?[index].firstName}',
-                                  style: TextStyle(
-                                    fontSize: Sizing.header5,
-                                    fontWeight: FontWeight.w600,
+                          SizedBox(width: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    '${patient?[index].firstName}',
+                                    style: TextStyle(
+                                      fontSize: Sizing.header5,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(width: 5),
-                                Text(
-                                  '${patient?[index].middleName}',
-                                  style: TextStyle(
-                                    fontSize: Sizing.header5,
-                                    fontWeight: FontWeight.w600,
+                                  SizedBox(width: 5),
+                                  Text(
+                                    '${patient?[index].middleName}',
+                                    style: TextStyle(
+                                      fontSize: Sizing.header5,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(width: 5),
-                                Text(
-                                  '${patient?[index].lastName}',
-                                  style: TextStyle(
-                                    fontSize: Sizing.header5,
-                                    fontWeight: FontWeight.w600,
+                                  SizedBox(width: 5),
+                                  Text(
+                                    '${patient?[index].lastName}',
+                                    style: TextStyle(
+                                      fontSize: Sizing.header5,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            Text(
-                              '${patient?[index].birthDate}',
-                              style: TextStyle(
-                                  fontSize: Sizing.header5,
-                                  fontWeight: FontWeight.normal),
-                            ),
-                          ],
-                        ),
-                      ],
+                                ],
+                              ),
+                              Text(
+                                '${patient?[index].birthDate}',
+                                style: TextStyle(
+                                    fontSize: Sizing.header5,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
