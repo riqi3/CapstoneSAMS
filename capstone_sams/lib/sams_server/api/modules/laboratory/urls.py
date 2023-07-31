@@ -1,5 +1,6 @@
 from .views import LabResultView
 from django.urls import path
+from .ocr import view_function  
 
 urlpatterns = [
     path('labresult/', LabResultView.fetch_pdf, name='fetch_pdf'),

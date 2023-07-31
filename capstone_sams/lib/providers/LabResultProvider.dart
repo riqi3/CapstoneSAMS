@@ -15,7 +15,8 @@ class LabResultProvider with ChangeNotifier {
 
   Future<List<LabResult>> fetchLabResults() async {
     await Future.delayed(Duration(milliseconds: 3000));
-    final response = await http.get(Uri.parse('${Env.prefix}/laboratory/labresult/'));
+    final response =
+        await http.get(Uri.parse('${Env.prefix}/laboratory/labresult/'));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
@@ -25,6 +26,33 @@ class LabResultProvider with ChangeNotifier {
       return labResults;
     } else {
       throw Exception('Failed to fetch lab results');
+    }
+  }
+
+  void addLabResult(LabResult labresult) async {
+    await Future.delayed(Duration(milliseconds: 3000));
+
+    final response = await http.post(Uri.parse('${Env.prefix}/ocr/'));
+    if (response.statusCode == 200) {
+      final result = jsonDecode(response.body);
+      print('SCANNED ${result['result']}');
+      _labResults.add(labresult);
+      notifyListeners();
+    } else {
+      print('Failed to scan pdf');
+    }
+  }
+
+  String trimFileName(String word, String lettersToRemove) {
+    String resultingWord = word.replaceAll(RegExp('[$lettersToRemove]'), '');
+    resultingWord = resultingWord.trim();
+    return resultingWord;
+  }
+
+  void removeLabResult(int index) {
+    if (index >= 0 && index < _labResults.length) {
+      _labResults.removeAt(index);
+      notifyListeners();
     }
   }
 
@@ -60,18 +88,6 @@ class LabResultProvider with ChangeNotifier {
   //   }
   //   return _medicines;
   // }
-
-  void addLabResult(LabResult labresult) {
-    _labResults.add(labresult);
-    notifyListeners();
-  }
-
-  void removeLabResult(int index) {
-    if (index >= 0 && index < _labResults.length) {
-      _labResults.removeAt(index);
-      notifyListeners();
-    }
-  }
 
   // void editMedicine(int index, Medicine editedMedicine) {
   //   if (index >= 0 && index < _medicines.length) {

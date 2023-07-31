@@ -3,14 +3,41 @@ from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 import json
+import os
+from tabula.io import read_pdf
+import pandas as pd
+from django.http import JsonResponse
 from rest_framework import status
- 
+from django.http import HttpResponse
 from api.modules.laboratory.models import LabResult
 from api.modules.laboratory.serializer import LabResultSerializer
+from rest_framework.views import APIView
+from api.admin import LabResultAdmin
+
+class ProcessPdf(APIView):
+    def post(self, request):
+        s = LabResultAdmin.get_urls
+        # base_dir = os.path.dirname(__file__)
+        # pdf_root = os.path.join(base_dir, 'upload-pdf/')
+        # pdf_file = LabResult.objects.last()
+        # file_path = pdf_file.file.path
+        df = read_pdf(s, pages='all', encoding='cp1252')
+        result = df[1].to_json(orient='records')
+        return JsonResponse({'result':result}) 
+        # pdf_path = request.POST.get('pdfPath')
+
 
 
 class LabResultView(viewsets.ModelViewSet):
 
+    # @api_view(['POST'])
+    # def process_pdf(request):
+    #     # pdf_path = 'upload-pdf/cbc3.pdf'
+    #     pdf_path = request.POST.get('pdfPath')
+    #     df = read_pdf(pdf_path, pages='all', encoding='cp1252')
+    #     result = df[1].to_json(orient='records')
+    #     return JsonResponse({'result':result})
+    
     @api_view(['GET'])
     def fetch_pdf(request):
         try:
@@ -28,7 +55,8 @@ class LabResultView(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"message": "Failed to fetch pdf.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-    
+ 
+     
     # @api_view(['GET'])
     # def fetch_pdf_through_prescription(request, title):
     #     try:

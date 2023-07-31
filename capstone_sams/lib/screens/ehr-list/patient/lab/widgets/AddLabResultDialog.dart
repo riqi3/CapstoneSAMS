@@ -19,13 +19,13 @@ class AddLabResultDialog extends StatefulWidget {
 class _AddLabResultDialogState extends State<AddLabResultDialog> {
   final _formKey = GlobalKey<FormState>();
   final _labResult = LabResult();
-  DateTime? _selectedStartDate;
-  DateTime? _selectedEndDate;
 
   late Future<List<Medicine>> medicines;
 
   @override
   Widget build(BuildContext context) {
+    final labresultProvider =
+        Provider.of<LabResultProvider>(context, listen: false);
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
@@ -84,8 +84,12 @@ class _AddLabResultDialogState extends State<AddLabResultDialog> {
                               .map((json) => LabResult.fromJson(json)));
                           return models;
                         },
-                        itemAsString: (LabResult labresult) =>
-                            labresult.title.toString(),
+                        itemAsString: (LabResult labresult) {
+                          final s = labresult.pdf.toString();
+
+                          print('HELLO EVERYNYAN ${s}');
+                          return s;
+                        },
                         onChanged: (LabResult? data) {
                           _labResult.title = data?.title.toString();
                           print('LAB RESULT: ${data?.title.toString()}');
@@ -109,11 +113,10 @@ class _AddLabResultDialogState extends State<AddLabResultDialog> {
                           ElevatedButton(
                             child: Text('Submit'),
                             onPressed: () {
+                               
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
-                                Provider.of<LabResultProvider>(context,
-                                        listen: false)
-                                    .addLabResult(_labResult);
+                                labresultProvider.addLabResult(_labResult);
                                 Navigator.pop(context);
                               }
                             },
