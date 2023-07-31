@@ -308,9 +308,11 @@ class LabResultAdmin(admin.ModelAdmin):
             if not pdf_file.name.endswith('.pdf'):
                 messages.warning(request, 'The wrong file type was uploaded')
                 return HttpResponseRedirect(request.path_info)
-            form = PdfImportLabResultForm()
-            data = {"form": form}
-            
+                
+        form = PdfImportLabResultForm()
+        data = {"form": form}
+        return render(request, "admin/pdf_upload.html", data)
+        
 class DataLogsAdminForm(forms.ModelForm):
     class Meta:
         model = Data_Log

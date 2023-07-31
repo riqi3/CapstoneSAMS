@@ -4,4 +4,4 @@ from rest_framework import serializers
 class LabResultSerializer(serializers.ModelSerializer):
     class Meta:
         model = LabResult
-        fields = ["pdfId", "title", 'comment']
+        fields = ["pdfId", "title", 'comment', 'pdf']

@@ -1,12 +1,13 @@
 import 'package:capstone_sams/models/SymptomsModel.dart';
 import 'package:capstone_sams/providers/SymptomsFieldsProvider.dart';
- 
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:capstone_sams/theme/pallete.dart';
 
+import '../../../../constants/Env.dart';
 import 'CpoeFormScreen.dart';
 
 class CpoeAnalyzeScreen extends StatefulWidget {
@@ -24,7 +25,7 @@ class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
       var requestBody = {'symptoms': symptoms};
 
       var response = await http.post(
-        Uri.parse('http://10.0.2.2:8000/predict/'),
+        Uri.parse('${Env.prefix}/predict/'),
         body: jsonEncode(requestBody),
         headers: {"Content-Type": "application/json"},
       );
