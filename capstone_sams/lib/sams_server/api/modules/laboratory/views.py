@@ -14,14 +14,16 @@ from api.modules.laboratory.serializer import LabResultSerializer
 from rest_framework.views import APIView
 from api.admin import LabResultAdmin
 
+
 class ProcessPdf(APIView):
-    def post(self, request):
-        s = LabResultAdmin.get_urls
+    @api_view(['POST'])
+    def post(request):
+        # s = LabResultAdmin.get_urls()
         # base_dir = os.path.dirname(__file__)
         # pdf_root = os.path.join(base_dir, 'upload-pdf/')
-        # pdf_file = LabResult.objects.last()
+        pdf_file = LabResult.objects.last()
         # file_path = pdf_file.file.path
-        df = read_pdf(s, pages='all', encoding='cp1252')
+        df = read_pdf(pdf_file, pages='all', encoding='cp1252')
         result = df[1].to_json(orient='records')
         return JsonResponse({'result':result}) 
         # pdf_path = request.POST.get('pdfPath')
