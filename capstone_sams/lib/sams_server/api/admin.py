@@ -295,7 +295,7 @@ class LabResultAdminForm(forms.ModelForm):
 
 class LabResultAdmin(admin.ModelAdmin):
     form = LabResultAdminForm
-    list_display = ("pdfId", "title", "comment")
+    list_display = ("pdfId", "title", "comment", 'pdf')
 
     def get_urls(self):
         urls = super().get_urls()
