@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from rest_framework import status
 from django.http import HttpResponse
 from api.modules.laboratory.models import LabResult, JsonLabResult
-from api.modules.laboratory.serializer import LabResultSerializer
+from api.modules.laboratory.serializer import LabResultSerializer,JsonLabResultSerializer
 from rest_framework.views import APIView
 from django.shortcuts import render
 from api.modules.laboratory.form import PdfImportLabResultForm
@@ -27,8 +27,9 @@ class LabResultForm(forms.ModelForm):
 
 class ProcessPdf(APIView):
     def scan_pdf(request):
-        selected_pdfs = request.GET.get('selected_pdfs', '').split(',')
-        return render(request, 'laboratory/select/scan/pdf_scan.html', {'selected_pdfs':selected_pdfs}) 
+        # selected_pdfs = request.GET.get('selected_pdfs', '').split(',')
+        # , {'selected_pdfs':selected_pdfs}
+        return render(request, 'laboratory/select/scan/pdf_scan.html') 
     # PyPDF2
     # def select_pdf(request):
     #     if request.method == 'POST':
@@ -48,6 +49,15 @@ class ProcessPdf(APIView):
         
     #         json_data = json.dumps(pdf_contents)
     #         return JsonResponse({'result': json_data})
+    @api_view(['GET'])
+    def fetch_json_pdf(request):
+        try:
+            queryset = JsonLabResult.objects.all()
+            serializer = JsonLabResultSerializer(queryset, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"message": "Failed to fetch json pdfs.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
 
     def select_pdf(request):
         if request.method == 'POST':

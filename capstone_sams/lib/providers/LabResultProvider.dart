@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:capstone_sams/models/LabResultModel.dart';
-import 'package:capstone_sams/models/MedicineModel.dart';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -16,7 +15,7 @@ class LabResultProvider with ChangeNotifier {
   Future<List<LabResult>> fetchLabResults() async {
     await Future.delayed(Duration(milliseconds: 3000));
     final response =
-        await http.get(Uri.parse('${Env.prefix}/laboratory/labresult/'));
+        await http.get(Uri.parse('${Env.prefix}/laboratory/select/scan/'));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
