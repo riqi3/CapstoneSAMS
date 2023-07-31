@@ -6,6 +6,17 @@ class LabResult(models.Model):
     title = models.CharField(blank = False,max_length=128)
     comment = models.TextField(blank = False,max_length=512)
     pdf = models.FileField(blank = False,upload_to='upload-pdf/')
+
+    def __str__(self):
+        return self.title
+
+class JsonLabResult(models.Model):
+    jsonId = models.AutoField(primary_key = True)
+    jsonData = models.JSONField()
+    createdAt = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.jsonId)
  
     # class Meta:
     #     ordering = ['title']
