@@ -1,10 +1,10 @@
 import 'package:capstone_sams/providers/AccountProvider.dart';
+import 'package:capstone_sams/providers/LabResultProvider.dart';
 import 'package:capstone_sams/providers/MedicineProvider.dart';
 import 'package:capstone_sams/providers/PatientProvider.dart';
 
 import 'package:capstone_sams/providers/SymptomsFieldsProvider.dart';
 import 'package:capstone_sams/screens/authentication/LoginScreen.dart';
-import 'package:capstone_sams/screens/home/HomeScreen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -36,6 +36,9 @@ void main() async {
         ),
         ChangeNotifierProvider<SymptomFieldsProvider>(
           create: (context) => SymptomFieldsProvider(),
+        ),
+        ChangeNotifierProvider<LabResultProvider>(
+          create: (context) => LabResultProvider(),
         ),
       ],
       child: const SAMSApp(),

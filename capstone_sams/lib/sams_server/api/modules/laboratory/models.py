@@ -1,7 +1,36 @@
 from django.db import models
 from django import forms
 
+class LabResult(models.Model):
+    pdfId = models.CharField(primary_key = True)
+    title = models.CharField(blank = False,max_length=128)
+    comment = models.TextField(blank = False,max_length=512)
+    pdf = models.FileField(blank = False,upload_to='upload-pdf/')
 
+    def __str__(self):
+        return self.title
+
+class JsonLabResult(models.Model):
+    jsonId = models.AutoField(primary_key = True)
+    jsonData = models.JSONField()
+    createdAt = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.jsonId)
+ 
+    # class Meta:
+    #     ordering = ['title']
+     
+    # def __str__(self):
+    #     return f"{self.title}"
+
+# class UploadLabResult(forms.ModelForm):
+#     class Meta:
+#         model = LabResult
+#         fields = ('title', 'comment','pdf')
+
+# class pdfJson(models.Model):
+#     text = models.TextField()
 
 # import os
 # import datetime
@@ -30,21 +59,3 @@ from django import forms
 
 
 
-class LabResult(models.Model):
-    title = models.CharField(max_length=128)
-    comment = models.TextField(max_length=512)
-    pdf = models.FileField(upload_to='upload/')
- 
-    class Meta:
-        ordering = ['title']
-     
-    def __str__(self):
-        return f"{self.title}"
-
-class UploadLabResult(forms.ModelForm):
-    class Meta:
-        model = LabResult
-        fields = ('title', 'comment','pdf')
-
-class pdfJson(models.Model):
-    text = models.TextField()

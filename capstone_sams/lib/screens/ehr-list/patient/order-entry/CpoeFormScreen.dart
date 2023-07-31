@@ -69,6 +69,7 @@ class CpoeFormScreen extends StatelessWidget {
                   icon: Icon(Icons.search),
                   label: Text('Analyze Again'),
                   style: ElevatedButton.styleFrom(
+                    backgroundColor: Pallete.mainColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15.0),
                     ),
