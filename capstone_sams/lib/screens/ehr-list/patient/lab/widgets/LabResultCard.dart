@@ -37,8 +37,15 @@ class LabResultCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${labresult.title.toString()}',
+                  '${labresult.jsonId.toString()}',
                   style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                ),
+                Flexible(
+                  child: Text(
+                    '${labresult.jsonData.toString()}',
+                    overflow: TextOverflow.clip,
+                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                  ),
                 ),
                 SizedBox(height: 5),
               ],
