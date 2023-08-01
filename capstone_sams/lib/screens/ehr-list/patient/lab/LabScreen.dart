@@ -31,6 +31,9 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
   @override
   Widget build(BuildContext context) {
     // final labresultProvider = Provider.of<LabResultProvider>(context);
+    // late List<LabResult> lr = [];
+    // late List<LabResult> b = labresultProvider.labResults;
+
     return Scaffold(
       body: SingleChildScrollView(
         padding: EdgeInsets.only(
@@ -105,6 +108,7 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
       itemCount: snapshot.data?.length,
       itemBuilder: (context, index) {
         final labresult = snapshot.data![index];
+
         return LabResultCard(labresult: labresult, index: index);
       },
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -128,11 +132,15 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
       physics: const BouncingScrollPhysics(),
       itemCount: snapshot.data?.length,
       itemBuilder: (context, index) {
+        // print('${b}TEST');
+        // final s = b[index];
+        // final a = s['result']['data']['text'];
         final labresult = snapshot.data![index];
+        // final z = labresult.jsonData['data'][0][2]['text'];
         return LabResultCard(labresult: labresult, index: index);
       },
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+        crossAxisCount: 1,
         mainAxisSpacing: 10,
         crossAxisSpacing: 10,
         childAspectRatio: 16 / 10,

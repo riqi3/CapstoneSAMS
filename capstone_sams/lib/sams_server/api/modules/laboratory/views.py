@@ -16,7 +16,7 @@ from django.contrib import admin, messages
 from django.http import HttpResponseRedirect
 import json
 import PyPDF2
-
+import simplejson
 
 
 
@@ -30,25 +30,7 @@ class ProcessPdf(APIView):
         # selected_pdfs = request.GET.get('selected_pdfs', '').split(',')
         # , {'selected_pdfs':selected_pdfs}
         return render(request, 'laboratory/select/scan/pdf_scan.html') 
-    # PyPDF2
-    # def select_pdf(request):
-    #     if request.method == 'POST':
-    #         selected_pdfs = request.POST.getlist('item')
-    #         pdf_contents = []
-        
-    #         for pdf_id in selected_pdfs:
-    #             pdf = LabResult.objects.get(pdfId=pdf_id)
-    #             with pdf.pdf.open('rb') as file:
-    #                 reader = PyPDF2.PdfReader(file)
-    #                 content = []
-                
-    #                 for page in reader.pages:
-    #                     content.append(page.extract_text())
-                
-    #                 pdf_contents.append(content)
-        
-    #         json_data = json.dumps(pdf_contents)
-    #         return JsonResponse({'result': json_data})
+
     @api_view(['GET'])
     def fetch_json_pdf(request):
         try:
@@ -66,8 +48,58 @@ class ProcessPdf(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"message": "Failed to fetch json pdf.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
  
 
+    # def select_pdf(request):
+    #     if request.method == 'POST':
+    #         selected_pdfs = request.POST.getlist('item')
+    #         pdf_contents = []
+    
+    #         for pdf_id in selected_pdfs:
+    #             pdf = LabResult.objects.get(pdfId=pdf_id)
+    #             with pdf.pdf.open('rb') as file:
+    #                 reader = PyPDF2.PdfReader(file)
+    #                 content = []
+            
+    #                 for page in reader.pages:
+    #                     content.append(page.extract_text())
+            
+    #                 pdf_contents.append(content)
+    #                 # print(pdf_contents)
+         
+    #     # Convert the extracted text to a JSON-parsed dictionary
+    #         parsed_data = {'pdf_contents': pdf_contents}
+    #         json_data = json.dumps(parsed_data)
+    #         # print(json_data)
+    #         return JsonResponse({'result': json.loads(json_data)})
+
+
+    # PyPDF2
+    # def select_pdf(request):
+    #     if request.method == 'POST':
+    #         selected_pdfs = request.POST.getlist('item')
+    #         pdf_contents = []
+        
+    #         for pdf_id in selected_pdfs:
+    #             pdf = LabResult.objects.get(pdfId=pdf_id)
+    #             with pdf.pdf.open('rb') as file:
+    #                 reader = PyPDF2.PdfReader(file)
+    #                 content = []
+                
+    #                 for page in reader.pages:
+    #                     content.append(page.extract_text())
+                
+    #                 pdf_contents.append(content)
+                    
+             
+    #         json_data = json.dumps(pdf_contents)
+    #         print(json_data)
+    #         # simplejson.loads('[%s]'%json_data[:-1])
+    #         # text = json.loads(r'[' + json_data[:-1] + ']')
+    #         return JsonResponse({'result': json.loads(json_data)})
+
+    #tabnula
     def select_pdf(request):
         if request.method == 'POST':
             selected_pdfs = request.POST.getlist('item')
@@ -75,27 +107,26 @@ class ProcessPdf(APIView):
 
             for pdf_id in selected_pdfs:
                 pdf = LabResult.objects.get(pdfId=pdf_id)
-                tables = read_pdf(pdf.pdf.path, pages='all')
+                tables = read_pdf(pdf.pdf.path, pages='all', output_format='json')
  
                 table = tables[1]
 
-                table_json = table.to_json()
+                # table_json = table.to_json()
 
-                jsonLabResult = JsonLabResult(jsonData=table_json)
+                jsonLabResult = JsonLabResult(jsonData=table)
                 jsonLabResult.save()
-
-                pdf_contents.append(table_json)
-
-            return JsonResponse({'result': pdf_contents})
+                print(table)
+                pdf_contents.append(table)
+                json_data = json.dumps(pdf_contents)
+            return JsonResponse({'result': json.loads(json_data)})
  
-            # print(selected_pdfs)
-            # return HttpResponseRedirect(f'../select/scan/?selected_pdfs={",".join(selected_pdfs)}')
- 
+            
         else:
             model = LabResult
             pdf_list = model.objects.all()
             return render(request, 'laboratory/select/pdf_select.html', {'pdf_list': pdf_list }) 
-    
+    # print(selected_pdfs)
+            # return HttpResponseRedirect(f'../select/scan/?selected_pdfs={",".join(selected_pdfs)}')
     def upload_pdf1(request):
         if request.method == 'POST':
             form = LabResultForm(request.POST, request.FILES)
