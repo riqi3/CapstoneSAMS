@@ -1,6 +1,4 @@
-import 'package:capstone_sams/providers/PatientProvider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../../../../../models/PatientModel.dart';
 import '../../../../../theme/Pallete.dart';
 import '../../../../../theme/Sizing.dart';
@@ -16,16 +14,6 @@ class PatientInfoCard extends StatefulWidget {
 class _PatientInfoCardState extends State<PatientInfoCard> {
   @override
   Widget build(BuildContext context) {
-    final a =
-        Provider.of<PatientProvider>(context, listen: false).fetchPatient();
-    // final rows = a.map((entry) {
-    //     return DataRow(
-    //       cells: [
-    //         DataCell(Text(entry.key)),
-    //         DataCell(Text('${entry.value}')),
-    //       ],
-    //     );
-    //   }).toList();
     return Container(
       margin: EdgeInsets.symmetric(vertical: Sizing.sectionSymmPadding),
       child: Material(
@@ -87,49 +75,30 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                   vertical: Sizing.sectionSymmPadding * 2,
                   horizontal: Sizing.sectionSymmPadding,
                 ),
-                child: Text('data'),
-                // DataTable(columns: [
-                //   DataColumn(
-                //     label: Text(
-                //       'test',
-                //       style: TextStyle(fontStyle: FontStyle.italic),
-                //     ),
-                //   ),
-                //   DataColumn(
-                //     label: Text(
-                //       'test2',
-                //       style: TextStyle(fontStyle: FontStyle.italic),
-                //     ),
-                //   ),
-                // ], rows: rows),
-
-                // Table(
-                //   border: TableBorder.all(
-                //       color: Colors.black, style: BorderStyle.solid, width: 2),
-                //   children: [
-                //     TableRow(children: [
-                //       Column(
-                //         children: [
-                //           Text(
-                //             '${widget.patient.firstName}',
-                //             style: TextStyle(fontSize: Sizing.header4),
-                //           ),Text(
-                //             patient.jsonData['data'][1][1]['text'],
-                //             style: TextStyle(fontSize: Sizing.header4),
-                //           ),
-                //         ],
-                //       ),
-                //       Column(
-                //         children: [
-                //           Text(
-                //             '${widget.patient.age}',
-                //             style: TextStyle(fontSize: 20.0),
-                //           ),
-                //         ],
-                //       ),
-                //     ])
-                //   ],
-                // ),
+                child: Table(
+                  border: TableBorder.all(
+                      color: Colors.black, style: BorderStyle.solid, width: 2),
+                  children: [
+                    TableRow(children: [
+                      Column(
+                        children: [
+                          Text(
+                            '${widget.patient.firstName}',
+                            style: TextStyle(fontSize: Sizing.header4),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Text(
+                            '${widget.patient.age}',
+                            style: TextStyle(fontSize: 20.0),
+                          ),
+                        ],
+                      ),
+                    ])
+                  ],
+                ),
               ),
             ),
 
