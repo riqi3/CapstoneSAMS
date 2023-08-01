@@ -11,6 +11,7 @@ class LabResult(models.Model):
         return self.title
 
 class JsonLabResult(models.Model):
+ 
     jsonId = models.AutoField(primary_key = True)
     jsonData = models.JSONField()
     createdAt = models.DateTimeField(auto_now_add=True)
