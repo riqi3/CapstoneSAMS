@@ -1,7 +1,9 @@
 // medicine_model.dart
+import 'dart:convert';
+
 class LabResult {
   final int jsonId;
-  final String jsonData;
+  final Map<String, dynamic> jsonData;
   final DateTime createdAt;
 
   LabResult({
@@ -21,6 +23,7 @@ class LabResult {
   factory LabResult.fromJson(Map<String, dynamic> json) {
     return LabResult(
       jsonId: json['jsonId'],
+      // jsonData: LabResult.fromJson(jsonDecode(json['jsonData'])),
       jsonData: json['jsonData'],
       createdAt: DateTime.parse(json['createdAt']),
     );

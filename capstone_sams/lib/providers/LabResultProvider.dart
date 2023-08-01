@@ -12,6 +12,22 @@ class LabResultProvider with ChangeNotifier {
 
   List<LabResult> get labResults => _labResults;
 
+  // Future<List<LabResult>> fetchLabResults() async {
+  //   await Future.delayed(Duration(milliseconds: 3000));
+  //   final response =
+  //       await http.get(Uri.parse('${Env.prefix}/laboratory/select/scan/'));
+
+  //   if (response.statusCode == 200) {
+  //     final data = json.decode(response.body);
+  //     List<LabResult> labResults = data.map<LabResult>((json) {
+  //       return LabResult.fromJson(json);
+  //     }).toList();
+  //     return labResults;
+  //   } else {
+  //     throw Exception('Failed to fetch lab results');
+  //   }
+  // }
+
   Future<List<LabResult>> fetchLabResults() async {
     await Future.delayed(Duration(milliseconds: 3000));
     final response =
