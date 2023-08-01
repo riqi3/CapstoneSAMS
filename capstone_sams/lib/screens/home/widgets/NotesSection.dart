@@ -23,8 +23,8 @@ class NotesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final username = context.watch<AccountProvider>().username;
-    final int numTodos = todosPreview.length;
-
+    int numTodos = todosPreview.length;
+    print(numTodos);
     return Column(
       children: [
         Padding(

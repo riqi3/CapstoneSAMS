@@ -4,6 +4,8 @@ import 'package:capstone_sams/screens/ehr-list/patient/lab/widgets/LabResultCard
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../constants/Dimensions.dart';
+import '../../../../models/LabResultModel.dart';
 import '../../../../models/PatientModel.dart';
 import '../../../../providers/MedicineProvider.dart';
 import '../../../../theme/Pallete.dart';
@@ -19,9 +21,19 @@ class LaboratoriesScreen extends StatefulWidget {
 }
 
 class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
+  late Future<List<LabResult>> labresults;
+  @override
+  void initState() {
+    super.initState();
+    labresults = context.read<LabResultProvider>().fetchLabResults();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final labresultProvider = Provider.of<LabResultProvider>(context);
+    // final labresultProvider = Provider.of<LabResultProvider>(context);
+    // late List<LabResult> lr = [];
+    // late List<LabResult> b = labresultProvider.labResults;
+
     return Scaffold(
       body: SingleChildScrollView(
         padding: EdgeInsets.only(
@@ -34,73 +46,104 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
         physics: BouncingScrollPhysics(),
         child: Column(
           children: [
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: labresultProvider.labResults.length,
-              itemBuilder: (ctx, index) => LabResultCard(
-                labresult: labresultProvider.labResults[index],
-                index: index,
-              ),
+            FutureBuilder(
+              future: labresults,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData)
+                  return Center(
+                    child: const CircularProgressIndicator(),
+                  );
+                return LayoutBuilder(
+                  builder: (BuildContext context, BoxConstraints constraints) {
+                    if (constraints.maxWidth >= Dimensions.mobileWidth) {
+                      return _tabletView(snapshot);
+                    } else {
+                      return _mobileView(snapshot);
+                    }
+                  },
+                );
+              },
             ),
-            Container(
-              width: 100,
-              height: 100,
-              color: Colors.red,
-            ),
-            Container(
-              width: 100,
-              height: 100,
-              color: Colors.orange,
-            ),
-            Container(
-              width: 100,
-              height: 100,
-              color: Colors.amber,
-            ),
-            Container(
-              width: 100,
-              height: 100,
-              color: Colors.green,
-            ),
-            Container(
-              width: 100,
-              height: 100,
-              color: Colors.blue,
-            ),
-            Container(
-              width: 100,
-              height: 100,
-              color: Colors.indigo,
-            ),
-            Container(
-              width: 100,
-              height: 100,
-              color: Colors.purple,
-            ),
-            Container(
-              width: 100,
-              height: 100,
-              color: Colors.pink,
-            ),
+            // ListView.builder(
+            //   shrinkWrap: true,
+            //   itemCount: labresultProvider.labResults.length,
+            //   itemBuilder: (ctx, index) => LabResultCard(
+            //     labresult: labresultProvider.labResults[index],
+            //     index: index,
+            //   ),
+            // ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        backgroundColor: Pallete.mainColor,
-        onPressed: () => showDialog(
-          context: context,
-          builder: (_) => AddLabResultDialog(),
-        ),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 200),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.add),
-            ],
-          ),
-        ),
+      // floatingActionButton: FloatingActionButton(
+      //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      //   backgroundColor: Pallete.mainColor,
+      //   onPressed: () => showDialog(
+      //     context: context,
+      //     builder: (_) => AddLabResultDialog(),
+      //   ),
+      //   child: ConstrainedBox(
+      //     constraints: BoxConstraints(maxWidth: 200),
+      //     child: Row(
+      //       mainAxisSize: MainAxisSize.min,
+      //       children: [
+      //         Icon(Icons.add),
+      //       ],
+      //     ),
+      //   ),
+      // ),
+    );
+  }
+
+  GridView _mobileView(AsyncSnapshot<List<LabResult>> snapshot) {
+    return GridView.builder(
+      shrinkWrap: true,
+      padding: EdgeInsets.only(
+        left: Sizing.sectionSymmPadding,
+        right: Sizing.sectionSymmPadding,
+        top: Sizing.sectionSymmPadding * 2,
+        bottom: Sizing.sectionSymmPadding * 4,
+      ),
+      physics: const BouncingScrollPhysics(),
+      itemCount: snapshot.data?.length,
+      itemBuilder: (context, index) {
+        final labresult = snapshot.data![index];
+
+        return LabResultCard(labresult: labresult, index: index);
+      },
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 1,
+        mainAxisSpacing: 10,
+        crossAxisSpacing: 10,
+        childAspectRatio: 16 / 8,
+      ),
+    );
+  }
+
+  GridView _tabletView(AsyncSnapshot<List<LabResult>> snapshot) {
+    return GridView.builder(
+      shrinkWrap: true,
+      padding: EdgeInsets.only(
+        left: Sizing.sectionSymmPadding,
+        right: Sizing.sectionSymmPadding,
+        top: Sizing.sectionSymmPadding * 2,
+        bottom: Sizing.sectionSymmPadding * 4,
+      ),
+      physics: const BouncingScrollPhysics(),
+      itemCount: snapshot.data?.length,
+      itemBuilder: (context, index) {
+        // print('${b}TEST');
+        // final s = b[index];
+        // final a = s['result']['data']['text'];
+        final labresult = snapshot.data![index];
+        // final z = labresult.jsonData['data'][0][2]['text'];
+        return LabResultCard(labresult: labresult, index: index);
+      },
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 1,
+        mainAxisSpacing: 10,
+        crossAxisSpacing: 10,
+        childAspectRatio: 16 / 10,
       ),
     );
   }

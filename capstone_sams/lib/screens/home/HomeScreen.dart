@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
           physics: BouncingScrollPhysics(),
           child: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
-              if (constraints.maxWidth >= Dimensions.mobileWidth) {
+              if (constraints.maxWidth >= 601) {
                 return _tabletView(context, ehrTitle, medNotesTitle);
               } else {
                 return _mobileView(context, ehrTitle, medNotesTitle);
@@ -120,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: <Widget>[
           Expanded(
             child: EHRSection(
-              title: ehrTitle,
+              title: 'ss',
               press: () {
                 Navigator.push(
                   context,

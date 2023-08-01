@@ -1,30 +1,31 @@
 // medicine_model.dart
+import 'dart:convert';
+
 class LabResult {
-  String? pdfId;
-  String? title;
-  String? comment;
-  String? pdf;
+  final int jsonId;
+  final Map<String, dynamic> jsonData;
+  final DateTime createdAt;
 
   LabResult({
-    this.pdfId,
-    this.title,
-    this.comment,
-    this.pdf,
+    required this.jsonId,
+    required this.jsonData,
+    required this.createdAt,
   });
 
-  LabResult.copy(LabResult other) {
-    pdfId = other.pdfId;
-    title = other.title;
-    comment = other.comment;
-    pdf = other.pdf;
+  Map<String, dynamic> toJson() {
+    return {
+      'jsonId': jsonId,
+      'jsonData': jsonData,
+      'createdAt': createdAt.toIso8601String(),
+    };
   }
 
   factory LabResult.fromJson(Map<String, dynamic> json) {
     return LabResult(
-      pdfId: json['pdfId'],
-      title: json['title'],
-      comment: json['comment'],
-      pdf: json['pdf'],
+      jsonId: json['jsonId'],
+      // jsonData: LabResult.fromJson(jsonDecode(json['jsonData'])),
+      jsonData: json['jsonData'],
+      createdAt: DateTime.parse(json['createdAt']),
     );
   }
 }
