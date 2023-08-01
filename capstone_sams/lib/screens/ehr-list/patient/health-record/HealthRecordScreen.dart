@@ -31,24 +31,6 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen> {
             PatientInfoCard(
               patient: widget.patient,
             ),
-            PatientInfoCard(
-              patient: widget.patient,
-            ),
-            PatientInfoCard(
-              patient: widget.patient,
-            ),
-            PatientInfoCard(
-              patient: widget.patient,
-            ),
-            PatientInfoCard(
-              patient: widget.patient,
-            ),
-            PatientInfoCard(
-              patient: widget.patient,
-            ),
-            PatientInfoCard(
-              patient: widget.patient,
-            ),
           ],
         ),
       ),

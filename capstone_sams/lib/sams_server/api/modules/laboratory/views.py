@@ -58,6 +58,15 @@ class ProcessPdf(APIView):
         except Exception as e:
             return Response({"message": "Failed to fetch json pdfs.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
+    @api_view(['GET'])
+    def fetch_json_pdf_by_id(request, jsonId):
+        try:
+            queryset = JsonLabResult.objects.filter(pk=jsonId)
+            serializer = JsonLabResultSerializer(queryset, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"message": "Failed to fetch json pdf.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+ 
 
     def select_pdf(request):
         if request.method == 'POST':

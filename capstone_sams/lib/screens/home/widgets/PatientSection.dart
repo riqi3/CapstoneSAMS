@@ -64,43 +64,41 @@ class EHRSection extends StatelessWidget {
                   horizontal: Sizing.sectionSymmPadding * 1.5,
                   vertical: Sizing.sectionSymmPadding * 2,
                 ),
-                child: Container(
-                  // color: Colors.black,
-                  child: Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            right: Sizing.sectionSymmPadding),
-                        child: FaIcon(
-                          FontAwesomeIcons.solidClipboard,
-                          color: Pallete.whiteColor,
-                          size: Sizing.sectionIconSize,
-                        ),
-                      ),
-                      Flexible(
-                        child: Text(
-                          title,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: Sizing.header4,
-                            color: Pallete.whiteColor,
-                            fontWeight: FontWeight.w600,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                right: Sizing.sectionSymmPadding),
+                            child: FaIcon(
+                              FontAwesomeIcons.solidClipboard,
+                              color: Pallete.whiteColor,
+                              size: Sizing.sectionIconSize,
+                            ),
                           ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          alignment: Alignment.centerRight,
-                          // color: Colors.green,
-                          child: FaIcon(
+                          Text(
+                            'Health Records',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: Sizing.header4,
+                              color: Pallete.whiteColor,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Spacer(),
+                          FaIcon(
                             FontAwesomeIcons.chevronRight,
                             color: Pallete.whiteColor,
                             size: Sizing.sectionIconSize,
                           ),
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),

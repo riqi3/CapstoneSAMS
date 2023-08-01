@@ -2,7 +2,7 @@ from django.db import models
 from django import forms
 
 class LabResult(models.Model):
-    pdfId = models.CharField(primary_key = True)
+    pdfId = models.AutoField(primary_key = True)
     title = models.CharField(blank = False,max_length=128)
     comment = models.TextField(blank = False,max_length=512)
     pdf = models.FileField(blank = False,upload_to='upload-pdf/')
