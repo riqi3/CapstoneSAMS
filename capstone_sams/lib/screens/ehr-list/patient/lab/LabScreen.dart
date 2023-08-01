@@ -132,18 +132,14 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
       physics: const BouncingScrollPhysics(),
       itemCount: snapshot.data?.length,
       itemBuilder: (context, index) {
-        // print('${b}TEST');
-        // final s = b[index];
-        // final a = s['result']['data']['text'];
         final labresult = snapshot.data![index];
-        // final z = labresult.jsonData['data'][0][2]['text'];
         return LabResultCard(labresult: labresult, index: index);
       },
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 1,
         mainAxisSpacing: 10,
         crossAxisSpacing: 10,
-        childAspectRatio: 16 / 10,
+        // childAspectRatio: 16 / 10,
       ),
     );
   }

@@ -11,14 +11,25 @@ from rest_framework.views import APIView
 from django.shortcuts import render
 from api.modules.laboratory.form import PdfImportLabResultForm
 from django import forms
-from django.urls import path
 from django.contrib import admin, messages
 from django.http import HttpResponseRedirect
 import json
-import PyPDF2
-import simplejson
 
+def cleanJsonTable(json_data):
+    if isinstance(json_data, dict):
+        cleaned_data = {}
+        for key, value in json_data.items():
+            if key == "text":
+                cleaned_data[key] = value
+            elif isinstance(value, (dict, list)):
+                cleaned_data[key] = cleanJsonTable(value)
+        return cleaned_data
 
+    elif isinstance(json_data, list):
+        return [cleanJsonTable(item) for item in json_data]
+    
+    else:
+        return json_data
 
 class LabResultForm(forms.ModelForm):
     class Meta:
@@ -110,16 +121,14 @@ class ProcessPdf(APIView):
                 tables = read_pdf(pdf.pdf.path, pages='all', output_format='json')
  
                 table = tables[1]
-
-                # table_json = table.to_json()
-
-                jsonLabResult = JsonLabResult(jsonData=table)
+                cleaned_data = cleanJsonTable(table)
+                jsonLabResult = JsonLabResult(jsonData=cleaned_data)
                 jsonLabResult.save()
-                print(table)
-                pdf_contents.append(table)
+                print(cleaned_data)
+                 
+                pdf_contents.append(cleaned_data)
                 json_data = json.dumps(pdf_contents)
             return JsonResponse({'result': json.loads(json_data)})
- 
             
         else:
             model = LabResult
@@ -203,3 +212,24 @@ class LabResultView(viewsets.ModelViewSet):
     #     except Exception as e:
     #          return Response({"message": "Failed to fetch medicine.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
             
+    # #tabnula
+    # def select_pdf(request):
+    #     if request.method == 'POST':
+    #         selected_pdfs = request.POST.getlist('item')
+    #         pdf_contents = []
+
+    #         for pdf_id in selected_pdfs:
+    #             pdf = LabResult.objects.get(pdfId=pdf_id)
+    #             tables = read_pdf(pdf.pdf.path, pages='all', output_format='json')
+ 
+    #             table = tables[1]
+
+    #             # table_json = table.to_json()
+
+    #             jsonLabResult = JsonLabResult(jsonData=table)
+    #             jsonLabResult.save()
+    #             print(table)
+    #             pdf_contents.append(table)
+    #             json_data = json.dumps(pdf_contents)
+    #         return JsonResponse({'result': json.loads(json_data)})
+ 
