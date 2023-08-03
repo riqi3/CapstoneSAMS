@@ -58,13 +58,12 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                     fontWeight: FontWeight.w600),
               ),
             ),
-
             Material(
-              // elevation: Sizing.cardElevation,
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(Sizing.borderRadius),
                   bottomRight: Radius.circular(Sizing.borderRadius)),
               child: Container(
+                width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   color: Pallete.whiteColor,
                   borderRadius: BorderRadius.only(
@@ -75,40 +74,27 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                   vertical: Sizing.sectionSymmPadding * 2,
                   horizontal: Sizing.sectionSymmPadding,
                 ),
-                child: Table(
-                  border: TableBorder.all(
-                      color: Colors.black, style: BorderStyle.solid, width: 2),
-                  children: [
-                    TableRow(children: [
-                      Column(
-                        children: [
-                          Text(
-                            '${widget.patient.firstName}',
-                            style: TextStyle(fontSize: Sizing.header4),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Text(
-                            '${widget.patient.age}',
-                            style: TextStyle(fontSize: 20.0),
-                          ),
-                        ],
-                      ),
-                    ])
+                child: DataTable(
+                  columns: const <DataColumn>[
+                    DataColumn(label: Text('test')),
+                    DataColumn(label: Text('info')),
                   ],
+                  rows: List<DataRow>.generate(
+                    widget.patient.toJson().entries.length,
+                    (int index) {
+                      MapEntry entry =
+                          widget.patient.toJson().entries.elementAt(index);
+                      return DataRow(
+                        cells: <DataCell>[
+                          DataCell(Text(entry.key)),
+                          DataCell(Text(entry.value.toString())),
+                        ],
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
-
-            // Container(
-            //   alignment: Alignment.centerLeft,
-            //   padding: EdgeInsets.symmetric(horizontal: 40),
-            //   width: MediaQuery.of(context).size.width,
-            //   height: 100,
-            //   color: Pallete.whiteColor,
-            // ),
           ],
         ),
       ),

@@ -1,5 +1,4 @@
 import 'package:capstone_sams/providers/LabResultProvider.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/lab/widgets/AddLabResultDialog.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/lab/widgets/LabResultCard.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,10 +6,7 @@ import 'package:provider/provider.dart';
 import '../../../../constants/Dimensions.dart';
 import '../../../../models/LabResultModel.dart';
 import '../../../../models/PatientModel.dart';
-import '../../../../providers/MedicineProvider.dart';
-import '../../../../theme/Pallete.dart';
 import '../../../../theme/Sizing.dart';
-import '../health-record/widgets/PatientInfoCard.dart';
 
 class LaboratoriesScreen extends StatefulWidget {
   final Patient patient;
@@ -98,24 +94,17 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
   GridView _mobileView(AsyncSnapshot<List<LabResult>> snapshot) {
     return GridView.builder(
       shrinkWrap: true,
-      padding: EdgeInsets.only(
-        left: Sizing.sectionSymmPadding,
-        right: Sizing.sectionSymmPadding,
-        top: Sizing.sectionSymmPadding * 2,
-        bottom: Sizing.sectionSymmPadding * 4,
-      ),
       physics: const BouncingScrollPhysics(),
       itemCount: snapshot.data?.length,
       itemBuilder: (context, index) {
         final labresult = snapshot.data![index];
-
         return LabResultCard(labresult: labresult, index: index);
       },
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 1,
         mainAxisSpacing: 10,
         crossAxisSpacing: 10,
-        childAspectRatio: 16 / 8,
+        // childAspectRatio: 16 / 8,
       ),
     );
   }
@@ -123,12 +112,6 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
   GridView _tabletView(AsyncSnapshot<List<LabResult>> snapshot) {
     return GridView.builder(
       shrinkWrap: true,
-      padding: EdgeInsets.only(
-        left: Sizing.sectionSymmPadding,
-        right: Sizing.sectionSymmPadding,
-        top: Sizing.sectionSymmPadding * 2,
-        bottom: Sizing.sectionSymmPadding * 4,
-      ),
       physics: const BouncingScrollPhysics(),
       itemCount: snapshot.data?.length,
       itemBuilder: (context, index) {

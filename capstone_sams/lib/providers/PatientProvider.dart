@@ -28,16 +28,16 @@ class PatientProvider extends ChangeNotifier {
     }
   }
 
-  Future<Patient> fetchPatient() async {
+  Future<Patient> fetchPatient(int index) async {
     final response =
-        await http.get(Uri.parse('${Env.prefix}/patient/patients/${int}'));
+        await http.get(Uri.parse('${Env.prefix}/patient/patients/${index}'));
 
     if (response.statusCode == 200) {
       return Patient.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to load album');
     }
-  }
+  } 
 
   Future<List<Patient>> searchPatients({String? query}) async {
     final response =
@@ -76,6 +76,4 @@ class PatientProvider extends ChangeNotifier {
     }
     return _patients;
   }
-
-  
 }

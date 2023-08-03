@@ -1,3 +1,38 @@
+{% extends "admin/base.html" %} {% load static %} {%block content %}
+
+<div>
+  {% comment %} ../select/scan/ {% endcomment %}
+  <form action="." method="POST" enctype="multipart/form-data">
+    {%csrf_token%}
+    <table class="table">
+      <tbody>
+        {% for pdf in pdf_list%}
+
+        <tr>
+          <td>
+            <input
+              type="radio"
+              id="labresult"
+              name="item"
+              value="{{ pdf.pdfId}}"
+            />
+          </td>
+          <td>{{pdf.pdfId}}</td>
+          <td>{{pdf.title}}</td>
+          <td>{{pdf.comment}}</td>
+          <td>
+            {% comment %} {{pdf.pdf}} {% endcomment %}
+            <a href="{{ pdf.pdf.url}}" download>Download</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <input type="submit" value="Submit" />
+  </form>
+</div>
+
+{{ block.super }} {% endblock %} {% comment %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -15,44 +50,40 @@
     <!-- Add additional CSS in static file -->
     {% load static %} {% comment %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
-    {% endcomment %}
   </head>
   <body>
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm-2">
-           
           <div>
-            {% comment %} ../select/scan/ {% endcomment %}
-            <form action='.' method='POST' enctype="multipart/form-data">  
+            {% comment %} ../select/scan/
+            <form action="." method="POST" enctype="multipart/form-data">
               {%csrf_token%}
-                <table class="table">
-                    <tbody>
-                      {% for pdf in pdf_list%} 
-                      
-                      <tr>
-                         
-                          <td>
-                              <input type="radio" id="labresult"   name="item" value="{{ pdf.pdfId}}">
-                          </td>
-                          <td>
-                              {{pdf.pdfId}} 
-                          </td>
-                          <td>
-                              {{pdf.title}} 
-                          </td>
-                          <td>
-                              {{pdf.comment}} 
-                          </td>
-                          <td>
-                              {% comment %} {{pdf.pdf}}  {% endcomment %}
-                              <a href="{{ pdf.pdf.url}}" download>Download</a>
-                          </td>
-                      </tr>
-                      {% endfor %}
-                    </tbody>
-                  </table>
-                  <input type="submit" value="Submit">
+              <table class="table">
+                <tbody>
+                  {% for pdf in pdf_list%}
+
+                  <tr>
+                    <td>
+                      <input
+                        type="radio"
+                        id="labresult"
+                        name="item"
+                        value="{{ pdf.pdfId}}"
+                      />
+                    </td>
+                    <td>{{pdf.pdfId}}</td>
+                    <td>{{pdf.title}}</td>
+                    <td>{{pdf.comment}}</td>
+                    <td>
+                      {% comment %} {{pdf.pdf}}
+                      <a href="{{ pdf.pdf.url}}" download>Download</a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+              <input type="submit" value="Submit" />
             </form>
           </div>
         </div>
@@ -61,3 +92,4 @@
     </div>
   </body>
 </html>
+{% endcomment %}
