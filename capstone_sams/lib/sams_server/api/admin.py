@@ -56,19 +56,21 @@ def create_data_log_instance(sender, instance, created, **kwargs):
             )
         data_log.save()
 
-@receiver(pre_delete)
+@receiver(pre_delete, sender=LogEntry)
 def create_data_log_for_deletion(sender, instance, using, **kwargs):
-    # Get the admin account associated with this deletion event (LogEntry model)
-    admin_account = instance.user
+    # Check if the instance is of type LogEntry
+    if isinstance(instance, LogEntry):
+        # Get the admin account associated with this deletion event (LogEntry model)
+        admin_account = instance.user
 
-    if admin_account:
-        # Set the account attribute of the Data_Log instance
-        data_log = Data_Log(
-            event=f"Admin deleted a model: {instance}",
-            type="Deleted Model",
-            account=admin_account,
-        )
-        data_log.save()
+        if admin_account:
+            # Set the account attribute of the Data_Log instance
+            data_log = Data_Log(
+                event=f"Admin deleted a model: {instance}",
+                type="Deleted Model",
+                account=admin_account,
+            )
+            data_log.save()
 
 
 COMMON_PASSWORDS = ["password", "12345678", "qwerty", "abc123"]
