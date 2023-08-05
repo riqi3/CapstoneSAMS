@@ -40,23 +40,33 @@ class _EhrListScreenState extends State<EhrListScreen> {
             backgroundColor: Pallete.mainColor),
         preferredSize: Size.fromHeight(kToolbarHeight),
       ),
-      body: FutureBuilder(
-        future: patients,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData)
-            return Center(
-              child: const CircularProgressIndicator(),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.only(
+          left: Sizing.sectionSymmPadding,
+          right: Sizing.sectionSymmPadding,
+          top: Sizing.sectionSymmPadding * 2,
+          bottom: Sizing.sectionSymmPadding * 4,
+        ),
+        scrollDirection: Axis.vertical,
+        physics: BouncingScrollPhysics(),
+        child: FutureBuilder(
+          future: patients,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData)
+              return Center(
+                child: const CircularProgressIndicator(),
+              );
+            return LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                if (constraints.maxWidth >= Dimensions.mobileWidth) {
+                  return _tabletView(snapshot);
+                } else {
+                  return _mobileView(snapshot);
+                }
+              },
             );
-          return LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
-              if (constraints.maxWidth >= Dimensions.mobileWidth) {
-                return _tabletView(snapshot);
-              } else {
-                return _mobileView(snapshot);
-              }
-            },
-          );
-        },
+          },
+        ),
       ),
 
       // FutureBuilder(
@@ -88,12 +98,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
   GridView _mobileView(AsyncSnapshot<List<Patient>> snapshot) {
     return GridView.builder(
       shrinkWrap: true,
-      padding: EdgeInsets.only(
-        left: Sizing.sectionSymmPadding,
-        right: Sizing.sectionSymmPadding,
-        top: Sizing.sectionSymmPadding * 2,
-        bottom: Sizing.sectionSymmPadding * 4,
-      ),
+      padding: EdgeInsets.only(),
       physics: const BouncingScrollPhysics(),
       itemCount: snapshot.data?.length,
       itemBuilder: (context, index) {
@@ -113,11 +118,11 @@ class _EhrListScreenState extends State<EhrListScreen> {
     return GridView.builder(
       shrinkWrap: true,
       padding: EdgeInsets.only(
-        left: Sizing.sectionSymmPadding,
-        right: Sizing.sectionSymmPadding,
-        top: Sizing.sectionSymmPadding * 2,
-        bottom: Sizing.sectionSymmPadding * 4,
-      ),
+          // left: Sizing.sectionSymmPadding,
+          // right: Sizing.sectionSymmPadding,
+          // top: Sizing.sectionSymmPadding * 2,
+          // bottom: Sizing.sectionSymmPadding * 4,
+          ),
       physics: const BouncingScrollPhysics(),
       itemCount: snapshot.data?.length,
       itemBuilder: (context, index) {

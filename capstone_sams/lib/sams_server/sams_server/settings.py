@@ -1,6 +1,7 @@
 from datetime import timedelta
 from pathlib import Path
 import os
+from .webui import JAZZMIN_SETTINGS
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -16,12 +17,13 @@ SECRET_KEY = 'django-insecure-celf-%q5!qz(3jy6rkzid1&$y_u6fkrl$s4!v7hd_+5ou6fhj_
 DEBUG = True
 
 # ALLOWED_HOSTS = ['localhost', '10.0.2.2', '127.0.0.1']
-ALLOWED_HOSTS = ['*', '192.168.1.9' 'localhost', '10.0.2.2', '127.0.0.1','0.0.0.0',]
+ALLOWED_HOSTS = ['*','192.168.36.61', '192.168.1.9' 'localhost', '10.0.2.2', '127.0.0.1','0.0.0.0',]
 # 192.168.1.9 is the public ip of the machine
 
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -133,6 +135,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'sams_server/static'), 
+]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -180,3 +187,5 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
+
+JAZZMIN_SETTINGS = JAZZMIN_SETTINGS

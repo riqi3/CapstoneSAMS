@@ -7,7 +7,6 @@ import '../../../models/PatientModel.dart';
 
 class PatientCard extends StatefulWidget {
   final Patient patient;
-
   PatientCard({
     required this.patient,
   });

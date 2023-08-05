@@ -117,12 +117,16 @@ class ProcessPdf(APIView):
             pdf_contents = []
 
             for pdf_id in selected_pdfs:
-                pdf = LabResult.objects.get(pdfId=pdf_id)
-                tables = read_pdf(pdf.pdf.path, pages='all', output_format='json')
- 
+                pdf_instance = LabResult.objects.get(pdfId=pdf_id)
+                pdf_title =pdf_instance.title
+                pdf_comment =pdf_instance.comment
+                # pdf_title= str(request.POST.get('title'))
+                 
+                tables = read_pdf(pdf_instance.pdf.path, pages='all', output_format='json')
                 table = tables[1]
                 cleaned_data = cleanJsonTable(table)
-                jsonLabResult = JsonLabResult(jsonData=cleaned_data)
+                
+                jsonLabResult = JsonLabResult(jsonData=cleaned_data, labresult=pdf_instance,title=pdf_title, comment=pdf_comment)
                 jsonLabResult.save()
                 print(cleaned_data)
                  
