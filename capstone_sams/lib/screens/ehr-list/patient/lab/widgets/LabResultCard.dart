@@ -1,5 +1,6 @@
 import 'package:capstone_sams/models/LabResultModel.dart';
 import 'package:flutter/material.dart';
+import 'package:table_sticky_headers/table_sticky_headers.dart';
 import '../../../../../theme/Pallete.dart';
 import '../../../../../theme/Sizing.dart';
 
@@ -11,16 +12,20 @@ class LabResultCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final titles = ["TEST", '', "VALUE", "UNIT", "REFERENCE"];
     final matrix = labresult.jsonData['data'];
-    final firstColumn = matrix.map((row) => row[0]['text']).toList();
-    final second2lastColumn = List.generate(
-      matrix[0].length - 1,
-      (int columnIndex) =>
-          matrix.map((row) => row[columnIndex + 1]["text"]).toList(),
-    );
+    // final firstColumn = matrix.map((row) => row[0]['text']).toList();
+    // final second2lastColumn = List.generate(
+    //   matrix[0].length - 1,
+    //   (int columnIndex) =>
+    //       matrix.map((row) => row[columnIndex + 1]["text"]).toList(),
+    // );
+    // Color getColor(Set<MaterialState> states) {
+    //   return Colors.grey;
+    // }
 
-    print('aaaa${second2lastColumn}');
-    print(firstColumn);
+    // print('secondCOLYUMN${second2lastColumn}');
+    // print('FIRST COLUMN${firstColumn}');
     return Container(
       margin: EdgeInsets.only(bottom: Sizing.sectionSymmPadding),
       child: Column(
@@ -38,49 +43,76 @@ class LabResultCard extends StatelessWidget {
             width: MediaQuery.of(context).size.width,
             height: Sizing.cardContainerHeight,
             child: Text(
-              'CBC Result',
+              labresult.title,
               style: TextStyle(
                   color: Pallete.whiteColor,
                   fontSize: Sizing.header3,
                   fontWeight: FontWeight.w600),
             ),
           ),
+          Container(
+            decoration: BoxDecoration(
+              color: Pallete.whiteColor,
+            ),
+            alignment: Alignment.centerLeft,
+            padding: EdgeInsets.only(
+                top: Sizing.sectionSymmPadding,
+                left: Sizing.sectionSymmPadding,
+                right: Sizing.sectionSymmPadding),
+            width: MediaQuery.of(context).size.width,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Comments: ',
+                  style: TextStyle(
+                      color: Pallete.textColor,
+                      fontSize: Sizing.header6,
+                      fontWeight: FontWeight.w600),
+                ),
+                Flexible(
+                  child: Text(
+                    labresult.comment,
+                    style: TextStyle(
+                        color: Pallete.textColor,
+                        fontSize: Sizing.header6,
+                        fontWeight: FontWeight.normal),
+                  ),
+                ),
+              ],
+            ),
+          ),
           Expanded(
-            child: Material(
-              borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(Sizing.borderRadius),
-                  bottomRight: Radius.circular(Sizing.borderRadius)),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Pallete.whiteColor,
-                  borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(Sizing.borderRadius),
-                      bottomLeft: Radius.circular(Sizing.borderRadius)),
-                ),
-                padding: const EdgeInsets.only(
-                  top: Sizing.sectionSymmPadding / 2,
-                  bottom: Sizing.sectionSymmPadding,
-                  left: Sizing.sectionSymmPadding,
-                  right: Sizing.sectionSymmPadding,
-                ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Pallete.whiteColor,
+                borderRadius: BorderRadius.only(
+                    bottomRight: Radius.circular(Sizing.borderRadius),
+                    bottomLeft: Radius.circular(Sizing.borderRadius)),
+              ),
+              padding: const EdgeInsets.only(
+                top: Sizing.sectionSymmPadding / 2,
+                bottom: Sizing.sectionSymmPadding,
+                left: Sizing.sectionSymmPadding,
+                right: Sizing.sectionSymmPadding,
+              ),
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                scrollDirection: Axis.vertical,
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
-                  scrollDirection: Axis.vertical,
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
-                    child: DataTable(
-                      columns: matrix[0].map<DataColumn>((item) {
-                        return DataColumn(label: Text('test'));
-                      }).toList(),
-                      rows: matrix.map<DataRow>((row) {
-                        return DataRow(
-                          cells: row.map<DataCell>((cell) {
-                            return DataCell(Text(cell['text'] ?? ''));
-                          }).toList(),
-                        );
-                      }).toList(),
-                    ),
+                  scrollDirection: Axis.horizontal,
+                  child: DataTable(
+                    columns: titles.map<DataColumn>((item) {
+                      return DataColumn(label: Text(item));
+                    }).toList(),
+                    rows: matrix.map<DataRow>((row) {
+                      return DataRow(
+                        cells: row.map<DataCell>((cell) {
+                          return DataCell(Text(cell['text'] ?? ''));
+                        }).toList(),
+                      );
+                    }).toList(),
                   ),
                 ),
               ),

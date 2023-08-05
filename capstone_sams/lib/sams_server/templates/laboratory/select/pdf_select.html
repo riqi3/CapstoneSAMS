@@ -4,10 +4,11 @@
   {% comment %} ../select/scan/ {% endcomment %}
   <form action="." method="POST" enctype="multipart/form-data">
     {%csrf_token%}
+
     <table class="table">
       <tbody>
         {% for pdf in pdf_list%}
-
+        
         <tr>
           <td>
             <input

@@ -11,11 +11,12 @@ class LabResult(models.Model):
         return self.title
 
 class JsonLabResult(models.Model):
- 
+    labresult = models.ForeignKey(LabResult, on_delete = models.CASCADE)
     jsonId = models.AutoField(primary_key = True)
     jsonData = models.JSONField()
     createdAt = models.DateTimeField(auto_now_add=True)
-
+    title = models.CharField(blank = False,max_length=128)
+    comment = models.TextField(blank = False,max_length=512)
     def __str__(self):
         return str(self.jsonId)
  

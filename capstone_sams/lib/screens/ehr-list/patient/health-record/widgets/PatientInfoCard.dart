@@ -12,6 +12,18 @@ class PatientInfoCard extends StatefulWidget {
 }
 
 class _PatientInfoCardState extends State<PatientInfoCard> {
+  final titles = [
+    'Patient ID',
+    'First Name',
+    'Middle Name',
+    'Last Name',
+    'Age',
+    'Gender',
+    'Birthdate',
+    'Registration Date',
+    'Phone',
+    'Email'
+  ];
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -44,8 +56,7 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
               ),
             ),
             Container(
-              padding:
-                  EdgeInsets.symmetric(horizontal: Sizing.sectionSymmPadding),
+              padding: EdgeInsets.all(Sizing.sectionSymmPadding),
               alignment: Alignment.centerLeft,
               decoration: BoxDecoration(
                 color: Pallete.whiteColor,
@@ -70,14 +81,16 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                       bottomRight: Radius.circular(Sizing.borderRadius),
                       bottomLeft: Radius.circular(Sizing.borderRadius)),
                 ),
-                padding: const EdgeInsets.symmetric(
-                  vertical: Sizing.sectionSymmPadding * 2,
-                  horizontal: Sizing.sectionSymmPadding,
+                padding: const EdgeInsets.only(
+                  // vertical: Sizing.sectionSymmPadding * 2,
+                  left: Sizing.sectionSymmPadding,
+                  right: Sizing.sectionSymmPadding,
+                  bottom: Sizing.sectionSymmPadding,
                 ),
                 child: DataTable(
                   columns: const <DataColumn>[
-                    DataColumn(label: Text('test')),
-                    DataColumn(label: Text('info')),
+                    DataColumn(label: Text('TITLE')),
+                    DataColumn(label: Text('VALUE')),
                   ],
                   rows: List<DataRow>.generate(
                     widget.patient.toJson().entries.length,
@@ -86,12 +99,38 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                           widget.patient.toJson().entries.elementAt(index);
                       return DataRow(
                         cells: <DataCell>[
-                          DataCell(Text(entry.key)),
+                          DataCell(Text(titles[index])),
                           DataCell(Text(entry.value.toString())),
                         ],
                       );
                     },
                   ),
+
+                  // rows: titles.map<DataRow>((title) {
+                  //   // final value = widget.patient.toJson()[title];
+                  //   MapEntry value =
+                  //       widget.patient.toJson().entries.elementAt(title);
+                  //   return DataRow(
+                  //     cells: <DataCell>[
+                  //       DataCell(Text(title)),
+                  //       DataCell(Text(value.toString())),
+                  //     ],
+                  //   );
+                  // }).toList(),
+
+                  // rows: List<DataRow>.generate(
+                  //   widget.patient.toJson().entries.length,
+                  //   (int index) {
+                  //     MapEntry entry =
+                  //         widget.patient.toJson().entries.elementAt(index);
+                  // return DataRow(
+                  //   cells: <DataCell>[
+                  //     DataCell(Text(entry.key)),
+                  //     DataCell(Text(entry.value.toString())),
+                  //   ],
+                  //     );
+                  //   },
+                  // ),
                 ),
               ),
             ),

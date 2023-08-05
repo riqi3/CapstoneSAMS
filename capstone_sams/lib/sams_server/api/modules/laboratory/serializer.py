@@ -9,4 +9,4 @@ class LabResultSerializer(serializers.ModelSerializer):
 class JsonLabResultSerializer(serializers.ModelSerializer):
     class Meta:
         model = JsonLabResult
-        fields = ['jsonId', 'jsonData', 'createdAt']
+        fields = ['jsonId', 'jsonData', 'createdAt','labresult', 'title', 'comment']
