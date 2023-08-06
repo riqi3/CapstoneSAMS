@@ -1,14 +1,13 @@
 import 'package:capstone_sams/models/LabResultModel.dart';
 import 'package:flutter/material.dart';
-import 'package:table_sticky_headers/table_sticky_headers.dart';
+
 import '../../../../../theme/Pallete.dart';
 import '../../../../../theme/Sizing.dart';
 
 class LabResultCard extends StatelessWidget {
   final LabResult labresult;
-  final int index;
 
-  LabResultCard({required this.labresult, required this.index});
+  LabResultCard({required this.labresult});
 
   @override
   Widget build(BuildContext context) {

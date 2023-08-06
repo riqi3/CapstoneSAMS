@@ -37,7 +37,7 @@ class PatientProvider extends ChangeNotifier {
     } else {
       throw Exception('Failed to load album');
     }
-  } 
+  }
 
   Future<List<Patient>> searchPatients({String? query}) async {
     final response =

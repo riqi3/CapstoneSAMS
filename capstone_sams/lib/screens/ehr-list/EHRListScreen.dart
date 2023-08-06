@@ -68,32 +68,8 @@ class _EhrListScreenState extends State<EhrListScreen> {
           },
         ),
       ),
-
-      // FutureBuilder(
-      //   future: patients,
-      //   builder: (context, snapshot) {
-      //     if (!snapshot.hasData) return const CircularProgressIndicator();
-      //     return ListView.builder(
-      //       itemCount: snapshot.data?.length,
-      //       itemBuilder: (context, index) {
-      //         final patient = snapshot.data![index];
-      //         return PatientCard(patient: patient);
-      //       },
-      //     );
-      //   },
-      // ),
     );
   }
-
-  // ListView _mobileView(AsyncSnapshot<List<Patient>> snapshot) {
-  //   return ListView.builder(
-  //     itemCount: snapshot.data?.length,
-  //     itemBuilder: (context, index) {
-  //       final patient = snapshot.data![index];
-  //       return PatientCard(patient: patient);
-  //     },
-  //   );
-  // }
 
   GridView _mobileView(AsyncSnapshot<List<Patient>> snapshot) {
     return GridView.builder(
@@ -103,7 +79,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
       itemCount: snapshot.data?.length,
       itemBuilder: (context, index) {
         final patient = snapshot.data![index];
-        return PatientCard(patient: patient);
+        return PatientCard(patient: patient, index: index.toString());
       },
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 1,
@@ -117,17 +93,14 @@ class _EhrListScreenState extends State<EhrListScreen> {
   GridView _tabletView(AsyncSnapshot<List<Patient>> snapshot) {
     return GridView.builder(
       shrinkWrap: true,
-      padding: EdgeInsets.only(
-          // left: Sizing.sectionSymmPadding,
-          // right: Sizing.sectionSymmPadding,
-          // top: Sizing.sectionSymmPadding * 2,
-          // bottom: Sizing.sectionSymmPadding * 4,
-          ),
       physics: const BouncingScrollPhysics(),
       itemCount: snapshot.data?.length,
       itemBuilder: (context, index) {
         final patient = snapshot.data![index];
-        return PatientCard(patient: patient);
+        final a = index + 1;
+        print(index.toString());
+        print('aasdasasd${a.toString()}');
+        return PatientCard(patient: patient, index: a.toString());
       },
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,

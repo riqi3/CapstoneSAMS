@@ -1,7 +1,9 @@
+ 
+
 {% extends "admin/base.html" %} {% load static %} {%block content %}
 
 <div>
-  {% comment %} ../select/scan/ {% endcomment %}
+  
   <form action="." method="POST" enctype="multipart/form-data">
     {%csrf_token%}
 
@@ -21,10 +23,7 @@
           <td>{{pdf.pdfId}}</td>
           <td>{{pdf.title}}</td>
           <td>{{pdf.comment}}</td>
-          <td>
-            {% comment %} {{pdf.pdf}} {% endcomment %}
-            <a href="{{ pdf.pdf.url}}" download>Download</a>
-          </td>
+           
         </tr>
         {% endfor %}
       </tbody>
@@ -33,7 +32,18 @@
   </form>
 </div>
 
-{{ block.super }} {% endblock %} {% comment %}
+{{ block.super }} {% endblock %}  
+
+
+
+
+
+
+
+
+
+
+{% comment %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
