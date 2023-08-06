@@ -32,9 +32,9 @@ class Medicine {
 
   factory Medicine.fromJson(Map<String, dynamic> json) {
     return Medicine(
-      drugId: json['drugId'] ,
+      drugId: json['drugId'],
       drugCode: json['drugCode'],
-      name: json['drugName']as String,
+      name: json['drugName'] as String,
       instructions: json['instructions'],
       startDate: json['startDate'],
       endDate: json['endDate'],
@@ -42,4 +42,4 @@ class Medicine {
       refills: json['refills'],
     );
   }
-}
+} 

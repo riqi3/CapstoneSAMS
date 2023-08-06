@@ -12,6 +12,18 @@ class PatientInfoCard extends StatefulWidget {
 }
 
 class _PatientInfoCardState extends State<PatientInfoCard> {
+  final titles = [
+    'Patient ID',
+    'First Name',
+    'Middle Name',
+    'Last Name',
+    'Age',
+    'Gender',
+    'Birthdate',
+    'Registration Date',
+    'Phone',
+    'Email'
+  ];
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -44,8 +56,7 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
               ),
             ),
             Container(
-              padding:
-                  EdgeInsets.symmetric(horizontal: Sizing.sectionSymmPadding),
+              padding: EdgeInsets.all(Sizing.sectionSymmPadding),
               alignment: Alignment.centerLeft,
               decoration: BoxDecoration(
                 color: Pallete.whiteColor,
@@ -58,57 +69,71 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                     fontWeight: FontWeight.w600),
               ),
             ),
-
             Material(
-              // elevation: Sizing.cardElevation,
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(Sizing.borderRadius),
                   bottomRight: Radius.circular(Sizing.borderRadius)),
               child: Container(
+                width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   color: Pallete.whiteColor,
                   borderRadius: BorderRadius.only(
                       bottomRight: Radius.circular(Sizing.borderRadius),
                       bottomLeft: Radius.circular(Sizing.borderRadius)),
                 ),
-                padding: const EdgeInsets.symmetric(
-                  vertical: Sizing.sectionSymmPadding * 2,
-                  horizontal: Sizing.sectionSymmPadding,
+                padding: const EdgeInsets.only(
+                  // vertical: Sizing.sectionSymmPadding * 2,
+                  left: Sizing.sectionSymmPadding,
+                  right: Sizing.sectionSymmPadding,
+                  bottom: Sizing.sectionSymmPadding,
                 ),
-                child: Table(
-                  border: TableBorder.all(
-                      color: Colors.black, style: BorderStyle.solid, width: 2),
-                  children: [
-                    TableRow(children: [
-                      Column(
-                        children: [
-                          Text(
-                            '${widget.patient.firstName}',
-                            style: TextStyle(fontSize: Sizing.header4),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Text(
-                            '${widget.patient.age}',
-                            style: TextStyle(fontSize: 20.0),
-                          ),
-                        ],
-                      ),
-                    ])
+                child: DataTable(
+                  columns: const <DataColumn>[
+                    DataColumn(label: Text('TITLE')),
+                    DataColumn(label: Text('VALUE')),
                   ],
+                  rows: List<DataRow>.generate(
+                    widget.patient.toJson().entries.length,
+                    (int index) {
+                      MapEntry entry =
+                          widget.patient.toJson().entries.elementAt(index);
+                      return DataRow(
+                        cells: <DataCell>[
+                          DataCell(Text(titles[index])),
+                          DataCell(Text(entry.value.toString())),
+                        ],
+                      );
+                    },
+                  ),
+
+                  // rows: titles.map<DataRow>((title) {
+                  //   // final value = widget.patient.toJson()[title];
+                  //   MapEntry value =
+                  //       widget.patient.toJson().entries.elementAt(title);
+                  //   return DataRow(
+                  //     cells: <DataCell>[
+                  //       DataCell(Text(title)),
+                  //       DataCell(Text(value.toString())),
+                  //     ],
+                  //   );
+                  // }).toList(),
+
+                  // rows: List<DataRow>.generate(
+                  //   widget.patient.toJson().entries.length,
+                  //   (int index) {
+                  //     MapEntry entry =
+                  //         widget.patient.toJson().entries.elementAt(index);
+                  // return DataRow(
+                  //   cells: <DataCell>[
+                  //     DataCell(Text(entry.key)),
+                  //     DataCell(Text(entry.value.toString())),
+                  //   ],
+                  //     );
+                  //   },
+                  // ),
                 ),
               ),
             ),
-
-            // Container(
-            //   alignment: Alignment.centerLeft,
-            //   padding: EdgeInsets.symmetric(horizontal: 40),
-            //   width: MediaQuery.of(context).size.width,
-            //   height: 100,
-            //   color: Pallete.whiteColor,
-            // ),
           ],
         ),
       ),

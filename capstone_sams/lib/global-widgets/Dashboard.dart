@@ -93,7 +93,6 @@ class Dashboard extends StatelessWidget {
               print('ehr');
             },
           ),
- 
           ListTile(
             leading: FaIcon(FontAwesomeIcons.notesMedical),
             title: const Text('Medical Notes'),

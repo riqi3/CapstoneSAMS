@@ -1,20 +1,14 @@
-import 'package:capstone_sams/constants/Dimensions.dart';
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/models/MedicalNotesModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/MedicalNotesProvider.dart';
-import 'package:capstone_sams/providers/MedicineProvider.dart';
 
 import 'package:capstone_sams/screens/ehr-list/EhrListScreen.dart';
 import 'package:capstone_sams/screens/home/widgets/PatientSection.dart';
-import 'package:dio/dio.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../constants/Env.dart';
-import '../../models/MedicineModel.dart';
 import '../../theme/sizing.dart';
 import '../medical_notes/MedicalNotesScreen.dart';
 import 'widgets/NotesSection.dart';

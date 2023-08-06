@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:capstone_sams/models/LabResultModel.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
 import 'package:capstone_sams/theme/sizing.dart';
 import 'package:flutter/material.dart';
@@ -7,9 +10,10 @@ import '../../../models/PatientModel.dart';
 
 class PatientCard extends StatefulWidget {
   final Patient patient;
-
+  final String index;
   PatientCard({
     required this.patient,
+    required this.index,
   });
 
   @override
@@ -19,13 +23,15 @@ class PatientCard extends StatefulWidget {
 class _PatientCardState extends State<PatientCard> {
   @override
   Widget build(BuildContext context) {
+    print('bbbbbbaa${widget.index.toString()}');
     return GestureDetector(
       onTap: () {
         print(widget.patient.firstName);
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => PatientTabsScreen(patient: widget.patient),
+            builder: (context) =>
+                PatientTabsScreen(patient: widget.patient, index: widget.index),
           ),
         );
       },

@@ -16,7 +16,7 @@ class PatientProvider extends ChangeNotifier {
   Future<List<Patient>> fetchPatients() async {
     final response =
         await http.get(Uri.parse('${Env.prefix}/patient/patients/'));
-
+    await Future.delayed(Duration(milliseconds: 3000));
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       List<Patient> patients = data.map<Patient>((json) {
@@ -28,9 +28,10 @@ class PatientProvider extends ChangeNotifier {
     }
   }
 
-  Future<Patient> fetchPatient() async {
+  Future<Patient> fetchPatient(int index) async {
+    await Future.delayed(Duration(milliseconds: 3000));
     final response =
-        await http.get(Uri.parse('${Env.prefix}/patient/patients/${int}'));
+        await http.get(Uri.parse('${Env.prefix}/patient/patients/${index}'));
 
     if (response.statusCode == 200) {
       return Patient.fromJson(jsonDecode(response.body));
@@ -42,7 +43,7 @@ class PatientProvider extends ChangeNotifier {
   Future<List<Patient>> searchPatients({String? query}) async {
     final response =
         await http.get(Uri.parse('${Env.prefix}/patient/patients/'));
-
+    await Future.delayed(Duration(milliseconds: 3000));
     try {
       if (response.statusCode == 200) {
         data = json.decode(response.body);
@@ -76,6 +77,4 @@ class PatientProvider extends ChangeNotifier {
     }
     return _patients;
   }
-
-  
 }

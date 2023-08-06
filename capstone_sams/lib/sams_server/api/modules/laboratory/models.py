@@ -1,4 +1,5 @@
 from django.db import models
+from api.modules.patient.models import Patient
 from django import forms
 
 class LabResult(models.Model):
@@ -6,15 +7,20 @@ class LabResult(models.Model):
     title = models.CharField(blank = False,max_length=128)
     comment = models.TextField(blank = False,max_length=512)
     pdf = models.FileField(blank = False,upload_to='upload-pdf/')
+    patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
 
     def __str__(self):
         return self.title
 
 class JsonLabResult(models.Model):
+    labresult = models.ForeignKey(LabResult, on_delete = models.CASCADE)
     jsonId = models.AutoField(primary_key = True)
     jsonData = models.JSONField()
     createdAt = models.DateTimeField(auto_now_add=True)
-
+    title = models.CharField(blank = False,max_length=128)
+    comment = models.TextField(blank = False,max_length=512)
+    patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
+    # patientID = models.CharField(max_length=100)
     def __str__(self):
         return str(self.jsonId)
  

@@ -7,8 +7,6 @@ import 'package:capstone_sams/providers/SymptomsFieldsProvider.dart';
 
 import 'package:capstone_sams/theme/pallete.dart';
 
-import '../../../../global-widgets/text-fields/Textfields.dart';
-import '../../../../models/MedicineModel.dart';
 import '../../../../providers/MedicineProvider.dart';
 
 class CpoeFormScreen extends StatelessWidget {
@@ -23,7 +21,7 @@ class CpoeFormScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final medicineProvider = Provider.of<MedicineProvider>(context);
-    final _medicine = Medicine();
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Analyze Page'),
