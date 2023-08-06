@@ -1,5 +1,7 @@
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
+import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../models/PatientModel.dart';
 import '../../../../theme/Sizing.dart';
@@ -28,7 +30,10 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
   @override
   void initState() {
     super.initState();
-    tabController = TabController(length: 3, vsync: this);
+    final accountProvider =
+        Provider.of<AccountProvider>(context, listen: false);
+    int tabCount = accountProvider.role == 'physician' ? 3 : 2;
+    tabController = TabController(length: tabCount, vsync: this);
   }
 
   @override
@@ -39,6 +44,7 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final accountProvider = Provider.of<AccountProvider>(context);
     return Scaffold(
       endDrawer: ValueDashboard(),
       appBar: PreferredSize(
@@ -56,7 +62,7 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
           ),
           LaboratoriesScreen(index: widget.index),
           // OrderEntryScreen(),
-          CpoeAnalyzeScreen(),
+          if (accountProvider.role == 'physician') CpoeAnalyzeScreen(),
         ],
       ),
     );
