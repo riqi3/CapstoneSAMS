@@ -15,7 +15,7 @@ class LabResultProvider with ChangeNotifier {
   Future<List<LabResult>> fetchLabResults(String index) async {
     await Future.delayed(Duration(milliseconds: 3000));
     final response = await http.get(
-        Uri.parse('${Env.prefix}/laboratory/select/scan/labresult/${index}'));
+        Uri.parse('${Env.prefix}/laboratory/select/scan/labresult/${index}/'));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);

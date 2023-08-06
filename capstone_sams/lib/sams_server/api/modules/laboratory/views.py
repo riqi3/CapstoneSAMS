@@ -132,7 +132,7 @@ class ProcessPdf(APIView):
     #         return JsonResponse({'result': json.loads(json_data)})
  
     # tabnula
-    def select_pdf(request):
+    def select_pdf(request,patient):
         if request.method == "POST":
             selected_pdfs = request.POST.getlist("item")
             pdf_contents = []
@@ -158,8 +158,7 @@ class ProcessPdf(APIView):
                     jsonData=cleaned_data,
                     labresult=pdf_instance,
                     title=pdf_title,
-                    comment=pdf_comment,
-                    # patient=patient_instance,
+                    comment=pdf_comment, 
                     patient=patient_id,
                 )
                 jsonLabResult.save()
@@ -168,25 +167,18 @@ class ProcessPdf(APIView):
                 pdf_contents.append(cleaned_data)
                 json_data = json.dumps(pdf_contents)
             return JsonResponse({"result": json.loads(json_data)})
-
         else:
-            model = LabResult
-            pdf_list = model.objects.all()
-            context = {
-                
-            }
+            pdf_list = LabResult.objects.filter(patient_id=patient)
             return render(
                 request, "laboratory/select/pdf_select.html", {"pdf_list": pdf_list}
             )
-
-    # print(selected_pdfs)
-    # return HttpResponseRedirect(f'../select/scan/?selected_pdfs={",".join(selected_pdfs)}')
+ 
     def upload_pdf1(request):
         if request.method == "POST":
             form = LabResultForm(request.POST, request.FILES)
             if form.is_valid():
                 form.save()
-            return HttpResponseRedirect("../select/")
+            return HttpResponseRedirect("../select/<str:patient>/")
 
         else:
             form = LabResultForm()
