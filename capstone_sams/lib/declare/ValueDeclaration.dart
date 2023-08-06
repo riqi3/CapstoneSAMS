@@ -1,6 +1,8 @@
 import 'package:capstone_sams/global-widgets/Dashboard.dart';
+import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 import '../global-widgets/TitleAppBar.dart';
 
@@ -60,6 +62,7 @@ class BottomPatientTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final accountProvider = Provider.of<AccountProvider>(context);
     return PreferredSize(
       preferredSize: Size.fromHeight(48),
       child: Container(
@@ -110,25 +113,26 @@ class BottomPatientTabs extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width / 2 - 10,
-              child: Tab(
-                child: Column(
-                  children: [
-                    Align(
-                      alignment: Alignment.center,
-                      child: FaIcon(
-                        FontAwesomeIcons.prescription,
+            if (accountProvider.role == 'physician')
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 2 - 10,
+                child: Tab(
+                  child: Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: FaIcon(
+                          FontAwesomeIcons.prescription,
+                        ),
                       ),
-                    ),
-                    Text(
-                      'Order Entry',
-                      style: TextStyle(fontSize: Sizing.header6),
-                    ),
-                  ],
+                      Text(
+                        'Order Entry',
+                        style: TextStyle(fontSize: Sizing.header6),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ),
