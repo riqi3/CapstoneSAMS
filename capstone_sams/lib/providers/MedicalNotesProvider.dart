@@ -21,13 +21,14 @@ class TodosProvider extends ChangeNotifier {
     final headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     };
+
     final response = await http.get(
       Uri.parse(
         _getUrl('user/notes/get/$accountID'),
       ),
       headers: headers,
     );
-
+    await Future.delayed(Duration(milliseconds: 3000));
     if (response.statusCode == 200) {
       final items = json.decode(response.body).cast<Map<String, dynamic>>();
       List<Todo> list = items.map<Todo>((json) => Todo.fromJson(json)).toList();
@@ -48,7 +49,7 @@ class TodosProvider extends ChangeNotifier {
       headers: headers,
       body: jsonEncode(todo.toJson()),
     );
-
+    await Future.delayed(Duration(milliseconds: 3000));
     print('Response status code: ${response.statusCode}');
     print('Response body: ${response.body}');
     if (response.statusCode == 201) {
@@ -70,6 +71,7 @@ class TodosProvider extends ChangeNotifier {
         ),
         headers: headers,
         body: jsonEncode(todo.toJson()));
+    await Future.delayed(Duration(milliseconds: 3000));
 
     if (response.statusCode == 204) {
       fetchTodos(accountID);
@@ -92,6 +94,7 @@ class TodosProvider extends ChangeNotifier {
       headers: headers,
       body: body,
     );
+    await Future.delayed(Duration(milliseconds: 3000));
 
     if (response.statusCode == 204) {
       todo.isDone = !todo.isDone;
@@ -112,6 +115,7 @@ class TodosProvider extends ChangeNotifier {
       headers: headers,
       body: body,
     );
+    await Future.delayed(Duration(milliseconds: 3000));
     if (response.statusCode == 204) {
       fetchTodos(todo.account);
     } else {

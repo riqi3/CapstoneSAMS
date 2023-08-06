@@ -28,9 +28,8 @@ class MedicineProvider with ChangeNotifier {
   }
 
   Future<List<Medicine>> searchMedicines({String? query}) async {
-    await Future.delayed(Duration(milliseconds: 3000));
     final response = await http.get(Uri.parse('${Env.prefix}/cpoe/medicines/'));
-
+    await Future.delayed(Duration(milliseconds: 3000));
     try {
       if (response.statusCode == 200) {
         data = json.decode(response.body);

@@ -13,10 +13,9 @@ class LabResultProvider with ChangeNotifier {
   List<LabResult> get labResults => _labResults;
 
   Future<List<LabResult>> fetchLabResults(String index) async {
-    await Future.delayed(Duration(milliseconds: 3000));
     final response = await http.get(
         Uri.parse('${Env.prefix}/laboratory/select/scan/labresult/${index}/'));
-
+    await Future.delayed(Duration(milliseconds: 3000));
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       List<LabResult> labResults = data.map<LabResult>((json) {
@@ -29,9 +28,8 @@ class LabResultProvider with ChangeNotifier {
   }
 
   void addLabResult(LabResult labresult) async {
-    await Future.delayed(Duration(milliseconds: 3000));
-
     final response = await http.post(Uri.parse('${Env.prefix}/ocr/'));
+    await Future.delayed(Duration(milliseconds: 3000));
     if (response.statusCode == 200) {
       final result = jsonDecode(response.body);
       print('SCANNED ${result['result']}');
