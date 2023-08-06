@@ -38,7 +38,6 @@ class AccountProvider extends ChangeNotifier {
     }
   }
 
-  
   void setAccount(Account account) {
     _account = account;
     notifyListeners();

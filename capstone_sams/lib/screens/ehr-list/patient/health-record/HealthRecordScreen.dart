@@ -1,9 +1,6 @@
-import 'package:capstone_sams/providers/PatientProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/PatientInfoCard.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../../../../constants/Dimensions.dart';
 import '../../../../models/PatientModel.dart';
 import '../../../../theme/Sizing.dart';
 

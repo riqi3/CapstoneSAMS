@@ -4,15 +4,17 @@ import 'package:flutter/material.dart';
 import '../../../../models/PatientModel.dart';
 import '../../../../theme/Sizing.dart';
 import '../lab/LabScreen.dart';
-
 import '../order-entry/CpoeAnalyzeScreen.dart';
 import 'HealthRecordScreen.dart';
 
 class PatientTabsScreen extends StatefulWidget {
   final Patient patient;
+  final String index;
+
   const PatientTabsScreen({
     super.key,
     required this.patient,
+    required this.index,
   });
 
   @override
@@ -52,9 +54,7 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
           HealthRecordsScreen(
             patient: widget.patient,
           ),
-          LaboratoriesScreen(
-            patient: widget.patient,
-          ),
+          LaboratoriesScreen(index: widget.index),
           // OrderEntryScreen(),
           CpoeAnalyzeScreen(),
         ],

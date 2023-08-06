@@ -5,12 +5,12 @@ import 'package:provider/provider.dart';
 
 import '../../../../constants/Dimensions.dart';
 import '../../../../models/LabResultModel.dart';
-import '../../../../models/PatientModel.dart';
+
 import '../../../../theme/Sizing.dart';
 
 class LaboratoriesScreen extends StatefulWidget {
-  final Patient patient;
-  const LaboratoriesScreen({super.key, required this.patient});
+  final String index;
+  const LaboratoriesScreen({Key? key, required this.index}) : super(key: key);
 
   @override
   State<LaboratoriesScreen> createState() => _LaboratoriesScreenState();
@@ -18,10 +18,12 @@ class LaboratoriesScreen extends StatefulWidget {
 
 class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
   late Future<List<LabResult>> labresults;
+
   @override
   void initState() {
     super.initState();
-    labresults = context.read<LabResultProvider>().fetchLabResults();
+    labresults =
+        context.read<LabResultProvider>().fetchLabResults(widget.index);
   }
 
   @override
@@ -45,49 +47,31 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
             FutureBuilder(
               future: labresults,
               builder: (context, snapshot) {
-                if (!snapshot.hasData)
+                if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
-                    child: const CircularProgressIndicator(),
+                    child: CircularProgressIndicator(),
                   );
-                return LayoutBuilder(
-                  builder: (BuildContext context, BoxConstraints constraints) {
-                    if (constraints.maxWidth >= Dimensions.mobileWidth) {
-                      return _tabletView(snapshot);
-                    } else {
-                      return _mobileView(snapshot);
-                    }
-                  },
-                );
+                } else if (snapshot.hasData) {
+                  return LayoutBuilder(
+                    builder:
+                        (BuildContext context, BoxConstraints constraints) {
+                      if (constraints.maxWidth >= Dimensions.mobileWidth) {
+                        return _tabletView(snapshot);
+                      } else {
+                        return _mobileView(snapshot);
+                      }
+                    },
+                  );
+                } else {
+                  return Center(
+                    child: Text('No lab results to show'),
+                  );
+                }
               },
             ),
-            // ListView.builder(
-            //   shrinkWrap: true,
-            //   itemCount: labresultProvider.labResults.length,
-            //   itemBuilder: (ctx, index) => LabResultCard(
-            //     labresult: labresultProvider.labResults[index],
-            //     index: index,
-            //   ),
-            // ),
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      //   backgroundColor: Pallete.mainColor,
-      //   onPressed: () => showDialog(
-      //     context: context,
-      //     builder: (_) => AddLabResultDialog(),
-      //   ),
-      //   child: ConstrainedBox(
-      //     constraints: BoxConstraints(maxWidth: 200),
-      //     child: Row(
-      //       mainAxisSize: MainAxisSize.min,
-      //       children: [
-      //         Icon(Icons.add),
-      //       ],
-      //     ),
-      //   ),
-      // ),
     );
   }
 
@@ -98,7 +82,8 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
       itemCount: snapshot.data?.length,
       itemBuilder: (context, index) {
         final labresult = snapshot.data![index];
-        return LabResultCard(labresult: labresult, index: index);
+
+        return LabResultCard(labresult: labresult);
       },
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 1,
@@ -116,7 +101,7 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
       itemCount: snapshot.data?.length,
       itemBuilder: (context, index) {
         final labresult = snapshot.data![index];
-        return LabResultCard(labresult: labresult, index: index);
+        return LabResultCard(labresult: labresult);
       },
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 1,

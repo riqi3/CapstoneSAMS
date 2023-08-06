@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:capstone_sams/models/MedicineModel.dart';
- 
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../constants/Env.dart';
@@ -30,9 +30,9 @@ class MedicineProvider with ChangeNotifier {
   Future<List<Medicine>> searchMedicines({String? query}) async {
     await Future.delayed(Duration(milliseconds: 3000));
     final response = await http.get(Uri.parse('${Env.prefix}/cpoe/medicines/'));
- 
+
     try {
-      if (response.statusCode == 200 ) {
+      if (response.statusCode == 200) {
         data = json.decode(response.body);
         _medicines = data.map((e) => Medicine.fromJson(e)).toList();
 
@@ -59,11 +59,6 @@ class MedicineProvider with ChangeNotifier {
     }
     return _medicines;
   }
-
-
-
-
-
 
   void addMedicine(Medicine medicine) {
     _medicines.add(medicine);

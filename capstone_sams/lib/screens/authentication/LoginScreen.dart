@@ -1,17 +1,12 @@
-import 'dart:convert';
-
-import 'package:capstone_sams/AdminScreen.dart';
 import 'package:capstone_sams/theme/pallete.dart';
 
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../constants/Env.dart';
 import '../../global-widgets/text-fields/Textfields.dart';
 import '../../theme/Sizing.dart';
 import '../home/HomeScreen.dart';
-import '../../models/AccountModel.dart';
+
 import '../../providers/AccountProvider.dart';
 
 class LoginScreen extends StatefulWidget {

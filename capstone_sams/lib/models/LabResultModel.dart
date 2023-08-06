@@ -5,6 +5,7 @@ class LabResult {
   final DateTime createdAt;
   final String title;
   final String comment;
+  final String patient;
 
   LabResult({
     required this.jsonId,
@@ -12,6 +13,7 @@ class LabResult {
     required this.createdAt,
     required this.title,
     required this.comment,
+    required this.patient,
   });
 
   Map<String, dynamic> toJson() {
@@ -21,6 +23,7 @@ class LabResult {
       'createdAt': createdAt.toIso8601String(),
       'title': title,
       'comment': comment,
+      'patient': patient,
     };
   }
 
@@ -32,6 +35,7 @@ class LabResult {
       createdAt: DateTime.parse(json['createdAt']),
       title: json['title'],
       comment: json['comment'],
+      patient: json['patient'],
     );
   }
 }

@@ -16,8 +16,6 @@ class SearchBarTabs extends StatefulWidget {
 }
 
 class _SearchBarTabsState extends State<SearchBarTabs> {
-
-
   @override
   Widget build(BuildContext context) {
     final currentWidth = MediaQuery.of(context).size.width;
