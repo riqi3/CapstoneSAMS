@@ -1,4 +1,4 @@
-from .views import CommentView, MedicineView
+from .views import CommentView, MedicineView, PrescriptionView
 from django.urls import path
 
 urlpatterns = [
@@ -10,4 +10,5 @@ urlpatterns = [
     path('medicines/', MedicineView.fetch_medicine, name='fetch_medicines'),
     path('medicines/<str:drugID>', MedicineView.fetch_medicine_by_id, name='fetch_medicine'),
     path('medicines/<str:presNum>', MedicineView.fetch_medicine_through_prescription, name='fetch_medicine_through_prescription'),
+    path('prescription/save/', PrescriptionView.save_prescription, name='save_prescription')
 ]

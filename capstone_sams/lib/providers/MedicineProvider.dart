@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:capstone_sams/models/MedicineModel.dart';
+import 'package:capstone_sams/providers/AccountProvider.dart';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import '../constants/Env.dart';
 
 class MedicineProvider with ChangeNotifier {
@@ -57,6 +59,24 @@ class MedicineProvider with ChangeNotifier {
       print('error: $e');
     }
     return _medicines;
+  }
+
+  void saveToPrescription(String accountId, String patientId) async {
+    final headers = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
+
+    final data = <String, dynamic>{
+      'medicines': _medicines,
+      'account': accountId,
+      'patient': patientId
+    };
+
+    final response = await http.post(
+      Uri.parse('${Env.prefix}/prescription/save'),
+      headers: headers,
+      body: jsonEncode(data),
+    );
   }
 
   void addMedicine(Medicine medicine) {

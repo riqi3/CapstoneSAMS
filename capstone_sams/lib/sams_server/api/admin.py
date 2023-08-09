@@ -17,7 +17,7 @@ from api.modules.patient.form import CsvImportPatientForm
 from api.modules.cpoe.form import CsvImportMedicineForm
 from api.modules.laboratory.form import PdfImportLabResultForm
 from api.modules.user.models import Account, Data_Log
-from api.modules.patient.models import Patient, Health_Record, Symptom
+from api.modules.patient.models import Patient, Health_Record
 from api.modules.cpoe.models import Medicine, Prescription
 from api.modules.laboratory.models import LabResult
 # from api.models import Account, Patient, Data_Log, Prescription, Medicine, Symptom, Health_Record, Comment, Prescribed_Medicine, Patient_Symptom
@@ -390,27 +390,28 @@ class PrescriptionAdmin(admin.ModelAdmin):
     autocomplete_fields = ["health_record"]
     list_display = (
         "presNum",
-        "dosage",
-        "timeFrame",
-        "amount",
+        # "dosage",
+        # "timeFrame",
+        # "amount",
+        "medicines",
         "account",
         "health_record",
     )
-    list_filter = ("timeFrame", "account", "health_record")
+    list_filter = ("account", "health_record")
     search_fields = ("presNum",)
     autocomplete_fields = ["account", "health_record"]
 
 
-class SymptomsAdminForm(forms.ModelForm):
-    class Meta:
-        model = Symptom
-        fields = "__all__"
+# class SymptomsAdminForm(forms.ModelForm):
+#     class Meta:
+#         model = Symptom
+#         fields = "__all__"
 
 
-class SymptomsAdmin(admin.ModelAdmin):
-    form = SymptomsAdminForm
-    list_display = ("sympNum", "symptom")
-    search_fields = ("sympNum", "symptom")
+# class SymptomsAdmin(admin.ModelAdmin):
+#     form = SymptomsAdminForm
+#     list_display = ("sympNum", "symptom")
+#     search_fields = ("sympNum", "symptom")
 
 # Now register the new UserAdmin...
 admin.site.register(Account, UserAdmin)
@@ -419,7 +420,7 @@ admin.site.register(Data_Log, DataLogsAdmin)
 admin.site.register(Medicine, MedicineAdmin)
 admin.site.register(Health_Record, HealthRecordAdmin)
 admin.site.register(Prescription, PrescriptionAdmin)
-admin.site.register(Symptom, SymptomsAdmin)
+# admin.site.register(Symptom, SymptomsAdmin)
 admin.site.register(LabResult, LabResultAdmin)
  
 # ... and, since we're not using Django's built-in permissions,

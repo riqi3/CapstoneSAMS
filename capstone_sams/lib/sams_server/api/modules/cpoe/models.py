@@ -13,9 +13,10 @@ class Comment(models.Model):
 class Prescription(models.Model):
     #Prescription Attributes
     presNum = models.AutoField(primary_key = True)
-    dosage = models.PositiveIntegerField(blank = False)
-    timeFrame = models.DateTimeField(blank = False)
-    amount = models.PositiveIntegerField(blank = False)
+    # dosage = models.PositiveIntegerField(blank = False)
+    # timeFrame = models.DateTimeField(blank = False)
+    # amount = models.PositiveIntegerField(blank = False)
+    medicines = models.JSONField(blank = True, default=None)
     account = models.ForeignKey(Account, on_delete = models.CASCADE)
     health_record = models.ForeignKey(Health_Record, on_delete = models.CASCADE)
 
@@ -26,6 +27,6 @@ class Medicine(models.Model):
     drugCode = models.CharField(blank = False)
     drugName = models.CharField(blank = False)
 
-class Prescribed_Medicine(models.Model):
-    prescription = models.ForeignKey(Prescription, on_delete=models.CASCADE)
-    medicine = models.ForeignKey(Medicine, on_delete=models.CASCADE)
+# class Prescribed_Medicine(models.Model):
+#     prescription = models.ForeignKey(Prescription, on_delete=models.CASCADE)
+#     medicine = models.ForeignKey(Medicine, on_delete=models.CASCADE)
