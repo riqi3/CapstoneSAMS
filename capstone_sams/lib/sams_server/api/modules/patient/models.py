@@ -19,10 +19,11 @@ class Patient(models.Model):
     registration = models.DateField(blank=False)
     phone = models.CharField(max_length = 20, blank = True)
     email = models.CharField(max_length = 50, blank = True)
+    user = models.CharField(null = True, blank = True)
 
 class Health_Record(models.Model):
     #Health Record Attributes
-    recordNum = models.CharField(primary_key = True)
+    recordNum = models.AutoField(primary_key = True)
     symptoms = models.JSONField(blank = True, default=None)
     diseases = models.JSONField(blank = True, default=None)
     patient = models.ForeignKey(Patient, on_delete = models.CASCADE)

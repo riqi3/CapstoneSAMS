@@ -28,6 +28,12 @@ class PatientView(viewsets.ModelViewSet):
                 phone=patient_data['phone'],
                 email=patient_data['email']
             )
+            patient_instance = get_object_or_404(Patient, pk=patient_data['patientID'])
+            record = Health_Record.objects.create(
+                symptoms = {"symptoms": "None"},
+                diseases = {"diseases": "None"},
+                patient = patient_instance
+            )
             data = json.loads(request.body)
             accountID = data['account']
             account = get_object_or_404(Account, pk=accountID)
