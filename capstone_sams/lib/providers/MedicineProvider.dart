@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:capstone_sams/models/MedicineModel.dart';
+import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 
 import 'package:flutter/material.dart';
@@ -61,22 +62,37 @@ class MedicineProvider with ChangeNotifier {
     return _medicines;
   }
 
-  void saveToPrescription(String accountId, String patientId) async {
+  saveToPrescription(String? accountId, String? patientId) async {
     final headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     };
+    // final patient = await patientId;
 
+    // final _medicinesJson = _medicines.map((medicine) => medicine.toJson()).toList();
     final data = <String, dynamic>{
       'medicines': _medicines,
       'account': accountId,
-      'patient': patientId
+      'patient': patientId,
     };
+    // final data = <String, dynamic>{
+    //   'medicines': _medicines,
+    //   'account': accountId,
+    //   'patient': patientId
+    // };
 
     final response = await http.post(
-      Uri.parse('${Env.prefix}/prescription/save'),
+      Uri.parse('${Env.prefix}/cpoe/prescription/save/'),
       headers: headers,
       body: jsonEncode(data),
     );
+    await Future.delayed(Duration(milliseconds: 3000));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final prescription = Medicine.fromJson(data);
+      addMedicine(prescription);
+    } else {
+      print('cannot add medicine!');
+    }
   }
 
   void addMedicine(Medicine medicine) {

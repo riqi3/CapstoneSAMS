@@ -79,7 +79,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
       itemCount: snapshot.data?.length,
       itemBuilder: (context, index) {
         final patient = snapshot.data![index];
-        return PatientCard(patient: patient, index: (index + 1).toString());
+        return PatientCard(patient: patient, index: (index + 1));
       },
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 1,
@@ -98,7 +98,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
       itemBuilder: (context, index) {
         final patient = snapshot.data![index];
         // print('aasdasasd${a.toString()}');
-        return PatientCard(patient: patient, index: (index + 1).toString());
+        return PatientCard(patient: patient, index: (index + 1) );
       },
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,

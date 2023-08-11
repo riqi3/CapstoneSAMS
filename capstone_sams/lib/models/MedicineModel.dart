@@ -30,6 +30,17 @@ class Medicine {
     refills = other.refills;
   }
 
+  Map<String, dynamic> toJson() => {
+        'drugId': drugId,
+        'drugCode': drugCode,
+        'name': name,
+        'instructions': instructions,
+        'startDate': startDate?.toIso8601String(),
+        'endDate': endDate?.toIso8601String(),
+        'quantity': quantity,
+        'refills': refills,
+      };
+
   factory Medicine.fromJson(Map<String, dynamic> json) {
     return Medicine(
       drugId: json['drugId'],
@@ -42,4 +53,4 @@ class Medicine {
       refills: json['refills'],
     );
   }
-} 
+}

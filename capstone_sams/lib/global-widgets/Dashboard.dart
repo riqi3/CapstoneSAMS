@@ -13,10 +13,11 @@ import 'search-bar/SearchPatientDelegate.dart';
 class Dashboard extends StatelessWidget {
   const Dashboard({
     super.key,
+    required this.username,
     required this.profile,
   });
 
-  final String profile;
+  final String profile, username;
 
   @override
   Widget build(BuildContext context) {
@@ -40,11 +41,11 @@ class Dashboard extends StatelessWidget {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('FULLNAME'),
-                    Text(
-                      'fullname@gmail.com',
-                      style: TextStyle(),
-                    ),
+                    Text(username),
+                    // Text(
+                    //   'fullname@gmail.com',
+                    //   style: TextStyle(),
+                    // ),
                   ],
                 ),
               ],
