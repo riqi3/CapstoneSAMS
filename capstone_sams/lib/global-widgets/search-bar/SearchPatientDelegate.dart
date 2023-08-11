@@ -57,7 +57,7 @@ class SearchPatientDelegate extends SearchDelegate {
                   context,
                   MaterialPageRoute(
                     builder: (context) => PatientTabsScreen(
-                        patient: patient1, index: index.toString()),
+                        patient: patient1, index: index),
                   ),
                 );
               },

@@ -1,3 +1,4 @@
+import 'package:capstone_sams/constants/Dimensions.dart';
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/models/MedicalNotesModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
@@ -55,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
           physics: BouncingScrollPhysics(),
           child: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
-              if (constraints.maxWidth >= 601) {
+              if (constraints.maxWidth >= Dimensions.mobileWidth) {
                 return _tabletView(context, ehrTitle, medNotesTitle);
               } else {
                 return _mobileView(context, ehrTitle, medNotesTitle);

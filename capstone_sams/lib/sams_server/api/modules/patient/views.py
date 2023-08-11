@@ -7,8 +7,8 @@ import json
 from rest_framework import status
 
 from api.modules.user.models import Account, Data_Log
-from api.modules.patient.models import Patient, Symptom
-from api.modules.patient.serializers import PatientSerializer, SymptomSerializer
+from api.modules.patient.models import Patient, Health_Record
+from api.modules.patient.serializers import PatientSerializer, HealthRecordSerializer
 
 class PatientView(viewsets.ModelViewSet):
 
@@ -27,6 +27,12 @@ class PatientView(viewsets.ModelViewSet):
                 registration=patient_data['registration'],
                 phone=patient_data['phone'],
                 email=patient_data['email']
+            )
+            patient_instance = get_object_or_404(Patient, pk=patient_data['patientID'])
+            record = Health_Record.objects.create(
+                symptoms = {"symptoms": "None"},
+                diseases = {"diseases": "None"},
+                patient = patient_instance
             )
             data = json.loads(request.body)
             accountID = data['account']
@@ -87,7 +93,17 @@ class PatientView(viewsets.ModelViewSet):
             return Response({"message": "Failed to update patient.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
-# class HealthRecordView(viewsets.ViewSet):
+class HealthRecordView(viewsets.ViewSet):
+
+    @api_view(['GET'])
+    def fetch_record_by_id(request, patientID):
+        try:
+            record = Health_Record.objects.filter(pk=patientID)
+            serializer = HealthRecordSerializer(record)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Health_Record.DoesNotExist:
+            return Response({"message": "Health Record does not exist."}, status=status.HTTP_404_NOT_FOUND)
+
 
 #     @api_view(['GET'])
 #     def fetch_records(request):
@@ -184,22 +200,22 @@ class PatientView(viewsets.ModelViewSet):
 #             return Response({"message": "Failed to fetch health record", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class SymptomsView(viewsets.ModelViewSet):
+# class SymptomsView(viewsets.ModelViewSet):
     
-    @api_view(['GET'])
-    def fetch_symptoms(request):
-        try:
-            symptoms = Symptom.objects.all()
-            serializer = SymptomSerializer(symptoms, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response({"message": "Failed to fetch symptoms", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+#     @api_view(['GET'])
+#     def fetch_symptoms(request):
+#         try:
+#             symptoms = Symptom.objects.all()
+#             serializer = SymptomSerializer(symptoms, many=True)
+#             return Response(serializer.data, status=status.HTTP_200_OK)
+#         except Exception as e:
+#             return Response({"message": "Failed to fetch symptoms", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
-    @api_view(['GET'])
-    def fetch_symptoms_by_num(request, sympNum):
-        try:
-            symptoms = Symptom.objects.get(pk=sympNum)
-            serializer = SymptomSerializer(symptoms)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response({"message": "Failed to fetch symptoms", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+#     @api_view(['GET'])
+#     def fetch_symptoms_by_num(request, sympNum):
+#         try:
+#             symptoms = Symptom.objects.get(pk=sympNum)
+#             serializer = SymptomSerializer(symptoms)
+#             return Response(serializer.data, status=status.HTTP_200_OK)
+#         except Exception as e:
+#             return Response({"message": "Failed to fetch symptoms", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

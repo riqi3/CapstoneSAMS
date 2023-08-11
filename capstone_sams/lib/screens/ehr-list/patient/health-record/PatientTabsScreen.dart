@@ -11,7 +11,7 @@ import 'HealthRecordScreen.dart';
 
 class PatientTabsScreen extends StatefulWidget {
   final Patient patient;
-  final String index;
+  final int index;
 
   const PatientTabsScreen({
     super.key,
@@ -62,7 +62,8 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
           ),
           LaboratoriesScreen(index: widget.index),
           // OrderEntryScreen(),
-          if (accountProvider.role == 'physician') CpoeAnalyzeScreen(),
+          if (accountProvider.role == 'physician')
+            CpoeAnalyzeScreen(patient: widget.patient, index: widget.index),
         ],
       ),
     );

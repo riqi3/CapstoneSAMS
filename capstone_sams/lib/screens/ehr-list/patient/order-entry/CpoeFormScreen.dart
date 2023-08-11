@@ -1,3 +1,5 @@
+import 'package:capstone_sams/providers/PatientProvider.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/health-record/HealthRecordScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/AddMedicineDialog.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/MedicineCard.dart';
 import 'package:flutter/material.dart';
@@ -7,13 +9,19 @@ import 'package:capstone_sams/providers/SymptomsFieldsProvider.dart';
 
 import 'package:capstone_sams/theme/pallete.dart';
 
+import '../../../../models/PatientModel.dart';
+import '../../../../providers/AccountProvider.dart';
 import '../../../../providers/MedicineProvider.dart';
+import '../../widgets/PatientCard.dart';
 
 class CpoeFormScreen extends StatelessWidget {
   final String finalPrediction;
   final double finalConfidence;
-
+  final int index;
+  final Patient patient;
   CpoeFormScreen({
+    required this.patient,
+    required this.index,
     required this.finalPrediction,
     required this.finalConfidence,
   });
@@ -148,8 +156,35 @@ class CpoeFormScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
-                      onPressed: () {
-                        // Submit action here riqi
+                      onPressed: () async {
+                        // final a = medicineProvider.medicines;
+                        final accountID = context.read<AccountProvider>().id;
+                        // final patientID =
+                        //     context.read<PatientProvider>().fetchPatient(index.toString());
+                        final patient = await context
+                            .read<PatientProvider>()
+                            .fetchPatient(index.toString());
+                        final patientID = patient.patientId;
+                        print('PATIENT $patientID ACCOUNT $accountID');
+                        final success = await context
+                            .read<MedicineProvider>()
+                            .saveToPrescription(accountID, patientID);
+                        if (success != null && success) {
+                          print('test this selected PATIENT $index');
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => PatientCard(
+                                patient: patient,
+                                index: index,
+                              ),
+                              // HealthRecordsScreen(
+                              //   patient: patient,
+                              // ),
+                            ),
+                          );
+                        } else {
+                          print("Failed to save prescription.");
+                        }
                       },
                       child: Text('Submit'),
                       style: ElevatedButton.styleFrom(

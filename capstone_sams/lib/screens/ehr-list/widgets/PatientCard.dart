@@ -10,7 +10,7 @@ import '../../../models/PatientModel.dart';
 
 class PatientCard extends StatefulWidget {
   final Patient patient;
-  final String index;
+  final int index;
   PatientCard({
     required this.patient,
     required this.index,
