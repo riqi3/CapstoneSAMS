@@ -59,6 +59,7 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
         children: [
           HealthRecordsScreen(
             patient: widget.patient,
+            // index: widget.index,
           ),
           LaboratoriesScreen(index: widget.index),
           // OrderEntryScreen(),

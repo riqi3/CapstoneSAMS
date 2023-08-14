@@ -30,8 +30,10 @@ class _PatientCardState extends State<PatientCard> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                PatientTabsScreen(patient: widget.patient, index: widget.index),
+            builder: (context) => PatientTabsScreen(
+              patient: widget.patient,
+              index: widget.index,
+            ),
           ),
         );
       },

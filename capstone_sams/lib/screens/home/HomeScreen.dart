@@ -5,7 +5,7 @@ import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/MedicalNotesProvider.dart';
 
 import 'package:capstone_sams/screens/ehr-list/EhrListScreen.dart';
-import 'package:capstone_sams/screens/home/widgets/PatientSection.dart';
+import 'package:capstone_sams/screens/home/widgets/EhrSection.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

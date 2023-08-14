@@ -132,22 +132,23 @@ class PrescriptionView(viewsets.ViewSet):
             prescription_data = json.loads(request.body)
             accountID = prescription_data['account']
             patientID = prescription_data['patient']
-            account = Account.objects.filter(pk=accountID)
-            record = Health_Record.objects.filter(patient=patientID)
+            account = Account.objects.get(pk=accountID)
+            record = Health_Record.objects.get(patient=patientID)
             prescription = Prescription.objects.create(
                 medicines=prescription_data['medicines'],
                 account=account,
                 health_record = record
             )
+            return Response({"message": "Prescription saved successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
+            print(e)
             return Response({"message": "Failed to save prescription", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-    # @api_view(['GET'])
-    # def fetch_prescription_by_ids(request, accountId, recordNum):
-    #     try:
-    #         account = Account.objects.get(pk=accountId)
-    #         record = Health_Record.objects.get(pk=recordNum)
-    #         prescription = Prescription.objects.get(account = account, health_record = record)
-    #         serializer = PrescriptionSerializer(prescription)
-    #         return Response(serializer.data, status=status.HTTP_200_OK)
-    #     except Exception as e:
-    #          return Response({"message": "Failed to fetch prescription", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    @api_view(['GET'])
+    def fetch_prescription_by_ids(request, recordNum):
+        try:
+            record = Health_Record.objects.get(pk=recordNum)
+            prescription = Prescription.objects.filter(health_record = record)
+            serializer = PrescriptionSerializer(prescription, many = True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+             return Response({"message": "Failed to fetch prescription", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

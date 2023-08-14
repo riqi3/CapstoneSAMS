@@ -1,5 +1,8 @@
 // medicine_model.dart
+import 'PatientModel.dart';
+
 class Medicine {
+  Patient? patient;
   String? drugId;
   String? drugCode;
   String? name;
@@ -10,6 +13,7 @@ class Medicine {
   int? refills;
 
   Medicine({
+    this.patient,
     this.drugId,
     this.drugCode,
     this.name,
@@ -21,6 +25,7 @@ class Medicine {
   });
 
   Medicine.copy(Medicine other) {
+    patient = other.patient;
     drugId = other.drugId;
     name = other.name;
     instructions = other.instructions;

@@ -62,23 +62,25 @@ class MedicineProvider with ChangeNotifier {
     return _medicines;
   }
 
-  saveToPrescription(String? accountId, String? patientId) async {
+  Future<bool> saveToPrescription(String? accountId, String? patientId) async {
     final headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     };
-    // final patient = await patientId;
+    final medicinesJson =
+        _medicines.map((medicine) => medicine.toJson()).toList();
 
-    // final _medicinesJson = _medicines.map((medicine) => medicine.toJson()).toList();
     final data = <String, dynamic>{
-      'medicines': _medicines,
+      'medicines': medicinesJson,
       'account': accountId,
       'patient': patientId,
     };
+
     // final data = <String, dynamic>{
     //   'medicines': _medicines,
     //   'account': accountId,
-    //   'patient': patientId
+    //   'patient': patientId,
     // };
+    print('DATADATA$data');
 
     final response = await http.post(
       Uri.parse('${Env.prefix}/cpoe/prescription/save/'),
@@ -87,12 +89,16 @@ class MedicineProvider with ChangeNotifier {
     );
     await Future.delayed(Duration(milliseconds: 3000));
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      final prescription = Medicine.fromJson(data);
-      addMedicine(prescription);
+      return true;
     } else {
       print('cannot add medicine!');
+      return false;
     }
+    // try {
+    // } on Exception catch(error){
+    //   print('error saving prescription $error');
+    //   return false;
+    // }
   }
 
   void addMedicine(Medicine medicine) {
