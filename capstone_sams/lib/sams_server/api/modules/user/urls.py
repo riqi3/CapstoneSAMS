@@ -1,4 +1,4 @@
-from .views import PersonalNotesView, ObtainTokenView, LogInView
+from .views import PersonalNotesView, ObtainTokenView, LogInView, AccountView
 from django.urls import path
 
 urlpatterns = [
@@ -6,6 +6,7 @@ urlpatterns = [
     # path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('token/', ObtainTokenView.get_token, name='get_token'),
     path('login/', LogInView.login, name='login'),
+    path('account/<str:accountID>', AccountView.fetch_user_by_id, name='fetch_user'),
     path('notes/get/<str:accountID>', PersonalNotesView.fetch_personal_notes, name='fetch_personal_notes'),
     path('notes/create/', PersonalNotesView.create_personal_note, name='create_personal_note'),
     path('notes/update/<str:noteNum>', PersonalNotesView.update_personal_note, name='update_personal_note'),

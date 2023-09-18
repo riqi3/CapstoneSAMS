@@ -23,15 +23,16 @@ class PatientCard extends StatefulWidget {
 class _PatientCardState extends State<PatientCard> {
   @override
   Widget build(BuildContext context) {
-    print('bbbbbbaa${widget.index.toString()}');
     return GestureDetector(
       onTap: () {
         print(widget.patient.firstName);
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                PatientTabsScreen(patient: widget.patient, index: widget.index),
+            builder: (context) => PatientTabsScreen(
+              patient: widget.patient,
+              index: widget.index,
+            ),
           ),
         );
       },

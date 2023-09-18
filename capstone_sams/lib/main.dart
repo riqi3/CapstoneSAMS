@@ -40,6 +40,7 @@ void main() async {
         ChangeNotifierProvider<LabResultProvider>(
           create: (context) => LabResultProvider(),
         ),
+        
       ],
       child: const SAMSApp(),
     ),

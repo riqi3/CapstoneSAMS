@@ -1,5 +1,6 @@
 import 'package:capstone_sams/providers/PatientProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/HealthRecordScreen.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/AddMedicineDialog.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/MedicineCard.dart';
 import 'package:flutter/material.dart';
@@ -157,7 +158,6 @@ class CpoeFormScreen extends StatelessWidget {
                   children: [
                     ElevatedButton(
                       onPressed: () async {
-                        // final a = medicineProvider.medicines;
                         final accountID = context.read<AccountProvider>().id;
                         // final patientID =
                         //     context.read<PatientProvider>().fetchPatient(index.toString());
@@ -165,21 +165,25 @@ class CpoeFormScreen extends StatelessWidget {
                             .read<PatientProvider>()
                             .fetchPatient(index.toString());
                         final patientID = patient.patientId;
-                        print('PATIENT $patientID ACCOUNT $accountID');
-                        final success = await context
-                            .read<MedicineProvider>()
+                        final medicineProvider =
+                            context.read<MedicineProvider>();
+                        final success = await medicineProvider
                             .saveToPrescription(accountID, patientID);
-                        if (success != null && success) {
+
+                        print('PATIENT $patientID ACCOUNT $accountID');
+
+                        print('TESTING PO ITO SA SUCCESS $success');
+
+                        print(success);
+
+                        if (success) {
                           print('test this selected PATIENT $index');
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => PatientCard(
+                              builder: (context) => PatientTabsScreen(
                                 patient: patient,
                                 index: index,
                               ),
-                              // HealthRecordsScreen(
-                              //   patient: patient,
-                              // ),
                             ),
                           );
                         } else {

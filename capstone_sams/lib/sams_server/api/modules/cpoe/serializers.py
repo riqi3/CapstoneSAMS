@@ -10,7 +10,7 @@ class CommentSerializer(serializers.ModelSerializer):
 class PrescriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Prescription
-        fields = ['presNum', 'dosage', 'timeFrame', 'amount', 'account', 'health_record']
+        fields = ['presNum', 'medicines', 'account', 'health_record']
 
 class MedicineSerializer(serializers.ModelSerializer):
     class Meta:
