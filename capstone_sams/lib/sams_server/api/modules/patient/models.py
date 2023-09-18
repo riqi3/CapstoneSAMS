@@ -1,6 +1,9 @@
 from django.db import models
  
-
+'''
+This model represent the patients
+inputted and stored into the system.
+'''
 class Patient(models.Model):
 
     GENDER_OPTIONS = {
@@ -21,6 +24,11 @@ class Patient(models.Model):
     email = models.CharField(max_length = 50, blank = True)
     user = models.CharField(null = True, blank = True)
 
+'''
+This model represent the health records
+inputted and stored into the system. Each
+record is connected to only one patient.
+'''
 class Health_Record(models.Model):
     #Health Record Attributes
     recordNum = models.AutoField(primary_key = True)

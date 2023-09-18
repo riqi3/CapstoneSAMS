@@ -13,7 +13,11 @@ import json
 from api.modules.user.models import Personal_Note, Account, Data_Log
 from api.modules.user.serializers import PersonalNoteSerializer, AccountSerializer
 
-
+'''
+This view represent the ability to generate
+and obtain a token.
+Certain to exception handlers were coded to ensure continued operations.
+'''
 class ObtainTokenView(APIView):
     permission_classes = [AllowAny]
 
@@ -43,7 +47,12 @@ class ObtainTokenView(APIView):
             # If authentication fails, return an error response
             return Response({'error': 'Invalid credentials'}, status=400)
     
-
+'''
+This view represent the ability for the user to login into the system.
+The system will validate the username and password are valid.
+In addition, it creates a data log for reference.
+Certain to exception handlers were coded to ensure continued operations.
+'''
 class LogInView(viewsets.ModelViewSet):
     @api_view(['POST'])
     def login(request):
@@ -67,10 +76,18 @@ class LogInView(viewsets.ModelViewSet):
         else:
             return Response({'error': 'Invalid credentials'}, status=400)
 
-
+'''
+This view represent all the functions necessary to conduct
+operations related to Personal_Note objects.
+'''
 
 class PersonalNotesView(viewsets.ModelViewSet):
 
+    '''
+    This view allow the user to fetch their inputted notes. It uses
+    the user's id to determine the notes to be fetch.
+    Certain to exception handlers were coded to ensure continued operations.
+    '''
     @api_view(['GET'])
     def fetch_personal_notes(request, accountID):
         try:
@@ -99,6 +116,12 @@ class PersonalNotesView(viewsets.ModelViewSet):
         except Exception as e:
             return Response({"message": "Failed to fetch personal notes"}, status=status.HTTP_400_BAD_REQUEST)
 
+    '''
+    This view allow the user to create a new note and store it into the 
+    database.
+    In addition, it creates a data log for reference.
+    Certain to exception handlers were coded to ensure continued operations.
+    '''
     @api_view(['POST']) 
     def create_personal_note(request):
         try:
@@ -121,6 +144,12 @@ class PersonalNotesView(viewsets.ModelViewSet):
         except Exception as e:
             return Response({"message": "Failed to create note"}, status=status.HTTP_400_BAD_REQUEST)
 
+    '''
+    This view allow the user to update their inputted personal note base on the note's
+    number.
+    In addition, a data log will be automatically generated for reference.
+    Certain to exception handlers were coded to ensure continued operations.
+    '''
     @api_view(['PUT'])
     def update_personal_note(request, noteNum):
         try:
@@ -141,6 +170,11 @@ class PersonalNotesView(viewsets.ModelViewSet):
         except Exception as e:
             return Response({"message": "Failed to update note", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
+    '''
+    This view allow the user to set the task as done or not.
+    In addition, a data log will be automatically generated for reference.
+    Certain to exception handlers were coded to ensure continued operations.
+    '''
     @api_view(['PUT'])
     def set_done(request, noteNum):
         try:
@@ -159,6 +193,11 @@ class PersonalNotesView(viewsets.ModelViewSet):
         except Exception as e:
             return Response({"message": "Failed to update note", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+    '''
+    This view allow the user to delete their inputted personal note base on the note's
+    number.
+    Certain to exception handlers were coded to ensure continued operations.
+    '''
     @api_view(['DELETE'])
     def delete_personal_note(request, noteNum):
         try:
