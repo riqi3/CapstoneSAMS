@@ -109,40 +109,38 @@ class _HomeScreenState extends State<HomeScreen> {
     final todosPreview =
         _userTodos.length > 3 ? _userTodos.sublist(0, 3) : _userTodos;
 
-    return Center(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          Expanded(
-            child: EHRSection(
-              title: 'ss',
-              press: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EhrListScreen(),
-                  ),
-                );
-                print('object');
-              },
-            ),
+    return Column(
+      // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        Center(
+          child: EHRSection(
+            title: 'ss',
+            press: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EhrListScreen(),
+                ),
+              );
+              print('homescreen');
+            },
           ),
-          Expanded(
-            child: NotesSection(
-              title: medNotesTitle,
-              press: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MedicalNotes(),
-                  ),
-                );
-              },
-              todosPreview: todosPreview,
-            ),
+        ),
+        Center(
+          child: NotesSection(
+            title: medNotesTitle,
+            press: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MedicalNotes(),
+                ),
+              );
+            },
+            todosPreview: todosPreview,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

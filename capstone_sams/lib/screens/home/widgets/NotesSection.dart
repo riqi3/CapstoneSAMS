@@ -24,7 +24,7 @@ class NotesSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final username = context.watch<AccountProvider>().username;
     int numTodos = todosPreview.length;
-    print(numTodos);
+    print("todos ${numTodos}");
     return Column(
       children: [
         Padding(
