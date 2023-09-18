@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:capstone_sams/constants/Dimensions.dart';
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/global-widgets/TitleAppBar.dart';
@@ -20,13 +22,7 @@ class EhrListScreen extends StatefulWidget {
 }
 
 class _EhrListScreenState extends State<EhrListScreen> {
-  late Future<List<Patient>> patients;
-
-  @override
-  void initState() {
-    super.initState();
-    patients = context.read<PatientProvider>().fetchPatients();
-  }
+  late Stream<List<Patient>> patients;
 
   final double items = 50;
   final start = 0;
@@ -36,82 +32,14 @@ class _EhrListScreenState extends State<EhrListScreen> {
   double pages1 = 0;
 
   @override
+  void initState() {
+    super.initState();
+    patients =
+        Stream.fromFuture(context.read<PatientProvider>().fetchPatients());
+  }
+
+  @override
   Widget build(BuildContext context) {
-    var pages = SingleChildScrollView(
-      padding: EdgeInsets.only(
-        left: Sizing.sectionSymmPadding,
-        right: Sizing.sectionSymmPadding,
-        top: Sizing.sectionSymmPadding * 2,
-        bottom: Sizing.sectionSymmPadding * 4,
-      ),
-      scrollDirection: Axis.vertical,
-      physics: BouncingScrollPhysics(),
-      child: FutureBuilder<List<Patient>>(
-        future: patients,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Center(
-              child: const CircularProgressIndicator(),
-            );
-          }
-
-          List<Patient> dataToShow = snapshot.data!;
-
-          // final start = max(0, (currentPageIndex - 1) * items.toInt());
-          // final end = (currentPageIndex * items.toInt() + items.toInt() <=
-          //         totalPatients!.toInt())
-          //     ? ((currentPageIndex * items.toInt()) + items.toInt())
-          //     : totalPatients!.toInt();
-          // final start = max(0, (currentPageIndex - 1) * items.toInt());
-
-          final start = currentPageIndex * items.toInt();
-          final end =
-              (currentPageIndex.toInt() * items.toInt() + items.toInt() <=
-                      totalPatients!.toInt())
-                  ? (currentPageIndex.toInt() * items.toInt() + items.toInt())
-                  : totalPatients!.toInt();
-
-          // end = (currentPageIndex * items.toInt() + items.toInt() <=
-          //         totalPatients!.toInt())
-          //     ? ((currentPageIndex * items.toInt()) + items.toInt())
-          //     : totalPatients!.toInt();
-          print('start ${start} end ${end}');
-
-          dataToShow = dataToShow.sublist(start, end);
-
-          return LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
-              totalPatients = snapshot.data?.length.toDouble();
-              pages1 = (totalPatients! / items);
-
-              print('items display per page ${items}');
-              if (pages1 > items) pages1++;
-              pageRounded = pages1.ceil();
-
-              // if (currentPageIndex > totalPatients!.ceil() ) {
-              //   int remainingItems = totalPatients.to % itemsPerPage;
-              //   int remainingPages = (remainingItems / itemsPerPage).ceil();
-
-              //   if (remainingItems > 0) {
-              //     totalPages += remainingPages;
-              //     // Create a new page and add the remaining items to it
-              //     // ...
-              //   }
-              // }
-
-              print(
-                  "number of pagess ${pageRounded} aa  number of patients ${totalPatients}");
-              if (constraints.maxWidth >= Dimensions.mobileWidth) {
-                return _tabletView(snapshot, dataToShow, start);
-              } else {
-                return _mobileView(snapshot, dataToShow, start);
-              }
-            },
-          );
-        },
-      ),
-    );
-
     return Scaffold(
       endDrawer: ValueDashboard(),
       appBar: PreferredSize(
@@ -122,33 +50,74 @@ class _EhrListScreenState extends State<EhrListScreen> {
             backgroundColor: Pallete.mainColor),
         preferredSize: Size.fromHeight(kToolbarHeight),
       ),
-      body: pages,
-      bottomNavigationBar: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          ChevronPrev(),
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: Sizing.sectionSymmPadding),
-            child: Text(
-              '${currentPageIndex + 1} out of ${pageRounded}',
-              style: TextStyle(fontSize: Sizing.header5),
-            ),
-          ),
-          ChevronNext(),
-        ],
+      body: SingleChildScrollView(
+        padding: EdgeInsets.only(
+          left: Sizing.sectionSymmPadding,
+          right: Sizing.sectionSymmPadding,
+          top: Sizing.sectionSymmPadding * 2,
+          bottom: Sizing.sectionSymmPadding * 4,
+        ),
+        scrollDirection: Axis.vertical,
+        physics: BouncingScrollPhysics(),
+        child: StreamBuilder(
+          stream: patients,
+          builder: (context, snapshot) {
+            List<Patient> dataToShow = [];
+            if (snapshot.hasError) {
+              return Center(
+                child: Text('Error: ${snapshot.error}'),
+              );
+            } else if (snapshot.connectionState == ConnectionState.waiting) {
+              print(snapshot.error);
+
+              return Center(
+                child: const CircularProgressIndicator(),
+              );
+            } else if (snapshot.hasData) {
+              dataToShow = snapshot.data!;
+              final start = currentPageIndex * items.toInt();
+              final end = min(
+                  (currentPageIndex.toInt() * items.toInt()) + items.toInt(),
+                  dataToShow.length);
+              print('start ${start} end ${end}');
+
+              dataToShow = dataToShow.sublist(start, end);
+              totalPatients = snapshot.data?.length.toDouble();
+              pages1 = (totalPatients! / items);
+              print('items display per page ${items}');
+
+              if (pages1 > items) pages1++;
+              pageRounded = pages1.ceil();
+
+              print(
+                  "number of pagess ${pageRounded} aa  number of patients ${totalPatients}");
+            }
+
+            return LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                if (constraints.maxWidth >= Dimensions.mobileWidth) {
+                  return _tabletView(snapshot, dataToShow, start);
+                } else {
+                  return _mobileView(snapshot, dataToShow, start);
+                }
+              },
+            );
+          },
+        ),
       ),
-      //     NumberPagination(
-      //   onPageChanged: (int pageNumber) {
-      //     setState(() {
-      //       currentPageIndex = pageNumber;
-      //     });
-      //   },
-      //   pageTotal: pageRounded,
-      //   pageInit: currentPageIndex,
-      //   colorPrimary: Pallete.whiteColor,
-      //   colorSub: Pallete.mainColor,
-      // ),
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.symmetric(vertical: Sizing.spacing),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ChevronPrev(),
+            Text(
+              '${currentPageIndex + 1} out of $pageRounded ',
+            ),
+            ChevronNext(),
+          ],
+        ),
+      ),
     );
   }
 
@@ -169,7 +138,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(100.0),
         ),
-        minimumSize: Size(50, 50), //////// HERE
+        minimumSize: Size(50, 50),
       ),
     );
   }
@@ -191,7 +160,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(100.0),
         ),
-        minimumSize: Size(50, 50), //////// HERE
+        minimumSize: Size(50, 50),
       ),
     );
   }
@@ -223,6 +192,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
       shrinkWrap: true,
       physics: const BouncingScrollPhysics(),
       itemCount: dataToShow.length,
+      // itemCount: snapshot.data?.length,
       itemBuilder: (context, index) {
         final patient = dataToShow[index];
         print("tablet ${pageRounded}");
