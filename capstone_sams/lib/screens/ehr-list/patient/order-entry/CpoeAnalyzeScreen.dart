@@ -8,10 +8,18 @@ import 'dart:convert';
 import 'package:capstone_sams/theme/pallete.dart';
 
 import '../../../../constants/Env.dart';
+import '../../../../models/PatientModel.dart';
 import '../../../../theme/Sizing.dart';
 import 'CpoeFormScreen.dart';
 
 class CpoeAnalyzeScreen extends StatefulWidget {
+  final int index;
+  final Patient patient;
+  CpoeAnalyzeScreen({
+    required this.patient,
+    required this.index,
+  });
+
   @override
   _CpoeAnalyzeScreenState createState() => _CpoeAnalyzeScreenState();
 }
@@ -43,6 +51,8 @@ class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
           context,
           MaterialPageRoute(
             builder: (context) => CpoeFormScreen(
+              patient: widget.patient,
+              index: widget.index,
               finalPrediction: finalPrediction,
               finalConfidence: finalConfidence,
             ),

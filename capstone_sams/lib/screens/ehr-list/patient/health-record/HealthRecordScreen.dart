@@ -1,8 +1,12 @@
+import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/MedicationOrdersCard.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/PatientInfoCard.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../models/PatientModel.dart';
+import '../../../../providers/MedicineProvider.dart';
 import '../../../../theme/Sizing.dart';
+import '../order-entry/widgets/MedicineCard.dart';
 
 class HealthRecordsScreen extends StatefulWidget {
   final Patient patient;
@@ -16,6 +20,7 @@ class HealthRecordsScreen extends StatefulWidget {
 class _HealthRecordsScreenState extends State<HealthRecordsScreen> {
   @override
   Widget build(BuildContext context) {
+    final medicineProvider = Provider.of<MedicineProvider>(context);
     return Scaffold(
       body: SingleChildScrollView(
         padding: EdgeInsets.only(
@@ -31,6 +36,12 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen> {
             PatientInfoCard(
               patient: widget.patient,
             ),
+            if (medicineProvider.medicines.isNotEmpty)
+              MedicationOrderCard(
+                patient: widget.patient,
+              )
+            else
+              SizedBox(),
           ],
         ),
       ),

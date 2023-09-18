@@ -9,7 +9,7 @@ import '../../../../models/LabResultModel.dart';
 import '../../../../theme/Sizing.dart';
 
 class LaboratoriesScreen extends StatefulWidget {
-  final String index;
+  final int index;
   const LaboratoriesScreen({Key? key, required this.index}) : super(key: key);
 
   @override
@@ -23,7 +23,7 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
   void initState() {
     super.initState();
     labresults =
-        context.read<LabResultProvider>().fetchLabResults(widget.index);
+        context.read<LabResultProvider>().fetchLabResults(widget.index.toString());
   }
 
   @override

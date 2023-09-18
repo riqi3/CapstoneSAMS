@@ -8,6 +8,18 @@ import 'package:http/http.dart' as http;
 import '../models/PatientModel.dart';
 
 class PatientProvider extends ChangeNotifier {
+  Patient? _patient;
+  Patient? get patient => _patient;
+  String? get id => _patient?.patientId;
+  String? get firstName => _patient?.firstName;
+  String? get middleName => _patient?.middleName;
+  String? get lastName => _patient?.lastName;
+  int? get age => _patient?.age;
+  String? get gender => _patient?.gender;
+  DateTime? get birthDate => _patient?.birthDate;
+  DateTime? get registrationDate => _patient?.registration;
+  String? get phone => _patient?.phone;
+  String? get email => _patient?.email;
   var data = [];
   List<Patient> _patients = [];
 
@@ -28,7 +40,7 @@ class PatientProvider extends ChangeNotifier {
     }
   }
 
-  Future<Patient> fetchPatient(int index) async {
+  Future<Patient> fetchPatient(String index) async {
     await Future.delayed(Duration(milliseconds: 3000));
     final response =
         await http.get(Uri.parse('${Env.prefix}/patient/patients/${index}'));
@@ -36,7 +48,7 @@ class PatientProvider extends ChangeNotifier {
     if (response.statusCode == 200) {
       return Patient.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception('Failed to load album');
+      throw Exception('Failed to fetch patient');
     }
   }
 

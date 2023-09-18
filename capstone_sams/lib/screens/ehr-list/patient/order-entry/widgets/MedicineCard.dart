@@ -2,8 +2,11 @@ import 'package:capstone_sams/models/MedicineModel.dart';
 import 'package:capstone_sams/providers/MedicineProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/EditMedicineDialog.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:capstone_sams/theme/pallete.dart';
+
+import '../../../../../constants/Dimensions.dart';
 
 class MedicineCard extends StatelessWidget {
   final Medicine medicine;
@@ -75,47 +78,110 @@ class MedicineCard extends StatelessWidget {
               ],
             ),
           ),
-          Row(
-            children: [
-              ElevatedButton.icon(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => EditMedicineDialog(
-                      medicine: medicine,
-                      index: index,
-                    ),
-                  );
-                },
-                icon: Icon(Icons.edit),
-                label: Text('Edit'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Pallete.greenColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  elevation: 5,
-                ),
-              ),
-              SizedBox(width: 10),
-              ElevatedButton.icon(
-                onPressed: () {
-                  medicineProvider.removeMedicine(index);
-                },
-                icon: Icon(Icons.delete),
-                label: Text('Remove'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  elevation: 5,
-                ),
-              ),
-            ],
+          LayoutBuilder(
+            builder: (context, constraints) {
+              if (constraints.maxWidth >= Dimensions.mobileWidth) {
+                return _tabletView(medicineProvider);
+              } else {
+                return _mobileView(context, medicineProvider);
+              }
+            },
           ),
         ],
       ),
+    );
+  }
+
+  Row _mobileView(BuildContext context, MedicineProvider medicineProvider) {
+    return Row(
+      children: [
+        ElevatedButton.icon(
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) => EditMedicineDialog(
+                medicine: medicine,
+                index: index,
+              ),
+            );
+          },
+          icon: FaIcon(
+            FontAwesomeIcons.pen,
+            color: Pallete.greenColor,
+          ),
+          label: Text('Edit'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Pallete.greenColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            elevation: 5,
+          ),
+        ),
+        SizedBox(width: 10),
+        ElevatedButton.icon(
+          onPressed: () {
+            medicineProvider.removeMedicine(index);
+          },
+          icon: FaIcon(
+            FontAwesomeIcons.trash,
+            color: Pallete.redColor,
+          ),
+          label: Text('Remove'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Pallete.redColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            elevation: 5,
+          ),
+        ),
+      ],
+    );
+  }
+
+  PopupMenuButton<dynamic> _tabletView(MedicineProvider medicineProvider) {
+    return PopupMenuButton(
+      itemBuilder: (context) => [
+        PopupMenuItem(
+          child: ListTile(
+            leading: FaIcon(
+              FontAwesomeIcons.pen,
+              color: Pallete.greenColor,
+            ),
+            title: Text(
+              'Edit',
+              style: TextStyle(
+                color: Pallete.greenColor,
+              ),
+            ),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => EditMedicineDialog(
+                  medicine: medicine,
+                  index: index,
+                ),
+              );
+            },
+          ),
+        ),
+        PopupMenuItem(
+          child: ListTile(
+            leading: FaIcon(
+              FontAwesomeIcons.trash,
+              color: Pallete.redColor,
+            ),
+            title: Text(
+              'Delete',
+              style: TextStyle(color: Pallete.redColor),
+            ),
+            onTap: () {
+              medicineProvider.removeMedicine(index);
+            },
+          ),
+        ),
+      ],
     );
   }
 
