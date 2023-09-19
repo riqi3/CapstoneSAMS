@@ -2,9 +2,10 @@ import 'package:capstone_sams/providers/MedicineProvider.dart';
 
 import 'package:flutter/material.dart';
 
+import '../../constants/theme/sizing.dart';
 import '../../models/MedicineModel.dart';
 
-import '../../theme/sizing.dart';
+ 
 
 class SearchMedicineDelegate extends SearchDelegate<String> {
   MedicineProvider _medicineList = MedicineProvider();

@@ -27,7 +27,6 @@ class LabResultProvider with ChangeNotifier {
       throw Exception('Failed to fetch lab results');
     }
   }
- 
 
   void addLabResult(LabResult labresult) async {
     final response = await http.post(Uri.parse('${Env.prefix}/ocr/'));

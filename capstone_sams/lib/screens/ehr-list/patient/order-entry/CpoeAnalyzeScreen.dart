@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:capstone_sams/theme/pallete.dart';
+ 
 
 import '../../../../constants/Env.dart';
+import '../../../../constants/theme/pallete.dart';
 import '../../../../models/PatientModel.dart';
 import '../../../../theme/Sizing.dart';
 import 'CpoeFormScreen.dart';

@@ -3,12 +3,14 @@
 import 'package:capstone_sams/models/MedicalNotesModel.dart';
 import 'package:capstone_sams/providers/MedicalNotesProvider.dart';
 import 'package:capstone_sams/screens/medical_notes/EditTodoScreen.dart';
-import 'package:capstone_sams/theme/pallete.dart';
+ 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import 'package:provider/provider.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
+
+import '../../../constants/theme/pallete.dart';
 
 class TodoWidget extends StatelessWidget {
   final Todo todo;

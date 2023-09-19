@@ -3,9 +3,8 @@ import 'dart:math';
 import 'package:capstone_sams/constants/Dimensions.dart';
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/global-widgets/TitleAppBar.dart';
-import 'package:capstone_sams/models/LabResultModel.dart';
+
 import 'package:capstone_sams/models/PatientModel.dart';
-import 'package:capstone_sams/providers/LabResultProvider.dart';
 
 import 'package:capstone_sams/screens/ehr-list/widgets/PatientCard.dart';
 
@@ -13,10 +12,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:provider/provider.dart';
-import 'package:capstone_sams/theme/pallete.dart';
 
+import '../../constants/theme/pallete.dart';
+import '../../constants/theme/sizing.dart';
 import '../../providers/PatientProvider.dart';
-import '../../theme/sizing.dart';
 
 class EhrListScreen extends StatefulWidget {
   @override

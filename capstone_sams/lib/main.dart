@@ -9,9 +9,10 @@ import 'package:capstone_sams/screens/authentication/LoginScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'constants/theme/AppTheme.dart';
 import 'providers/MedicalNotesProvider.dart';
 
-import 'theme/AppTheme.dart';
+ 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

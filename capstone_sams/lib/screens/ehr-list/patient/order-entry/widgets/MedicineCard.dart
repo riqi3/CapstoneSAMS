@@ -4,9 +4,10 @@ import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/EditM
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:capstone_sams/theme/pallete.dart';
+ 
 
 import '../../../../../constants/Dimensions.dart';
+import '../../../../../constants/theme/pallete.dart';
 
 class MedicineCard extends StatelessWidget {
   final Medicine medicine;
