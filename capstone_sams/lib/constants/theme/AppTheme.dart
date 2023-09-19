@@ -1,7 +1,5 @@
- 
+import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:flutter/material.dart';
-
-import '../../theme/Pallete.dart';
 
 class AppTheme {
   static ThemeData theme = ThemeData(

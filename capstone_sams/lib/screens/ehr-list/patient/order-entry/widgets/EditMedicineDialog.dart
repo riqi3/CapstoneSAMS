@@ -8,7 +8,8 @@ import 'package:provider/provider.dart';
 
 import '../../../../../constants/Env.dart';
 import '../../../../../constants/theme/pallete.dart';
-import '../../../../../theme/Sizing.dart';
+import '../../../../../constants/theme/sizing.dart';
+ 
 
 class EditMedicineDialog extends StatefulWidget {
   final Medicine medicine;

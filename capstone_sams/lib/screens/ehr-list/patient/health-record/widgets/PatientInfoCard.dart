@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import '../../../../../constants/theme/pallete.dart';
+import '../../../../../constants/theme/sizing.dart';
 import '../../../../../models/PatientModel.dart';
-import '../../../../../theme/Pallete.dart';
-import '../../../../../theme/Sizing.dart';
+ 
 
 class PatientInfoCard extends StatefulWidget {
   final Patient patient;

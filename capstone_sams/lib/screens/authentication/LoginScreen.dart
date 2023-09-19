@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../constants/theme/pallete.dart';
+import '../../constants/theme/sizing.dart';
 import '../../global-widgets/text-fields/Textfields.dart';
-import '../../theme/Sizing.dart';
+ 
 import '../home/HomeScreen.dart';
 
 import '../../providers/AccountProvider.dart';
