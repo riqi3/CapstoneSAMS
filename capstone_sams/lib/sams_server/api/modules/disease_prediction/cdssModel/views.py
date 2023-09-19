@@ -318,8 +318,28 @@ class SymptomViewSet(viewsets.ModelViewSet):
 
         return Response("Successfully uploaded the data!")
     
+@api_view(['POST'])
+def create_symptom_record(request):
+    symptom_input = request.data.get('symptom_input', "").lower()
 
-            
+    # Create a new HealthSymptom instance with values set based on user input
+    health_symptom = HealthSymptom()
+
+    # Set the values of the symptoms based on the user's input
+    for field in HealthSymptom._meta.fields:
+        if field.name != 'id' and field.name != 'prognosis':
+            setattr(health_symptom, field.name, 1 if field.name in symptom_input else 0)
+
+    # Set "prognosis" to an empty string, as it's not relevant in this case
+    health_symptom.prognosis = ""
+
+    # Serialize the health_symptom instance to JSON
+    serializer = HealthSymptomSerializer(health_symptom)
+
+    # Save the instance to the database
+    health_symptom.save()
+
+    return Response(serializer.data,"Successfully uploaded the data!")           
 class PredictDisease(APIView):
     def post(self, request):
         symptoms = request.data["symptoms"]
