@@ -22,6 +22,8 @@ class Patient {
       this.phone,
       this.email});
 
+   
+
   Map<String, dynamic> toJson() {
     return {
       'patientId': patientId,

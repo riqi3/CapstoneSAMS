@@ -77,10 +77,23 @@ class LogInView(viewsets.ModelViewSet):
             return Response({'error': 'Invalid credentials'}, status=400)
 
 '''
+This view represent all the function necessary to fetch
+an Account object by its id.
+'''
+class AccountView(viewsets.ModelViewSet):
+    @api_view(['GET'])
+    def fetch_user_by_id(request, accountID):
+        try:
+            account = Account.objects.get(pk = accountID)
+            serializer = AccountSerializer(account)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"message": "Failed to fetch account.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+'''
 This view represent all the functions necessary to conduct
 operations related to Personal_Note objects.
 '''
-
 class PersonalNotesView(viewsets.ModelViewSet):
 
     '''

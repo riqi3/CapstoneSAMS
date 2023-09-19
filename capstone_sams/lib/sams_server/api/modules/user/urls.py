@@ -1,4 +1,4 @@
-from .views import PersonalNotesView, ObtainTokenView, LogInView
+from .views import PersonalNotesView, ObtainTokenView, LogInView, AccountView
 from django.urls import path
 
 urlpatterns = [

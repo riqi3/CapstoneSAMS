@@ -1,9 +1,12 @@
 import 'package:capstone_sams/models/MedicineModel.dart';
 import 'package:capstone_sams/providers/MedicineProvider.dart';
 import 'package:capstone_sams/theme/pallete.dart';
+import 'package:dio/dio.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../../constants/Env.dart';
 import '../../../../../theme/Sizing.dart';
 
 class EditMedicineDialog extends StatefulWidget {
@@ -70,27 +73,41 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Medication',
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Pallete.paleblueColor,
-                            ),
-                          ),
-                          filled: true,
-                          fillColor: Pallete.palegrayColor,
+                      DropdownSearch<Medicine>(
+                        dropdownDecoratorProps: DropDownDecoratorProps(
+                          dropdownSearchDecoration:
+                              InputDecoration(labelText: "Medication"),
                         ),
-                        initialValue: _editedMedicine.name,
-                        onSaved: (value) => _editedMedicine.name = value,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter a medicine';
-                          }
-                          return null;
+                        clearButtonProps: ClearButtonProps(isVisible: true),
+                        popupProps: PopupProps.modalBottomSheet(
+                          showSearchBox: true,
+                          // showSelectedItems: true,
+                        ),
+                        asyncItems: (String filter) async {
+                          var response = await Dio().get(
+                            '${Env.prefix}/cpoe/medicines/',
+                            queryParameters: {"filter": filter},
+                          );
+                          // var models = Medicine.fromJson(response.data);
+                          var models = List<Medicine>.from(response.data
+                              .map((json) => Medicine.fromJson(json)));
+                          return models;
+                        },
+                        itemAsString: (Medicine medicine) =>
+                            medicine.name.toString(),
+                        onChanged: (Medicine? data) {
+                          _editedMedicine.name = data?.name.toString();
+                          print('MEDICATION: ${data?.name.toString()}');
                         },
                       ),
                       SizedBox(height: 10),
+                      // Flexible(
+                      //   child: TextAreaField(
+                      //     validator: 'pls input',
+                      //     hintText: 'Instructions',
+                      //     onSaved: _editedMedicine.instructions,
+                      //   ),
+                      // ),
                       Flexible(
                         child: TextFormField(
                           decoration: InputDecoration(
@@ -103,9 +120,9 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                             filled: true,
                             fillColor: Pallete.palegrayColor,
                           ),
+                          minLines: 4,
                           maxLines: null,
                           keyboardType: TextInputType.multiline,
-                          initialValue: _editedMedicine.instructions,
                           onSaved: (value) =>
                               _editedMedicine.instructions = value,
                         ),
@@ -130,8 +147,7 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                               onTap: () {
                                 showDatePicker(
                                   context: context,
-                                  initialDate:
-                                      _selectedStartDate ?? DateTime.now(),
+                                  initialDate: DateTime.now(),
                                   firstDate: DateTime.now(),
                                   lastDate:
                                       DateTime.now().add(Duration(days: 365)),
@@ -145,7 +161,8 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                               },
                               controller: TextEditingController(
                                 text: _selectedStartDate != null
-                                    ? _selectedStartDate
+                                    ? _selectedStartDate!
+                                        .toLocal()
                                         .toString()
                                         .split(' ')[0]
                                     : '',
@@ -171,8 +188,9 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                                 showDatePicker(
                                   context: context,
                                   initialDate:
-                                      _selectedEndDate ?? DateTime.now(),
-                                  firstDate: DateTime.now(),
+                                      _selectedStartDate ?? DateTime.now(),
+                                  firstDate:
+                                      _selectedStartDate ?? DateTime.now(),
                                   lastDate:
                                       DateTime.now().add(Duration(days: 365)),
                                 ).then((selectedDate) {
@@ -185,7 +203,10 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                               },
                               controller: TextEditingController(
                                 text: _selectedEndDate != null
-                                    ? _selectedEndDate.toString().split(' ')[0]
+                                    ? _selectedEndDate!
+                                        .toLocal()
+                                        .toString()
+                                        .split(' ')[0]
                                     : '',
                               ),
                             ),
@@ -208,8 +229,6 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                                 fillColor: Pallete.palegrayColor,
                               ),
                               keyboardType: TextInputType.number,
-                              initialValue:
-                                  _editedMedicine.quantity?.toString() ?? '',
                               onSaved: (value) => _editedMedicine.quantity =
                                   int.tryParse(value ?? ''),
                             ),
@@ -228,8 +247,6 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                                 fillColor: Pallete.palegrayColor,
                               ),
                               keyboardType: TextInputType.number,
-                              initialValue:
-                                  _editedMedicine.refills?.toString() ?? '',
                               onSaved: (value) => _editedMedicine.refills =
                                   int.tryParse(value ?? ''),
                             ),
@@ -252,7 +269,7 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                           ),
                           SizedBox(width: 10),
                           ElevatedButton(
-                            child: Text('Save'),
+                            child: Text('Submit'),
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
