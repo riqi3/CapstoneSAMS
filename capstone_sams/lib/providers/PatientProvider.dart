@@ -34,6 +34,7 @@ class PatientProvider extends ChangeNotifier {
       List<Patient> patients = data.map<Patient>((json) {
         return Patient.fromJson(json);
       }).toList();
+      patients = patients.reversed.toList();
       return patients;
     } else {
       throw Exception('Failed to fetch patients');

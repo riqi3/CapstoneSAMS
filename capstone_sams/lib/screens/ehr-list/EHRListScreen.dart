@@ -3,7 +3,9 @@ import 'dart:math';
 import 'package:capstone_sams/constants/Dimensions.dart';
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/global-widgets/TitleAppBar.dart';
+import 'package:capstone_sams/models/LabResultModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
+import 'package:capstone_sams/providers/LabResultProvider.dart';
 
 import 'package:capstone_sams/screens/ehr-list/widgets/PatientCard.dart';
 
@@ -175,7 +177,8 @@ class _EhrListScreenState extends State<EhrListScreen> {
       itemBuilder: (context, index) {
         final patient = dataToShow[index];
         print("phone ${pageRounded}");
-        return PatientCard(patient: patient, index: (start + index + 1));
+        final labresult = int.parse(patient.patientId);
+        return PatientCard(patient: patient, labresult: labresult);
       },
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 1,
@@ -196,7 +199,8 @@ class _EhrListScreenState extends State<EhrListScreen> {
       itemBuilder: (context, index) {
         final patient = dataToShow[index];
         print("tablet ${pageRounded}");
-        return PatientCard(patient: patient, index: (start + index + 1));
+        final labresult = int.parse(patient.patientId);
+        return PatientCard(patient: patient, labresult: labresult);
       },
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,

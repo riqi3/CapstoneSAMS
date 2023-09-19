@@ -1,4 +1,6 @@
+import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/providers/LabResultProvider.dart';
+import 'package:capstone_sams/providers/PatientProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/lab/widgets/LabResultCard.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,12 +20,15 @@ class LaboratoriesScreen extends StatefulWidget {
 
 class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
   late Future<List<LabResult>> labresults;
+ 
 
   @override
   void initState() {
     super.initState();
-    labresults =
-        context.read<LabResultProvider>().fetchLabResults(widget.index.toString());
+    labresults = context
+        .read<LabResultProvider>()
+        .fetchLabResults(widget.index.toString());
+ 
   }
 
   @override
@@ -31,6 +36,7 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
     // final labresultProvider = Provider.of<LabResultProvider>(context);
     // late List<LabResult> lr = [];
     // late List<LabResult> b = labresultProvider.labResults;
+ 
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -82,7 +88,7 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
       itemCount: snapshot.data?.length,
       itemBuilder: (context, index) {
         final labresult = snapshot.data![index];
-
+        
         return LabResultCard(labresult: labresult);
       },
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

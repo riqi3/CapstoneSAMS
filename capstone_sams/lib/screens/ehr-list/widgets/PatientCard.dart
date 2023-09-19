@@ -10,10 +10,10 @@ import '../../../models/PatientModel.dart';
 
 class PatientCard extends StatefulWidget {
   final Patient patient;
-  final int index;
+  final int labresult;
   PatientCard({
     required this.patient,
-    required this.index,
+    required this.labresult,
   });
 
   @override
@@ -31,7 +31,7 @@ class _PatientCardState extends State<PatientCard> {
           MaterialPageRoute(
             builder: (context) => PatientTabsScreen(
               patient: widget.patient,
-              index: widget.index,
+              index: widget.labresult,
             ),
           ),
         );

@@ -21,11 +21,13 @@ class LabResultProvider with ChangeNotifier {
       List<LabResult> labResults = data.map<LabResult>((json) {
         return LabResult.fromJson(json);
       }).toList();
+      // labResults = labResults.reversed.toList();
       return labResults;
     } else {
       throw Exception('Failed to fetch lab results');
     }
   }
+ 
 
   void addLabResult(LabResult labresult) async {
     final response = await http.post(Uri.parse('${Env.prefix}/ocr/'));
