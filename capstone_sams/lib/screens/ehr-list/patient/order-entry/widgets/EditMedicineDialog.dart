@@ -1,12 +1,13 @@
 import 'package:capstone_sams/models/MedicineModel.dart';
 import 'package:capstone_sams/providers/MedicineProvider.dart';
-import 'package:capstone_sams/theme/pallete.dart';
+ 
 import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../constants/Env.dart';
+import '../../../../../constants/theme/pallete.dart';
 import '../../../../../theme/Sizing.dart';
 
 class EditMedicineDialog extends StatefulWidget {

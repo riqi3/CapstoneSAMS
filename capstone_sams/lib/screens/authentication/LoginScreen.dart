@@ -1,8 +1,7 @@
-import 'package:capstone_sams/theme/pallete.dart';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../constants/theme/pallete.dart';
 import '../../global-widgets/text-fields/Textfields.dart';
 import '../../theme/Sizing.dart';
 import '../home/HomeScreen.dart';

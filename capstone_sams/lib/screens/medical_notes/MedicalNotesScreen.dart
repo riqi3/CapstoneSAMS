@@ -11,8 +11,9 @@ import 'package:capstone_sams/screens/medical_notes/widgets/TodoListWidget.dart'
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../constants/theme/sizing.dart';
 import '../../theme/Pallete.dart';
-import '../../theme/sizing.dart';
+ 
 
 class MedicalNotes extends StatefulWidget {
   const MedicalNotes({Key? key}) : super(key: key);

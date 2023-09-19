@@ -10,7 +10,8 @@ import 'package:capstone_sams/screens/home/widgets/EhrSection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../theme/sizing.dart';
+ 
+import '../../constants/theme/sizing.dart';
 import '../medical_notes/MedicalNotesScreen.dart';
 import 'widgets/NotesSection.dart';
 
