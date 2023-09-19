@@ -1,7 +1,9 @@
-import 'package:capstone_sams/theme/pallete.dart';
-import 'package:capstone_sams/theme/sizing.dart';
+ 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import '../../../constants/theme/pallete.dart';
+import '../../../constants/theme/sizing.dart';
 
 class EHRSection extends StatelessWidget {
   const EHRSection({

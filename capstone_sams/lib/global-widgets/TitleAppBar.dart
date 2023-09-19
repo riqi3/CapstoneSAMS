@@ -3,8 +3,10 @@ import 'package:capstone_sams/global-widgets/search-bar/widgets/SearchBarWidget.
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../theme/pallete.dart';
-import '../theme/sizing.dart';
+import '../constants/theme/pallete.dart';
+import '../constants/theme/sizing.dart';
+
+ 
 
 class TitleAppBar extends StatelessWidget {
   const TitleAppBar({

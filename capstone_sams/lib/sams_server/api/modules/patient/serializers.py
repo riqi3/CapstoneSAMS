@@ -1,7 +1,9 @@
 from api.modules.patient.models import Patient, Health_Record
 from rest_framework import serializers
 
-
+'''
+This serializer will convert Patient objects into jsons.
+'''
 class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
@@ -18,7 +20,9 @@ class PatientSerializer(serializers.ModelSerializer):
             "email",
         ]
 
-
+'''
+This serializer will convert Health_Record objects into jsons.
+'''
 class HealthRecordSerializer(serializers.ModelSerializer):
     class Meta:
         model = Health_Record

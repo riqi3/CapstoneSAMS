@@ -1,5 +1,5 @@
 import 'package:capstone_sams/providers/PatientProvider.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/health-record/HealthRecordScreen.dart';
+ 
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/AddMedicineDialog.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/MedicineCard.dart';
@@ -8,12 +8,13 @@ import 'package:provider/provider.dart';
 
 import 'package:capstone_sams/providers/SymptomsFieldsProvider.dart';
 
-import 'package:capstone_sams/theme/pallete.dart';
+ 
 
+import '../../../../constants/theme/pallete.dart';
 import '../../../../models/PatientModel.dart';
 import '../../../../providers/AccountProvider.dart';
 import '../../../../providers/MedicineProvider.dart';
-import '../../widgets/PatientCard.dart';
+ 
 
 class CpoeFormScreen extends StatelessWidget {
   final String finalPrediction;

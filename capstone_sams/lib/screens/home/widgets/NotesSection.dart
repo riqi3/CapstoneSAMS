@@ -1,12 +1,14 @@
 import 'package:capstone_sams/providers/MedicalNotesProvider.dart';
-import 'package:capstone_sams/theme/pallete.dart';
-import 'package:capstone_sams/theme/sizing.dart';
+ 
 import 'package:flutter/material.dart';
 
 import 'package:capstone_sams/models/MedicalNotesModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 
 import 'package:provider/provider.dart';
+
+import '../../../constants/theme/pallete.dart';
+import '../../../constants/theme/sizing.dart';
 
 class NotesSection extends StatelessWidget {
   const NotesSection({

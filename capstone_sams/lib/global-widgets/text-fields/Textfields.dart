@@ -1,5 +1,7 @@
-import 'package:capstone_sams/theme/Theme.dart';
+ 
 import 'package:flutter/material.dart';
+
+import '../../constants/theme/pallete.dart';
 
 class ShortTextfield extends StatelessWidget {
   const ShortTextfield({

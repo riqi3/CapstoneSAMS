@@ -1,11 +1,13 @@
-import 'package:capstone_sams/theme/pallete.dart';
+ 
 import 'package:flutter/material.dart';
 
+import '../../constants/theme/pallete.dart';
+import '../../constants/theme/sizing.dart';
 import '../../models/PatientModel.dart';
 
 import '../../providers/PatientProvider.dart';
 import '../../screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
-import '../../theme/sizing.dart';
+ 
 
 class SearchPatientDelegate extends SearchDelegate {
   PatientProvider _patientList = PatientProvider();

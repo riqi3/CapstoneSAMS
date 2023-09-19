@@ -10,8 +10,20 @@ from api.modules.user.models import Account, Data_Log
 from api.modules.patient.models import Patient, Health_Record
 from api.modules.patient.serializers import PatientSerializer, HealthRecordSerializer
 
+'''
+This view represent all the functions necessary to conduct
+operations related to Patient objects.
+'''
 class PatientView(viewsets.ModelViewSet):
 
+
+    '''
+    This view allow the user to create a new patient and store it into the 
+    database.
+    In addition, it creates a health record link to the new patient and also
+    create data log for reference.
+    Certain to exception handlers were coded to ensure continued operations.
+    '''
     @api_view(['POST'])
     def create_patient(request):
         try:
@@ -46,6 +58,10 @@ class PatientView(viewsets.ModelViewSet):
         except Exception as e:
             return Response({"message": "Failed to create patient.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+    '''
+    This view allow the user to fetch all patients currently stored into the system.
+    Certain to exception handlers were coded to ensure continued operations.
+    '''
     @api_view(['GET'])
     def fetch_patients(request):
         try:
@@ -55,6 +71,10 @@ class PatientView(viewsets.ModelViewSet):
         except Exception as e:
             return Response({"message": "Failed to fetch patients.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+    '''
+    This view allow the user to fetch a certain patient base on the patient's id.
+    Certain to exception handlers were coded to ensure continued operations.
+    '''
     @api_view(['GET'])
     def fetch_patient_by_id(request, patientID):
         try:
@@ -64,6 +84,11 @@ class PatientView(viewsets.ModelViewSet):
         except Exception as e:
             return Response({"message": "Failed to fetch patients.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+    '''
+    This view allow the user to update a patient based on the patient's id.
+    A data log will be automatically generated for reference.
+    Certain to exception handlers were coded to ensure continued operations.
+    '''
     @api_view(['PUT'])
     def update_patient(request):
         try:
@@ -92,9 +117,16 @@ class PatientView(viewsets.ModelViewSet):
         except Exception as e:
             return Response({"message": "Failed to update patient.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-
+'''
+This view represent all the functions necessary to conduct
+operations related to Health_Record objects.
+'''
 class HealthRecordView(viewsets.ViewSet):
 
+    '''
+    This view allow the user to fetch a certain patient's record base on the patient's id.
+    Certain to exception handlers were coded to ensure continued operations.
+    '''
     @api_view(['GET'])
     def fetch_record_by_id(request, patientID):
         try:

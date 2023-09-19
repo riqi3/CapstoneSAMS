@@ -2,11 +2,12 @@ import 'package:capstone_sams/screens/home/HomeScreen.dart';
 
 import 'package:capstone_sams/screens/medical_notes/MedicalNotesScreen.dart';
 
-import 'package:capstone_sams/theme/sizing.dart';
+ 
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../constants/theme/sizing.dart';
 import '../screens/ehr-list/EhrListScreen.dart';
 import 'search-bar/SearchPatientDelegate.dart';
 

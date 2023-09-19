@@ -1,19 +1,19 @@
-import 'dart:convert';
-
-import 'package:capstone_sams/models/LabResultModel.dart';
+ 
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
-import 'package:capstone_sams/theme/sizing.dart';
+ 
 import 'package:flutter/material.dart';
-import 'package:capstone_sams/theme/pallete.dart';
+ 
 import 'package:intl/intl.dart';
+import '../../../constants/theme/pallete.dart';
+import '../../../constants/theme/sizing.dart';
 import '../../../models/PatientModel.dart';
 
 class PatientCard extends StatefulWidget {
   final Patient patient;
-  final int index;
+  final int labresult;
   PatientCard({
     required this.patient,
-    required this.index,
+    required this.labresult,
   });
 
   @override
@@ -31,7 +31,7 @@ class _PatientCardState extends State<PatientCard> {
           MaterialPageRoute(
             builder: (context) => PatientTabsScreen(
               patient: widget.patient,
-              index: widget.index,
+              index: widget.labresult,
             ),
           ),
         );
