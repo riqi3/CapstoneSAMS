@@ -6,9 +6,10 @@ import 'package:provider/provider.dart';
 
 import '../../../../constants/Dimensions.dart';
 import '../../../../constants/Strings.dart';
+import '../../../../constants/theme/sizing.dart';
 import '../../../../models/LabResultModel.dart';
 
-import '../../../../theme/Sizing.dart';
+ 
 
 class LaboratoriesScreen extends StatefulWidget {
   final int index;

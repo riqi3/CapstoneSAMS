@@ -1,8 +1,8 @@
 import 'package:capstone_sams/models/LabResultModel.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../../theme/Pallete.dart';
-import '../../../../../theme/Sizing.dart';
+ import '../../../../../constants/theme/pallete.dart';
+import '../../../../../constants/theme/sizing.dart';
 
 class LabResultCard extends StatelessWidget {
   final LabResult labresult;

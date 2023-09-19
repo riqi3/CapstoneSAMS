@@ -3,10 +3,11 @@ import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/Pat
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../constants/theme/sizing.dart';
 import '../../../../models/PatientModel.dart';
 import '../../../../providers/MedicineProvider.dart';
-import '../../../../theme/Sizing.dart';
-import '../order-entry/widgets/MedicineCard.dart';
+ 
+ 
 
 class HealthRecordsScreen extends StatefulWidget {
   final Patient patient;

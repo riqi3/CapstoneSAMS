@@ -9,8 +9,9 @@ import 'dart:convert';
 
 import '../../../../constants/Env.dart';
 import '../../../../constants/theme/pallete.dart';
+import '../../../../constants/theme/sizing.dart';
 import '../../../../models/PatientModel.dart';
-import '../../../../theme/Sizing.dart';
+ 
 import 'CpoeFormScreen.dart';
 
 class CpoeAnalyzeScreen extends StatefulWidget {

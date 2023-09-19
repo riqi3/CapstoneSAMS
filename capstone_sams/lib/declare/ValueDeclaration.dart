@@ -5,10 +5,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../constants/theme/pallete.dart';
+import '../constants/theme/sizing.dart';
 import '../global-widgets/TitleAppBar.dart';
 
 import '../screens/home/widgets/HomeAppBar.dart';
-import '../theme/Sizing.dart';
+ 
  
 
 class ValueDashboard extends StatelessWidget {
