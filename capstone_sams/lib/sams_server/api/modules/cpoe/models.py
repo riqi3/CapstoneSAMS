@@ -3,6 +3,10 @@ from django.db import models
 from api.modules.user.models import Account
 from api.modules.patient.models import Health_Record
 
+'''
+This model represent the comments that
+each user will inputted and stored into the system.
+'''
 class Comment(models.Model):
     #Comment Attributes
     comNum = models.AutoField(primary_key = True)
@@ -10,6 +14,10 @@ class Comment(models.Model):
     account = models.ForeignKey(Account, on_delete = models.CASCADE)
     health_record = models.ForeignKey(Health_Record, on_delete = models.CASCADE)
 
+'''
+This model represent the prescriptions that
+physicians will input and store into the system.
+'''
 class Prescription(models.Model):
     #Prescription Attributes
     presNum = models.AutoField(primary_key = True)
@@ -20,7 +28,10 @@ class Prescription(models.Model):
     account = models.ForeignKey(Account, on_delete = models.CASCADE)
     health_record = models.ForeignKey(Health_Record, on_delete = models.CASCADE)
 
-
+'''
+This model represent the medicines currently
+stored into the system.
+'''
 class Medicine(models.Model):
     #Medicine Attributes
     drugId = models.CharField(primary_key = True)

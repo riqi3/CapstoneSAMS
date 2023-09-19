@@ -24,7 +24,9 @@ from api.modules.laboratory.models import LabResult
 
 # from api.models import Account, Patient, Data_Log, Prescription, Medicine, Symptom, Health_Record, Comment, Prescribed_Medicine, Patient_Symptom
 
-
+'''
+This is a signal that will create a data log if a user logs in.
+'''
 @receiver(user_logged_in)
 def log_admin_login(sender, request, user, **kwargs):
     data_log = Data_Log(
@@ -34,7 +36,9 @@ def log_admin_login(sender, request, user, **kwargs):
     )
     data_log.save()
 
-
+'''
+This is a signal that will create a data log if a user logs out.
+'''
 @receiver(user_logged_out)
 def log_admin_logout(sender, request, user, **kwargs):
     data_log = Data_Log(
@@ -44,7 +48,10 @@ def log_admin_logout(sender, request, user, **kwargs):
     )
     data_log.save()
 
-
+'''
+This is a signal that will create a data log if an admin user does
+anything in the admin form.
+'''
 @receiver(post_save, sender=LogEntry)
 def create_data_log_instance(sender, instance, created, **kwargs):
     if created:
@@ -60,7 +67,10 @@ def create_data_log_instance(sender, instance, created, **kwargs):
             )
         data_log.save()
 
-
+'''
+This is a signal that will create a data log if an admin user deletes
+any data.
+'''
 @receiver(pre_delete, sender=LogEntry)
 def create_data_log_for_deletion(sender, instance, using, **kwargs):
     # Check if the instance is of type LogEntry
@@ -77,7 +87,10 @@ def create_data_log_for_deletion(sender, instance, using, **kwargs):
             )
             data_log.save()
 
-
+'''
+This is a signal that will create a data log if an admin user deletes
+any data.
+'''
 @receiver(post_save, sender=Patient)
 def create_health_record(sender, instance, created, **kwargs):
     if created:
@@ -89,9 +102,11 @@ def create_health_record(sender, instance, created, **kwargs):
         admin_account = instance.user
 
 
-COMMON_PASSWORDS = ["password", "12345678", "qwerty", "abc123"]
+COMMON_PASSWORDS = ["password", "12345678", "qwerty", "abc123"] # These are some commonly used passwords that the system will not accept.
 
-
+'''
+This represent the forms that will be shown to the admin when creating a new user.
+'''
 class UserCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""
@@ -144,6 +159,9 @@ class UserCreationForm(forms.ModelForm):
         return user
 
 
+'''
+This represent the forms that will be shown to the admin when updating data of an existing user.
+'''
 class UserChangeForm(forms.ModelForm):
     """A form for updating users. Includes all the fields on
     the user, but replaces the password field with admin's
@@ -179,7 +197,9 @@ class UserChangeForm(forms.ModelForm):
         # field does not have access to the initial value
         return self.initial["password"]
 
-
+'''
+This represent the table that will be shown to the admin looking at the currently stored users.
+'''
 class UserAdmin(BaseUserAdmin):
     # The forms to add and change user instances
     form = UserChangeForm
@@ -241,7 +261,10 @@ class UserAdmin(BaseUserAdmin):
     ordering = ("username",)
     filter_horizontal = ()
 
-
+'''
+This represent the forms that will be shown to the admin when creating a new patient
+and updating existing patients.
+'''
 class PatientAdminForm(forms.ModelForm):
     class Meta:
         model = Patient
@@ -258,7 +281,9 @@ class PatientAdminForm(forms.ModelForm):
             "email",
         )
 
-
+'''
+This represent the table that will be shown to the admin looking at the currently stored patients.
+'''
 class PatientAdmin(admin.ModelAdmin):
     form = PatientAdminForm
     list_display = (
@@ -347,13 +372,17 @@ class LabResultAdmin(admin.ModelAdmin):
         data = {"form": form}
         return render(request, "admin/pdf_upload.html", data)
 
-
+'''
+This represent the forms that will be shown to the admin when updating existing data logs.
+'''
 class DataLogsAdminForm(forms.ModelForm):
     class Meta:
         model = Data_Log
         fields = "__all__"
 
-
+'''
+This represent the table that will be shown to the admin looking at the currently stored data logs.
+'''
 class DataLogsAdmin(admin.ModelAdmin):
     form = DataLogsAdminForm
     list_display = ("logNum", "event", "date", "type", "account")
@@ -361,12 +390,17 @@ class DataLogsAdmin(admin.ModelAdmin):
     search_fields = ("event", "date", "account")
 
 
+'''
+This represent the table that will be shown to the admin looking at the currently stored medicines.
+'''
 class MedicineAdminForm(forms.ModelForm):
     class Meta:
         model = Medicine
         fields = "__all__"
 
-
+'''
+This represent the table that will be shown to the admin looking at the currently stored medicines.
+'''
 class MedicineAdmin(admin.ModelAdmin):
     form = MedicineAdminForm
     list_display = ("drugId", "drugCode", "drugName")
@@ -400,13 +434,18 @@ class MedicineAdmin(admin.ModelAdmin):
         data = {"form": form}
         return render(request, "admin/csv_upload.html", data)
 
-
+'''
+This represent the forms that will be shown to the admin when creating a new health record
+and updating existing health records.
+'''
 class HealthRecordAdminForm(forms.ModelForm):
     class Meta:
         model = Health_Record
         fields = "__all__"
 
-
+'''
+This represent the table that will be shown to the admin looking at the currently stored health records.
+'''
 class HealthRecordAdmin(admin.ModelAdmin):
     form = HealthRecordAdminForm
     list_display = ("recordNum", "patient")
@@ -419,7 +458,9 @@ class PrescriptionAdminForm(forms.ModelForm):
         model = Prescription
         fields = "__all__"
 
-
+'''
+This represent the table that will be shown to the admin looking at the currently stored prescriptions.
+'''
 class PrescriptionAdmin(admin.ModelAdmin):
     form = PrescriptionAdminForm
     autocomplete_fields = ["health_record"]
