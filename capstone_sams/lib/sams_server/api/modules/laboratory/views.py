@@ -136,6 +136,7 @@ class ProcessPdf(APIView):
         if request.method == "POST":
             selected_pdfs = request.POST.getlist("item")
             pdf_contents = []
+            tableAppend= []
 
             for pdf_id in selected_pdfs:
                 
@@ -151,20 +152,43 @@ class ProcessPdf(APIView):
                 tables = read_pdf(
                     pdf_instance.pdf.path, pages="all", output_format="json"
                 )
-                table = tables[1]
-                cleaned_data = cleanJsonTable(table)
+                '''tables[index] retrieves the table according by index.
+                in this case the format of the labresult has the following
+                tables: 1.) tables[0] contains the personal information. 
+                2.) tables[1] contains the haematology of the blood
+                3.) tables[3] contains the biochemistry. theese tables are 
+                then stored in their respective rows
+                '''
+                
+                for index, j in enumerate(tables):
+                    # table = 
+                    # print(index)
+                    # print(j)
+                    readTable = tables[index]
+                    tableAppend = [tableAppend,readTable]
+                    # u = [u,t]
+                    # print(tables[index])
+                # print(index,tableAppend)
+                print('\n\n\n\n')
+                cleaned_data = cleanJsonTable(tableAppend)
+                 
+                 
+                print(cleaned_data)
+                print('\n\n\n\n')
+
+                
 
                 jsonLabResult = JsonLabResult(
-                    jsonData=cleaned_data,
+                    jsonTables=cleaned_data,
                     labresult=pdf_instance,
                     title=pdf_title,
                     comment=pdf_comment, 
                     patient=patient_id,
                 )
                 jsonLabResult.save()
-                print(cleaned_data)
+                # print(jsonLabResult)
 
-                pdf_contents.append(cleaned_data)
+                pdf_contents.append(jsonLabResult)
                 json_data = json.dumps(pdf_contents)
             return JsonResponse({"result": json.loads(json_data)})
         else:

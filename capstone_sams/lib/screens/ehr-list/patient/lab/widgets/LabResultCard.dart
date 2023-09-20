@@ -1,7 +1,7 @@
 import 'package:capstone_sams/models/LabResultModel.dart';
 import 'package:flutter/material.dart';
 
- import '../../../../../constants/theme/pallete.dart';
+import '../../../../../constants/theme/pallete.dart';
 import '../../../../../constants/theme/sizing.dart';
 
 class LabResultCard extends StatelessWidget {
@@ -12,7 +12,11 @@ class LabResultCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final titles = ["TEST", '', "VALUE", "UNIT", "REFERENCE"];
-    final matrix = labresult.jsonData['data'];
+    // final matrix = labresult.jsonTables?[0][0][0][1]['data'];
+    final haematologyArray = labresult.jsonTables![0][0][1];
+    final haematologyMatrix = haematologyArray['data'];
+    final patientArray = labresult.jsonTables![0][0][0][1];
+    final patientMatrix = patientArray['data'];
     // final firstColumn = matrix.map((row) => row[0]['text']).toList();
     // final second2lastColumn = List.generate(
     //   matrix[0].length - 1,
@@ -101,17 +105,33 @@ class LabResultCard extends StatelessWidget {
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
-                  child: DataTable(
-                    columns: titles.map<DataColumn>((item) {
-                      return DataColumn(label: Text(item));
-                    }).toList(),
-                    rows: matrix.map<DataRow>((row) {
-                      return DataRow(
-                        cells: row.map<DataCell>((cell) {
-                          return DataCell(Text(cell['text'] ?? ''));
+                  child: Column(
+                    children: [
+                      DataTable(
+                        columns: titles.map<DataColumn>((item) {
+                          return DataColumn(label: Text(item));
                         }).toList(),
-                      );
-                    }).toList(),
+                        rows: patientMatrix.map<DataRow>((row) {
+                          return DataRow(
+                            cells: row.map<DataCell>((cell) {
+                              return DataCell(Text(cell['text'] ?? ''));
+                            }).toList(),
+                          );
+                        }).toList(),
+                      ),
+                      DataTable(
+                        columns: titles.map<DataColumn>((item) {
+                          return DataColumn(label: Text(item));
+                        }).toList(),
+                        rows: haematologyMatrix.map<DataRow>((row) {
+                          return DataRow(
+                            cells: row.map<DataCell>((cell) {
+                              return DataCell(Text(cell['text'] ?? ''));
+                            }).toList(),
+                          );
+                        }).toList(),
+                      ),
+                    ],
                   ),
                 ),
               ),
