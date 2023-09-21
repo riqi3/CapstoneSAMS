@@ -536,13 +536,14 @@ class PredictDisease(APIView):
 @api_view(['POST'])
 def create_symptom_record(request):
     symptoms = request.data.get('symptoms', [])
+    symptoms = [symptom.replace(' ', '_') for symptom in symptoms]
 
     # Prepare the input data for the HealthSymptom model
     input_data = {}
-    all_symptoms = [field.name for field in HealthSymptom._meta.fields if field.name != 'id' and field.name != 'prognosis']
+    all_symptoms = [field.name.replace(' ', '_') for field in HealthSymptom._meta.fields if field.name != 'id' and field.name != 'prognosis']
     
     for symptom in all_symptoms:
-        input_data[symptom] = 1 if symptom.lower() in symptoms else 0
+        input_data[symptom] = 1 if symptom.lower() in [user_symptom.lower() for user_symptom in symptoms] else 0
     
     # Create a new HealthSymptom instance with values set based on user input
     health_symptom = HealthSymptom(**input_data)
