@@ -318,28 +318,28 @@ class SymptomViewSet(viewsets.ModelViewSet):
 
         return Response("Successfully uploaded the data!")
     
-@api_view(['POST'])
-def create_symptom_record(request):
-    symptom_input = request.data.get('symptom_input', "").lower()
+# @api_view(['POST'])
+# def create_symptom_record(request):
+#     symptom_input = request.data.get('symptom_input', "").lower()
 
-    # Create a new HealthSymptom instance with values set based on user input
-    health_symptom = HealthSymptom()
+#     # Create a new HealthSymptom instance with values set based on user input
+#     health_symptom = HealthSymptom()
 
-    # Set the values of the symptoms based on the user's input
-    for field in HealthSymptom._meta.fields:
-        if field.name != 'id' and field.name != 'prognosis':
-            setattr(health_symptom, field.name, 1 if field.name in symptom_input else 0)
+#     # Set the values of the symptoms based on the user's input
+#     for field in HealthSymptom._meta.fields:
+#         if field.name != 'id' and field.name != 'prognosis':
+#             setattr(health_symptom, field.name, 1 if field.name in symptom_input else 0)
 
-    # Set "prognosis" to an empty string, as it's not relevant in this case
-    health_symptom.prognosis = ""
+#     # Set "prognosis" to an empty string, as it's not relevant in this case
+#     health_symptom.prognosis = ""
 
-    # Serialize the health_symptom instance to JSON
-    serializer = HealthSymptomSerializer(health_symptom)
+#     # Serialize the health_symptom instance to JSON
+#     serializer = HealthSymptomSerializer(health_symptom)
 
-    # Save the instance to the database
-    health_symptom.save()
+#     # Save the instance to the database
+#     health_symptom.save()
 
-    return Response(serializer.data,"Successfully uploaded the data!")           
+#     return Response(serializer.data,"Successfully uploaded the data!")           
 class PredictDisease(APIView):
     def post(self, request):
         symptoms = request.data["symptoms"]
@@ -533,3 +533,81 @@ class PredictDisease(APIView):
                 "final_confidence": final_confidence,
             }
         )
+@api_view(['POST'])
+def create_symptom_record(request):
+    symptoms = request.data.get('symptoms', [])
+
+    # Prepare the input data for the HealthSymptom model
+    input_data = {}
+    all_symptoms = [field.name for field in HealthSymptom._meta.fields if field.name != 'id' and field.name != 'prognosis']
+    
+    for symptom in all_symptoms:
+        input_data[symptom] = 1 if symptom.lower() in symptoms else 0
+    
+    # Create a new HealthSymptom instance with values set based on user input
+    health_symptom = HealthSymptom(**input_data)
+    
+    # Call your prediction models here and get the prognosis
+    base_dir = os.path.dirname(__file__)
+    svm_model_path = os.path.join(base_dir, "final_svm_model.pkl")
+    final_svm_model = pickle.load(open(svm_model_path, "rb"))
+
+    nb_model_path = os.path.join(base_dir, "final_nb_model.pkl")
+    final_nb_model = pickle.load(open(nb_model_path, "rb"))
+
+    rf_model_path = os.path.join(base_dir, "final_rf_model.pkl")
+    final_rf_model = pickle.load(open(rf_model_path, "rb"))
+
+    encoder_path = os.path.join(base_dir, "encoder.pkl")
+    encoder = pickle.load(open(encoder_path, "rb"))
+
+    input_data = [0] * len(all_symptoms)
+    for symptom in symptoms:
+        if symptom.lower() in all_symptoms:
+            index = all_symptoms.index(symptom.lower())
+            input_data[index] = 1
+    input_data = np.array(input_data).reshape(1, -1)
+
+    svm_prediction = encoder.classes_[final_svm_model.predict(input_data)[0]]
+    nb_prediction = encoder.classes_[final_nb_model.predict(input_data)[0]]
+    rf_prediction = encoder.classes_[final_rf_model.predict(input_data)[0]]
+
+    svm_prob = max(final_svm_model.predict_proba(input_data)[0])
+    nb_prob = max(final_nb_model.predict_proba(input_data)[0])
+    rf_prob = max(final_rf_model.predict_proba(input_data)[0])
+
+    # Combine predictions and probabilities
+    predictions_with_confidence = {
+        "SVM": {"prediction": svm_prediction, "confidence": svm_prob},
+        "Naive Bayes": {"prediction": nb_prediction, "confidence": nb_prob},
+        "Random Forest": {"prediction": rf_prediction, "confidence": rf_prob},
+    }
+    # Sort predictions by confidence
+    sorted_predictions = sorted(
+        predictions_with_confidence.items(),
+        key=lambda item: item[1]["confidence"],
+        reverse=True,
+    )
+
+    # The final prediction is based on the model with the highest confidence score
+    final_prediction = sorted_predictions[0][1]["prediction"]
+    final_confidence = sorted_predictions[0][1]["confidence"]
+
+    # Serialize the health_symptom instance to JSON
+    serializer = HealthSymptomSerializer(health_symptom)
+
+    # Set the prognosis obtained from the prediction models
+    health_symptom.prognosis = final_prediction
+
+    # Save the instance to the database
+    health_symptom.save()
+
+    # Return the response with both symptom recording and prediction
+    response_data = {
+        "symptom_record": serializer.data,
+        "predictions_with_confidence": sorted_predictions,
+        "final_prediction": final_prediction,
+        "final_confidence": final_confidence,
+    }
+    
+    return Response(response_data, status=200)
