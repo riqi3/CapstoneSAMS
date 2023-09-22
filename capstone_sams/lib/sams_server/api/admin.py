@@ -583,11 +583,11 @@ class HealthSymptomAdmin(admin.ModelAdmin):
     def get_urls(self):
         urls = super().get_urls()
         new_urls = [
-            path("retrain_model/", self.retrain_model),
+            path("retrain_model/", self.retrain_model, name="admin_retrain_model"),
         ]
         return new_urls + urls 
     
-    def retrain_model(self, request, queryset):
+    def retrain_model(self, request):
         if request.method == 'POST':
             success, message = train_disease_prediction_model()
             if success:
@@ -599,6 +599,7 @@ class HealthSymptomAdmin(admin.ModelAdmin):
         return render(request, "admin/train_model.html", context)
     
     retrain_model.short_description = "Retrain Model"
+    
 
 
 # class SymptomsAdminForm(forms.ModelForm):

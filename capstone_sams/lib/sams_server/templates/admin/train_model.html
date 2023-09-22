@@ -1,12 +1,12 @@
-{% extends "admin/base.html" %}
-{% load static %}
-{% block content %}
-    <div class="module">
-        <h2>Retrain Model</h2>
-        <form method="post">
-            {% csrf_token %}
-            <button type="submit" class="button">Retrain Model</button>
-        </form>
-    </div>
-    {{ block.super }}
+{% extends 'admin/base.html' %}
+{% block object-tools %}
+  {% load static %}
+  <div class="module">
+    <h2>Retrain Model</h2>
+    <form action="{% url 'admin:retrain_model' %}" method="POST">
+      {% csrf_token %}
+      <button type="submit">Retrain Model</button>
+    </form>
+  </div>
+  {{ block.super }}
 {% endblock %}
