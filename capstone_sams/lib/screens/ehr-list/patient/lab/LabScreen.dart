@@ -1,15 +1,14 @@
-import 'package:capstone_sams/providers/LabresultProvider.dart';
+import 'package:capstone_sams/providers/LabResultProvider.dart';
 
 import 'package:capstone_sams/screens/ehr-list/patient/lab/widgets/LabresultCard.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../../../constants/Dimensions.dart';
 import '../../../../constants/Strings.dart';
 import '../../../../constants/theme/sizing.dart';
 import '../../../../models/LabResultModel.dart';
-import 'widgets/test.dart';
 
 class LaboratoriesScreen extends StatefulWidget {
   final int index;
@@ -53,6 +52,7 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
               future: labresults,
               builder: (context, snapshot) {
                 List<Labresult> dataToShow = [];
+                int dataLength = 0;
                 if (snapshot.hasError) {
                   return Center(
                     child: Text('Error: ${snapshot.error}'),
@@ -72,13 +72,14 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
                   );
                 } else if (snapshot.hasData) {
                   dataToShow = snapshot.data!;
+                  dataLength = dataToShow.length;
                 }
                 return LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints constraints) {
                     if (constraints.maxWidth >= Dimensions.mobileWidth) {
                       return Column(
                         children: [
-                          _labresultTile(snapshot),
+                          _labresultTile(dataToShow, dataLength),
 
                           // _buildList(snapshot, dataToShow, widget.index),
                           _tabletView(snapshot),
@@ -97,15 +98,44 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
     );
   }
 
-  ListView _labresultTile(AsyncSnapshot<List<Labresult>> snapshot) {
+  ListView _labresultTile(List<Labresult> dataToShow, int dataLength) {
     return ListView.builder(
       shrinkWrap: true,
-      physics: const BouncingScrollPhysics(),
-      itemCount: snapshot.data?.length,
-      itemBuilder: (context, index) {
-        final labresult = snapshot.data![index];
-        return SubCategory(labresult: labresult);
+      physics: const BouncingScrollPhysics(), 
+      itemCount: dataLength,
+      itemBuilder: (context, index) { 
+        return _buildList(dataToShow[index]);
       },
+    );
+  }
+
+  Widget _buildList(Labresult list) {
+    final jsonList = list.jsonTables;
+    int numLabTypes = 0;
+    for (numLabTypes; numLabTypes < jsonList!.length; numLabTypes++)
+      print('COUNT NUMBER OF DATA $numLabTypes');
+
+    // if (list.jsonTables!.isEmpty)
+    //   return Builder(builder: (context) {
+    //     return ListTile(
+    //         onTap: () => Navigator.push(
+    //             context,
+    //             MaterialPageRoute(
+    //                 builder: (context) => SubCategory(
+    //                       name: list.title,
+    //                     ))),
+    //         leading: SizedBox(),
+    //         title: Text(list.patient));
+    //   });
+    return ExpansionTile(
+      title: Text(
+        list.title,
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      ),
+      children: List.generate(
+        numLabTypes - 1,
+        (index) => Text(jsonList[index + 1].toString()),
+      ),
     );
   }
 

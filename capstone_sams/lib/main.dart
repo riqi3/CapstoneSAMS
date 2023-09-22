@@ -1,5 +1,6 @@
 import 'package:capstone_sams/providers/AccountProvider.dart';
-import 'package:capstone_sams/providers/LabresultProvider.dart';
+import 'package:capstone_sams/providers/LabResultProvider.dart';
+
 import 'package:capstone_sams/providers/MedicineProvider.dart';
 import 'package:capstone_sams/providers/PatientProvider.dart';
 

@@ -45,6 +45,8 @@ class Labresult {
   factory Labresult.fromJson(Map<String, dynamic> json) {
     List<dynamic>? tables =
         json['jsonTables'] is List<dynamic> ? json['jsonTables'] : [];
+
+    // print(tables);
     return Labresult(
       jsonId: json['jsonId'],
       jsonTables: tables,

@@ -21,6 +21,7 @@ class LabResultCard extends StatelessWidget {
 
     final haematologyArray = labresult.jsonTables![1];
     final haematologyMatrix = haematologyArray['data'];
+
     // final patientArray = labresult.jsonTables![0];
     // final patientMatrix = patientArray['data'];
 
@@ -126,6 +127,7 @@ class LabResultCard extends StatelessWidget {
                       //     );
                       //   }).toList(),
                       // ),
+
                       DataTable(
                         columns: titles.map<DataColumn>((item) {
                           return DataColumn(label: Text(item));
