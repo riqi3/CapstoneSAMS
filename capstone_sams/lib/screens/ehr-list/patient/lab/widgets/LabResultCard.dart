@@ -5,7 +5,7 @@ import '../../../../../constants/theme/pallete.dart';
 import '../../../../../constants/theme/sizing.dart';
 
 class LabResultCard extends StatelessWidget {
-  final LabResult labresult;
+  final Labresult labresult;
 
   LabResultCard({required this.labresult});
 
@@ -13,10 +13,17 @@ class LabResultCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final titles = ["TEST", '', "VALUE", "UNIT", "REFERENCE"];
     // final matrix = labresult.jsonTables?[0][0][0][1]['data'];
-    final haematologyArray = labresult.jsonTables![0][0][1];
+
+    // final haematologyArray = labresult.jsonTables![0][0][1];
+    // final haematologyMatrix = haematologyArray['data'];
+    // final patientArray = labresult.jsonTables![0][0][0][1];
+    // final patientMatrix = patientArray['data'];
+
+    final haematologyArray = labresult.jsonTables![1];
     final haematologyMatrix = haematologyArray['data'];
-    final patientArray = labresult.jsonTables![0][0][0][1];
-    final patientMatrix = patientArray['data'];
+    // final patientArray = labresult.jsonTables![0];
+    // final patientMatrix = patientArray['data'];
+
     // final firstColumn = matrix.map((row) => row[0]['text']).toList();
     // final second2lastColumn = List.generate(
     //   matrix[0].length - 1,
@@ -107,18 +114,18 @@ class LabResultCard extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   child: Column(
                     children: [
-                      DataTable(
-                        columns: titles.map<DataColumn>((item) {
-                          return DataColumn(label: Text(item));
-                        }).toList(),
-                        rows: patientMatrix.map<DataRow>((row) {
-                          return DataRow(
-                            cells: row.map<DataCell>((cell) {
-                              return DataCell(Text(cell['text'] ?? ''));
-                            }).toList(),
-                          );
-                        }).toList(),
-                      ),
+                      // DataTable(
+                      //   columns: titles.map<DataColumn>((item) {
+                      //     return DataColumn(label: Text(item));
+                      //   }).toList(),
+                      //   rows: patientMatrix.map<DataRow>((row) {
+                      //     return DataRow(
+                      //       cells: row.map<DataCell>((cell) {
+                      //         return DataCell(Text(cell['text'] ?? ''));
+                      //       }).toList(),
+                      //     );
+                      //   }).toList(),
+                      // ),
                       DataTable(
                         columns: titles.map<DataColumn>((item) {
                           return DataColumn(label: Text(item));

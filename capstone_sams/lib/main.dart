@@ -1,5 +1,5 @@
 import 'package:capstone_sams/providers/AccountProvider.dart';
-import 'package:capstone_sams/providers/LabResultProvider.dart';
+import 'package:capstone_sams/providers/LabresultProvider.dart';
 import 'package:capstone_sams/providers/MedicineProvider.dart';
 import 'package:capstone_sams/providers/PatientProvider.dart';
 
@@ -38,8 +38,8 @@ void main() async {
         ChangeNotifierProvider<SymptomFieldsProvider>(
           create: (context) => SymptomFieldsProvider(),
         ),
-        ChangeNotifierProvider<LabResultProvider>(
-          create: (context) => LabResultProvider(),
+        ChangeNotifierProvider<LabresultProvider>(
+          create: (context) => LabresultProvider(),
         ),
         
       ],

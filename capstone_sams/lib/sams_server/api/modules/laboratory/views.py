@@ -19,6 +19,9 @@ from django.contrib import admin, messages
 from django.http import HttpResponseRedirect
 import json
 
+# def get_data_and_move_higher(arr):
+
+
 
 def cleanJsonTable(json_data):
     if isinstance(json_data, dict):
@@ -132,11 +135,16 @@ class ProcessPdf(APIView):
     #         return JsonResponse({'result': json.loads(json_data)})
  
     # tabnula
+ 
+ 
     def select_pdf(request,patient):
         if request.method == "POST":
             selected_pdfs = request.POST.getlist("item")
             pdf_contents = []
             tableAppend= []
+            tempList = []
+            uniqueDataList = []
+            newLista = []
 
             for pdf_id in selected_pdfs:
                 
@@ -160,26 +168,44 @@ class ProcessPdf(APIView):
                 then stored in their respective rows
                 '''
                 
-                for index, j in enumerate(tables):
-                    # table = 
-                    # print(index)
-                    # print(j)
+                for index, j in enumerate(tables): 
                     readTable = tables[index]
                     tableAppend = [tableAppend,readTable]
-                    # u = [u,t]
-                    # print(tables[index])
-                # print(index,tableAppend)
+                     
                 print('\n\n\n\n')
                 cleaned_data = cleanJsonTable(tableAppend)
-                 
-                 
-                print(cleaned_data)
-                print('\n\n\n\n')
 
+                def get_data_and_move_higher(arr):
+                    for item in arr:
+                        if isinstance(item, dict) and "data" in item:
+                            data_contents = item["data"]
+                            extract_list = {"data": data_contents}
+                            tempList.append(extract_list)
+
+                        if isinstance(item, list):
+                            get_data_and_move_higher(item)
+
+                get_data_and_move_higher(cleaned_data)
+
+                print('aaaaaaaaaaa', tempList)
+                print('\n\n')
+
+                for item in tempList:
+                    data_contents = item['data']
+                    if data_contents not in uniqueDataList:
+                        uniqueDataList.append(data_contents)
+
+                result_list = [{'data': data_contents} for data_contents in uniqueDataList]
+                for item in result_list:
+                    newLista.append(item)
+                 
+                 
+                print('bbbbbbbbb', newLista)
+                
                 
 
                 jsonLabResult = JsonLabResult(
-                    jsonTables=cleaned_data,
+                    jsonTables=newLista,
                     labresult=pdf_instance,
                     title=pdf_title,
                     comment=pdf_comment, 

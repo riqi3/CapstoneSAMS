@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../constants/theme/sizing.dart';
 import '../../../../models/PatientModel.dart';
- 
+
 import '../lab/LabScreen.dart';
 import '../order-entry/CpoeAnalyzeScreen.dart';
 import 'HealthRecordScreen.dart';

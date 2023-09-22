@@ -24,6 +24,7 @@ class EhrListScreen extends StatefulWidget {
 
 class _EhrListScreenState extends State<EhrListScreen> {
   late Stream<List<Patient>> patients;
+  ScrollController _controller = ScrollController();
 
   final double items = 50;
   final start = 0;
@@ -39,6 +40,15 @@ class _EhrListScreenState extends State<EhrListScreen> {
         Stream.fromFuture(context.read<PatientProvider>().fetchPatients());
   }
 
+  void _scrollUp() {
+    // _controller.jumpTo(_controller.position.minScrollExtent);
+    _controller.animateTo(
+      _controller.position.minScrollExtent,
+      duration: Duration(seconds: 1),
+      curve: Curves.fastOutSlowIn,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,6 +62,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
         preferredSize: Size.fromHeight(kToolbarHeight),
       ),
       body: SingleChildScrollView(
+        controller: _controller,
         padding: EdgeInsets.only(
           left: Sizing.sectionSymmPadding,
           right: Sizing.sectionSymmPadding,
@@ -125,6 +136,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
   ElevatedButton ChevronPrev() {
     return ElevatedButton(
       onPressed: () => {
+        _scrollUp(),
         if (currentPageIndex > 0)
           {
             setState(() {
@@ -147,6 +159,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
   ElevatedButton ChevronNext() {
     return ElevatedButton(
       onPressed: () => {
+        _scrollUp(),
         if (currentPageIndex < pageRounded - 1)
           {
             setState(() {
