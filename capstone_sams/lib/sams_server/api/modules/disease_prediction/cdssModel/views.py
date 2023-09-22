@@ -1,5 +1,7 @@
 from django.http import JsonResponse
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 import csv
 from django.core.files.base import ContentFile
 from django.core.files.storage import FileSystemStorage
@@ -15,6 +17,16 @@ import numpy as np
 from statistics import mode
 import os
 from collections import Counter
+import pandas as pd
+import numpy as np
+import pickle
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import RandomForestClassifier
+from scipy.stats import mode
+
 
 fs = FileSystemStorage(location='tmp/')
 
@@ -317,29 +329,7 @@ class SymptomViewSet(viewsets.ModelViewSet):
         HealthSymptom.objects.bulk_create(symptoms_list)
 
         return Response("Successfully uploaded the data!")
-    
-# @api_view(['POST'])
-# def create_symptom_record(request):
-#     symptom_input = request.data.get('symptom_input', "").lower()
-
-#     # Create a new HealthSymptom instance with values set based on user input
-#     health_symptom = HealthSymptom()
-
-#     # Set the values of the symptoms based on the user's input
-#     for field in HealthSymptom._meta.fields:
-#         if field.name != 'id' and field.name != 'prognosis':
-#             setattr(health_symptom, field.name, 1 if field.name in symptom_input else 0)
-
-#     # Set "prognosis" to an empty string, as it's not relevant in this case
-#     health_symptom.prognosis = ""
-
-#     # Serialize the health_symptom instance to JSON
-#     serializer = HealthSymptomSerializer(health_symptom)
-
-#     # Save the instance to the database
-#     health_symptom.save()
-
-#     return Response(serializer.data,"Successfully uploaded the data!")           
+        
 class PredictDisease(APIView):
     def post(self, request):
         symptoms = request.data["symptoms"]
@@ -533,6 +523,80 @@ class PredictDisease(APIView):
                 "final_confidence": final_confidence,
             }
         )
+def train_disease_prediction_model():
+    try:
+        # Check if old pickle files exist and delete them
+        if os.path.exists('final_svm_model.pkl'):
+            os.remove('final_svm_model.pkl')
+        if os.path.exists('final_nb_model.pkl'):
+            os.remove('final_nb_model.pkl')
+        if os.path.exists('final_rf_model.pkl'):
+            os.remove('final_rf_model.pkl')
+        if os.path.exists('encoder.pkl'):
+            os.remove('encoder.pkl')
+
+        # Load the dataset
+        symptoms_data = HealthSymptom.objects.all().values()
+        data = pd.DataFrame(symptoms_data)
+
+        # Encode the target value into numerical value using LabelEncoder
+        encoder = LabelEncoder()
+        data["prognosis"] = encoder.fit_transform(data["prognosis"])
+
+        # Convert categorical symptoms to numerical features (e.g., one-hot encoding)
+
+        # Split the data into training and testing sets
+        X = data.drop("prognosis", axis=1)
+        y = data["prognosis"]
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+        # Train the models
+        final_svm_model = SVC(probability=True)
+        final_nb_model = GaussianNB()
+        final_rf_model = RandomForestClassifier(random_state=18)
+
+        final_svm_model.fit(X_train, y_train)
+        final_nb_model.fit(X_train, y_train)
+        final_rf_model.fit(X_train, y_train)
+
+        # Evaluate the models on training data
+        svm_train_accuracy = final_svm_model.score(X_train, y_train)
+        nb_train_accuracy = final_nb_model.score(X_train, y_train)
+        rf_train_accuracy = final_rf_model.score(X_train, y_train)
+
+        # Evaluate the models on testing data
+        svm_test_accuracy = final_svm_model.score(X_test, y_test)
+        nb_test_accuracy = final_nb_model.score(X_test, y_test)
+        rf_test_accuracy = final_rf_model.score(X_test, y_test)
+
+        # Print the accuracies
+        print("SVM Training Accuracy: ", svm_train_accuracy)
+        print("Naive Bayes Training Accuracy: ", nb_train_accuracy)
+        print("Random Forest Training Accuracy: ", rf_train_accuracy)
+
+        print("SVM Testing Accuracy: ", svm_test_accuracy)
+        print("Naive Bayes Testing Accuracy: ", nb_test_accuracy)
+        print("Random Forest Testing Accuracy: ", rf_test_accuracy)
+
+        # Save the models to disk
+        pickle.dump(final_svm_model, open('final_svm_model.pkl', 'wb'))
+        pickle.dump(final_nb_model, open('final_nb_model.pkl', 'wb'))
+        pickle.dump(final_rf_model, open('final_rf_model.pkl', 'wb'))
+        pickle.dump(encoder, open('encoder.pkl', 'wb'))
+
+        return True, "Model training completed successfully."
+    except Exception as e:
+        return False, str(e)
+
+class TrainModelView(APIView):
+    def post(self, request):
+        success, message = train_disease_prediction_model()
+        if success:
+            return Response({"message": message}, status=200)
+        else:
+            return Response({"message": message}, status=500)
+        
+
 @api_view(['POST'])
 def create_symptom_record(request):
     symptoms = request.data.get('symptoms', [])
