@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from django.http import JsonResponse
+from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 import csv
@@ -26,6 +27,7 @@ from sklearn.svm import SVC
 from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import RandomForestClassifier
 from scipy.stats import mode
+import warnings
 
 
 fs = FileSystemStorage(location='tmp/')
@@ -525,15 +527,26 @@ class PredictDisease(APIView):
         )
 def train_disease_prediction_model():
     try:
-        # Check if old pickle files exist and delete them
-        if os.path.exists('final_svm_model.pkl'):
-            os.remove('final_svm_model.pkl')
-        if os.path.exists('final_nb_model.pkl'):
-            os.remove('final_nb_model.pkl')
-        if os.path.exists('final_rf_model.pkl'):
-            os.remove('final_rf_model.pkl')
-        if os.path.exists('encoder.pkl'):
-            os.remove('encoder.pkl')
+        # Specify the folder for saving pickle files
+        pickle_folder = 'api/modules/disease_prediction/cdssModel'
+        
+        # Create the folder if it doesn't exist
+        if not os.path.exists(pickle_folder):
+            os.makedirs(pickle_folder)
+
+        # Check if old pickle files exist in the specified folder and delete them
+        old_files = [
+            'final_svm_model.pkl',
+            'final_nb_model.pkl',
+            'final_rf_model.pkl',
+            'encoder.pkl'
+        ]
+        
+        for file_name in old_files:
+            old_file_path = os.path.join(pickle_folder, file_name)
+            if os.path.exists(old_file_path):
+                os.remove(old_file_path)
+
 
         # Load the dataset
         symptoms_data = HealthSymptom.objects.all().values()
@@ -543,7 +556,11 @@ def train_disease_prediction_model():
         encoder = LabelEncoder()
         data["prognosis"] = encoder.fit_transform(data["prognosis"])
 
-        # Convert categorical symptoms to numerical features (e.g., one-hot encoding)
+        # Check if there are any columns with no data (all NaN values)
+        columns_with_no_data = data.columns[data.isnull().all()]
+
+        # Drop the columns with no data
+        data.drop(columns=columns_with_no_data, inplace=True)
 
         # Split the data into training and testing sets
         X = data.drop("prognosis", axis=1)
@@ -577,12 +594,11 @@ def train_disease_prediction_model():
         print("SVM Testing Accuracy: ", svm_test_accuracy)
         print("Naive Bayes Testing Accuracy: ", nb_test_accuracy)
         print("Random Forest Testing Accuracy: ", rf_test_accuracy)
-
-        # Save the models to disk
-        pickle.dump(final_svm_model, open('final_svm_model.pkl', 'wb'))
-        pickle.dump(final_nb_model, open('final_nb_model.pkl', 'wb'))
-        pickle.dump(final_rf_model, open('final_rf_model.pkl', 'wb'))
-        pickle.dump(encoder, open('encoder.pkl', 'wb'))
+        # Save the models to the specified folder
+        pickle.dump(final_svm_model, open(os.path.join(pickle_folder, 'final_svm_model.pkl'), 'wb'))
+        pickle.dump(final_nb_model, open(os.path.join(pickle_folder, 'final_nb_model.pkl'), 'wb'))
+        pickle.dump(final_rf_model, open(os.path.join(pickle_folder, 'final_rf_model.pkl'), 'wb'))
+        pickle.dump(encoder, open(os.path.join(pickle_folder, 'encoder.pkl'), 'wb'))
 
         return True, "Model training completed successfully."
     except Exception as e:
@@ -599,31 +615,39 @@ class TrainModelView(APIView):
 
 @api_view(['POST'])
 def create_symptom_record(request):
+    # Disable scikit-learn warnings about feature names
+    warnings.filterwarnings("ignore", category=UserWarning, module="sklearn")
+
     symptoms = request.data.get('symptoms', [])
     symptoms = [symptom.replace(' ', '_') for symptom in symptoms]
 
     # Prepare the input data for the HealthSymptom model
     input_data = {}
-    all_symptoms = [field.name.replace(' ', '_') for field in HealthSymptom._meta.fields if field.name != 'id' and field.name != 'prognosis']
-    
+    all_symptoms = [field.name.replace(' ', '_') for field in HealthSymptom._meta.fields if field.name != 'id']
+
     for symptom in all_symptoms:
         input_data[symptom] = 1 if symptom.lower() in [user_symptom.lower() for user_symptom in symptoms] else 0
     
+
     # Create a new HealthSymptom instance with values set based on user input
     health_symptom = HealthSymptom(**input_data)
     
-    # Call your prediction models here and get the prognosis
-    base_dir = os.path.dirname(__file__)
-    svm_model_path = os.path.join(base_dir, "final_svm_model.pkl")
+    # Get the absolute path of your project directory
+    project_directory = settings.BASE_DIR
+
+    # Specify the folder where pickle files are stored relative to the project directory
+    model_folder = os.path.join(project_directory, 'api/modules/disease_prediction/cdssModel')
+    
+    svm_model_path = os.path.join(model_folder, "final_svm_model.pkl")
     final_svm_model = pickle.load(open(svm_model_path, "rb"))
 
-    nb_model_path = os.path.join(base_dir, "final_nb_model.pkl")
+    nb_model_path = os.path.join(model_folder, "final_nb_model.pkl")
     final_nb_model = pickle.load(open(nb_model_path, "rb"))
 
-    rf_model_path = os.path.join(base_dir, "final_rf_model.pkl")
+    rf_model_path = os.path.join(model_folder, "final_rf_model.pkl")
     final_rf_model = pickle.load(open(rf_model_path, "rb"))
 
-    encoder_path = os.path.join(base_dir, "encoder.pkl")
+    encoder_path = os.path.join(model_folder, "encoder.pkl")
     encoder = pickle.load(open(encoder_path, "rb"))
 
     input_data = [0] * len(all_symptoms)

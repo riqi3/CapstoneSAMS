@@ -1,11 +1,20 @@
-{% extends 'admin/base.html' %}
+{% extends 'admin/change_list.html' %}
 {% block object-tools %}
   {% load static %}
+  <style>
+    .retrain-button {
+      background-color: #0074e4; /* Light blue background color */
+      color: #fff; /* White text color */
+      border: none; /* Remove button border */
+      border-radius: 8px; /* Add round edges */
+      padding: 7px 20px; /* Add some padding for spacing */
+      cursor: pointer; /* Add a pointer cursor on hover */
+    }
+  </style>
   <div class="module">
-    <h2>Retrain Model</h2>
-    <form action="{% url 'admin:retrain_model' %}" method="POST">
+    <form action="retrain_model/" method="POST">
       {% csrf_token %}
-      <button type="submit">Retrain Model</button>
+      <button type="submit" class="retrain-button">Retrain Model</button>
     </form>
   </div>
   {{ block.super }}

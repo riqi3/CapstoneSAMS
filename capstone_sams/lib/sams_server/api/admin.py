@@ -440,6 +440,7 @@ class PrescriptionAdmin(admin.ModelAdmin):
     autocomplete_fields = ["account", "health_record"]
 
 class HealthSymptomAdmin(admin.ModelAdmin):
+    change_list_template = "admin/train_model.html"
     list_display = [
     "prognosis",
     "itching",
@@ -596,7 +597,7 @@ class HealthSymptomAdmin(admin.ModelAdmin):
                 self.message_user(request, f"Model retraining failed: {message}", level=admin.ERROR)
 
         context = self.admin_site.each_context(request)
-        return render(request, "admin/train_model.html", context)
+        return HttpResponseRedirect("../")
     
     retrain_model.short_description = "Retrain Model"
     
