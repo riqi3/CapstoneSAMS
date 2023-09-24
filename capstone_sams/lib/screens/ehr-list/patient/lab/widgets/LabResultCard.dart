@@ -6,8 +6,8 @@ import '../../../../../constants/theme/sizing.dart';
 
 class LabResultCard extends StatelessWidget {
   final Labresult labresult;
-
-  LabResultCard({required this.labresult});
+  final int a;
+  LabResultCard({required this.labresult, required this.a});
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +18,10 @@ class LabResultCard extends StatelessWidget {
     // final haematologyMatrix = haematologyArray['data'];
     // final patientArray = labresult.jsonTables![0][0][0][1];
     // final patientMatrix = patientArray['data'];
+    print('index in lab card ${a}');
 
-    final haematologyArray = labresult.jsonTables![1];
-    final haematologyMatrix = haematologyArray['data'];
+    final array = labresult.jsonTables![a];
+    final matrix = array['data'];
 
     // final patientArray = labresult.jsonTables![0];
     // final patientMatrix = patientArray['data'];
@@ -40,7 +41,8 @@ class LabResultCard extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(bottom: Sizing.sectionSymmPadding),
       child: Column(
-        children: [
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
           Container(
             decoration: BoxDecoration(
               color: Pallete.mainColor,
@@ -93,55 +95,53 @@ class LabResultCard extends StatelessWidget {
               ],
             ),
           ),
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Pallete.whiteColor,
-                borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(Sizing.borderRadius),
-                    bottomLeft: Radius.circular(Sizing.borderRadius)),
-              ),
-              padding: const EdgeInsets.only(
-                top: Sizing.sectionSymmPadding / 2,
-                bottom: Sizing.sectionSymmPadding,
-                left: Sizing.sectionSymmPadding,
-                right: Sizing.sectionSymmPadding,
-              ),
+          Container(
+            decoration: BoxDecoration(
+              color: Pallete.whiteColor,
+              borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(Sizing.borderRadius),
+                  bottomLeft: Radius.circular(Sizing.borderRadius)),
+            ),
+            padding: const EdgeInsets.only(
+              top: Sizing.sectionSymmPadding / 2,
+              bottom: Sizing.sectionSymmPadding,
+              left: Sizing.sectionSymmPadding,
+              right: Sizing.sectionSymmPadding,
+            ),
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              scrollDirection: Axis.vertical,
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
-                scrollDirection: Axis.vertical,
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  child: Column(
-                    children: [
-                      // DataTable(
-                      //   columns: titles.map<DataColumn>((item) {
-                      //     return DataColumn(label: Text(item));
-                      //   }).toList(),
-                      //   rows: patientMatrix.map<DataRow>((row) {
-                      //     return DataRow(
-                      //       cells: row.map<DataCell>((cell) {
-                      //         return DataCell(Text(cell['text'] ?? ''));
-                      //       }).toList(),
-                      //     );
-                      //   }).toList(),
-                      // ),
+                scrollDirection: Axis.horizontal,
+                child: Column(
+                  children: [
+                    // DataTable(
+                    //   columns: titles.map<DataColumn>((item) {
+                    //     return DataColumn(label: Text(item));
+                    //   }).toList(),
+                    //   rows: patientMatrix.map<DataRow>((row) {
+                    //     return DataRow(
+                    //       cells: row.map<DataCell>((cell) {
+                    //         return DataCell(Text(cell['text'] ?? ''));
+                    //       }).toList(),
+                    //     );
+                    //   }).toList(),
+                    // ),
 
-                      DataTable(
-                        columns: titles.map<DataColumn>((item) {
-                          return DataColumn(label: Text(item));
-                        }).toList(),
-                        rows: haematologyMatrix.map<DataRow>((row) {
-                          return DataRow(
-                            cells: row.map<DataCell>((cell) {
-                              return DataCell(Text(cell['text'] ?? ''));
-                            }).toList(),
-                          );
-                        }).toList(),
-                      ),
-                    ],
-                  ),
+                    DataTable(
+                      columns: titles.map<DataColumn>((item) {
+                        return DataColumn(label: Text(item));
+                      }).toList(),
+                      rows: matrix.map<DataRow>((row) {
+                        return DataRow(
+                          cells: row.map<DataCell>((cell) {
+                            return DataCell(Text(cell['text'] ?? ''));
+                          }).toList(),
+                        );
+                      }).toList(),
+                    ),
+                  ],
                 ),
               ),
             ),

@@ -11,6 +11,7 @@ from api.modules.laboratory.serializer import (
     LabResultSerializer,
     JsonLabResultSerializer,
 )
+from PyPDF2 import PdfReader
 from rest_framework.views import APIView
 from django.shortcuts import render
 from api.modules.laboratory.form import PdfImportLabResultForm
@@ -145,6 +146,7 @@ class ProcessPdf(APIView):
             tempList = []
             uniqueDataList = []
             newLista = []
+            labresultTitles = []
 
             for pdf_id in selected_pdfs:
                 
@@ -160,6 +162,7 @@ class ProcessPdf(APIView):
                 tables = read_pdf(
                     pdf_instance.pdf.path, pages="all", output_format="json"
                 )
+                reader = PdfReader(pdf_instance.pdf.path)
                 '''tables[index] retrieves the table according by index.
                 in this case the format of the labresult has the following
                 tables: 1.) tables[0] contains the personal information. 
@@ -167,12 +170,20 @@ class ProcessPdf(APIView):
                 3.) tables[3] contains the biochemistry. theese tables are 
                 then stored in their respective rows
                 '''
+
+                for page in reader.pages:
+                    text = page.extract_text()
+                    # first_word = text.split()[0] if text else None
+                    # print(first_word)
+                    if text:
+                        firstWord = text.split()[0]
+                        labresultTitles.append(firstWord)
                 
                 for index, j in enumerate(tables): 
                     readTable = tables[index]
                     tableAppend = [tableAppend,readTable]
                      
-                print('\n\n\n\n')
+                # print('\n\n\n\n')
                 cleaned_data = cleanJsonTable(tableAppend)
 
                 def get_data_and_move_higher(arr):
@@ -187,8 +198,8 @@ class ProcessPdf(APIView):
 
                 get_data_and_move_higher(cleaned_data)
 
-                print('aaaaaaaaaaa', tempList)
-                print('\n\n')
+                # print('aaaaaaaaaaa', tempList)
+                # print('\n\n')
 
                 for item in tempList:
                     data_contents = item['data']
@@ -200,12 +211,13 @@ class ProcessPdf(APIView):
                     newLista.append(item)
                  
                  
-                print('bbbbbbbbb', newLista)
+                # print('bbbbbbbbb', newLista)
                 
                 
 
                 jsonLabResult = JsonLabResult(
                     jsonTables=newLista,
+                    labresultTitles = labresultTitles,
                     labresult=pdf_instance,
                     title=pdf_title,
                     comment=pdf_comment, 

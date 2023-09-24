@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import '../../../../constants/Dimensions.dart';
 import '../../../../constants/Strings.dart';
 import '../../../../constants/theme/sizing.dart';
 import '../../../../models/LabResultModel.dart';
@@ -76,18 +75,22 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
                 }
                 return LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints constraints) {
-                    if (constraints.maxWidth >= Dimensions.mobileWidth) {
-                      return Column(
-                        children: [
-                          _labresultTile(dataToShow, dataLength),
+                    return _labresultTile(
+                        // snapshot,
+                        dataToShow,
+                        dataLength);
+                    // if (constraints.maxWidth >= Dimensions.mobileWidth) {
+                    //   return Column(
+                    //     children: [
+                    //       _labresultTile(snapshot, dataToShow, dataLength),
 
-                          // _buildList(snapshot, dataToShow, widget.index),
-                          _tabletView(snapshot),
-                        ],
-                      );
-                    } else {
-                      return _mobileView(snapshot);
-                    }
+                    //       // _buildList(snapshot, dataToShow, widget.index),
+                    //       _tabletView(snapshot),
+                    //     ],
+                    //   );
+                    // } else {
+                    //   return _mobileView(snapshot);
+                    // }
                   },
                 );
               },
@@ -98,22 +101,44 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
     );
   }
 
-  ListView _labresultTile(List<Labresult> dataToShow, int dataLength) {
+  ListView _labresultTile(
+      // AsyncSnapshot<List<Labresult>> snapshot,
+      List<Labresult> dataToShow,
+      int dataLength) {
     return ListView.builder(
       shrinkWrap: true,
-      physics: const BouncingScrollPhysics(), 
+      physics: const BouncingScrollPhysics(),
       itemCount: dataLength,
-      itemBuilder: (context, index) { 
-        return _buildList(dataToShow[index]);
+      itemBuilder: (context, index) {
+        return _buildList(
+          // snapshot,
+          dataToShow,
+          dataToShow[index],
+        );
       },
     );
   }
 
-  Widget _buildList(Labresult list) {
+  Widget _buildList(
+      // AsyncSnapshot<List<Labresult>> snapshot,
+      List<Labresult> s,
+      Labresult list) {
     final jsonList = list.jsonTables;
-    int numLabTypes = 0;
-    for (numLabTypes; numLabTypes < jsonList!.length; numLabTypes++)
-      print('COUNT NUMBER OF DATA $numLabTypes');
+    final labresultTitles = list.labresultTitles;
+
+    if (jsonList == null || labresultTitles == null) {
+      return Container(); // Handle null data gracefully
+    }
+    // int numLabTypes = 0;
+
+    int numLabTypes = (jsonList.length);
+    // for (numLabTypes; numLabTypes < jsonList.length; numLabTypes++) {
+    print('COUNT NUMBER OF DATA $numLabTypes');
+    // }
+
+    // int numLabTypes = 0;
+    // for (numLabTypes; numLabTypes < jsonList!.length; numLabTypes++)
+    //   print('COUNT NUMBER OF DATA $numLabTypes');
 
     // if (list.jsonTables!.isEmpty)
     //   return Builder(builder: (context) {
@@ -127,51 +152,125 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
     //         leading: SizedBox(),
     //         title: Text(list.patient));
     //   });
+
     return ExpansionTile(
       title: Text(
-        list.title,
+        // list.labresultTitles![0],
+        ('${list.createdAt.toIso8601String()} | ${list.title}'),
         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
       ),
       children: List.generate(
-        numLabTypes - 1,
-        (index) => Text(jsonList[index + 1].toString()),
+        numLabTypes,
+        (index)
+            // {
+            //   if (index < labresultTitles.length) {
+            //     // print('number of laboratories ${numLabTypes}');
+            //     // print('titles ${labresultTitles![index]}');
+            //     return ListTile(
+            //       onTap: () {
+            //         // final labresult = s[index];
+            //         Labresult? labresult = s[index];
+            //         showDialog(
+            //           context: context,
+            //           builder: (context) => AlertDialog(
+            //             content: LabResultCard(
+            //               labresult: labresult,
+            //               a: index,
+            //             ),
+            //           ),
+            //         );
+            //       },
+            //       title: Text(labresultTitles[index].toString()),
+            //     );
+            //   } else {
+            //     return ListTile(
+            //       title: Text('Lab result not found for index $index'),
+            //     );
+            //   }
+            // },
+
+            =>
+            ListTile(
+          onTap: () {
+            Labresult? labresult = s[index];
+            print('number of laboratories ${numLabTypes}');
+            print('titles ${labresultTitles[index]}');
+            // print('labresult ${s[index]}');
+            showDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (context) => Dialog(
+                backgroundColor: Colors.transparent,
+
+                alignment: Alignment.center,
+                // contentPadding: EdgeInsets.zero,
+                child: LabResultCard(
+                  labresult: labresult,
+                  a: numLabTypes - 1,
+                ),
+              ),
+            );
+          },
+          title: Text(labresultTitles[1].toString()),
+        ),
+
+        // {
+        //   return ListTile(
+        //     onTap: () {
+        //       Labresult? labresult = s[index];
+        //       print('number of laboratories ${numLabTypes}');
+        //       print('titles ${labresultTitles[index]}');
+        //       // print('labresult ${s[index]}');
+        //       showDialog(
+        //         context: context,
+        //         builder: (context) => AlertDialog(
+        //           content: LabResultCard(
+        //             labresult: labresult,
+        //             a: numLabTypes - 1,
+        //           ),
+        //         ),
+        //       );
+        //     },
+        //     title: Text(labresultTitles[index].toString()),
+        //   );
+        // },
       ),
     );
   }
 
-  GridView _mobileView(AsyncSnapshot<List<Labresult>> snapshot) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const BouncingScrollPhysics(),
-      itemCount: snapshot.data?.length,
-      itemBuilder: (context, index) {
-        final labresult = snapshot.data![index];
-        return LabResultCard(labresult: labresult);
-      },
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 1,
-        mainAxisSpacing: 10,
-        crossAxisSpacing: 10,
-        // childAspectRatio: 16 / 8,
-      ),
-    );
-  }
+  // GridView _mobileView(AsyncSnapshot<List<Labresult>> snapshot) {
+  //   return GridView.builder(
+  //     shrinkWrap: true,
+  //     physics: const BouncingScrollPhysics(),
+  //     itemCount: snapshot.data?.length,
+  //     itemBuilder: (context, index) {
+  //       final labresult = snapshot.data![index];
+  //       return LabResultCard(labresult: labresult);
+  //     },
+  //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+  //       crossAxisCount: 1,
+  //       mainAxisSpacing: 10,
+  //       crossAxisSpacing: 10,
+  //       // childAspectRatio: 16 / 8,
+  //     ),
+  //   );
+  // }
 
-  GridView _tabletView(AsyncSnapshot<List<Labresult>> snapshot) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const BouncingScrollPhysics(),
-      itemCount: snapshot.data?.length,
-      itemBuilder: (context, index) {
-        final labresult = snapshot.data![index];
-        return LabResultCard(labresult: labresult);
-      },
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 1,
-        mainAxisSpacing: 10,
-        crossAxisSpacing: 10,
-        // childAspectRatio: 16 / 10,
-      ),
-    );
-  }
+  // GridView _tabletView(AsyncSnapshot<List<Labresult>> snapshot) {
+  //   return GridView.builder(
+  //     shrinkWrap: true,
+  //     physics: const BouncingScrollPhysics(),
+  //     itemCount: snapshot.data?.length,
+  //     itemBuilder: (context, index) {
+  //       final labresult = snapshot.data![index];
+  //       return LabResultCard(labresult: labresult);
+  //     },
+  //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+  //       crossAxisCount: 1,
+  //       mainAxisSpacing: 10,
+  //       crossAxisSpacing: 10,
+  //       // childAspectRatio: 16 / 10,
+  //     ),
+  //   );
+  // }
 }

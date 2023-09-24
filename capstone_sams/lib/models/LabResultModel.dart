@@ -2,6 +2,7 @@
 class Labresult {
   final int jsonId;
   // final Map<String, dynamic> jsonTables;
+  final List<dynamic>? labresultTitles;
   final List<dynamic>? jsonTables;
   final DateTime createdAt;
   final String title;
@@ -11,6 +12,7 @@ class Labresult {
 
   Labresult({
     required this.jsonId,
+    required this.labresultTitles,
     required this.jsonTables,
     required this.createdAt,
     required this.title,
@@ -21,6 +23,7 @@ class Labresult {
   Map<String, dynamic> toJson() {
     return {
       'jsonId': jsonId,
+      'labresultTitles': labresultTitles,
       'jsonData': jsonTables,
       'createdAt': createdAt.toIso8601String(),
       'title': title,
@@ -45,10 +48,13 @@ class Labresult {
   factory Labresult.fromJson(Map<String, dynamic> json) {
     List<dynamic>? tables =
         json['jsonTables'] is List<dynamic> ? json['jsonTables'] : [];
+    List<dynamic>? titles =
+        json['labresultTitles'] is List<dynamic> ? json['labresultTitles'] : [];
 
     // print(tables);
     return Labresult(
       jsonId: json['jsonId'],
+      labresultTitles: titles,
       jsonTables: tables,
       createdAt: DateTime.parse(json['createdAt']),
       title: json['title'],
