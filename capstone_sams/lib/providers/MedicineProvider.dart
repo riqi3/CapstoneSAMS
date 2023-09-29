@@ -101,7 +101,7 @@ class MedicineProvider with ChangeNotifier {
     // }
   }
 
-    Future<bool> updateAmount(String? patientId) async {
+  Future<bool> updateAmount(String? accountId, String? patientId) async {
     final headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     };
@@ -109,6 +109,7 @@ class MedicineProvider with ChangeNotifier {
         _medicines.map((medicine) => medicine.toJson()).toList();
 
     final data = <String, dynamic>{
+      'account': accountId,
       'medicines': medicinesJson,
     };
 
