@@ -143,6 +143,19 @@ class PrescriptionView(viewsets.ViewSet):
         except Exception as e:
             print(e)
             return Response({"message": "Failed to save prescription", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+    @api_view(['POST'])
+    def update_prescription_amount(request, patientID):
+        try:
+            prescription_data = json.loads(request.body)
+            record = Health_Record.objects.get(patient=patientID)
+            prescription = Prescription.objects.get(health_record=record)
+            prescription.medicines = prescription_data["medicines"]
+            return Response({"message": "Prescription amount updated successfully"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            return Response({"message": "Failed to update prescription amount", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
     @api_view(['GET'])
     def fetch_prescription_by_ids(request, recordNum):
         try:

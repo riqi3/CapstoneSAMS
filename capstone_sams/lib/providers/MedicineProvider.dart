@@ -101,6 +101,31 @@ class MedicineProvider with ChangeNotifier {
     // }
   }
 
+    Future<bool> updateAmount(String? patientId) async {
+    final headers = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
+    final medicinesJson =
+        _medicines.map((medicine) => medicine.toJson()).toList();
+
+    final data = <String, dynamic>{
+      'medicines': medicinesJson,
+    };
+
+    final response = await http.post(
+      Uri.parse('${Env.prefix}/cpoe/prescription/update/${patientId}'),
+      headers: headers,
+      body: jsonEncode(data),
+    );
+    await Future.delayed(Duration(milliseconds: 3000));
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      print('cannot update medicine!');
+      return false;
+    }
+  }
+
   void addMedicine(Medicine medicine) {
     _medicines.add(medicine);
     notifyListeners();
