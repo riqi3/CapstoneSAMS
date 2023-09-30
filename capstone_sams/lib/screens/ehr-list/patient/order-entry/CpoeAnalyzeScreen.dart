@@ -34,7 +34,7 @@ class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
       var requestBody = {'symptoms': symptoms};
 
       var response = await http.post(
-        Uri.parse('${Env.prefix}/predict/'),
+        Uri.parse('${Env.prefix}/cdss/create_symptom_record/'),
         body: jsonEncode(requestBody),
         headers: {"Content-Type": "application/json"},
       );
