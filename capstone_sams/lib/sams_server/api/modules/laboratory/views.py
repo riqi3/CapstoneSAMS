@@ -163,6 +163,7 @@ class ProcessPdf(APIView):
                     pdf_instance.pdf.path, pages="all", output_format="json"
                 )
                 reader = PdfReader(pdf_instance.pdf.path)
+                
                 '''tables[index] retrieves the table according by index.
                 in this case the format of the labresult has the following
                 tables: 1.) tables[0] contains the personal information. 

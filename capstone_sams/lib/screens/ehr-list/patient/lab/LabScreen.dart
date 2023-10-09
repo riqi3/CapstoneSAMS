@@ -75,22 +75,18 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
                 }
                 return LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints constraints) {
-                    return _labresultTile(
-                        // snapshot,
-                        dataToShow,
-                        dataLength);
-                    // if (constraints.maxWidth >= Dimensions.mobileWidth) {
-                    //   return Column(
-                    //     children: [
-                    //       _labresultTile(snapshot, dataToShow, dataLength),
-
-                    //       // _buildList(snapshot, dataToShow, widget.index),
-                    //       _tabletView(snapshot),
-                    //     ],
-                    //   );
-                    // } else {
-                    //   return _mobileView(snapshot);
-                    // }
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: dataLength,
+                      itemBuilder: (context, index) {
+                        return _buildList(
+                          // snapshot,
+                          // dataToShow,
+                          dataToShow[index],
+                        );
+                      },
+                    );
                   },
                 );
               },
@@ -101,101 +97,30 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
     );
   }
 
-  ListView _labresultTile(
-      // AsyncSnapshot<List<Labresult>> snapshot,
-      List<Labresult> dataToShow,
-      int dataLength) {
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const BouncingScrollPhysics(),
-      itemCount: dataLength,
-      itemBuilder: (context, index) {
-        return _buildList(
-          // snapshot,
-          dataToShow,
-          dataToShow[index],
-        );
-      },
-    );
-  }
-
   Widget _buildList(
       // AsyncSnapshot<List<Labresult>> snapshot,
-      List<Labresult> s,
+      // List<Labresult> s,
       Labresult list) {
     final jsonList = list.jsonTables;
     final labresultTitles = list.labresultTitles;
 
     if (jsonList == null || labresultTitles == null) {
-      return Container(); // Handle null data gracefully
+      return Container();
     }
-    // int numLabTypes = 0;
 
-    int numLabTypes = (jsonList.length);
-    // for (numLabTypes; numLabTypes < jsonList.length; numLabTypes++) {
+    int numLabTypes = (labresultTitles.length);
     print('COUNT NUMBER OF DATA $numLabTypes');
-    // }
-
-    // int numLabTypes = 0;
-    // for (numLabTypes; numLabTypes < jsonList!.length; numLabTypes++)
-    //   print('COUNT NUMBER OF DATA $numLabTypes');
-
-    // if (list.jsonTables!.isEmpty)
-    //   return Builder(builder: (context) {
-    //     return ListTile(
-    //         onTap: () => Navigator.push(
-    //             context,
-    //             MaterialPageRoute(
-    //                 builder: (context) => SubCategory(
-    //                       name: list.title,
-    //                     ))),
-    //         leading: SizedBox(),
-    //         title: Text(list.patient));
-    //   });
 
     return ExpansionTile(
       title: Text(
-        // list.labresultTitles![0],
         ('${list.createdAt.toIso8601String()} | ${list.title}'),
         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
       ),
-      children: List.generate(
-        numLabTypes,
-        (index)
-            // {
-            //   if (index < labresultTitles.length) {
-            //     // print('number of laboratories ${numLabTypes}');
-            //     // print('titles ${labresultTitles![index]}');
-            //     return ListTile(
-            //       onTap: () {
-            //         // final labresult = s[index];
-            //         Labresult? labresult = s[index];
-            //         showDialog(
-            //           context: context,
-            //           builder: (context) => AlertDialog(
-            //             content: LabResultCard(
-            //               labresult: labresult,
-            //               a: index,
-            //             ),
-            //           ),
-            //         );
-            //       },
-            //       title: Text(labresultTitles[index].toString()),
-            //     );
-            //   } else {
-            //     return ListTile(
-            //       title: Text('Lab result not found for index $index'),
-            //     );
-            //   }
-            // },
-
-            =>
-            ListTile(
+      children: List.generate(numLabTypes, (index) {
+        return ListTile(
+          title: Text(labresultTitles[index]),
           onTap: () {
-            Labresult? labresult = s[index];
-            print('number of laboratories ${numLabTypes}');
-            print('titles ${labresultTitles[index]}');
-            // print('labresult ${s[index]}');
+            // final labresult = s[index];
             showDialog(
               context: context,
               barrierDismissible: true,
@@ -205,36 +130,15 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
                 alignment: Alignment.center,
                 // contentPadding: EdgeInsets.zero,
                 child: LabResultCard(
-                  labresult: labresult,
-                  a: numLabTypes - 1,
+                  labresult: list,
+                  a: index + 1,
+                  // a: numLabTypes - 1,
                 ),
               ),
             );
           },
-          title: Text(labresultTitles[1].toString()),
-        ),
-
-        // {
-        //   return ListTile(
-        //     onTap: () {
-        //       Labresult? labresult = s[index];
-        //       print('number of laboratories ${numLabTypes}');
-        //       print('titles ${labresultTitles[index]}');
-        //       // print('labresult ${s[index]}');
-        //       showDialog(
-        //         context: context,
-        //         builder: (context) => AlertDialog(
-        //           content: LabResultCard(
-        //             labresult: labresult,
-        //             a: numLabTypes - 1,
-        //           ),
-        //         ),
-        //       );
-        //     },
-        //     title: Text(labresultTitles[index].toString()),
-        //   );
-        // },
-      ),
+        );
+      }),
     );
   }
 
