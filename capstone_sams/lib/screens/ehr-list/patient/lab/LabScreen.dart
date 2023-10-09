@@ -2,7 +2,8 @@ import 'package:capstone_sams/providers/LabResultProvider.dart';
 
 import 'package:capstone_sams/screens/ehr-list/patient/lab/widgets/LabresultCard.dart';
 import 'package:flutter/material.dart';
-
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../constants/Strings.dart';
@@ -97,12 +98,11 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
     );
   }
 
-  Widget _buildList(
-      // AsyncSnapshot<List<Labresult>> snapshot,
-      // List<Labresult> s,
-      Labresult list) {
+  Widget _buildList(Labresult list) {
     final jsonList = list.jsonTables;
     final labresultTitles = list.labresultTitles;
+    final collectedOn = list.collectedOn;
+    final String formattedDate = DateFormat.yMMMMd().format(collectedOn);
 
     if (jsonList == null || labresultTitles == null) {
       return Container();
@@ -112,27 +112,49 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
     print('COUNT NUMBER OF DATA $numLabTypes');
 
     return ExpansionTile(
+      textColor: Colors.amber,
       title: Text(
-        ('${list.createdAt.toIso8601String()} | ${list.title}'),
+        ('${formattedDate} | ${list.title}'),
         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
       ),
+    
+      // trailing: FaIcon(FontAwesomeIcons.chevronDown),
+      subtitle: GestureDetector(
+        onTap: () {
+          print('ss');
+          showDialog(
+            context: context,
+            builder: (context) => Dialog(
+              child: Padding(
+                padding: const EdgeInsets.all(Sizing.sectionSymmPadding),
+                child: Text(
+                  ('Investigations: ${list.comment}'),
+                  style: TextStyle(fontSize: Sizing.header5),
+                ),
+              ),
+            ),
+          );
+        },
+        child: Text(
+          ('Investigations: ${list.comment}'),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
       children: List.generate(numLabTypes, (index) {
+        print('aa');
         return ListTile(
           title: Text(labresultTitles[index]),
           onTap: () {
-            // final labresult = s[index];
             showDialog(
               context: context,
               barrierDismissible: true,
               builder: (context) => Dialog(
                 backgroundColor: Colors.transparent,
-
                 alignment: Alignment.center,
-                // contentPadding: EdgeInsets.zero,
                 child: LabResultCard(
                   labresult: list,
                   a: index + 1,
-                  // a: numLabTypes - 1,
                 ),
               ),
             );

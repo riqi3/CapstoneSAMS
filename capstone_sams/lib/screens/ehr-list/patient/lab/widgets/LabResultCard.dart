@@ -95,53 +95,55 @@ class LabResultCard extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            decoration: BoxDecoration(
-              color: Pallete.whiteColor,
-              borderRadius: BorderRadius.only(
-                  bottomRight: Radius.circular(Sizing.borderRadius),
-                  bottomLeft: Radius.circular(Sizing.borderRadius)),
-            ),
-            padding: const EdgeInsets.only(
-              top: Sizing.sectionSymmPadding / 2,
-              bottom: Sizing.sectionSymmPadding,
-              left: Sizing.sectionSymmPadding,
-              right: Sizing.sectionSymmPadding,
-            ),
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              scrollDirection: Axis.vertical,
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Pallete.whiteColor,
+                borderRadius: BorderRadius.only(
+                    bottomRight: Radius.circular(Sizing.borderRadius),
+                    bottomLeft: Radius.circular(Sizing.borderRadius)),
+              ),
+              padding: const EdgeInsets.only(
+                top: Sizing.sectionSymmPadding / 2,
+                bottom: Sizing.sectionSymmPadding,
+                left: Sizing.sectionSymmPadding,
+                right: Sizing.sectionSymmPadding,
+              ),
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
-                scrollDirection: Axis.horizontal,
-                child: Column(
-                  children: [
-                    // DataTable(
-                    //   columns: titles.map<DataColumn>((item) {
-                    //     return DataColumn(label: Text(item));
-                    //   }).toList(),
-                    //   rows: patientMatrix.map<DataRow>((row) {
-                    //     return DataRow(
-                    //       cells: row.map<DataCell>((cell) {
-                    //         return DataCell(Text(cell['text'] ?? ''));
-                    //       }).toList(),
-                    //     );
-                    //   }).toList(),
-                    // ),
+                scrollDirection: Axis.vertical,
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  child: Column(
+                    children: [
+                      // DataTable(
+                      //   columns: titles.map<DataColumn>((item) {
+                      //     return DataColumn(label: Text(item));
+                      //   }).toList(),
+                      //   rows: patientMatrix.map<DataRow>((row) {
+                      //     return DataRow(
+                      //       cells: row.map<DataCell>((cell) {
+                      //         return DataCell(Text(cell['text'] ?? ''));
+                      //       }).toList(),
+                      //     );
+                      //   }).toList(),
+                      // ),
 
-                    DataTable(
-                      columns: titles.map<DataColumn>((item) {
-                        return DataColumn(label: Text(item));
-                      }).toList(),
-                      rows: matrix.map<DataRow>((row) {
-                        return DataRow(
-                          cells: row.map<DataCell>((cell) {
-                            return DataCell(Text(cell['text'] ?? ''));
-                          }).toList(),
-                        );
-                      }).toList(),
-                    ),
-                  ],
+                      DataTable(
+                        columns: titles.map<DataColumn>((item) {
+                          return DataColumn(label: Text(item));
+                        }).toList(),
+                        rows: matrix.map<DataRow>((row) {
+                          return DataRow(
+                            cells: row.map<DataCell>((cell) {
+                              return DataCell(Text(cell['text'] ?? ''));
+                            }).toList(),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

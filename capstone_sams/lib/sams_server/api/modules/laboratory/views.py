@@ -11,6 +11,8 @@ from api.modules.laboratory.serializer import (
     LabResultSerializer,
     JsonLabResultSerializer,
 )
+import re
+import datetime
 from PyPDF2 import PdfReader
 from rest_framework.views import APIView
 from django.shortcuts import render
@@ -147,6 +149,7 @@ class ProcessPdf(APIView):
             uniqueDataList = []
             newLista = []
             labresultTitles = []
+            
 
             for pdf_id in selected_pdfs:
                 
@@ -154,6 +157,7 @@ class ProcessPdf(APIView):
                 pdf_title = pdf_instance.title
                 pdf_comment = pdf_instance.comment
                 patient_id = pdf_instance.patient
+                str_collected_on = None
                 # test = pdf_instance.patient
                 # patient_instance = Patient.objects.filter(patient=test)
                 # patient_id = patient_instance.patientID
@@ -210,15 +214,29 @@ class ProcessPdf(APIView):
                 result_list = [{'data': data_contents} for data_contents in uniqueDataList]
                 for item in result_list:
                     newLista.append(item)
-                 
-                 
-                # print('bbbbbbbbb', newLista)
+
                 
+                for item in newLista:
+                    for text_data in item["data"][3]:
+                        if text_data["text"] == "Collected on:":
+                            str_collected_on = item["data"][3][1]["text"]
+                            break
+
+                # print('bbbbbbbbb', newLista) 
+                print(str_collected_on)
                 
+                # h = json.dumps(collected_on)
+                # matches = re.findall(r'(\d+/\d+/\d+)',h)
+                # print(matches)
+                # print(h)
+                # collected_on = datetime.datetime.strptime(str_collected_on, '%d/%m/%Y').strftime('%B %d, %Y')
+                collected_on = datetime.datetime.strptime(str_collected_on, '%d/%m/%Y').strftime('%Y-%m-%d')
+                print('aaa ', collected_on)
 
                 jsonLabResult = JsonLabResult(
                     jsonTables=newLista,
                     labresultTitles = labresultTitles,
+                    collectedOn = collected_on,
                     labresult=pdf_instance,
                     title=pdf_title,
                     comment=pdf_comment, 
