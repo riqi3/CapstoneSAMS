@@ -1,5 +1,8 @@
 from django.http import JsonResponse
 from django.http import JsonResponse
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 import csv
 from django.core.files.base import ContentFile
 from django.core.files.storage import FileSystemStorage
@@ -15,6 +18,17 @@ import numpy as np
 from statistics import mode
 import os
 from collections import Counter
+import pandas as pd
+import numpy as np
+import pickle
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import RandomForestClassifier
+from scipy.stats import mode
+import warnings
+
 
 fs = FileSystemStorage(location='tmp/')
 
@@ -317,219 +331,219 @@ class SymptomViewSet(viewsets.ModelViewSet):
         HealthSymptom.objects.bulk_create(symptoms_list)
 
         return Response("Successfully uploaded the data!")
-    
+
+def train_disease_prediction_model():
+    try:
+        # Specify the folder for saving pickle files
+        pickle_folder = 'api/modules/disease_prediction/cdssModel'
+        
+        # Create the folder if it doesn't exist
+        if not os.path.exists(pickle_folder):
+            os.makedirs(pickle_folder)
+
+        # Check if old pickle files exist in the specified folder and delete them
+        old_files = [
+            'final_svm_model.pkl',
+            'final_nb_model.pkl',
+            'final_rf_model.pkl',
+            'encoder.pkl'
+        ]
+        
+        for file_name in old_files:
+            old_file_path = os.path.join(pickle_folder, file_name)
+            if os.path.exists(old_file_path):
+                os.remove(old_file_path)
+
+
+        # Load the dataset
+        symptoms_data = HealthSymptom.objects.all().values()
+        data = pd.DataFrame(symptoms_data)
+
+        # Encode the target value into numerical value using LabelEncoder
+        encoder = LabelEncoder()
+        data["prognosis"] = encoder.fit_transform(data["prognosis"])
+
+        # Check if there are any columns with no data (all NaN values)
+        columns_with_no_data = data.columns[data.isnull().all()]
+
+        # Drop the columns with no data
+        data.drop(columns=columns_with_no_data, inplace=True)
+
+        # Split the data into training and testing sets
+        X = data.drop("prognosis", axis=1)
+        y = data["prognosis"]
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+        # Train the models
+        final_svm_model = SVC(probability=True)
+        final_nb_model = GaussianNB()
+        final_rf_model = RandomForestClassifier(random_state=18)
+
+        final_svm_model.fit(X_train, y_train)
+        final_nb_model.fit(X_train, y_train)
+        final_rf_model.fit(X_train, y_train)
+
+        # Evaluate the models on training data
+        svm_train_accuracy = final_svm_model.score(X_train, y_train)
+        nb_train_accuracy = final_nb_model.score(X_train, y_train)
+        rf_train_accuracy = final_rf_model.score(X_train, y_train)
+
+        # Evaluate the models on testing data
+        svm_test_accuracy = final_svm_model.score(X_test, y_test)
+        nb_test_accuracy = final_nb_model.score(X_test, y_test)
+        rf_test_accuracy = final_rf_model.score(X_test, y_test)
+
+        # Print the accuracies
+        print("SVM Training Accuracy: ", svm_train_accuracy)
+        print("Naive Bayes Training Accuracy: ", nb_train_accuracy)
+        print("Random Forest Training Accuracy: ", rf_train_accuracy)
+
+        print("SVM Testing Accuracy: ", svm_test_accuracy)
+        print("Naive Bayes Testing Accuracy: ", nb_test_accuracy)
+        print("Random Forest Testing Accuracy: ", rf_test_accuracy)
+        # Save the models to the specified folder
+        pickle.dump(final_svm_model, open(os.path.join(pickle_folder, 'final_svm_model.pkl'), 'wb'))
+        pickle.dump(final_nb_model, open(os.path.join(pickle_folder, 'final_nb_model.pkl'), 'wb'))
+        pickle.dump(final_rf_model, open(os.path.join(pickle_folder, 'final_rf_model.pkl'), 'wb'))
+        pickle.dump(encoder, open(os.path.join(pickle_folder, 'encoder.pkl'), 'wb'))
+
+        return True, "Model training completed successfully."
+    except Exception as e:
+        return False, str(e)
+
+class TrainModelView(APIView):
+    def post(self, request):
+        success, message = train_disease_prediction_model()
+        if success:
+            return Response({"message": message}, status=200)
+        else:
+            return Response({"message": message}, status=500)
+        
+
 @api_view(['POST'])
 def create_symptom_record(request):
-    symptom_input = request.data.get('symptom_input', "").lower()
+    # Disable scikit-learn warnings about feature names
+    warnings.filterwarnings("ignore", category=UserWarning, module="sklearn")
+
+    symptoms = request.data.get('symptoms', [])
+    symptoms = [symptom.replace(' ', '_') for symptom in symptoms]
+
+    # Prepare the input data for the HealthSymptom model
+    input_data = {}
+    all_symptoms = [field.name.replace(' ', '_') for field in HealthSymptom._meta.fields if field.name != 'id']
+
+    for symptom in all_symptoms:
+        input_data[symptom] = 1 if symptom.lower() in [user_symptom.lower() for user_symptom in symptoms] else 0
+    
 
     # Create a new HealthSymptom instance with values set based on user input
-    health_symptom = HealthSymptom()
+    health_symptom = HealthSymptom(**input_data)
+    
+    # Get the absolute path of your project directory
+    project_directory = settings.BASE_DIR
 
-    # Set the values of the symptoms based on the user's input
-    for field in HealthSymptom._meta.fields:
-        if field.name != 'id' and field.name != 'prognosis':
-            setattr(health_symptom, field.name, 1 if field.name in symptom_input else 0)
+    # Specify the folder where pickle files are stored relative to the project directory
+    model_folder = os.path.join(project_directory, 'api/modules/disease_prediction/cdssModel')
+    
+    svm_model_path = os.path.join(model_folder, "final_svm_model.pkl")
+    final_svm_model = pickle.load(open(svm_model_path, "rb"))
 
-    # Set "prognosis" to an empty string, as it's not relevant in this case
-    health_symptom.prognosis = ""
+    nb_model_path = os.path.join(model_folder, "final_nb_model.pkl")
+    final_nb_model = pickle.load(open(nb_model_path, "rb"))
+
+    rf_model_path = os.path.join(model_folder, "final_rf_model.pkl")
+    final_rf_model = pickle.load(open(rf_model_path, "rb"))
+
+    encoder_path = os.path.join(model_folder, "encoder.pkl")
+    encoder = pickle.load(open(encoder_path, "rb"))
+
+    input_data = [0] * len(all_symptoms)
+    for symptom in symptoms:
+        if symptom.lower() in all_symptoms:
+            index = all_symptoms.index(symptom.lower())
+            input_data[index] = 1
+    input_data = np.array(input_data).reshape(1, -1)
+
+    svm_prediction = encoder.classes_[final_svm_model.predict(input_data)[0]]
+    nb_prediction = encoder.classes_[final_nb_model.predict(input_data)[0]]
+    rf_prediction = encoder.classes_[final_rf_model.predict(input_data)[0]]
+
+    svm_prob = max(final_svm_model.predict_proba(input_data)[0])
+    nb_prob = max(final_nb_model.predict_proba(input_data)[0])
+    rf_prob = max(final_rf_model.predict_proba(input_data)[0])
+
+    # Combine predictions and probabilities
+    predictions_with_confidence = {
+        "SVM": {"prediction": svm_prediction, "confidence": svm_prob},
+        "Naive Bayes": {"prediction": nb_prediction, "confidence": nb_prob},
+        "Random Forest": {"prediction": rf_prediction, "confidence": rf_prob},
+    }
+    # Sort predictions by confidence
+    sorted_predictions = sorted(
+        predictions_with_confidence.items(),
+        key=lambda item: item[1]["confidence"],
+        reverse=True,
+    )
+
+    # The final prediction is based on the model with the highest confidence score
+    final_prediction = sorted_predictions[0][1]["prediction"]
+    final_confidence = sorted_predictions[0][1]["confidence"]
 
     # Serialize the health_symptom instance to JSON
     serializer = HealthSymptomSerializer(health_symptom)
 
+    # Set the prognosis obtained from the prediction models
+    health_symptom.prognosis = final_prediction
+
     # Save the instance to the database
     health_symptom.save()
 
-    return Response(serializer.data,"Successfully uploaded the data!")           
-class PredictDisease(APIView):
-    def post(self, request):
-        symptoms = request.data["symptoms"]
+    # Return the response with both symptom recording and prediction
+    response_data = {
+        "symptom_record": serializer.data,
+        "predictions_with_confidence": sorted_predictions,
+        "final_prediction": final_prediction,
+        "final_confidence": final_confidence,
+    }
+    
+    return Response(response_data, status=200)
 
-        base_dir = os.path.dirname(__file__)
+def get_latest_record_id(request):
+    try:
+        latest_record = HealthSymptom.objects.latest('id')
+        latest_record_id = latest_record.id
+        return JsonResponse({'latest_record_id': latest_record_id})
+    except HealthSymptom.DoesNotExist:
+        return JsonResponse({'error': 'No records found'}, status=404)
 
-        svm_model_path = os.path.join(base_dir, "final_svm_model.pkl")
-        final_svm_model = pickle.load(open(svm_model_path, "rb"))
-
-        nb_model_path = os.path.join(base_dir, "final_nb_model.pkl")
-        final_nb_model = pickle.load(open(nb_model_path, "rb"))
-
-        rf_model_path = os.path.join(base_dir, "final_rf_model.pkl")
-        final_rf_model = pickle.load(open(rf_model_path, "rb"))
-
-        encoder_path = os.path.join(base_dir, "encoder.pkl")
-        encoder = pickle.load(open(encoder_path, "rb"))
-
-        symptomslist = [
-            "itching",
-            "skin rash",
-            "nodal skin eruptions",
-            "continuous sneezing",
-            "shivering",
-            "chills",
-            "joint pain",
-            "stomach pain",
-            "acidity",
-            "ulcers on tongue",
-            "muscle wasting",
-            "vomiting",
-            "burning micturition",
-            "spotting urination",
-            "fatigue",
-            "weight gain",
-            "anxiety",
-            "cold hands and feets",
-            "mood swings",
-            "weight loss",
-            "restlessness",
-            "lethargy",
-            "patches in throat",
-            "irregular sugar level",
-            "cough",
-            "high fever",
-            "sunken eyes",
-            "breathlessness",
-            "sweating",
-            "dehydration",
-            "indigestion",
-            "headache",
-            "yellowish skin",
-            "dark urine",
-            "nausea",
-            "loss of appetite",
-            "pain behind the eyes",
-            "back pain",
-            "constipation",
-            "abdominal pain",
-            "diarrhoea",
-            "mild fever",
-            "yellow urine",
-            "yellowing of eyes",
-            "acute liver failure",
-            "fluid overload",
-            "swelling of stomach",
-            "swelled lymph nodes",
-            "malaise",
-            "blurred and distorted vision",
-            "phlegm",
-            "throat irritation",
-            "redness of eyes",
-            "sinus pressure",
-            "runny nose",
-            "congestion",
-            "chest pain",
-            "weakness in limbs",
-            "fast heart rate",
-            "pain during bowel movements",
-            "pain in anal region",
-            "bloody stool",
-            "irritation in anus",
-            "neck pain",
-            "dizziness",
-            "cramps",
-            "bruising",
-            "obesity",
-            "swollen legs",
-            "swollen blood vessels",
-            "puffy face and eyes",
-            "enlarged thyroid",
-            "brittle nails",
-            "swollen extremeties",
-            "excessive hunger",
-            "extra-marital contacts",
-            "drying and tingling lips",
-            "slurred speech",
-            "knee pain",
-            "hip joint pain",
-            "muscle weakness",
-            "stiff neck",
-            "swelling joints",
-            "movement stiffness",
-            "spinning movements",
-            "loss of balance",
-            "unsteadiness",
-            "weakness of one body side",
-            "loss of smell",
-            "bladder discomfort",
-            "foul smell of urine",
-            "continuous feel of urine",
-            "passage of gases",
-            "internal itching",
-            "toxic look (typhos)",
-            "depression",
-            "irritability",
-            "muscle pain",
-            "altered sensorium",
-            "red spots over body",
-            "belly pain",
-            "abnormal menstruation",
-            "dischromic patches",
-            "watering from eyes",
-            "increased appetite",
-            "polyuria",
-            "family history",
-            "mucoid sputum",
-            "rusty sputum",
-            "lack of concentration",
-            "visual disturbances",
-            "receiving blood transfusion",
-            "receiving unsterile injections",
-            "coma",
-            "stomach bleeding",
-            "distention of abdomen",
-            "history of alcohol consumption",
-            "fluid overload",
-            "blood in sputum",
-            "prominent veins on calf",
-            "palpitations",
-            "painful walking",
-            "pus-filled pimples",
-            "blackheads",
-            "scurring",
-            "skin peeling",
-            "silver-like dusting",
-            "small dents in nails",
-            "inflammatory nails",
-            "blister",
-            "red sore around nose",
-            "yellow crust ooze",
-        ]
-        # Prepare the input data
-        input_data = [0] * len(symptomslist)
-        for symptom in symptoms:
-            index = symptomslist.index(symptom)
-            input_data[index] = 1
-        input_data = np.array(input_data).reshape(1, -1)
-        # Make the predictions
-        svm_prediction = encoder.classes_[final_svm_model.predict(input_data)[0]]
-        nb_prediction = encoder.classes_[final_nb_model.predict(input_data)[0]]
-        rf_prediction = encoder.classes_[final_rf_model.predict(input_data)[0]]
-
-        # Get prediction probabilities
-        svm_prob = max(final_svm_model.predict_proba(input_data)[0])
-        nb_prob = max(final_nb_model.predict_proba(input_data)[0])
-        rf_prob = max(final_rf_model.predict_proba(input_data)[0])
-
-        # Combine predictions and probabilities
-        predictions_with_confidence = {
-            "SVM": {"prediction": svm_prediction, "confidence": svm_prob},
-            "Naive Bayes": {"prediction": nb_prediction, "confidence": nb_prob},
-            "Random Forest": {"prediction": rf_prediction, "confidence": rf_prob},
-        }
-        # Sort predictions by confidence
-        sorted_predictions = sorted(
-            predictions_with_confidence.items(),
-            key=lambda item: item[1]["confidence"],
-            reverse=True,
-        )
-
-        # The final prediction is based on the model with the highest confidence score
-        final_prediction = sorted_predictions[0][1]["prediction"]
-        final_confidence = sorted_predictions[0][1]["confidence"]
-
-        # Return the predictions
+@api_view(['DELETE'])
+def delete_symptom_record(request, record_id):
+    try:
+        health_symptom = HealthSymptom.objects.get(pk=record_id)
+        health_symptom.delete()
+        return JsonResponse({}, status=204)
+    except HealthSymptom.DoesNotExist:
         return JsonResponse(
-            {
-                "predictions_with_confidence": sorted_predictions,
-                "final_prediction": final_prediction,
-                "final_confidence": final_confidence,
-            }
+            {'error': 'Symptom record not found'},
+            status=404
         )
+    
+@api_view(['POST'])
+def update_prognosis(request, record_id):
+    try:
+        # Find the HealthSymptom record with the given record_id
+        health_symptom = HealthSymptom.objects.get(id=record_id)
+
+        # Extract the new prognosis value from the request data
+        new_prognosis = request.data.get('new_prognosis')
+
+        # Update the prognosis value
+        health_symptom.prognosis = new_prognosis
+        health_symptom.save()
+
+        # Serialize and return the updated HealthSymptom instance
+        serializer = HealthSymptomSerializer(health_symptom)
+        return Response(serializer.data, status=200)
+
+    except HealthSymptom.DoesNotExist:
+        return Response({'error': 'HealthSymptom record not found'}, status=404)

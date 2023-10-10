@@ -5,7 +5,6 @@
 from django.contrib import admin
 from django.urls import path, include
 # from api.views import PredictDisease, PatientView, MedicineView, SymptomsView, PersonalNotesView, CommentView
-from api.modules.disease_prediction.cdssModel.views import PredictDisease
 # from api.modules.drug.views import 
 # process_pdf,  predict HealthRecordView,ViewUploadCSV, ViewLabResult
 
@@ -16,7 +15,6 @@ urlpatterns = [
     path('user/', include('api.modules.user.urls')),
     path('laboratory/', include('api.modules.laboratory.urls')),
     path('cdss/', include('api.modules.disease_prediction.cdssModel.urls')),
-    path('predict/', PredictDisease.as_view(), name='predict'),
  
     # path('upload/', include('api.modules.drug.urls')),
     

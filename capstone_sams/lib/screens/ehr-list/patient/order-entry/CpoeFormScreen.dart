@@ -1,8 +1,10 @@
 import 'package:capstone_sams/providers/PatientProvider.dart';
  
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/order-entry/api/api_service.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/AddMedicineDialog.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/MedicineCard.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/PrognosisUpdateDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -27,6 +29,27 @@ class CpoeFormScreen extends StatelessWidget {
     required this.finalPrediction,
     required this.finalConfidence,
   });
+  Future<void> _handleAnalyzeAgain(BuildContext context) async {
+    try {
+      await ApiService.deleteLatestRecord();
+
+      Provider.of<SymptomFieldsProvider>(context, listen: false).reset();
+      Navigator.pop(context);
+    } catch (error) {
+      // Handle the case where the record deletion fails
+      // You can display an error message or perform any necessary actions here
+      print('Failed to delete the latest record: $error');
+    }
+  }
+
+  void _showPrognosisUpdateDialog(BuildContext context) async {
+    final newPrognosis = await showDialog<String>(
+      context: context,
+      builder: (context) => PrognosisUpdateDialog(),
+    );
+
+    if (newPrognosis != null && newPrognosis.isNotEmpty) {}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,21 +91,37 @@ class CpoeFormScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 16),
                 ),
                 SizedBox(height: 10),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    Provider.of<SymptomFieldsProvider>(context, listen: false)
-                        .reset();
-                    Navigator.pop(context);
-                  },
-                  icon: Icon(Icons.search),
-                  label: Text('Analyze Again'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Pallete.mainColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () => _handleAnalyzeAgain(context),
+                        icon: Icon(Icons.search),
+                        label: Text('Analyze Again'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Pallete.mainColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () => _showPrognosisUpdateDialog(context),
+                        icon: Icon(Icons.edit),
+                        label: Text('Change Value'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Pallete.mainColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
               ],
             ),
           ),
