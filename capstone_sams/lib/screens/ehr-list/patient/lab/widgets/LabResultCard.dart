@@ -1,18 +1,31 @@
 import 'package:capstone_sams/models/LabResultModel.dart';
 import 'package:flutter/material.dart';
 
- import '../../../../../constants/theme/pallete.dart';
+import '../../../../../constants/theme/pallete.dart';
 import '../../../../../constants/theme/sizing.dart';
 
 class LabResultCard extends StatelessWidget {
-  final LabResult labresult;
-
-  LabResultCard({required this.labresult});
+  final Labresult labresult;
+  final int a;
+  LabResultCard({required this.labresult, required this.a});
 
   @override
   Widget build(BuildContext context) {
     final titles = ["TEST", '', "VALUE", "UNIT", "REFERENCE"];
-    final matrix = labresult.jsonData['data'];
+    // final matrix = labresult.jsonTables?[0][0][0][1]['data'];
+
+    // final haematologyArray = labresult.jsonTables![0][0][1];
+    // final haematologyMatrix = haematologyArray['data'];
+    // final patientArray = labresult.jsonTables![0][0][0][1];
+    // final patientMatrix = patientArray['data'];
+    print('index in lab card ${a}');
+
+    final array = labresult.jsonTables![a];
+    final matrix = array['data'];
+
+    // final patientArray = labresult.jsonTables![0];
+    // final patientMatrix = patientArray['data'];
+
     // final firstColumn = matrix.map((row) => row[0]['text']).toList();
     // final second2lastColumn = List.generate(
     //   matrix[0].length - 1,
@@ -28,7 +41,8 @@ class LabResultCard extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(bottom: Sizing.sectionSymmPadding),
       child: Column(
-        children: [
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
           Container(
             decoration: BoxDecoration(
               color: Pallete.mainColor,
@@ -101,17 +115,34 @@ class LabResultCard extends StatelessWidget {
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
-                  child: DataTable(
-                    columns: titles.map<DataColumn>((item) {
-                      return DataColumn(label: Text(item));
-                    }).toList(),
-                    rows: matrix.map<DataRow>((row) {
-                      return DataRow(
-                        cells: row.map<DataCell>((cell) {
-                          return DataCell(Text(cell['text'] ?? ''));
+                  child: Column(
+                    children: [
+                      // DataTable(
+                      //   columns: titles.map<DataColumn>((item) {
+                      //     return DataColumn(label: Text(item));
+                      //   }).toList(),
+                      //   rows: patientMatrix.map<DataRow>((row) {
+                      //     return DataRow(
+                      //       cells: row.map<DataCell>((cell) {
+                      //         return DataCell(Text(cell['text'] ?? ''));
+                      //       }).toList(),
+                      //     );
+                      //   }).toList(),
+                      // ),
+
+                      DataTable(
+                        columns: titles.map<DataColumn>((item) {
+                          return DataColumn(label: Text(item));
                         }).toList(),
-                      );
-                    }).toList(),
+                        rows: matrix.map<DataRow>((row) {
+                          return DataRow(
+                            cells: row.map<DataCell>((cell) {
+                              return DataCell(Text(cell['text'] ?? ''));
+                            }).toList(),
+                          );
+                        }).toList(),
+                      ),
+                    ],
                   ),
                 ),
               ),

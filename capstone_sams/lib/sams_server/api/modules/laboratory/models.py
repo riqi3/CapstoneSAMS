@@ -15,7 +15,9 @@ class LabResult(models.Model):
 class JsonLabResult(models.Model):
     labresult = models.ForeignKey(LabResult, on_delete = models.CASCADE)
     jsonId = models.AutoField(primary_key = True)
-    jsonData = models.JSONField()
+    labresultTitles = models.JSONField()
+    collectedOn = models.DateField()
+    jsonTables = models.JSONField()
     createdAt = models.DateTimeField(auto_now_add=True)
     title = models.CharField(blank = False,max_length=128)
     comment = models.TextField(blank = False,max_length=512)

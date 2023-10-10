@@ -6,20 +6,20 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../constants/Env.dart';
 
-class LabResultProvider with ChangeNotifier {
+class LabresultProvider with ChangeNotifier {
   var data = [];
-  List<LabResult> _labResults = [];
+  List<Labresult> _labResults = [];
 
-  List<LabResult> get labResults => _labResults;
+  List<Labresult> get labResults => _labResults;
 
-  Future<List<LabResult>> fetchLabResults(String index) async {
+  Future<List<Labresult>> fetchLabResults(String index) async {
     final response = await http.get(
         Uri.parse('${Env.prefix}/laboratory/select/scan/labresult/${index}/'));
     await Future.delayed(Duration(milliseconds: 3000));
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      List<LabResult> labResults = data.map<LabResult>((json) {
-        return LabResult.fromJson(json);
+      List<Labresult> labResults = data.map<Labresult>((json) {
+        return Labresult.fromJson(json);
       }).toList();
       // labResults = labResults.reversed.toList();
       return labResults;
@@ -28,7 +28,7 @@ class LabResultProvider with ChangeNotifier {
     }
   }
 
-  void addLabResult(LabResult labresult) async {
+  void addLabResult(Labresult labresult) async {
     final response = await http.post(Uri.parse('${Env.prefix}/ocr/'));
     await Future.delayed(Duration(milliseconds: 3000));
     if (response.statusCode == 200) {
