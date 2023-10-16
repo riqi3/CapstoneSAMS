@@ -115,34 +115,17 @@ class LabResultCard extends StatelessWidget {
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
-                  child: Column(
-                    children: [
-                      // DataTable(
-                      //   columns: titles.map<DataColumn>((item) {
-                      //     return DataColumn(label: Text(item));
-                      //   }).toList(),
-                      //   rows: patientMatrix.map<DataRow>((row) {
-                      //     return DataRow(
-                      //       cells: row.map<DataCell>((cell) {
-                      //         return DataCell(Text(cell['text'] ?? ''));
-                      //       }).toList(),
-                      //     );
-                      //   }).toList(),
-                      // ),
-
-                      DataTable(
-                        columns: titles.map<DataColumn>((item) {
-                          return DataColumn(label: Text(item));
+                  child: DataTable(
+                    columns: titles.map<DataColumn>((item) {
+                      return DataColumn(label: Text(item));
+                    }).toList(),
+                    rows: matrix.map<DataRow>((row) {
+                      return DataRow(
+                        cells: row.map<DataCell>((cell) {
+                          return DataCell(Text(cell['text'] ?? ''));
                         }).toList(),
-                        rows: matrix.map<DataRow>((row) {
-                          return DataRow(
-                            cells: row.map<DataCell>((cell) {
-                              return DataCell(Text(cell['text'] ?? ''));
-                            }).toList(),
-                          );
-                        }).toList(),
-                      ),
-                    ],
+                      );
+                    }).toList(),
                   ),
                 ),
               ),

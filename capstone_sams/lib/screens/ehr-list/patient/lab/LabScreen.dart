@@ -1,3 +1,4 @@
+import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/providers/LabResultProvider.dart';
 
 import 'package:capstone_sams/screens/ehr-list/patient/lab/widgets/LabresultCard.dart';
@@ -112,12 +113,14 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
     print('COUNT NUMBER OF DATA $numLabTypes');
 
     return ExpansionTile(
-      textColor: Colors.amber,
+      textColor: Pallete.mainColor,
+      iconColor: Pallete.mainColor,
+      collapsedIconColor: Pallete.greyColor,
       title: Text(
         ('${formattedDate} | ${list.title}'),
         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
       ),
-    
+
       // trailing: FaIcon(FontAwesomeIcons.chevronDown),
       subtitle: GestureDetector(
         onTap: () {

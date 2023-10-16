@@ -13,8 +13,6 @@ import 'package:provider/provider.dart';
 
 import '../../constants/theme/pallete.dart';
 import '../../constants/theme/sizing.dart';
- 
- 
 
 class MedicalNotes extends StatefulWidget {
   const MedicalNotes({Key? key}) : super(key: key);
