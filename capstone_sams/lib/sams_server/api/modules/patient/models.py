@@ -24,6 +24,9 @@ class Patient(models.Model):
     email = models.CharField(max_length = 50, blank = True)
     user = models.CharField(null = True, blank = True)
 
+    def __str__(self):
+        return f"{self.patientID} - {self.firstName} {self.middleName} {self.lastName}"
+
 '''
 This model represent the health records
 inputted and stored into the system. Each
