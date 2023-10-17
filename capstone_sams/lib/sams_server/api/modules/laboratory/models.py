@@ -9,6 +9,7 @@ class LabResult(models.Model):
     pdf = models.FileField(blank = False,upload_to='upload-pdf/')
     patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
 
+
     def __str__(self):
         return self.title
 
