@@ -11,6 +11,9 @@ from api.modules.laboratory.serializer import (
     LabResultSerializer,
     JsonLabResultSerializer,
 )
+import re
+import datetime
+from PyPDF2 import PdfReader
 from rest_framework.views import APIView
 from django.shortcuts import render
 from api.modules.laboratory.form import PdfImportLabResultForm
@@ -18,6 +21,9 @@ from django import forms
 from django.contrib import admin, messages
 from django.http import HttpResponseRedirect
 import json
+
+# def get_data_and_move_higher(arr):
+
 
 
 def cleanJsonTable(json_data):
@@ -132,10 +138,18 @@ class ProcessPdf(APIView):
     #         return JsonResponse({'result': json.loads(json_data)})
  
     # tabnula
+ 
+ 
     def select_pdf(request,patient):
         if request.method == "POST":
             selected_pdfs = request.POST.getlist("item")
             pdf_contents = []
+            tableAppend= []
+            tempList = []
+            uniqueDataList = []
+            newLista = []
+            labresultTitles = []
+            
 
             for pdf_id in selected_pdfs:
                 
@@ -143,6 +157,7 @@ class ProcessPdf(APIView):
                 pdf_title = pdf_instance.title
                 pdf_comment = pdf_instance.comment
                 patient_id = pdf_instance.patient
+                str_collected_on = None
                 # test = pdf_instance.patient
                 # patient_instance = Patient.objects.filter(patient=test)
                 # patient_id = patient_instance.patientID
@@ -151,20 +166,86 @@ class ProcessPdf(APIView):
                 tables = read_pdf(
                     pdf_instance.pdf.path, pages="all", output_format="json"
                 )
-                table = tables[1]
-                cleaned_data = cleanJsonTable(table)
+                reader = PdfReader(pdf_instance.pdf.path)
+                
+                '''tables[index] retrieves the table according by index.
+                in this case the format of the labresult has the following
+                tables: 1.) tables[0] contains the personal information. 
+                2.) tables[1] contains the haematology of the blood
+                3.) tables[3] contains the biochemistry. theese tables are 
+                then stored in their respective rows
+                '''
+
+                for page in reader.pages:
+                    text = page.extract_text()
+                    # first_word = text.split()[0] if text else None
+                    # print(first_word)
+                    if text:
+                        firstWord = text.split()[0]
+                        labresultTitles.append(firstWord)
+                
+                for index, j in enumerate(tables): 
+                    readTable = tables[index]
+                    tableAppend = [tableAppend,readTable]
+                     
+                # print('\n\n\n\n')
+                cleaned_data = cleanJsonTable(tableAppend)
+
+                def get_data_and_move_higher(arr):
+                    for item in arr:
+                        if isinstance(item, dict) and "data" in item:
+                            data_contents = item["data"]
+                            extract_list = {"data": data_contents}
+                            tempList.append(extract_list)
+
+                        if isinstance(item, list):
+                            get_data_and_move_higher(item)
+
+                get_data_and_move_higher(cleaned_data)
+
+                # print('aaaaaaaaaaa', tempList)
+                # print('\n\n')
+
+                for item in tempList:
+                    data_contents = item['data']
+                    if data_contents not in uniqueDataList:
+                        uniqueDataList.append(data_contents)
+
+                result_list = [{'data': data_contents} for data_contents in uniqueDataList]
+                for item in result_list:
+                    newLista.append(item)
+
+                
+                for item in newLista:
+                    for text_data in item["data"][3]:
+                        if text_data["text"] == "Collected on:":
+                            str_collected_on = item["data"][3][1]["text"]
+                            break
+
+                # print('bbbbbbbbb', newLista) 
+                print(str_collected_on)
+                
+                # h = json.dumps(collected_on)
+                # matches = re.findall(r'(\d+/\d+/\d+)',h)
+                # print(matches)
+                # print(h)
+                # collected_on = datetime.datetime.strptime(str_collected_on, '%d/%m/%Y').strftime('%B %d, %Y')
+                collected_on = datetime.datetime.strptime(str_collected_on, '%d/%m/%Y').strftime('%Y-%m-%d')
+                print('aaa ', collected_on)
 
                 jsonLabResult = JsonLabResult(
-                    jsonData=cleaned_data,
+                    jsonTables=newLista,
+                    labresultTitles = labresultTitles,
+                    collectedOn = collected_on,
                     labresult=pdf_instance,
                     title=pdf_title,
                     comment=pdf_comment, 
                     patient=patient_id,
                 )
                 jsonLabResult.save()
-                print(cleaned_data)
+                # print(jsonLabResult)
 
-                pdf_contents.append(cleaned_data)
+                pdf_contents.append(jsonLabResult)
                 json_data = json.dumps(pdf_contents)
             return JsonResponse({"result": json.loads(json_data)})
         else:

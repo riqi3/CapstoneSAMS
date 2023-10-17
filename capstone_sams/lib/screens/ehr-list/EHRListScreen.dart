@@ -24,6 +24,7 @@ class EhrListScreen extends StatefulWidget {
 
 class _EhrListScreenState extends State<EhrListScreen> {
   late Stream<List<Patient>> patients;
+  ScrollController _controller = ScrollController();
 
   final double items = 50;
   final start = 0;
@@ -39,6 +40,15 @@ class _EhrListScreenState extends State<EhrListScreen> {
         Stream.fromFuture(context.read<PatientProvider>().fetchPatients());
   }
 
+  void _scrollUp() {
+    // _controller.jumpTo(_controller.position.minScrollExtent);
+    _controller.animateTo(
+      _controller.position.minScrollExtent,
+      duration: Duration(seconds: 1),
+      curve: Curves.fastOutSlowIn,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,6 +62,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
         preferredSize: Size.fromHeight(kToolbarHeight),
       ),
       body: SingleChildScrollView(
+        controller: _controller,
         padding: EdgeInsets.only(
           left: Sizing.sectionSymmPadding,
           right: Sizing.sectionSymmPadding,
@@ -125,6 +136,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
   ElevatedButton ChevronPrev() {
     return ElevatedButton(
       onPressed: () => {
+        _scrollUp(),
         if (currentPageIndex > 0)
           {
             setState(() {
@@ -147,6 +159,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
   ElevatedButton ChevronNext() {
     return ElevatedButton(
       onPressed: () => {
+        _scrollUp(),
         if (currentPageIndex < pageRounded - 1)
           {
             setState(() {
@@ -168,6 +181,12 @@ class _EhrListScreenState extends State<EhrListScreen> {
 
   GridView _mobileView(AsyncSnapshot<List<Patient>> snapshot,
       List<Patient> dataToShow, int start) {
+    double _crossAxisSpacing = 10, _mainAxisSpacing = 10, _aspectRatio = 2;
+    int _crossAxisCount = 1;
+    double screenWidth = MediaQuery.of(context).size.width;
+    var width = (screenWidth - ((_crossAxisCount - 1) * _crossAxisSpacing)) /
+        _crossAxisCount;
+    var height = width / _aspectRatio;
     return GridView.builder(
       shrinkWrap: true,
       padding: EdgeInsets.only(),
@@ -183,10 +202,14 @@ class _EhrListScreenState extends State<EhrListScreen> {
         crossAxisCount: 1,
         mainAxisSpacing: 10,
         crossAxisSpacing: 10,
-        childAspectRatio: 16 / 8,
+        childAspectRatio: MediaQuery.of(context).size.width /
+            (MediaQuery.of(context).size.height / 4),
+        // childAspectRatio: MediaQuery.of(context).size.width / 200,
       ),
     );
   }
+
+  // MediaQuery.of(context).size.width / (MediaQuery.of(context).size.height / 1)
 
   GridView _tabletView(AsyncSnapshot<List<Patient>> snapshot,
       List<Patient> dataToShow, int start) {

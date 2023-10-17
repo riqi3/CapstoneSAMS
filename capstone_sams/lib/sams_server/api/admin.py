@@ -22,6 +22,9 @@ from api.modules.patient.models import Patient, Health_Record
 from api.modules.cpoe.models import Medicine, Prescription
 from api.modules.laboratory.models import LabResult
 
+from api.modules.disease_prediction.cdssModel.models import HealthSymptom
+from api.modules.disease_prediction.cdssModel.views import train_disease_prediction_model
+
 # from api.models import Account, Patient, Data_Log, Prescription, Medicine, Symptom, Health_Record, Comment, Prescribed_Medicine, Patient_Symptom
 
 '''
@@ -477,6 +480,169 @@ class PrescriptionAdmin(admin.ModelAdmin):
     search_fields = ("presNum",)
     autocomplete_fields = ["account", "health_record"]
 
+class HealthSymptomAdmin(admin.ModelAdmin):
+    change_list_template = "admin/train_model.html"
+    list_display = [
+    "prognosis",
+    "itching",
+    "skin_rash",
+    "nodal_skin_eruptions",
+    "continuous_sneezing",
+    "shivering",
+    "chills",
+    "joint_pain",
+    "stomach_pain",
+    "acidity",
+    "ulcers_on_tongue",
+    "muscle_wasting",
+    "vomiting",
+    "burning_micturition",
+    "spotting_urination",
+    "fatigue",
+    "weight_gain",
+    "anxiety",
+    "cold_hands_and_feets",
+    "mood_swings",
+    "weight_loss",
+    "restlessness",
+    "lethargy",
+    "patches_in_throat",
+    "irregular_sugar_level",
+    "cough",
+    "high_fever",
+    "sunken_eyes",
+    "breathlessness",
+    "sweating",
+    "dehydration",
+    "indigestion",
+    "headache",
+    "yellowish_skin",
+    "dark_urine",
+    "nausea",
+    "loss_of_appetite",
+    "pain_behind_the_eyes",
+    "back_pain",
+    "constipation",
+    "abdominal_pain",
+    "diarrhoea",
+    "mild_fever",
+    "yellow_urine",
+    "yellowing_of_eyes",
+    "acute_liver_failure",
+    "fluid_overload",
+    "swelling_of_stomach",
+    "swelled_lymph_nodes",
+    "malaise",
+    "blurred_and_distorted_vision",
+    "phlegm",
+    "throat_irritation",
+    "redness_of_eyes",
+    "sinus_pressure",
+    "runny_nose",
+    "congestion",
+    "chest_pain",
+    "weakness_in_limbs",
+    "fast_heart_rate",
+    "pain_during_bowel_movements",
+    "pain_in_anal_region",
+    "bloody_stool",
+    "irritation_in_anus",
+    "neck_pain",
+    "dizziness",
+    "cramps",
+    "bruising",
+    "obesity",
+    "swollen_legs",
+    "swollen_blood_vessels",
+    "puffy_face_and_eyes",
+    "enlarged_thyroid",
+    "brittle_nails",
+    "swollen_extremities",
+    "excessive_hunger",
+    "extra_marital_contacts",
+    "drying_and_tingling_lips",
+    "slurred_speech",
+    "knee_pain",
+    "hip_joint_pain",
+    "muscle_weakness",
+    "stiff_neck",
+    "swelling_joints",
+    "movement_stiffness",
+    "spinning_movements",
+    "loss_of_balance",
+    "unsteadiness",
+    "weakness_of_one_body_side",
+    "loss_of_smell",
+    "bladder_discomfort",
+    "foul_smell_of_urine",
+    "continuous_feel_of_urine",
+    "passage_of_gases",
+    "internal_itching",
+    "toxic_look_typhos",
+    "depression",
+    "irritability",
+    "muscle_pain",
+    "altered_sensorium",
+    "red_spots_over_body",
+    "belly_pain",
+    "abnormal_menstruation",
+    "dischromic_patches",
+    "watering_from_eyes",
+    "increased_appetite",
+    "polyuria",
+    "family_history",
+    "mucoid_sputum",
+    "rusty_sputum",
+    "lack_of_concentration",
+    "visual_disturbances",
+    "receiving_blood_transfusion",
+    "receiving_unsterile_injections",
+    "coma",
+    "stomach_bleeding",
+    "distention_of_abdomen",
+    "history_of_alcohol_consumption",
+    "fluid_overload_2",
+    "blood_in_sputum",
+    "prominent_veins_on_calf",
+    "palpitations",
+    "painful_walking",
+    "pus_filled_pimples",
+    "blackheads",
+    "scurrying",
+    "skin_peeling",
+    "silver_like_dusting",
+    "small_dents_in_nails",
+    "inflammatory_nails",
+    "blister",
+    "red_sore_around_nose",
+    "yellow_crust_ooze"
+]
+    list_filter = ["prognosis"]  
+    search_fields = ["prognosis"] 
+
+    ordering = ('-id',)
+
+    def get_urls(self):
+        urls = super().get_urls()
+        new_urls = [
+            path("retrain_model/", self.retrain_model, name="admin_retrain_model"),
+        ]
+        return new_urls + urls 
+    
+    def retrain_model(self, request):
+        if request.method == 'POST':
+            success, message = train_disease_prediction_model()
+            if success:
+                self.message_user(request, f"Model retraining completed successfully: {message}")
+            else:
+                self.message_user(request, f"Model retraining failed: {message}", level=admin.ERROR)
+
+        context = self.admin_site.each_context(request)
+        return HttpResponseRedirect("../")
+    
+    retrain_model.short_description = "Retrain Model"
+    
+
 
 # class SymptomsAdminForm(forms.ModelForm):
 #     class Meta:
@@ -498,7 +664,7 @@ admin.site.register(Health_Record, HealthRecordAdmin)
 admin.site.register(Prescription, PrescriptionAdmin)
 # admin.site.register(Symptom, SymptomsAdmin)
 admin.site.register(LabResult, LabResultAdmin)
-
+admin.site.register(HealthSymptom, HealthSymptomAdmin)
 # ... and, since we're not using Django's built-in permissions,
 # unregister the Group model from admin.
 admin.site.unregister(Group)

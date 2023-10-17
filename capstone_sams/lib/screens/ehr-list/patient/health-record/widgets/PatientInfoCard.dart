@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../../../../constants/theme/pallete.dart';
 import '../../../../../constants/theme/sizing.dart';
 import '../../../../../models/PatientModel.dart';
- 
 
 class PatientInfoCard extends StatefulWidget {
   final Patient patient;
@@ -88,50 +87,54 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                   right: Sizing.sectionSymmPadding,
                   bottom: Sizing.sectionSymmPadding,
                 ),
-                child: DataTable(
-                  columns: const <DataColumn>[
-                    DataColumn(label: Text('TITLE')),
-                    DataColumn(label: Text('VALUE')),
-                  ],
-                  rows: List<DataRow>.generate(
-                    widget.patient.toJson().entries.length,
-                    (int index) {
-                      MapEntry entry =
-                          widget.patient.toJson().entries.elementAt(index);
-                      return DataRow(
-                        cells: <DataCell>[
-                          DataCell(Text(titles[index])),
-                          DataCell(Text(entry.value.toString())),
-                        ],
-                      );
-                    },
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  child: DataTable(
+                    columns: const <DataColumn>[
+                      DataColumn(label: Text('TITLE')),
+                      DataColumn(label: Text('VALUE')),
+                    ],
+                    rows: List<DataRow>.generate(
+                      widget.patient.toJson().entries.length,
+                      (int index) {
+                        MapEntry entry =
+                            widget.patient.toJson().entries.elementAt(index);
+                        return DataRow(
+                          cells: <DataCell>[
+                            DataCell(Text(titles[index])),
+                            DataCell(Text(entry.value.toString())),
+                          ],
+                        );
+                      },
+                    ),
+
+                    // rows: titles.map<DataRow>((title) {
+                    //   // final value = widget.patient.toJson()[title];
+                    //   MapEntry value =
+                    //       widget.patient.toJson().entries.elementAt(title);
+                    //   return DataRow(
+                    //     cells: <DataCell>[
+                    //       DataCell(Text(title)),
+                    //       DataCell(Text(value.toString())),
+                    //     ],
+                    //   );
+                    // }).toList(),
+
+                    // rows: List<DataRow>.generate(
+                    //   widget.patient.toJson().entries.length,
+                    //   (int index) {
+                    //     MapEntry entry =
+                    //         widget.patient.toJson().entries.elementAt(index);
+                    // return DataRow(
+                    //   cells: <DataCell>[
+                    //     DataCell(Text(entry.key)),
+                    //     DataCell(Text(entry.value.toString())),
+                    //   ],
+                    //     );
+                    //   },
+                    // ),
                   ),
-
-                  // rows: titles.map<DataRow>((title) {
-                  //   // final value = widget.patient.toJson()[title];
-                  //   MapEntry value =
-                  //       widget.patient.toJson().entries.elementAt(title);
-                  //   return DataRow(
-                  //     cells: <DataCell>[
-                  //       DataCell(Text(title)),
-                  //       DataCell(Text(value.toString())),
-                  //     ],
-                  //   );
-                  // }).toList(),
-
-                  // rows: List<DataRow>.generate(
-                  //   widget.patient.toJson().entries.length,
-                  //   (int index) {
-                  //     MapEntry entry =
-                  //         widget.patient.toJson().entries.elementAt(index);
-                  // return DataRow(
-                  //   cells: <DataCell>[
-                  //     DataCell(Text(entry.key)),
-                  //     DataCell(Text(entry.value.toString())),
-                  //   ],
-                  //     );
-                  //   },
-                  // ),
                 ),
               ),
             ),
