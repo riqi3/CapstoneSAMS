@@ -2,7 +2,8 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import  AbstractBaseUser, BaseUserManager, PermissionsMixin 
 from rest_framework_simplejwt.tokens import RefreshToken
-
+from PIL import Image, ImageDraw, ImageFont 
+import random
 '''
 This model manages custom user models which in this case is
 the Account model.
@@ -39,6 +40,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
         ('admin', 'Admin'),
     ]
     accountID = models.CharField(max_length=100, primary_key=True)
+    photo = models.ImageField(upload_to ='upload-photo/', height_field=None, width_field=None) 
     username = models.CharField(max_length=100, unique=True)
     password = models.CharField(max_length=100, blank = False)
     firstName = models.CharField(max_length=100, blank = False)
@@ -52,6 +54,9 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['accountID','accountRole']
+
+    def user_directory_path(instance, filename): 
+        return 'user_{0}/{1}'.format(instance.accountID+instance.username, filename) 
 
     objects = AccountManager()
 
