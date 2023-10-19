@@ -2,8 +2,8 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import  AbstractBaseUser, BaseUserManager, PermissionsMixin 
 from rest_framework_simplejwt.tokens import RefreshToken
-from PIL import Image, ImageDraw, ImageFont 
-import random
+import os
+
 '''
 This model manages custom user models which in this case is
 the Account model.
@@ -21,6 +21,8 @@ class AccountManager(BaseUserManager):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         return self.create_user(username, password, **extra_fields)
+    
+ 
 
 '''
 This model represent the user accounts
@@ -33,6 +35,7 @@ Each account also has a token that will be use for
 security purposes.
 '''
 class Account(AbstractBaseUser, PermissionsMixin):
+
     ACCOUNT_ROLE_CHOICES = [
         ('physician', 'Physician'),
         ('medtech', 'MedTech'),
@@ -40,10 +43,10 @@ class Account(AbstractBaseUser, PermissionsMixin):
         ('admin', 'Admin'),
     ]
     accountID = models.CharField(max_length=100, primary_key=True)
-    photo = models.ImageField(upload_to ='upload-photo/', height_field=None, width_field=None) 
+    profile_photo = models.ImageField(blank = True, default=None,upload_to ='upload-photo/' ) 
     username = models.CharField(max_length=100, unique=True)
     password = models.CharField(max_length=100, blank = False)
-    firstName = models.CharField(max_length=100, blank = False)
+    firstName = models.CharField(max_length=100, blank = False) 
     middleName = models.CharField(max_length=100, blank = False)
     lastName = models.CharField(max_length=100, blank = False)
     accountRole = models.CharField(max_length=100, choices=ACCOUNT_ROLE_CHOICES)
@@ -55,10 +58,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['accountID','accountRole']
 
-    def user_directory_path(instance, filename): 
-        return 'user_{0}/{1}'.format(instance.accountID+instance.username, filename) 
-
     objects = AccountManager()
+ 
 
     class Meta:
         db_table = "account"

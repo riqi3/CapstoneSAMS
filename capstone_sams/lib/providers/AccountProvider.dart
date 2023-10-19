@@ -7,10 +7,14 @@ import '../constants/Env.dart';
 import '../models/AccountModel.dart';
 
 class AccountProvider extends ChangeNotifier {
+  // List<Account> _accounts = [];
+
+  // List<Account> get account => _accounts;
   Account? _account;
 
   Account? get acc => _account;
   String? get id => _account?.accountID;
+  String? get photo => _account?.profile_photo;
   String? get username => _account?.username;
   String? get password => _account?.password;
   String? get firstName => _account?.firstName;
@@ -38,6 +42,7 @@ class AccountProvider extends ChangeNotifier {
     }
   }
 
+   
   void setAccount(Account account) {
     _account = account;
     notifyListeners();

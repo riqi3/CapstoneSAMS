@@ -5,7 +5,6 @@ class Labresult {
   final List<dynamic>? labresultTitles;
   final DateTime collectedOn;
   final List<dynamic>? jsonTables;
-
   final DateTime createdAt;
   final String title;
   final String comment;

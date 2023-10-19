@@ -3,26 +3,26 @@ import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-
+import 'package:http/http.dart' as http;
+import '../constants/Env.dart';
 import '../constants/theme/pallete.dart';
 import '../constants/theme/sizing.dart';
 import '../global-widgets/TitleAppBar.dart';
 
 import '../screens/home/widgets/HomeAppBar.dart';
- 
- 
 
 class ValueDashboard extends StatelessWidget {
   const ValueDashboard({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { 
     final username = context.watch<AccountProvider>().username;
+    final filename = context.watch<AccountProvider>().photo;
+    print('PROFILE $filename');
     return Dashboard(
       username: '$username',
-      profile: 'assets/images/profile1.png',
-      // profile:
-      //     'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
+      profile: '$filename',
+  
     );
   }
 }
@@ -32,10 +32,11 @@ class ValueHomeAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return HomeAppBar(
-      profile: 'assets/images/profile1.png',
-      // profile:
-      //     'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
+    final filename = context.watch<AccountProvider>().photo;
+ 
+    return HomeAppBar( 
+      profile: '$filename',
+       
     );
   }
 }
