@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../constants/theme/pallete.dart';
- 
 
 //home app bar
 class HomeAppBar extends StatelessWidget {
@@ -23,7 +22,8 @@ class HomeAppBar extends StatelessWidget {
           padding: const EdgeInsets.only(left: 20.0),
           child: CircleAvatar(
             radius: 30,
-            backgroundImage: AssetImage(profile),
+            backgroundImage:
+                AssetImage('lib/sams_server/upload-photo${profile}'),
             // backgroundImage: NetworkImage(profile),
             backgroundColor: Colors.transparent,
           ),

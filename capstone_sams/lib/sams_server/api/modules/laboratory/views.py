@@ -138,6 +138,8 @@ class ProcessPdf(APIView):
     #         return JsonResponse({'result': json.loads(json_data)})
  
     # tabnula
+
+
  
  
     def select_pdf(request,patient):

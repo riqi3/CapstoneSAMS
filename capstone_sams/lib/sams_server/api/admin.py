@@ -7,8 +7,11 @@ from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
-from django.urls import path
-
+from django.urls import path 
+from PIL import Image, ImageDraw, ImageFont 
+import random   
+import os 
+from .utils import delete_profile_photo
 # from io import StringIO as io
 # import csv
 from django.urls import reverse
@@ -131,6 +134,7 @@ class UserCreationForm(forms.ModelForm):
             "is_active",
             "is_staff",
             "is_superuser",
+            "profile_photo",
         )
 
     def clean_password2(self):
@@ -152,20 +156,52 @@ class UserCreationForm(forms.ModelForm):
         if password1.lower() in COMMON_PASSWORDS:
             raise forms.ValidationError("Password is too common")
         return password2
-
+    
     def save(self, commit=True):
         # Save the provided password in hashed format
         user = super(UserCreationForm, self).save(commit=False)
         user.set_password(self.cleaned_data["password1"])
+        photo = self.photo_generator(user)
+        user.profile_photo = os.path.basename(photo)
         if commit:
             user.save()
         return user
+
+    
+    def photo_generator(self, user):
+        width = 300
+        height = 300
+        font_size = 200
+        font_path  = 'sams_server/static/fonts/Poppins-Regular.ttf'
+        fontColor = (255,255,255)
+        arr = []
+        for rand in range(3):
+            rand = random.randint(0,200) 
+            arr.append(rand)
+            backgroundColor = tuple(arr)
+            print(backgroundColor)
+        img = Image.new("RGBA", (width, height), backgroundColor)
+        draw = ImageDraw.Draw(img)
+        font = ImageFont.truetype(font_path, size=font_size)
+        letter = str(user.firstName)[0].upper() 
+        bbox = font.getbbox(letter)
+        x = (width - (bbox[2] - bbox[0])) // 2
+        y = (height - (bbox[3] - bbox[1])) // 2
+        draw.text((x, y - bbox[1]), letter, font=font, fill=fontColor)
+        save_folder = 'upload-photo'
+        os.makedirs(save_folder, exist_ok=True)
+        img_path = os.path.join(save_folder, f'{user.accountID}_{user.firstName}{user.lastName}_profilepic.png')
+        img.save(img_path)
+        return img_path
+     
 
 
 '''
 This represent the forms that will be shown to the admin when updating data of an existing user.
 '''
 class UserChangeForm(forms.ModelForm):
+
+    
     """A form for updating users. Includes all the fields on
     the user, but replaces the password field with admin's
     password hash display field.
@@ -179,10 +215,12 @@ class UserChangeForm(forms.ModelForm):
             'using <a href="../password/">this form</a>.'
         ),
     )
+ 
 
     class Meta:
         model = Account
         fields = (
+            "accountID",
             "username",
             "password",
             "firstName",
@@ -192,6 +230,7 @@ class UserChangeForm(forms.ModelForm):
             "is_active",
             "is_staff",
             "is_superuser",
+            "profile_photo",
         )
 
     def clean_password(self):
@@ -199,19 +238,42 @@ class UserChangeForm(forms.ModelForm):
         # This is done here, rather than on the field, because the
         # field does not have access to the initial value
         return self.initial["password"]
+     
+    # def delete_profile_photo(user):
+    #     folder_path = 'upload-photo/'
+    #     file_name = f'{user.accountID}_{user.firstName}{user.lastName}_profilepic.png'
+    #     file_path = os.path.join(folder_path, file_name)
+    #     if os.path.exists(file_path):
+    #         os.remove(file_path)
+    #         print(f"Deleted file: {file_path}")
+    #     else:
+    #         print(f"File does not exist: {file_path}")
+
+    
+    # def save(self, commit=True): 
+    #     admin = super(UserChangeForm, self).save(commit=False) 
+    #     photo = self.delete_profile_photo(admin)
+    #     admin.profile_photo = os.path.basename(photo)
+    #     if commit:
+    #         admin.save()
+    #     return admin
+ 
+ 
 
 '''
 This represent the table that will be shown to the admin looking at the currently stored users.
 '''
 class UserAdmin(BaseUserAdmin):
+    
+ 
     # The forms to add and change user instances
     form = UserChangeForm
-    add_form = UserCreationForm
-
+    add_form = UserCreationForm 
+    actions = ['delete_model']
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = (
+    list_display = ( 
         "username",
         "firstName",
         "middleName",
@@ -220,6 +282,7 @@ class UserAdmin(BaseUserAdmin):
         "is_active",
         "is_staff",
         "is_superuser",
+        "profile_photo",
     )
     list_filter = ("accountRole", "is_staff", "is_superuser")
     fieldsets = (
@@ -256,6 +319,7 @@ class UserAdmin(BaseUserAdmin):
                     "is_superuser",
                     "password1",
                     "password2",
+                    "profile_photo",
                 ),
             },
         ),
@@ -264,6 +328,43 @@ class UserAdmin(BaseUserAdmin):
     ordering = ("username",)
     filter_horizontal = ()
 
+
+    # def delete_queryset(self, request, queryset):
+    #     for obj in queryset: 
+    #         if obj.file_field:
+    #             delete_profile_photo(obj)   
+    #         obj.delete()  
+    #         queryset.delete()
+    #     super(UserAdmin, self).delete_queryset(request, queryset)
+ 
+    def delete_queryset(self, request, queryset):
+         for obj in queryset:
+            print(obj)
+            folder_path = 'upload-photo/'
+            file_name = f'{obj.accountID}_{obj.firstName}{obj.lastName}_profilepic.png'
+            print(file_name)
+            file_path = os.path.join(folder_path, file_name)
+            print(file_path)
+            if os.path.exists(file_path):
+                os.remove(file_path)
+                obj.delete()
+                print(f"Deleted file: {file_path}")
+            else:
+                print(f"File does not exist: {file_path}")
+    def delete_model(self, request,  obj):
+        print(obj)
+        folder_path = 'upload-photo/'
+        file_name = f'{obj.accountID}_{obj.firstName}{obj.lastName}_profilepic.png'
+        print(file_name)
+        file_path = os.path.join(folder_path, file_name)
+        print(file_path)
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            obj.delete()
+            print(f"Deleted file: {file_path}")
+        else:
+            print(f"File does not exist: {file_path}")
+        
 '''
 This represent the forms that will be shown to the admin when creating a new patient
 and updating existing patients.

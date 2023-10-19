@@ -2,8 +2,6 @@ import 'package:capstone_sams/screens/home/HomeScreen.dart';
 
 import 'package:capstone_sams/screens/medical_notes/MedicalNotesScreen.dart';
 
- 
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -17,8 +15,8 @@ class Dashboard extends StatelessWidget {
     required this.username,
     required this.profile,
   });
-
-  final String profile, username;
+  final String username, profile;
+  // final String a = '';
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +30,9 @@ class Dashboard extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 30,
-                  backgroundImage: AssetImage(profile),
+                  backgroundImage:
+                      AssetImage('lib/sams_server/upload-photo${profile}'),
+                  // backgroundImage:  FileImage(profile),
                   // backgroundImage: NetworkImage(profile),
                   backgroundColor: Colors.transparent,
                 ),
