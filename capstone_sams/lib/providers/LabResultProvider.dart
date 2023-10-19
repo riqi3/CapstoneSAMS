@@ -41,11 +41,11 @@ class LabresultProvider with ChangeNotifier {
     }
   }
 
-  String trimFileName(String word, String lettersToRemove) {
-    String resultingWord = word.replaceAll(RegExp('[$lettersToRemove]'), '');
-    resultingWord = resultingWord.trim();
-    return resultingWord;
-  }
+  // String trimFileName(String word, String lettersToRemove) {
+  //   String resultingWord = word.replaceAll(RegExp('[$lettersToRemove]'), '');
+  //   resultingWord = resultingWord.trim();
+  //   return resultingWord;
+  // }
 
   void removeLabResult(int index) {
     if (index >= 0 && index < _labResults.length) {

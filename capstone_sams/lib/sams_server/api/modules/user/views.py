@@ -55,6 +55,10 @@ Certain to exception handlers were coded to ensure continued operations.
 '''
 class LogInView(viewsets.ModelViewSet):
     @api_view(['POST'])
+    def photo(request):
+        photo = request.data.get('profile_photo')
+        
+    @api_view(['POST'])
     def login(request):
         username = request.data.get('username')
         password = request.data.get('password')
@@ -157,6 +161,8 @@ class PersonalNotesView(viewsets.ModelViewSet):
         except Exception as e:
             return Response({"message": "Failed to create note"}, status=status.HTTP_400_BAD_REQUEST)
 
+
+    
     '''
     This view allow the user to update their inputted personal note base on the note's
     number.
