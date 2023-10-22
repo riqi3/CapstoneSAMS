@@ -582,7 +582,7 @@ class PrescriptionAdmin(admin.ModelAdmin):
     autocomplete_fields = ["account", "health_record"]
 
 class HealthSymptomAdmin(admin.ModelAdmin):
-    change_list_template = "admin/train_model.html"
+    change_list_template = "admin/change_list.html"
     list_display = [
     "prognosis",
     "itching",
@@ -725,33 +725,52 @@ class HealthSymptomAdmin(admin.ModelAdmin):
 
     def get_urls(self):
         urls = super().get_urls()
-        new_urls = [
-            path("retrain_model/", self.retrain_model, name="admin_retrain_model"),
-            path("upload_dataset/", self.upload_dataset, name="admin_upload_dataset"),
-        ]
-        return new_urls + urls 
-    
-    def upload_dataset(self, request):
-        viewset = SymptomViewSet()
-        response = viewset.upload_data(request)
-        self.message_user(request, response.data)
+        has_records = self.model.objects.exists()
+        new_urls = []
+        if has_records:
+            new_urls.append(path("retrain_model/", self.retrain_model, name="admin_retrain_model"))
+        new_urls.append(path("upload_dataset/", self.upload_dataset, name="admin_upload_dataset"))
+        return new_urls + urls
 
-        return HttpResponseRedirect("../")
+    
+    class UploadFileForm(forms.Form):
+        file = forms.FileField()
+
+    def upload_dataset(self, request):
+        if request.method == 'POST':
+            form = self.UploadFileForm(request.POST, request.FILES)
+            if form.is_valid():
+                file = request.FILES['file']
+                content = file.read()
+                viewset = SymptomViewSet()
+                response = viewset.upload_data(request)
+                self.message_user(request, response.data)
+                return HttpResponseRedirect("../")
+        else:
+            form = self.UploadFileForm()
+        return render(request, 'admin/change_list.html', {'form': form})
 
     upload_dataset.short_description = "Upload Dataset"
     
     def retrain_model(self, request):
-        if request.method == 'POST':
-            success, message = train_disease_prediction_model()
-            if success:
-                self.message_user(request, f"Model retraining completed successfully: {message}")
+        try:
+            if request.method == 'POST':
+                success, message = train_disease_prediction_model()
+                if success:
+                    self.message_user(request, f"Model retraining: {message}")
+                else:
+                    self.message_user(request, f"Model retraining failed: {message}", level=admin.ERROR)
             else:
-                self.message_user(request, f"Model retraining failed: {message}", level=admin.ERROR)
+                raise ValueError("Invalid request method")
+
+        except Exception as e:
+            self.message_user(request, f"An error occurred during model retraining: {str(e)}", level=admin.ERROR)
 
         context = self.admin_site.each_context(request)
         return HttpResponseRedirect("../")
-    
+
     retrain_model.short_description = "Retrain Model"
+
     
 
 
