@@ -26,7 +26,7 @@ from api.modules.cpoe.models import Medicine, Prescription
 from api.modules.laboratory.models import LabResult
 
 from api.modules.disease_prediction.cdssModel.models import HealthSymptom
-from api.modules.disease_prediction.cdssModel.views import train_disease_prediction_model
+from api.modules.disease_prediction.cdssModel.views import SymptomViewSet, train_disease_prediction_model
 
 # from api.models import Account, Patient, Data_Log, Prescription, Medicine, Symptom, Health_Record, Comment, Prescribed_Medicine, Patient_Symptom
 
@@ -727,8 +727,18 @@ class HealthSymptomAdmin(admin.ModelAdmin):
         urls = super().get_urls()
         new_urls = [
             path("retrain_model/", self.retrain_model, name="admin_retrain_model"),
+            path("upload_dataset/", self.upload_dataset, name="admin_upload_dataset"),
         ]
         return new_urls + urls 
+    
+    def upload_dataset(self, request):
+        viewset = SymptomViewSet()
+        response = viewset.upload_data(request)
+        self.message_user(request, response.data)
+
+        return HttpResponseRedirect("../")
+
+    upload_dataset.short_description = "Upload Dataset"
     
     def retrain_model(self, request):
         if request.method == 'POST':
