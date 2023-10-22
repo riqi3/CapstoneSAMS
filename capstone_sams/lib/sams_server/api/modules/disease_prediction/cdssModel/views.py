@@ -334,14 +334,14 @@ class SymptomViewSet(viewsets.ModelViewSet):
 
 def train_disease_prediction_model():
     try:
-        # Specify the folder for saving pickle files
+        # Folder Directory
         pickle_folder = 'api/modules/disease_prediction/cdssModel'
         
-        # Create the folder if it doesn't exist
+        # If no folder only
         if not os.path.exists(pickle_folder):
             os.makedirs(pickle_folder)
 
-        # Check if old pickle files exist in the specified folder and delete them
+        
         old_files = [
             'final_svm_model.pkl',
             'final_nb_model.pkl',
@@ -422,13 +422,13 @@ class TrainModelView(APIView):
 
 @api_view(['POST'])
 def create_symptom_record(request):
-    # Disable scikit-learn warnings about feature names
+    
     warnings.filterwarnings("ignore", category=UserWarning, module="sklearn")
 
     symptoms = request.data.get('symptoms', [])
     symptoms = [symptom.replace(' ', '_') for symptom in symptoms]
 
-    # Prepare the input data for the HealthSymptom model
+    
     input_data = {}
     all_symptoms = [field.name.replace(' ', '_') for field in HealthSymptom._meta.fields if field.name != 'id']
 
@@ -436,13 +436,13 @@ def create_symptom_record(request):
         input_data[symptom] = 1 if symptom.lower() in [user_symptom.lower() for user_symptom in symptoms] else 0
     
 
-    # Create a new HealthSymptom instance with values set based on user input
+    
     health_symptom = HealthSymptom(**input_data)
     
-    # Get the absolute path of your project directory
+    
     project_directory = settings.BASE_DIR
 
-    # Specify the folder where pickle files are stored relative to the project directory
+    # Folder directory
     model_folder = os.path.join(project_directory, 'api/modules/disease_prediction/cdssModel')
     
     svm_model_path = os.path.join(model_folder, "final_svm_model.pkl")
@@ -531,17 +531,17 @@ def delete_symptom_record(request, record_id):
 @api_view(['POST'])
 def update_prognosis(request, record_id):
     try:
-        # Find the HealthSymptom record with the given record_id
+        
         health_symptom = HealthSymptom.objects.get(id=record_id)
 
-        # Extract the new prognosis value from the request data
+        
         new_prognosis = request.data.get('new_prognosis')
 
-        # Update the prognosis value
+        
         health_symptom.prognosis = new_prognosis
         health_symptom.save()
 
-        # Serialize and return the updated HealthSymptom instance
+        
         serializer = HealthSymptomSerializer(health_symptom)
         return Response(serializer.data, status=200)
 
