@@ -10,19 +10,18 @@ class Patient {
   String? phone;
   String? email;
 
-  Patient(
-      {required this.patientId,
-      required this.firstName,
-      this.middleName,
-      required this.lastName,
-      required this.age,
-      required this.gender,
-      required this.birthDate,
-      required this.registration,
-      this.phone,
-      this.email});
-
-   
+  Patient({
+    required this.patientId,
+    required this.firstName,
+    this.middleName,
+    required this.lastName,
+    required this.age,
+    required this.gender,
+    required this.birthDate,
+    required this.registration,
+    this.phone,
+    this.email,
+  });
 
   Map<String, dynamic> toJson() {
     return {

@@ -13,16 +13,6 @@ class Todo {
     this.isDone = false,
   });
 
-  factory Todo.fromJson(Map<String, dynamic> json) {
-    return Todo(
-      noteNum: json['noteNum'],
-      title: json['title'],
-      content: json['content'],
-      isDone: json['isDone'],
-      account: json['account'],
-    );
-  }
-
   Map<String, dynamic> toJson() {
     return {
       'noteNum': noteNum,
@@ -31,5 +21,15 @@ class Todo {
       'isDone': isDone,
       'account': account,
     };
+  }
+
+  factory Todo.fromJson(Map<String, dynamic> json) {
+    return Todo(
+      noteNum: json['noteNum'],
+      title: json['title'],
+      content: json['content'],
+      isDone: json['isDone'],
+      account: json['account'],
+    );
   }
 }

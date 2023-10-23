@@ -3,6 +3,7 @@ import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/models/MedicalNotesModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/MedicalNotesProvider.dart';
+import 'package:capstone_sams/providers/PrescriptionProvider.dart';
 
 import 'package:capstone_sams/screens/ehr-list/EhrListScreen.dart';
 import 'package:capstone_sams/screens/home/widgets/EhrSection.dart';
@@ -10,7 +11,6 @@ import 'package:capstone_sams/screens/home/widgets/EhrSection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
- 
 import '../../constants/theme/sizing.dart';
 import '../medical_notes/MedicalNotesScreen.dart';
 import 'widgets/NotesSection.dart';
@@ -36,8 +36,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _fetchUserTodos() async {
     final provider = Provider.of<TodosProvider>(context, listen: false);
     final accountID = context.read<AccountProvider>().id;
+    final test = context.read<PrescriptionProvider>().healthRecord;
     await provider.fetchTodos(accountID!);
-
+    print('healthRecord numbner ${test}');
     setState(() {
       _userTodos = provider.todos;
     });
@@ -45,6 +46,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final filename = context.watch<AccountProvider>().photo;
+    print(filename);
     return SafeArea(
       child: Scaffold(
         endDrawer: ValueDashboard(),

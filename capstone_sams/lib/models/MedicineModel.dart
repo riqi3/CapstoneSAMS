@@ -54,8 +54,7 @@ class Medicine {
       instructions: json['instructions'],
       startDate: json['startDate'],
       endDate: json['endDate'],
-      quantity: json['quantity'],
-      refills: json['refills'],
+      quantity: json['quantity'], 
     );
   }
 }

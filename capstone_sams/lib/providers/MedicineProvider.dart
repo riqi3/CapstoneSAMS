@@ -16,9 +16,8 @@ class MedicineProvider with ChangeNotifier {
   List<Medicine> get medicines => _medicines;
 
   Future<List<Medicine>> fetchMedicines() async {
-    await Future.delayed(Duration(milliseconds: 3000));
     final response = await http.get(Uri.parse('${Env.prefix}/cpoe/medicines/'));
-
+    await Future.delayed(Duration(milliseconds: 3000));
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       List<Medicine> medicines = data.map<Medicine>((json) {
@@ -61,6 +60,8 @@ class MedicineProvider with ChangeNotifier {
     }
     return _medicines;
   }
+
+
 
   Future<bool> saveToPrescription(String? accountId, String? patientId) async {
     final headers = <String, String>{
