@@ -33,10 +33,6 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final labresultProvider = Provider.of<LabResultProvider>(context);
-    // late List<LabResult> lr = [];
-    // late List<LabResult> b = labresultProvider.labResults;
-
     return Scaffold(
       body: SingleChildScrollView(
         padding: EdgeInsets.only(

@@ -42,10 +42,9 @@ class PatientProvider extends ChangeNotifier {
   }
 
   Future<Patient> fetchPatient(String index) async {
-    await Future.delayed(Duration(milliseconds: 3000));
     final response =
         await http.get(Uri.parse('${Env.prefix}/patient/patients/${index}'));
-
+    await Future.delayed(Duration(milliseconds: 3000));
     if (response.statusCode == 200) {
       return Patient.fromJson(jsonDecode(response.body));
     } else {
