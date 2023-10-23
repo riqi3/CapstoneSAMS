@@ -17,7 +17,7 @@ from .utils import delete_profile_photo
 # from io import StringIO as io
 # import csv
 from django.urls import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from api.modules.patient.form import CsvImportPatientForm
 from api.modules.cpoe.form import CsvImportMedicineForm
@@ -896,12 +896,13 @@ class HealthSymptomAdmin(admin.ModelAdmin):
                 if success:
                     self.message_user(request, f"Model retraining: {message}")
                 else:
-                    self.message_user(request, f"Model retraining failed: {message}", level=admin.ERROR)
+                    self.message_user(request, f"Model retraining failed: {message}")
             else:
                 raise ValueError("Invalid request method")
 
         except Exception as e:
-            self.message_user(request, f"An error occurred during model retraining: {str(e)}", level=admin.ERROR)
+            error_message = f"An error occurred during model retraining: {str(e)}"
+            return JsonResponse({'success': False, 'message': error_message})
 
         context = self.admin_site.each_context(request)
         return HttpResponseRedirect("../")

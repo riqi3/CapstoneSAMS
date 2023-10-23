@@ -9,6 +9,9 @@ $(document).ready(function () {
                     alert("Model retraining: " + data.message);
                 } else {
                     alert("Model retraining failed: " + data.message);
+                    if (data.error_popup) {
+                        alert(data.message);
+                    }
                 }
             },
             error: function () {

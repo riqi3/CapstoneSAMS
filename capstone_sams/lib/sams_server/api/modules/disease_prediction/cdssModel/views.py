@@ -55,6 +55,9 @@ def train_disease_prediction_model():
 
         # Load the dataset
         symptoms_data = HealthSymptom.objects.all().values()
+        if not symptoms_data:
+            raise ValueError("No uploaded dataset")
+
         data = pd.DataFrame(symptoms_data)
 
         # Encode the target value into numerical value using LabelEncoder
@@ -111,11 +114,11 @@ def train_disease_prediction_model():
 
 class TrainModelView(APIView):
     def post(self, request):
-        success, message = train_disease_prediction_model()
-        if success:
+        try:
+            success, message = train_disease_prediction_model()
             return Response({"message": message}, status=200)
-        else:
-            return Response({"message": message}, status=500)
+        except ValueError as e:
+            return Response({"message": str(e)}, status=400)
         
 
 @api_view(['POST'])
