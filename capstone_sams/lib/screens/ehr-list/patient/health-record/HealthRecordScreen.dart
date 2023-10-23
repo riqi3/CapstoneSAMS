@@ -20,8 +20,8 @@ class HealthRecordsScreen extends StatefulWidget {
 }
 
 class _HealthRecordsScreenState extends State<HealthRecordsScreen> {
-  late Future<List<Prescription>> prescriptions;
-  late HealthRecord record;
+  Future<List<Prescription>>? prescriptions;
+  HealthRecord? record;
   // late int? presNumID;
   // late List? medicinesID;
   // late String? accID;
@@ -30,16 +30,29 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<HealthRecordProvider>().setRecord(widget.patient.patientId);
-    // record = context.read<HealthRecordProvider>().healthrecord;
-    print('health record num ${record.recordNum}');
-    prescriptions = context
-        .read<PrescriptionProvider>()
-        .fetchPrescriptions(record.recordNum!);
+    _initializeData();
+    // context.read<HealthRecordProvider>().setRecord(widget.patient.patientId);
+    // // record = context.read<HealthRecordProvider>().healthrecord;
+    // print('health record num ${record.recordNum}');
+    // prescriptions = context
+    //     .read<PrescriptionProvider>()
+    //     .fetchPrescriptions(record.recordNum!);
 
     // prescriptions = context
     //     .read<PrescriptionProvider>()
     //     .fetchPrescriptions(widget.patient.age + 69);
+  }
+
+  Future<void> _initializeData() async {
+    await context
+        .read<HealthRecordProvider>()
+        .setRecord(widget.patient.patientId);
+    record = context.read<HealthRecordProvider>().healthrecord;
+    print(
+        'Health record num ${record?.recordNum}'); // Use the null-aware operator !
+    prescriptions = context
+        .read<PrescriptionProvider>()
+        .fetchPrescriptions(record?.recordNum);
   }
 
   // @override
@@ -88,52 +101,54 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen> {
             // )
             // else
             //   SizedBox(),
-            FutureBuilder(
-              future: prescriptions,
-              builder: (context, snapshot) {
-                List<Prescription> dataToShow = [];
-                if (snapshot.hasError) {
-                  print(
-                      'HEALTH RECORD snapshot error message: ${snapshot.error}');
-                  return Center(
-                    child: Text('Error: ${snapshot.error}'),
-                  );
-                } else if (snapshot.connectionState ==
-                    ConnectionState.waiting) {
-                  return Center(
-                    child: const CircularProgressIndicator(),
-                  );
-                } else if (snapshot.data!.isEmpty) {
-                  return Center(
-                    child: Text(Strings.noPrescriptions),
-                  );
-                } else if (snapshot.hasData) {
-                  dataToShow = snapshot.data!;
-                }
-                return ListView.builder(
-                    itemCount: dataToShow.length,
-                    itemBuilder: (context, index) {
-                      final a = dataToShow[index];
-                      final b = a.presNum;
-                      return ListTile(
-                        title: Text(
-                          b.toString(),
-                        ),
-                      );
+            prescriptions != null
+                ? FutureBuilder<List<Prescription>>(
+                    future: prescriptions,
+                    builder: (context, snapshot) {
+                      List<Prescription> dataToShow = [];
+                      if (snapshot.hasError) {
+                        print(
+                            'HEALTH RECORD snapshot error message: ${snapshot.error}');
+                        return Center(
+                          child: Text('Error: ${snapshot.error}'),
+                        );
+                      } else if (snapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return Center(
+                          child: const CircularProgressIndicator(),
+                        );
+                      } else if (snapshot.data!.isEmpty) {
+                        return Center(
+                          child: Text(Strings.noPrescriptions),
+                        );
+                      } else if (snapshot.hasData) {
+                        dataToShow = snapshot.data!;
+                      }
+                      return ListView.builder(
+                          itemCount: dataToShow.length,
+                          itemBuilder: (context, index) {
+                            final a = dataToShow[index];
+                            final b = a.presNum;
+                            return ListTile(
+                              title: Text(
+                                b.toString(),
+                              ),
+                            );
 
-                      // ExpansionTile(
-                      //   title: Text('data'),
-                      //   children: List.generate(
-                      //       dataToShow.length, (index) => ListTile(
-                      //         subtitle: b,
-                      //       )),
+                            // ExpansionTile(
+                            //   title: Text('data'),
+                            //   children: List.generate(
+                            //       dataToShow.length, (index) => ListTile(
+                            //         subtitle: b,
+                            //       )),
+                            // );
+                          });
+                      // MedicationOrderCard(
+                      //   patient: widget.patient,
                       // );
-                    });
-                // MedicationOrderCard(
-                //   patient: widget.patient,
-                // );
-              },
-            ),
+                    },
+                  )
+                : const Text("No Prescriptions available"),
           ],
         ),
       ),

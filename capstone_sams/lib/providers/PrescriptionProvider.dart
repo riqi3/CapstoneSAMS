@@ -17,7 +17,7 @@ class PrescriptionProvider with ChangeNotifier {
 
   List<Prescription> get prescriptions => _prescriptions;
 
-  Future<List<Prescription>> fetchPrescriptions(int recordNum) async {
+  Future<List<Prescription>> fetchPrescriptions(int? recordNum) async {
     print('HEALTH RECORD NUMBER: ${recordNum}');
     final response = await http
         .get(Uri.parse('${Env.prefix}/cpoe/prescription/get/${recordNum}/'));

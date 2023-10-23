@@ -1,7 +1,7 @@
 class HealthRecord {
   final int? recordNum;
-  final List<dynamic>? symptoms;
-  final List<dynamic>? diseases;
+  final Map<String, dynamic>? symptoms;
+  final Map<String, dynamic>? diseases;
   final String? patient;
 
   HealthRecord({
