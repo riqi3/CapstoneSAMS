@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:capstone_sams/constants/Env.dart';
 import 'package:capstone_sams/models/HealthRecordModel.dart';
 import 'package:flutter/material.dart';
-import '../models/PatientModel.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -14,7 +13,7 @@ class HealthRecordProvider with ChangeNotifier {
   HealthRecord? _healthrecord;
   HealthRecord? get healthrecord => _healthrecord;
   int? get recordNum => _healthrecord?.recordNum;
-  List? get diseases => _healthrecord?.diseases;
+  Map<String, dynamic>? get diseases => _healthrecord?.diseases;
   String? get patient => _healthrecord?.patient;
 
   // Future<List<HealthRecord>> fetchHealthRecords(int? healthRecordID) async {
