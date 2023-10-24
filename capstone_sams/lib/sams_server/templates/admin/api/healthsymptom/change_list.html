@@ -1,0 +1,39 @@
+{% extends "admin/change_list.html" %}
+{% load static %}
+{% block content %}
+<style>
+.upload-button, .retrain-button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    border-radius: 10px;
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.upload-button {
+    background-color: rgb(36, 179, 100); 
+}
+
+.retrain-button {
+    background-color: rgb(36, 179, 100); 
+}
+
+
+</style>
+
+<a href="upload-csv/">
+    <button class="upload-button">Upload a csv file</button>
+</a>
+<div class="module">
+    <form action="retrain_model/" method="POST">
+        {% csrf_token %}
+        <button type="submit" class="retrain-button">Retrain Model</button>
+    </form>
+</div>
+{{ block.super }}
+{% endblock %}
