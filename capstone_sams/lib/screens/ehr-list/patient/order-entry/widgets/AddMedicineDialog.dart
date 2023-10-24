@@ -2,7 +2,7 @@
 
 import 'package:capstone_sams/models/MedicineModel.dart';
 import 'package:capstone_sams/providers/MedicineProvider.dart';
- 
+
 import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
@@ -205,44 +205,20 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                         ],
                       ),
                       SizedBox(height: 10),
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'Quantity',
-                                border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Pallete.paleblueColor,
-                                  ),
-                                ),
-                                filled: true,
-                                fillColor: Pallete.palegrayColor,
-                              ),
-                              keyboardType: TextInputType.number,
-                              onSaved: (value) => _medicine.quantity =
-                                  int.tryParse(value ?? ''),
+                      TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Quantity',
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Pallete.paleblueColor,
                             ),
                           ),
-                          SizedBox(width: 10),
-                          Expanded(
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'Refills',
-                                border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Pallete.paleblueColor,
-                                  ),
-                                ),
-                                filled: true,
-                                fillColor: Pallete.palegrayColor,
-                              ),
-                              keyboardType: TextInputType.number,
-                              onSaved: (value) =>
-                                  _medicine.refills = int.tryParse(value ?? ''),
-                            ),
-                          ),
-                        ],
+                          filled: true,
+                          fillColor: Pallete.palegrayColor,
+                        ),
+                        keyboardType: TextInputType.number,
+                        onSaved: (value) =>
+                            _medicine.quantity = int.tryParse(value ?? ''),
                       ),
                       SizedBox(height: 10),
                       Row(

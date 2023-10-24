@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:capstone_sams/constants/Dimensions.dart';
+import 'package:capstone_sams/constants/Strings.dart';
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/global-widgets/TitleAppBar.dart';
 
@@ -76,14 +77,17 @@ class _EhrListScreenState extends State<EhrListScreen> {
           builder: (context, snapshot) {
             List<Patient> dataToShow = [];
             if (snapshot.hasError) {
+              print('EHR snapshot error message: ${snapshot.error}');
               return Center(
                 child: Text('Error: ${snapshot.error}'),
               );
             } else if (snapshot.connectionState == ConnectionState.waiting) {
-              print(snapshot.error);
-
               return Center(
                 child: const CircularProgressIndicator(),
+              );
+            } else if (snapshot.data!.isEmpty) {
+              return Center(
+                child: Text(Strings.noPatientResults),
               );
             } else if (snapshot.hasData) {
               dataToShow = snapshot.data!;
@@ -181,12 +185,6 @@ class _EhrListScreenState extends State<EhrListScreen> {
 
   GridView _mobileView(AsyncSnapshot<List<Patient>> snapshot,
       List<Patient> dataToShow, int start) {
-    double _crossAxisSpacing = 10, _mainAxisSpacing = 10, _aspectRatio = 2;
-    int _crossAxisCount = 1;
-    double screenWidth = MediaQuery.of(context).size.width;
-    var width = (screenWidth - ((_crossAxisCount - 1) * _crossAxisSpacing)) /
-        _crossAxisCount;
-    var height = width / _aspectRatio;
     return GridView.builder(
       shrinkWrap: true,
       padding: EdgeInsets.only(),

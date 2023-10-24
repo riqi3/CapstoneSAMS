@@ -130,7 +130,9 @@ class HealthRecordView(viewsets.ViewSet):
     @api_view(['GET'])
     def fetch_record_by_id(request, patientID):
         try:
-            record = Health_Record.objects.filter(pk=patientID) 
+            patient = Patient.objects.get(pk=patientID)
+            record = Health_Record.objects.get(patient=patient) 
+            # serializer = HealthRecordSerializer(record)
             serializer = HealthRecordSerializer(record)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Health_Record.DoesNotExist:

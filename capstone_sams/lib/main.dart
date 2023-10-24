@@ -1,8 +1,10 @@
 import 'package:capstone_sams/providers/AccountProvider.dart';
+import 'package:capstone_sams/providers/HealthRecordProvider.dart';
 import 'package:capstone_sams/providers/LabResultProvider.dart';
 
 import 'package:capstone_sams/providers/MedicineProvider.dart';
 import 'package:capstone_sams/providers/PatientProvider.dart';
+import 'package:capstone_sams/providers/PrescriptionProvider.dart';
 
 import 'package:capstone_sams/providers/SymptomsFieldsProvider.dart';
 import 'package:capstone_sams/screens/authentication/LoginScreen.dart';
@@ -12,8 +14,6 @@ import 'package:provider/provider.dart';
 
 import 'constants/theme/AppTheme.dart';
 import 'providers/MedicalNotesProvider.dart';
-
- 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,7 +42,12 @@ void main() async {
         ChangeNotifierProvider<LabresultProvider>(
           create: (context) => LabresultProvider(),
         ),
-        
+        ChangeNotifierProvider<PrescriptionProvider>(
+          create: (context) => PrescriptionProvider(),
+        ),
+        ChangeNotifierProvider<HealthRecordProvider>(
+          create: (context) => HealthRecordProvider(),
+        ),
       ],
       child: const SAMSApp(),
     ),

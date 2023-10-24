@@ -6,7 +6,7 @@ import '../../../../../constants/theme/sizing.dart';
 import '../../../../../models/PatientModel.dart';
 import '../../../../../providers/AccountProvider.dart';
 import '../../../../../providers/MedicineProvider.dart';
- 
+
 import '../../order-entry/widgets/MedicineCard.dart';
 
 class MedicationOrderCard extends StatefulWidget {
