@@ -1,4 +1,5 @@
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
+import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,12 +12,12 @@ import '../order-entry/CpoeAnalyzeScreen.dart';
 import 'HealthRecordScreen.dart';
 
 class PatientTabsScreen extends StatefulWidget {
-  final Patient patient;
+  final Patient patient; 
   final int index;
 
   const PatientTabsScreen({
     super.key,
-    required this.patient,
+    required this.patient, 
     required this.index,
   });
 
@@ -59,7 +60,7 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
         controller: tabController,
         children: [
           HealthRecordsScreen(
-            patient: widget.patient,
+            patient: widget.patient, 
             // index: widget.index,
           ),
           LaboratoriesScreen(index: widget.index),

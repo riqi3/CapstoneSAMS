@@ -569,7 +569,7 @@ This represent the table that will be shown to the admin looking at the currentl
 '''
 class PrescriptionAdmin(admin.ModelAdmin):
     form = PrescriptionAdminForm
-    autocomplete_fields = ["health_record"]
+    autocomplete_fields = ["patient"]
     list_display = (
         "presNum",
         # "dosage",
@@ -577,11 +577,11 @@ class PrescriptionAdmin(admin.ModelAdmin):
         # "amount",
         "medicines",
         "account",
-        "health_record",
+        "patient",
     )
-    list_filter = ("account", "health_record")
+    list_filter = ("account", "patient")
     search_fields = ("presNum",)
-    autocomplete_fields = ["account", "health_record"]
+    autocomplete_fields = ["account", "patient"]
 
 
 class HealthSymptomAdminForm(forms.ModelForm):

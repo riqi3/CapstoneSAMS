@@ -7,7 +7,8 @@ from rest_framework import status
 
 from api.modules.user.models import Account, Data_Log
 from api.modules.user.serializers import AccountSerializer
-from api.modules.patient.serializers import Health_Record
+# from api.modules.patient.serializers import Health_Record
+from api.modules.patient.models import Health_Record, Patient
 from api.modules.cpoe.models import Comment, Medicine, Prescription
 from api.modules.cpoe.serializers import CommentSerializer, MedicineSerializer, PrescriptionSerializer
 
@@ -58,6 +59,7 @@ class CommentView(viewsets.ModelViewSet):
             return Response(response_data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"message": "Failed to fetch comments.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
         
     @api_view(['PUT'])
     def update_comment(request, comNum):
@@ -134,10 +136,12 @@ class PrescriptionView(viewsets.ViewSet):
             patientID = prescription_data['patient']
             account = Account.objects.get(pk=accountID)
             record = Health_Record.objects.get(patient=patientID)
+            patiente = Patient.objects.get(pk=patientID)
             prescription = Prescription.objects.create(
                 medicines=prescription_data['medicines'],
                 account=account,
-                health_record = record
+                health_record = record,
+                patient = patiente
             )
             data_log = Data_Log.objects.create(
                 event = f"{account.username} created prescription",
@@ -169,11 +173,20 @@ class PrescriptionView(viewsets.ViewSet):
             return Response({"message": "Failed to update prescription amount", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
     @api_view(['GET'])
-    def fetch_prescription_by_ids(request, recordNum):
+    def fetch_prescription_by_ids(request, patientID): 
         try:
-            record = Health_Record.objects.get(pk=recordNum)
-            prescription = Prescription.objects.filter(health_record = record)
-            serializer = PrescriptionSerializer(prescription, many = True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            id = Patient.objects.get(pk=patientID)
+            prescription = Prescription.objects.filter(patient = id)
+            accountID = prescription.account
+            account = Account.objects.get(pk=accountID)
+            prescriptionData = PrescriptionSerializer(prescription, many = True)
+            accountData = AccountSerializer(account, many = True)
+            data = {
+                "prescription" : prescriptionData.data,
+                "account": accountData.data
+                }
+            return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
              return Response({"message": "Failed to fetch prescription", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+

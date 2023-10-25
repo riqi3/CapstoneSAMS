@@ -13,14 +13,14 @@ class PrescriptionProvider with ChangeNotifier {
   int? get presNum => _prescription?.presNum;
   List? get medicines => _prescription?.medicines;
   String? get acc => _prescription?.account;
-  int? get healthRecord => _prescription?.health_record;
+  String? get patientID => _prescription?.patientID;
 
   List<Prescription> get prescriptions => _prescriptions;
 
-  Future<List<Prescription>> fetchPrescriptions(int? recordNum) async {
-    print('HEALTH RECORD NUMBER: ${recordNum}');
-    final response = await http
-        .get(Uri.parse('${Env.prefix}/cpoe/prescription/get/${recordNum}/'));
+  Future<List<Prescription>> fetchPrescriptions(String? id) async {
+    print('PATIENT ID: ${id}');
+    final response =
+        await http.get(Uri.parse('${Env.prefix}/cpoe/prescription/get/${id}/'));
     await Future.delayed(Duration(milliseconds: 3000));
     print('PRESCRIPTION RESPOSNSE CODE1: ${response.statusCode}');
     if (response.statusCode == 200) {

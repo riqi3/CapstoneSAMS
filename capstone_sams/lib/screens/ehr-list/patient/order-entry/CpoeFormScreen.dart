@@ -1,5 +1,5 @@
 import 'package:capstone_sams/providers/PatientProvider.dart';
- 
+
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/api/api_service.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/AddMedicineDialog.dart';
@@ -10,13 +10,10 @@ import 'package:provider/provider.dart';
 
 import 'package:capstone_sams/providers/SymptomsFieldsProvider.dart';
 
- 
-
 import '../../../../constants/theme/pallete.dart';
 import '../../../../models/PatientModel.dart';
 import '../../../../providers/AccountProvider.dart';
 import '../../../../providers/MedicineProvider.dart';
- 
 
 class CpoeFormScreen extends StatelessWidget {
   final String finalPrediction;
@@ -149,7 +146,7 @@ class CpoeFormScreen extends StatelessWidget {
                 ),
                 if (medicineProvider.medicines.isEmpty)
                   Text(
-                    '\n\nNo Orders\n\n',
+                    '\n\nNo current orders\n\n',
                     style: TextStyle(color: Pallete.greyColor),
                   )
                 else
@@ -172,13 +169,6 @@ class CpoeFormScreen extends StatelessWidget {
                             fontWeight: FontWeight.bold),
                       ),
                       SizedBox(height: 2),
-                      // Flexible(
-                      //   child: TextAreaField(
-                      //     validator: 'pls input',
-                      //     hintText: 'Instructions',
-                      //     onSaved: _medicine.instructions,
-                      //   ),
-                      // ),
                       TextFormField(
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
@@ -198,16 +188,17 @@ class CpoeFormScreen extends StatelessWidget {
                   children: [
                     ElevatedButton(
                       onPressed: () async {
-                        final accountID = context.read<AccountProvider>().id;
+                         var accountID = context.read<AccountProvider>().id;
                         // final patientID =
                         //     context.read<PatientProvider>().fetchPatient(index.toString());
-                        final patient = await context
+                         
+                         var patient = await context
                             .read<PatientProvider>()
                             .fetchPatient(index.toString());
-                        final patientID = patient.patientId;
-                        final medicineProvider =
+                         var patientID = patient.patientId;
+                        var medicineProvider =
                             context.read<MedicineProvider>();
-                        final success = await medicineProvider
+                        var success = await medicineProvider
                             .saveToPrescription(accountID, patientID);
 
                         print('PATIENT $patientID ACCOUNT $accountID');
@@ -221,7 +212,7 @@ class CpoeFormScreen extends StatelessWidget {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => PatientTabsScreen(
-                                patient: patient,
+                                patient: patient, 
                                 index: index,
                               ),
                             ),

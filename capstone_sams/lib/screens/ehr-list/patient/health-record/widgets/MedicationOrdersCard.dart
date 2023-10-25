@@ -1,18 +1,21 @@
+import 'package:capstone_sams/models/PrescriptionModel.dart';
+import 'package:capstone_sams/providers/MedicineProvider.dart';
+import 'package:capstone_sams/providers/PrescriptionProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/MedicationOrderSection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../../constants/theme/pallete.dart';
 import '../../../../../constants/theme/sizing.dart';
-import '../../../../../models/PatientModel.dart';
 import '../../../../../providers/AccountProvider.dart';
-import '../../../../../providers/MedicineProvider.dart';
 
 import '../../order-entry/widgets/MedicineCard.dart';
 
 class MedicationOrderCard extends StatefulWidget {
-  final Patient patient;
-  const MedicationOrderCard({super.key, required this.patient});
-
+  final Prescription prescription;
+  const MedicationOrderCard({
+    super.key,
+    required this.prescription,
+  });
   @override
   State<MedicationOrderCard> createState() => _MedicationOrderCardState();
 }
@@ -22,6 +25,7 @@ class _MedicationOrderCardState extends State<MedicationOrderCard> {
   Widget build(BuildContext context) {
     final medicineProvider = Provider.of<MedicineProvider>(context);
     final username = context.watch<AccountProvider>().username;
+
     return Container(
       margin: EdgeInsets.symmetric(vertical: Sizing.sectionSymmPadding),
       child: Material(
@@ -70,16 +74,11 @@ class _MedicationOrderCardState extends State<MedicationOrderCard> {
                   bottom: Sizing.sectionSymmPadding,
                 ),
                 child: MedicationOrderSection(
-                  physicianName: '$username',
+                  prescription: widget.prescription,
                   // dateOrdered: dateOrdered,
                   press: () {
-                    press(context, medicineProvider, username);
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => MedicalNotes(),
-                    //   ),
-                    // );
+                    press(context, medicineProvider, username,
+                        widget.prescription);
                   },
                 ),
               ),
@@ -90,8 +89,8 @@ class _MedicationOrderCardState extends State<MedicationOrderCard> {
     );
   }
 
-  Future<dynamic> press(
-      BuildContext context, MedicineProvider medicineProvider, username) {
+  Future<dynamic> press(BuildContext context,
+      MedicineProvider medicineProvider, username, prescription) {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
