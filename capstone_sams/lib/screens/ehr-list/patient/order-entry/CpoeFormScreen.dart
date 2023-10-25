@@ -1,5 +1,5 @@
 import 'package:capstone_sams/providers/PatientProvider.dart';
- 
+
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/api/api_service.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/AddMedicineDialog.dart';
@@ -10,13 +10,10 @@ import 'package:provider/provider.dart';
 
 import 'package:capstone_sams/providers/SymptomsFieldsProvider.dart';
 
- 
-
 import '../../../../constants/theme/pallete.dart';
 import '../../../../models/PatientModel.dart';
 import '../../../../providers/AccountProvider.dart';
 import '../../../../providers/MedicineProvider.dart';
- 
 
 class CpoeFormScreen extends StatelessWidget {
   final String finalPrediction;
@@ -36,8 +33,6 @@ class CpoeFormScreen extends StatelessWidget {
       Provider.of<SymptomFieldsProvider>(context, listen: false).reset();
       Navigator.pop(context);
     } catch (error) {
-      // Handle the case where the record deletion fails
-      // You can display an error message or perform any necessary actions here
       print('Failed to delete the latest record: $error');
     }
   }

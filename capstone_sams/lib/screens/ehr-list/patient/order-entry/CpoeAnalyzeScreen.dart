@@ -5,13 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
- 
 
 import '../../../../constants/Env.dart';
 import '../../../../constants/theme/pallete.dart';
 import '../../../../constants/theme/sizing.dart';
 import '../../../../models/PatientModel.dart';
- 
+
 import 'CpoeFormScreen.dart';
 
 class CpoeAnalyzeScreen extends StatefulWidget {
@@ -85,7 +84,6 @@ class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
         ),
         physics: AlwaysScrollableScrollPhysics(),
         child: Container(
-          // margin: EdgeInsets.all(20),
           padding: EdgeInsets.all(
             Sizing.sectionSymmPadding,
           ),
