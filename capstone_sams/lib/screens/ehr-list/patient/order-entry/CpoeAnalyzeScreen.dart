@@ -54,8 +54,8 @@ class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
             builder: (context) => CpoeFormScreen(
               patient: widget.patient,
               index: widget.index,
-              finalPrediction: finalPrediction,
-              finalConfidence: finalConfidence,
+              initialPrediction: finalPrediction,
+              initialConfidence: finalConfidence,
             ),
           ),
         );
