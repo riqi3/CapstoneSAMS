@@ -22,11 +22,8 @@ class PrognosisUpdateDialog extends StatelessWidget {
                   await ApiService.updatePrognosis(context, newPrognosis);
 
               if (isSuccess) {
-                // Close the dialog when prognosis is updated successfully
                 Navigator.of(context).pop();
               } else {
-                // Handle the case where updating the prognosis fails
-                // You can display an error message or perform any necessary actions here
                 print('Failed to update prognosis.');
               }
             },
