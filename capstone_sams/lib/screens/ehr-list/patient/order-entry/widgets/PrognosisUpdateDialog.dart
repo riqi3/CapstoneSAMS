@@ -22,7 +22,7 @@ class PrognosisUpdateDialog extends StatelessWidget {
                   await ApiService.updatePrognosis(context, newPrognosis);
 
               if (isSuccess) {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(newPrognosis);
               } else {
                 print('Failed to update prognosis.');
               }

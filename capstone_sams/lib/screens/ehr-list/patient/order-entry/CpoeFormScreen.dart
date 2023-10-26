@@ -59,7 +59,12 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
       builder: (context) => PrognosisUpdateDialog(),
     );
 
-    if (newPrognosis != null && newPrognosis.isNotEmpty) {}
+    if (newPrognosis != null && newPrognosis.isNotEmpty) {
+      setState(() {
+        finalPrediction = newPrognosis;
+        finalConfidence = 0;
+      });
+    }
   }
 
   @override
