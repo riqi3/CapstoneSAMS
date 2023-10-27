@@ -171,22 +171,54 @@ class PrescriptionView(viewsets.ViewSet):
         except Exception as e:
             print(e)
             return Response({"message": "Failed to update prescription amount", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        
+
     @api_view(['GET'])
-    def fetch_prescription_by_ids(request, patientID): 
-        try:
-            id = Patient.objects.get(pk=patientID)
-            prescription = Prescription.objects.filter(patient = id)
-            accountID = prescription.account
-            account = Account.objects.get(pk=accountID)
-            prescriptionData = PrescriptionSerializer(prescription, many = True)
-            accountData = AccountSerializer(account, many = True)
+    def fetch_prescription_by_ids(request, patientID):
+        try: 
+            patient = Patient.objects.get(pk=patientID) 
+            prescriptions = Prescription.objects.filter(patient=patient) 
+            prescriptionData = PrescriptionSerializer(prescriptions, many=True) 
+            accountData = [] 
+            for prescription in prescriptions:
+                account = Account.objects.get(pk=prescription.account_id)
+                accountSerializer = AccountSerializer(account)
+                accountData.append(accountSerializer.data)
+        
             data = {
-                "prescription" : prescriptionData.data,
-                "account": accountData.data
-                }
-            return Response(data, status=status.HTTP_200_OK)
+                "prescriptions": prescriptionData.data,
+                "accounts": accountData
+            }
+            # temp = json.loads(data)
+            unique_accounts = {}
+            new_accounts = []
+            for account in data['accounts']:
+                account_id = account['accountID']
+                if account_id not in unique_accounts:
+                    unique_accounts[account_id] = True
+                    new_accounts.append(account)
+            data['accounts'] = new_accounts
+            updated_json_data = json.dumps(data)
+            data_clean = json.loads(updated_json_data)
+        
+            return Response(data_clean, status=status.HTTP_200_OK)
         except Exception as e:
-             return Response({"message": "Failed to fetch prescription", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "Failed to fetch prescriptions", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    # @api_view(['GET'])
+    # def fetch_prescription_by_ids(request, patientID): 
+    #     try:
+    #         id = Patient.objects.get(pk=patientID)
+    #         prescription = Prescription.objects.filter(patient = id)
+    #         accountID = prescription.account
+    #         account = Account.objects.get(pk=accountID)
+    #         prescriptionData = PrescriptionSerializer(prescription, many = True)
+    #         accountData = AccountSerializer(account, many = True)
+    #         data = {
+    #             "prescription" : prescriptionData.data,
+    #             "account": accountData.data
+    #             }
+    #         return Response(data, status=status.HTTP_200_OK)
+    #     except Exception as e:
+    #          return Response({"message": "Failed to fetch prescription", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 

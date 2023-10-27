@@ -1,10 +1,12 @@
 import 'package:capstone_sams/constants/Strings.dart';
 import 'package:capstone_sams/constants/theme/pallete.dart';
+import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/HealthRecordModel.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/providers/HealthRecordProvider.dart';
 import 'package:capstone_sams/providers/PatientProvider.dart';
 import 'package:capstone_sams/providers/PrescriptionProvider.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/Info.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/MedicationOrdersCard.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/PatientInfoCard.dart';
 import 'package:flutter/material.dart';
@@ -25,20 +27,18 @@ class HealthRecordsScreen extends StatefulWidget {
 }
 
 class _HealthRecordsScreenState extends State<HealthRecordsScreen> {
-  Future<List<Prescription>>? prescriptions;
-  HealthRecord? record;
-
   @override
   void initState() {
     super.initState();
-    prescriptions = context
-        .read<PrescriptionProvider>()
-        .fetchPrescriptions(widget.patient.patientId);
   }
 
   @override
   Widget build(BuildContext context) {
     print('Patient ID: ${widget.patient.patientId}');
+    // final provider = context.read<PrescriptionProvider>();
+    // provider.fetchPrescriptions(widget.patient.patientId);
+    // print(provider.prescriptions);
+    // print(provider.physicians);
     return Scaffold(
       body: SingleChildScrollView(
         padding: EdgeInsets.only(
@@ -51,54 +51,57 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen> {
         physics: BouncingScrollPhysics(),
         child: Column(
           children: [
+            Info(patient: widget.patient),
             PatientInfoCard(
               patient: widget.patient,
             ),
 
-            FutureBuilder(
-              future: prescriptions,
-              builder: (context, snapshot) {
-                List<Prescription> dataToShow = [];
-                // int dataLength = 0;
-                if (snapshot.hasError) {
-                  print(
-                      'HEALTH RECORD snapshot error message: ${snapshot.error}');
-                  return Center(
-                    child: Text('Error: ${snapshot.error}'),
-                  );
-                } else if (snapshot.connectionState ==
-                    ConnectionState.waiting) {
-                  return Center(
-                    child: const CircularProgressIndicator(),
-                  );
-                } else if (snapshot.data!.isEmpty) {
-                  return Center(
-                    child: Text(Strings.noPrescriptions),
-                  );
-                } else if (snapshot.hasData) {
-                  dataToShow = snapshot.data!;
-                }
-                return
-                    // MedicationOrderCard(
-                    //   patient: widget.patient,
-                    // );
+            // FutureBuilder(
+            //   future: prescriptions,
+            //   builder: (context, snapshot) {
+            //     List<dynamic>? dataToShow = [];
+            //     // int dataLength = 0;
+            //     if (snapshot.hasError) {
+            //       print(
+            //           'HEALTH RECORD snapshot error message: ${snapshot.error}');
+            //       return Center(
+            //         child: Text('Error: ${snapshot.error}'),
+            //       );
+            //     } else if (snapshot.connectionState ==
+            //         ConnectionState.waiting) {
+            //       return Center(
+            //         child: const CircularProgressIndicator(),
+            //       );
+            //     } else if (snapshot.data!.isEmpty) {
+            //       return Center(
+            //         child: Text(Strings.noPrescriptions),
+            //       );
+            //     } else if (snapshot.hasData) {
+            //       dataToShow = snapshot.data;
+            //     }
+            //     return
+            //         // MedicationOrderCard(
+            //         //   patient: widget.patient,
+            //         // );
 
-                    LayoutBuilder(
-                  builder: (BuildContext context, BoxConstraints constraints) {
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      physics: const BouncingScrollPhysics(),
-                      itemCount: dataToShow.length,
-                      itemBuilder: (context, index) {
-                        return _buildList(
-                          dataToShow[index],
-                        );
-                      },
-                    );
-                  },
-                );
-              },
-            ),
+            //         LayoutBuilder(
+            //       builder: (BuildContext context, BoxConstraints constraints) {
+            //         return ListView.builder(
+            //           shrinkWrap: true,
+            //           physics: const BouncingScrollPhysics(),
+            //           itemCount: dataToShow!.length,
+            //           itemBuilder: (context, index) {
+            //             final a = dataToShow![index];
+            //             return MedicationOrderCard(prescription: a);
+            //             // _buildList(
+            //             //   dataToShow[index],
+            //             // );
+            //           },
+            //         );
+            //       },
+            //     );
+            //   },
+            // ),
 
             // prescriptions != null
             //     ? FutureBuilder<List<Prescription>>(
@@ -157,41 +160,41 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen> {
     );
   }
 
-  Widget _buildList(Prescription list) {
-    final jsonList = list.medicines;
-    final prescriptionNum = list.presNum;
-    final acc = list.account;
+  // Widget _buildList(List<Patient> list) {
+  //   // final jsonList = list.medicines;
+  //   // final prescriptionNum = list.presc;
+  //   // final acc = list.accounts;
 
-    return ExpansionTile(
-      textColor: Pallete.mainColor,
-      iconColor: Pallete.mainColor,
-      collapsedIconColor: Pallete.greyColor,
-      title: Text(
-        ('${prescriptionNum} | ${acc}'),
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-      ),
-      subtitle: GestureDetector(
-        onTap: () {
-          print('ss');
-          showDialog(
-            context: context,
-            builder: (context) => Dialog(
-              child: Padding(
-                padding: const EdgeInsets.all(Sizing.sectionSymmPadding),
-                child: Text(
-                  ('Investigations: ${jsonList}'),
-                  style: TextStyle(fontSize: Sizing.header5),
-                ),
-              ),
-            ),
-          );
-        },
-        child: Text(
-          ('Investigations: ${jsonList}'),
-          // maxLines: 2,
-          // overflow: TextOverflow.ellipsis,
-        ),
-      ),
-    );
-  }
+  //   return ExpansionTile(
+  //     textColor: Pallete.mainColor,
+  //     iconColor: Pallete.mainColor,
+  //     collapsedIconColor: Pallete.greyColor,
+  //     title: Text(
+  //       ('${prescriptionNum} | ${acc}'),
+  //       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+  //     ),
+  //     subtitle: GestureDetector(
+  //       onTap: () {
+  //         print('ss');
+  //         showDialog(
+  //           context: context,
+  //           builder: (context) => Dialog(
+  //             child: Padding(
+  //               padding: const EdgeInsets.all(Sizing.sectionSymmPadding),
+  //               child: Text(
+  //                 ('Investigations: ${prescriptionNum}'),
+  //                 style: TextStyle(fontSize: Sizing.header5),
+  //               ),
+  //             ),
+  //           ),
+  //         );
+  //       },
+  //       child: Text(
+  //         ('Investigations: ${prescriptionNum}'),
+  //         // maxLines: 2,
+  //         // overflow: TextOverflow.ellipsis,
+  //       ),
+  //     ),
+  //   );
+  // }
 }

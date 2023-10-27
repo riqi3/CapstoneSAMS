@@ -20,10 +20,8 @@ class _MedicationState extends State<Medication> {
     return Container(
       child: Column(
         children: [
-          Text('${widget.prescription.account}'),
-          Text('${widget.prescription.medicines}'),
-          Text('${widget.prescription.patientID}'),
-          Text('${widget.prescription.presNum}'),
+          Text('${widget.prescription.accounts}'),
+          Text('${widget.prescription.prescriptions}'),
         ],
       ),
     );

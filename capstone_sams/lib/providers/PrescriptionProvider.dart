@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
 
 import 'package:flutter/material.dart';
@@ -8,34 +9,76 @@ import '../constants/Env.dart';
 
 class PrescriptionProvider with ChangeNotifier {
   List<Prescription> _prescriptions = [];
+  List<Account> _physicians = [];
   Prescription? _prescription;
   Prescription? get prescription => _prescription;
-  int? get presNum => _prescription?.presNum;
-  List? get medicines => _prescription?.medicines;
-  String? get acc => _prescription?.account;
-  String? get patientID => _prescription?.patientID;
+  // int? get presNum => _prescription?.presNum;
+  List? get presc => _prescription?.prescriptions;
+  List? get accounts => _prescription?.accounts;
+  // String? get acc => _prescription?.account;
+  // String? get patientID => _prescription?.patientID;
+  Future<List<Prescription>> get prescriptions => Future.value(prescriptions);
+  Future<List<Account>> get physicians => Future.value(physicians);
 
-  List<Prescription> get prescriptions => _prescriptions;
+  String _getUrl(String endpoint) {
+    return '${Env.prefix}/$endpoint';
+  }
 
-  Future<List<Prescription>> fetchPrescriptions(String? id) async {
-    print('PATIENT ID: ${id}');
-    final response =
-        await http.get(Uri.parse('${Env.prefix}/cpoe/prescription/get/${id}/'));
+  Future<void> fetchPrescriptions(String? patientID) async {
+    final headers = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
+
+    final response = await http.get(
+      Uri.parse(
+        _getUrl('cpoe/prescription/get/${patientID}/'),
+      ),
+      headers: headers,
+    );
     await Future.delayed(Duration(milliseconds: 3000));
-    print('PRESCRIPTION RESPOSNSE CODE1: ${response.statusCode}');
     if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-
-      print('PRESCRIPTION RESPOSNSE CODE2: ${response.statusCode}');
-      List<Prescription> prescription = data.map<Prescription>((json) {
-        return Prescription.fromJson(json);
-      }).toList();
-      return prescription;
+      final items = json.decode(response.body);
+      List<Prescription> prescriptions = items["prescriptions"]
+          .map<Prescription>((json) => Prescription.fromJson(json))
+          .toList();
+      List<Account> accounts = items["accounts"]
+          .map<Account>((json) => Account.fromJson(json))
+          .toList();
+      // print(prescriptions);
+      // print(accounts);
+      if (_prescriptions.isEmpty && _physicians.isEmpty) {
+        _prescriptions = prescriptions;
+        _physicians = accounts;
+        notifyListeners();
+      }
+      print(_prescriptions.toString());
+      print(_physicians.toString());
     } else {
-      print('PRESCRIPTION RESPOSNSE CODE3: ${response.statusCode}');
-      throw Exception('Failed to fetch prescriptions');
+      throw Exception(
+          'Failed to fetch prescriptions ${jsonDecode(response.body)}');
     }
   }
+
+  // Future<List<Prescription>> fetchPrescriptions(String? patientID) async {
+  //   print('PATIENT ID: ${patientID}');
+  //   final response = await http
+  //       .get(Uri.parse('${Env.prefix}/cpoe/prescription/get/${patientID}/'));
+  //   await Future.delayed(Duration(milliseconds: 3000));
+  //   print('PRESCRIPTION RESPOSNSE CODE1: ${response.statusCode}');
+  //   if (response.statusCode == 200) {
+  //     final data = json.decode(response.body);
+
+  //     print('PRESCRIPTION RESPOSNSE CODE2: ${response.statusCode}');
+  //     List<Prescription> prescription = data.map<Prescription>((json) {
+  //       return Prescription.fromJson(json);
+  //     }).toList();
+  //     return prescription;
+  //   } else {
+  //     print('PRESCRIPTION RESPOSNSE CODE3: ${response.statusCode}');
+  //     throw Exception('Failed to fetch prescriptions');
+  //   }
+  // }
+
   // Future<List<Prescription>> fetchPrescriptions(int recordNum) async {
   //   final response = await http
   //       .get(Uri.parse('${Env.prefix}/cpoe/prescription/get/${recordNum}/'));

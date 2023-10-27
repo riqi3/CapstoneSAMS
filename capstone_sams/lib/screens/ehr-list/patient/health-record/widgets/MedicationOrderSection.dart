@@ -46,7 +46,7 @@ class _MedicationOrderSectionState extends State<MedicationOrderSection> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              '${widget.prescription.account}',
+                              '${widget.prescription.accounts}',
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontSize: Sizing.header4,

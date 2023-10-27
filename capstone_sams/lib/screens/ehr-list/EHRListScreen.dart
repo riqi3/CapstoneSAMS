@@ -193,8 +193,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
         final patient = dataToShow[index];
         print("phone ${pageRounded}");
         final labresult = int.parse(patient.patientId);
-        final prescription = int.parse(patient.patientId);
-        return PatientCard(patient: patient,  labresult: labresult);
+        return PatientCard(patient: patient, labresult: labresult);
       },
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 1,
