@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -24,40 +25,72 @@ class PrescriptionProvider with ChangeNotifier {
     return '${Env.prefix}/$endpoint';
   }
 
-  Future<void> fetchPrescriptions(String? patientID) async {
+  Future<void> fetchPrescriptions(String patientID) async {
     final headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     };
 
     final response = await http.get(
       Uri.parse(
-        _getUrl('cpoe/prescription/get/${patientID}/'),
+        _getUrl('cpoe/prescription/get/$patientID/'),
       ),
       headers: headers,
     );
     await Future.delayed(Duration(milliseconds: 3000));
     if (response.statusCode == 200) {
       final items = json.decode(response.body);
-      List<Prescription> prescriptions = items["prescriptions"]
+      List<Prescription> newPrescriptions = items["prescriptions"]
           .map<Prescription>((json) => Prescription.fromJson(json))
           .toList();
-      List<Account> accounts = items["accounts"]
+      List<Account> newAccounts = items["accounts"]
           .map<Account>((json) => Account.fromJson(json))
           .toList();
-      // print(prescriptions);
-      // print(accounts);
-      if (_prescriptions.isEmpty && _physicians.isEmpty) {
-        _prescriptions = prescriptions;
-        _physicians = accounts;
+
+      if (!listEquals(_prescriptions, newPrescriptions) ||
+          !listEquals(_physicians, newAccounts)) {
+        _prescriptions = newPrescriptions;
+        _physicians = newAccounts;
+        print(_prescriptions);
+        print(_physicians);
         notifyListeners();
       }
-      print(_prescriptions.toString());
-      print(_physicians.toString());
     } else {
       throw Exception(
           'Failed to fetch prescriptions ${jsonDecode(response.body)}');
     }
   }
+
+  // Future<void> fetchPrescriptions(String patientID) async {
+  //   final headers = <String, String>{
+  //     'Content-Type': 'application/json; charset=UTF-8',
+  //   };
+
+  //   final response = await http.get(
+  //     Uri.parse(
+  //       _getUrl('cpoe/prescription/get/${patientID}/'),
+  //     ),
+  //     headers: headers,
+  //   );
+  //   await Future.delayed(Duration(milliseconds: 3000));
+  //   if (response.statusCode == 200) {
+  //     final items = json.decode(response.body);
+  //     List<Prescription> prescriptions = items["prescriptions"]
+  //         .map<Prescription>((json) => Prescription.fromJson(json))
+  //         .toList();
+  //     List<Account> accounts = items["accounts"]
+  //         .map<Account>((json) => Account.fromJson(json))
+  //         .toList();
+  //     // print(prescriptions);
+  //     // print(accounts);
+  // _prescriptions = prescriptions;
+  // _physicians = accounts;
+  //     notifyListeners();
+
+  //   } else {
+  //     throw Exception(
+  //         'Failed to fetch prescriptions ${jsonDecode(response.body)}');
+  //   }
+  // }
 
   // Future<List<Prescription>> fetchPrescriptions(String? patientID) async {
   //   print('PATIENT ID: ${patientID}');

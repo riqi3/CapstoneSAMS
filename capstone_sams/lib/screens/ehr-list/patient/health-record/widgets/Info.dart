@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 
 class Info extends StatefulWidget {
   final Patient patient;
-  const Info({super.key, required this.patient});
+  const Info({Key? key, required this.patient}) : super(key: key);
 
   @override
   State<Info> createState() => _InfoState();
@@ -17,35 +17,36 @@ class Info extends StatefulWidget {
 
 class _InfoState extends State<Info> {
   late Future<List<Prescription>> prescriptions;
-  late Future<List<Account>> physicians;
-  HealthRecord? record;
 
   @override
   void initState() {
     super.initState();
+    prescriptions = fetchData();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
+  Future<List<Prescription>> fetchData() async {
+    try {
+      final provider = Provider.of<PrescriptionProvider>(context, listen: false);
+      await provider.fetchPrescriptions(widget.patient.patientId);
+      return provider.prescriptions;
+    } catch (error) { 
+      print("Error fetching data: $error");
+      return [];
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<PrescriptionProvider>(context, listen: false);
-    provider.fetchPrescriptions(widget.patient.patientId);
-    prescriptions = provider.prescriptions;
-    physicians = provider.physicians;
-    return FutureBuilder(
-      future: provider.prescriptions,
+    return FutureBuilder<List<Prescription>>(
+      future: fetchData(),
       builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Center(
-            child: Text('Error: ${snapshot.error}'),
-          );
-        } else if (snapshot.connectionState == ConnectionState.waiting) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
             child: CircularProgressIndicator(),
+          );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text('Error: ${snapshot.error}'),
           );
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return Center(
