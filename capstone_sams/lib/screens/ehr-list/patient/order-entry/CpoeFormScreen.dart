@@ -1,5 +1,5 @@
 import 'package:capstone_sams/providers/PatientProvider.dart';
- 
+
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/api/api_service.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/AddMedicineDialog.dart';
@@ -10,25 +10,38 @@ import 'package:provider/provider.dart';
 
 import 'package:capstone_sams/providers/SymptomsFieldsProvider.dart';
 
- 
-
 import '../../../../constants/theme/pallete.dart';
 import '../../../../models/PatientModel.dart';
 import '../../../../providers/AccountProvider.dart';
 import '../../../../providers/MedicineProvider.dart';
- 
 
-class CpoeFormScreen extends StatelessWidget {
-  final String finalPrediction;
-  final double finalConfidence;
+class CpoeFormScreen extends StatefulWidget {
+  final String initialPrediction;
+  final double initialConfidence;
   final int index;
   final Patient patient;
   CpoeFormScreen({
     required this.patient,
     required this.index,
-    required this.finalPrediction,
-    required this.finalConfidence,
+    required this.initialPrediction,
+    required this.initialConfidence,
   });
+
+  @override
+  _CpoeFormScreenState createState() => _CpoeFormScreenState();
+}
+
+class _CpoeFormScreenState extends State<CpoeFormScreen> {
+  late String finalPrediction;
+  late double finalConfidence;
+
+  @override
+  void initState() {
+    super.initState();
+    finalPrediction = widget.initialPrediction;
+    finalConfidence = widget.initialConfidence;
+  }
+
   Future<void> _handleAnalyzeAgain(BuildContext context) async {
     try {
       await ApiService.deleteLatestRecord();
@@ -36,8 +49,6 @@ class CpoeFormScreen extends StatelessWidget {
       Provider.of<SymptomFieldsProvider>(context, listen: false).reset();
       Navigator.pop(context);
     } catch (error) {
-      // Handle the case where the record deletion fails
-      // You can display an error message or perform any necessary actions here
       print('Failed to delete the latest record: $error');
     }
   }
@@ -48,7 +59,12 @@ class CpoeFormScreen extends StatelessWidget {
       builder: (context) => PrognosisUpdateDialog(),
     );
 
-    if (newPrognosis != null && newPrognosis.isNotEmpty) {}
+    if (newPrognosis != null && newPrognosis.isNotEmpty) {
+      setState(() {
+        finalPrediction = newPrognosis;
+        finalConfidence = 0;
+      });
+    }
   }
 
   @override
@@ -203,7 +219,7 @@ class CpoeFormScreen extends StatelessWidget {
                         //     context.read<PatientProvider>().fetchPatient(index.toString());
                         final patient = await context
                             .read<PatientProvider>()
-                            .fetchPatient(index.toString());
+                            .fetchPatient(widget.index.toString());
                         final patientID = patient.patientId;
                         final medicineProvider =
                             context.read<MedicineProvider>();
@@ -217,12 +233,12 @@ class CpoeFormScreen extends StatelessWidget {
                         print(success);
 
                         if (success) {
-                          print('test this selected PATIENT $index');
+                          // print('test this selected PATIENT $index');
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => PatientTabsScreen(
                                 patient: patient,
-                                index: index,
+                                index: widget.index,
                               ),
                             ),
                           );
