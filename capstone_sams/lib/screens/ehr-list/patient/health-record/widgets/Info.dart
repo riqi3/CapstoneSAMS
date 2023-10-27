@@ -17,68 +17,91 @@ class Info extends StatefulWidget {
 
 class _InfoState extends State<Info> {
   late Future<List<Prescription>> prescriptions;
+  late Future<List<Account>> physicians;
 
   @override
   void initState() {
     super.initState();
-    prescriptions = fetchData();
+    prescriptions = fetchPrescriptions();
+    physicians = fetchPhysicians();
   }
 
-  Future<List<Prescription>> fetchData() async {
+  Future<List<Prescription>> fetchPrescriptions() async {
     try {
-      final provider = Provider.of<PrescriptionProvider>(context, listen: false);
+      final provider =
+          Provider.of<PrescriptionProvider>(context, listen: false);
       await provider.fetchPrescriptions(widget.patient.patientId);
       return provider.prescriptions;
-    } catch (error) { 
+    } catch (error, stackTrace) {
       print("Error fetching data: $error");
+      print(stackTrace);
+      return [];
+    }
+  }
+
+  Future<List<Account>> fetchPhysicians() async {
+    try {
+      final provider =
+          Provider.of<PrescriptionProvider>(context, listen: false);
+      await provider.fetchPrescriptions(widget.patient.patientId);
+      return provider.physicians;
+    } catch (error, stackTrace) {
+      print("Error fetching data: $error");
+      print(stackTrace);
       return [];
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Prescription>>(
-      future: fetchData(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Text('Error: ${snapshot.error}'),
-          );
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(
-            child: Text('No data available'),
-          );
-        } else {
-          final prescriptionList = snapshot.data;
+    print(prescriptions);
+    return SizedBox(
+      height: 300,
+      child: FutureBuilder<List<Prescription>>(
+        future: prescriptions,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(
+              child: Text('No data available'),
+            );
+          } else if (snapshot.hasError) {
+            print('Error: ${snapshot.hasError}');
+            return Text('Error: ${snapshot.hasError}');
+          } else {
+            final prescriptionList = snapshot.data;
 
-          return ListView.builder(
-            itemCount: prescriptionList!.length,
-            itemBuilder: (context, index) {
-              final prescription = prescriptionList[index];
-              return Card(
-                margin: EdgeInsets.all(8.0),
-                child: ListTile(
-                  title: Text(
-                      'Prescription Number: ${prescription.prescriptions}'),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: prescription.prescriptions!.map((medicine) {
-                      return Text(
-                        'Medicine: ${medicine.name}',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      );
-                    }).toList(),
+            return ListView.builder(
+              itemCount: prescriptionList!.length,
+              itemBuilder: (context, index) {
+                final prescription = prescriptionList[index];
+                return Card(
+                  margin: EdgeInsets.all(8.0),
+                  child: ListTile(
+                    title: Text('Prescription Number: ${prescription.account}'),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: prescription.medicines!.map((medicine) {
+                        return Text(
+                          'Medicine: ${medicine["name"]}',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        );
+                      }).toList(),
+                    ),
                   ),
-                ),
-              );
-            },
-          );
-        }
-      },
+                );
+              },
+            );
+          }
+        },
+      ),
     );
   }
 }

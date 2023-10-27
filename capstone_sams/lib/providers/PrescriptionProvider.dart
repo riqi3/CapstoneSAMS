@@ -14,12 +14,17 @@ class PrescriptionProvider with ChangeNotifier {
   Prescription? _prescription;
   Prescription? get prescription => _prescription;
   // int? get presNum => _prescription?.presNum;
-  List? get presc => _prescription?.prescriptions;
-  List? get accounts => _prescription?.accounts;
+  // List? get presc => _prescription?.prescriptions;
+  // List? get accounts => _prescription?.accounts;
   // String? get acc => _prescription?.account;
   // String? get patientID => _prescription?.patientID;
-  Future<List<Prescription>> get prescriptions => Future.value(prescriptions);
-  Future<List<Account>> get physicians => Future.value(physicians);
+  int? get presNum => _prescription?.presNum;
+  // List? get medicines => _prescription?.medicines;
+  String? get acc => _prescription?.account;
+  String? get patientID => _prescription?.patientID;
+
+  Future<List<Prescription>> get prescriptions => Future.value(_prescriptions);
+  Future<List<Account>> get physicians => Future.value(_physicians);
 
   String _getUrl(String endpoint) {
     return '${Env.prefix}/$endpoint';
@@ -50,8 +55,6 @@ class PrescriptionProvider with ChangeNotifier {
           !listEquals(_physicians, newAccounts)) {
         _prescriptions = newPrescriptions;
         _physicians = newAccounts;
-        print(_prescriptions);
-        print(_physicians);
         notifyListeners();
       }
     } else {
