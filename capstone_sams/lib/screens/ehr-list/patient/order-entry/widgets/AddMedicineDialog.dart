@@ -24,6 +24,7 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
   DateTime? _selectedEndDate;
 
   late Future<List<Medicine>> medicines;
+  late bool _autoValidate = false;
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +63,9 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                 SizedBox(height: 10),
                 Form(
                   key: _formKey,
+                  autovalidateMode: _autoValidate
+                      ? AutovalidateMode.always
+                      : AutovalidateMode.disabled,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
@@ -240,12 +244,19 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
-                                _medicine.startDate = _selectedStartDate;
-                                _medicine.endDate = _selectedEndDate;
-                                Provider.of<MedicineProvider>(context,
-                                        listen: false)
-                                    .addMedicine(_medicine);
-                                Navigator.pop(context);
+                                if (_medicine.name!.isNotEmpty) {
+                                  _medicine.startDate = _selectedStartDate;
+                                  _medicine.endDate = _selectedEndDate;
+                                  Provider.of<MedicineProvider>(context,
+                                          listen: false)
+                                      .addMedicine(_medicine);
+                                  Navigator.pop(context);
+                                }
+                              } else {
+                                setState(() {
+                                  _autoValidate =
+                                      true; // Enable auto validation
+                                });
                               }
                             },
                             style: ElevatedButton.styleFrom(
