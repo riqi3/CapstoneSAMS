@@ -10,7 +10,7 @@ class PrognosisUpdateDialog extends StatelessWidget {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
       title: Text(
-        'Edit Prognosis',
+        'Edit Suspected Disease',
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
@@ -27,7 +27,7 @@ class PrognosisUpdateDialog extends StatelessWidget {
             child: TextField(
               controller: controller,
               decoration: InputDecoration(
-                labelText: 'New Prognosis',
+                labelText: 'New Disease',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(5.0),
                 ),
@@ -48,7 +48,7 @@ class PrognosisUpdateDialog extends StatelessWidget {
                   if (isSuccess) {
                     Navigator.of(context).pop(newPrognosis);
                   } else {
-                    print('Failed to update prognosis.');
+                    print('Failed to update diagnosis.');
                   }
                 },
                 style: ElevatedButton.styleFrom(

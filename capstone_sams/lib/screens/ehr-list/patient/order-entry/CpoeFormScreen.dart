@@ -98,8 +98,9 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
                   'Diagnosis',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
+                SizedBox(height: 15),
                 Text(
-                  'Prognosis: $finalPrediction',
+                  'Suspected Disease: $finalPrediction',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 Text(
