@@ -80,7 +80,6 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                             '${Env.prefix}/cpoe/medicines/',
                             queryParameters: {"filter": filter},
                           );
-                          // var models = Medicine.fromJson(response.data);
                           var models = List<Medicine>.from(response.data
                               .map((json) => Medicine.fromJson(json)));
                           return models;
@@ -88,18 +87,13 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                         itemAsString: (Medicine medicine) =>
                             medicine.name.toString(),
                         onChanged: (Medicine? data) {
+                          _medicine.drugId = data?.drugId.toString();
                           _medicine.name = data?.name.toString();
-                          print('MEDICATION: ${data?.name.toString()}');
+                          _medicine.drugCode = data?.drugCode.toString();
+                          print('ADD MEDICATION: ${data?.name.toString()}');
                         },
                       ),
                       SizedBox(height: 10),
-                      // Flexible(
-                      //   child: TextAreaField(
-                      //     validator: 'pls input',
-                      //     hintText: 'Instructions',
-                      //     onSaved: _medicine.instructions,
-                      //   ),
-                      // ),
                       Flexible(
                         child: TextFormField(
                           decoration: InputDecoration(

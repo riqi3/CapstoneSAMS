@@ -1,10 +1,9 @@
 import 'package:capstone_sams/models/MedicineModel.dart';
 import 'package:capstone_sams/providers/MedicineProvider.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/EditMedicineDialog.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/EditMedicineScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
- 
 
 import '../../../../../constants/Dimensions.dart';
 import '../../../../../constants/theme/pallete.dart';
@@ -69,11 +68,6 @@ class MedicineCard extends StatelessWidget {
                         fontSize: 12,
                       ),
                     ),
-                    SizedBox(width: 10),
-                    Text(
-                      'Refills: ${medicine.refills}',
-                      style: TextStyle(fontSize: 12),
-                    ),
                   ],
                 ),
               ],
@@ -100,7 +94,7 @@ class MedicineCard extends StatelessWidget {
           onPressed: () {
             showDialog(
               context: context,
-              builder: (context) => EditMedicineDialog(
+              builder: (context) => EditMedicineScreen(
                 medicine: medicine,
                 index: index,
               ),
@@ -159,7 +153,7 @@ class MedicineCard extends StatelessWidget {
             onTap: () {
               showDialog(
                 context: context,
-                builder: (context) => EditMedicineDialog(
+                builder: (context) => EditMedicineScreen(
                   medicine: medicine,
                   index: index,
                 ),

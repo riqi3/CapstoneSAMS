@@ -12,5 +12,6 @@ urlpatterns = [
     path('medicines/<str:presNum>', MedicineView.fetch_medicine_through_prescription, name='fetch_medicine_through_prescription'),
     path('prescription/save/', PrescriptionView.save_prescription, name='save_prescription'),
     path('prescription/update/<str:patientID>', PrescriptionView.update_prescription_amount, name='update_prescription_amount'),
-    path('prescription/get/<str:patientID>/', PrescriptionView.fetch_prescription_by_ids, name='fetch_prescription'),
+    path('prescription/get-patient/<str:patientID>/', PrescriptionView.fetch_prescription_by_patientIds, name='fetch_prescription'),
+    path('prescription/get-account/<str:accountID>/', PrescriptionView.fetch_prescription_by_accountIds, name='fetch_prescription'),
 ]

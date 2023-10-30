@@ -10,7 +10,6 @@ class Medicine {
   DateTime? startDate;
   DateTime? endDate;
   int? quantity;
-  int? refills;
 
   Medicine({
     this.patient,
@@ -21,7 +20,6 @@ class Medicine {
     this.startDate,
     this.endDate,
     this.quantity,
-    this.refills,
   });
 
   Medicine.copy(Medicine other) {
@@ -32,18 +30,16 @@ class Medicine {
     startDate = other.startDate;
     endDate = other.endDate;
     quantity = other.quantity;
-    refills = other.refills;
   }
 
   Map<String, dynamic> toJson() => {
         'drugId': drugId,
         'drugCode': drugCode,
-        'name': name,
+        'drugName': name,
         'instructions': instructions,
         'startDate': startDate?.toIso8601String(),
         'endDate': endDate?.toIso8601String(),
         'quantity': quantity,
-        'refills': refills,
       };
 
   factory Medicine.fromJson(Map<String, dynamic> json) {
@@ -54,7 +50,7 @@ class Medicine {
       instructions: json['instructions'],
       startDate: json['startDate'],
       endDate: json['endDate'],
-      quantity: json['quantity'], 
+      quantity: json['quantity'],
     );
   }
 }

@@ -37,7 +37,7 @@ class PrescriptionProvider with ChangeNotifier {
 
     final response = await http.get(
       Uri.parse(
-        _getUrl('cpoe/prescription/get/$patientID/'),
+        _getUrl('cpoe/prescription/get-patient/$patientID/'),
       ),
       headers: headers,
     );
@@ -59,7 +59,40 @@ class PrescriptionProvider with ChangeNotifier {
       }
     } else {
       throw Exception(
-          'Failed to fetch prescriptions ${jsonDecode(response.body)}');
+          'Failed to fetch patient prescriptions ${jsonDecode(response.body)}');
+    }
+  }
+
+  Future<void> fetchAccountPrescriptions(String accountID) async {
+    final headers = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
+
+    final response = await http.get(
+      Uri.parse(
+        _getUrl('cpoe/prescription/get-account/$accountID/'),
+      ),
+      headers: headers,
+    );
+    await Future.delayed(Duration(milliseconds: 3000));
+    if (response.statusCode == 200) {
+      final items = json.decode(response.body);
+      List<Prescription> newPrescriptions = items["prescriptions"]
+          .map<Prescription>((json) => Prescription.fromJson(json))
+          .toList();
+      List<Account> newAccounts = items["accounts"]
+          .map<Account>((json) => Account.fromJson(json))
+          .toList();
+
+      if (!listEquals(_prescriptions, newPrescriptions) ||
+          !listEquals(_physicians, newAccounts)) {
+        _prescriptions = newPrescriptions;
+        _physicians = newAccounts;
+        notifyListeners();
+      }
+    } else {
+      throw Exception(
+          'Failed to fetch account created prescriptions ${jsonDecode(response.body)}');
     }
   }
 
