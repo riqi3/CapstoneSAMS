@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../constants/theme/pallete.dart';
 import '../../constants/theme/sizing.dart';
 import '../../global-widgets/text-fields/Textfields.dart';
- 
+
 import '../home/HomeScreen.dart';
 
 import '../../providers/AccountProvider.dart';
@@ -197,7 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Pallete.whiteColor,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(15),
                             ),
                             elevation: Sizing.cardElevation,
                             minimumSize: Size(elementWidth, elementWidth / 8),
