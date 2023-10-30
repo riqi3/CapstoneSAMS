@@ -8,10 +8,11 @@ from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from django.urls import path 
+from IPython.display import display, HTML
 from PIL import Image, ImageDraw, ImageFont 
 import random   
 import os
-
+import csv
 from api.modules.disease_prediction.cdssModel.forms import CsvImportHealthSymptomForm 
 from .utils import delete_profile_photo
 # from io import StringIO as io
@@ -420,7 +421,49 @@ class PatientAdmin(admin.ModelAdmin):
             path("upload-csv/", self.upload_csv),
         ]
         return new_urls + urls
+    
+    # def csv_to_html_table(self, request, num_rows=10): 
+    #     if request.method == 'POST':
+    #         csv_file = request.FILES['csv_upload']
+    #         if not csv_file.name.endswith('.csv'):
+    #             messages.warning(request, 'The wrong file type was uploaded')
+    #             return HttpResponseRedirect(request.path_info)
+    #         table_html = "<table>"
+    #         with open(csv_file, 'r', newline='') as csv_file:
+    #             csv_reader = csv.reader(csv_file) 
+    #             for i, row in enumerate(csv_reader):
+    #                 if i >= num_rows:
+    #                     break
+    #                 table_html += "<tr>"
+    #                 for cell in row:
+    #                     table_html += f"<td>{cell}</td>"
+    #                 table_html += "</tr>"
+    #         table_html += "</table>"
+    #         return table_html
+    #     num_rows_to_read = 10
+    #     return render(request, "admin/csv_upload.html", {'html_table': table_html, 'row_count': num_rows_to_read})
 
+
+    # def csv_to_html_table(request, num_rows=10):
+    #     if request.method == 'POST':
+    #         csv_file = request.FILES['csv_upload']
+    #         if not csv_file.name.endswith('.csv'):
+    #             messages.warning(request, 'The wrong file type was uploaded')
+    #             return HttpResponseRedirect(request.path_info)
+        
+    #         csv_data = []
+    #         with open(csv_file, 'r', newline='') as csv_file:
+    #             csv_reader = csv.reader(csv_file)
+    #             for row in csv_reader:
+    #                 csv_data.append(row)
+        
+    #         num_rows_to_read = 10   
+        
+    #         return render(request, "admin/csv_upload.html", {'csv_data': csv_data, 'row_count': num_rows_to_read})
+
+    #     num_rows_to_read = 10
+    #     return render(request, "admin/csv_upload.html", {'csv_data': [], 'row_count': num_rows_to_read})
+ 
     def upload_csv(self, request):
         if request.method == "POST":
             csv_file = request.FILES["csv_upload"]

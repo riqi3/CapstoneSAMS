@@ -18,9 +18,18 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">You're about to upload a bulk file!</h5>
-             
           </div>
+           
           <div class="modal-body">
+            <table>
+              {% for row in csv_data %}
+                  <tr>
+                      {% for cell in row %}
+                          <td>{{ cell }}</td>
+                      {% endfor %}
+                  </tr>
+              {% endfor %}
+          </table>
             Are you sure to upload this file? This process is permanent and cannot be edited.
           </div>
           <div class="modal-footer">
@@ -64,7 +73,7 @@
       
 
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
   function checkFormFields() { 
     var allFieldsFilled = true;

@@ -1,14 +1,14 @@
 import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/providers/MedicineProvider.dart';
 import 'package:capstone_sams/providers/PrescriptionProvider.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/MedicationOrderSection.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/DISCARD/MedicationOrderSection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../../constants/theme/pallete.dart';
-import '../../../../../constants/theme/sizing.dart';
-import '../../../../../providers/AccountProvider.dart';
+import '../../../../../../constants/theme/pallete.dart';
+import '../../../../../../constants/theme/sizing.dart';
+import '../../../../../../providers/AccountProvider.dart';
 
-import '../../order-entry/widgets/MedicineCard.dart';
+import '../../../order-entry/widgets/MedicineCard.dart';
 
 class MedicationOrderCard extends StatefulWidget {
   final Prescription prescription;

@@ -7,8 +7,9 @@ import 'package:capstone_sams/providers/HealthRecordProvider.dart';
 import 'package:capstone_sams/providers/PatientProvider.dart';
 import 'package:capstone_sams/providers/PrescriptionProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/Info.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/MedicationOrdersCard.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/DISCARD/MedicationOrdersCard.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/PatientInfoCard.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/PhysicianCard.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../constants/theme/sizing.dart';
@@ -35,10 +36,6 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen> {
   @override
   Widget build(BuildContext context) {
     print('Patient ID: ${widget.patient.patientId}');
-    // final provider = context.read<PrescriptionProvider>();
-    // provider.fetchPrescriptions(widget.patient.patientId);
-    // print(provider.prescriptions);
-    // print(provider.physicians);
     return Scaffold(
       body: SingleChildScrollView(
         padding: EdgeInsets.only(
@@ -51,6 +48,7 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen> {
         physics: BouncingScrollPhysics(),
         child: Column(
           children: [
+            PhysicianCard(patient: widget.patient),
             Info(patient: widget.patient),
             PatientInfoCard(
               patient: widget.patient,

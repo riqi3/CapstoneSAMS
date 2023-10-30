@@ -2,8 +2,8 @@ import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../../../constants/theme/pallete.dart';
-import '../../../../../constants/theme/sizing.dart';
+import '../../../../../../constants/theme/pallete.dart';
+import '../../../../../../constants/theme/sizing.dart';
 
 class MedicationOrderSection extends StatefulWidget {
   final Prescription prescription;

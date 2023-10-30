@@ -1,4 +1,3 @@
-
 import 'package:capstone_sams/constants/Strings.dart';
 import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/HealthRecordModel.dart';
@@ -8,37 +7,37 @@ import 'package:capstone_sams/providers/PrescriptionProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class Info extends StatefulWidget {
+class PhysicianCard extends StatefulWidget {
   final Patient patient;
-  const Info({Key? key, required this.patient}) : super(key: key);
+  const PhysicianCard({Key? key, required this.patient}) : super(key: key);
 
   @override
-  State<Info> createState() => _InfoState();
+  State<PhysicianCard> createState() => _PhysicianCardState();
 }
 
-class _InfoState extends State<Info> {
-  late Future<List<Prescription>> prescriptions;
+class _PhysicianCardState extends State<PhysicianCard> {
+  // late Future<List<Prescription>> prescriptions;
   late Future<List<Account>> physicians;
 
   @override
   void initState() {
     super.initState();
-    prescriptions = fetchPrescriptions();
+    // prescriptions = fetchPrescriptions();
     physicians = fetchPhysicians();
   }
 
-  Future<List<Prescription>> fetchPrescriptions() async {
-    try {
-      final provider =
-          Provider.of<PrescriptionProvider>(context, listen: false);
-      await provider.fetchPrescriptions(widget.patient.patientId);
-      return provider.prescriptions;
-    } catch (error, stackTrace) {
-      print("Error fetching data: $error");
-      print(stackTrace);
-      return [];
-    }
-  }
+  // Future<List<Prescription>> fetchPrescriptions() async {
+  //   try {
+  //     final provider =
+  //         Provider.of<PrescriptionProvider>(context, listen: false);
+  //     await provider.fetchPrescriptions(widget.patient.patientId);
+  //     return provider.prescriptions;
+  //   } catch (error, stackTrace) {
+  //     print("Error fetching data: $error");
+  //     print(stackTrace);
+  //     return [];
+  //   }
+  // }
 
   Future<List<Account>> fetchPhysicians() async {
     try {
@@ -55,11 +54,11 @@ class _InfoState extends State<Info> {
 
   @override
   Widget build(BuildContext context) {
-    print(prescriptions);
+    print(physicians);
     return SizedBox(
       height: 300,
-      child: FutureBuilder<List<Prescription>>(
-        future: prescriptions,
+      child: FutureBuilder<List<Account>>(
+        future: physicians,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -77,25 +76,17 @@ class _InfoState extends State<Info> {
             print('Error: ${snapshot.hasError}');
             return Text('Error: ${snapshot.hasError}');
           } else {
-            final prescriptionList = snapshot.data;
+            final physicianList = snapshot.data;
 
             return ListView.builder(
-              itemCount: prescriptionList!.length,
+              itemCount: physicianList!.length,
               itemBuilder: (context, index) {
-                final prescription = prescriptionList[index];
+                final physician = physicianList[index];
                 return Card(
                   margin: EdgeInsets.all(8.0),
                   child: ListTile(
-                    title: Text('Prescription Number: ${prescription.account}'),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: prescription.medicines!.map((medicine) {
-                        return Text(
-                          'Medicine: ${medicine["name"]}',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        );
-                      }).toList(),
-                    ),
+                    title: Text(
+                        'Physisician: ${physician.accountID} | ${physician.firstName}'),
                   ),
                 );
               },
