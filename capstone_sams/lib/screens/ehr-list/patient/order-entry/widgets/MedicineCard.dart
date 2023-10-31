@@ -1,6 +1,10 @@
 import 'package:capstone_sams/models/MedicineModel.dart';
+import 'package:capstone_sams/models/PatientModel.dart';
+import 'package:capstone_sams/models/PrescriptionModel.dart';
+import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/MedicineProvider.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/EditMedicineScreen.dart';
+import 'package:capstone_sams/providers/PrescriptionProvider.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/EditMedicineScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -10,9 +14,14 @@ import '../../../../../constants/theme/pallete.dart';
 
 class MedicineCard extends StatelessWidget {
   final Medicine medicine;
+  // final Prescription prescription;
+  final Patient patient;
   final int index;
 
-  MedicineCard({required this.medicine, required this.index});
+  MedicineCard(
+      {required this.medicine, required this.patient,
+      // required this.prescription, 
+      required this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +59,7 @@ class MedicineCard extends StatelessWidget {
                 ),
                 SizedBox(height: 5),
                 Text(
-                  '${medicine.name.toString()}',
+                  '${medicine.drugName.toString()}',
                   style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 5),
@@ -92,13 +101,17 @@ class MedicineCard extends StatelessWidget {
       children: [
         ElevatedButton.icon(
           onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) => EditMedicineScreen(
-                medicine: medicine,
-                index: index,
-              ),
-            );
+             
+            // showDialog(
+            //   context: context,
+            //   builder: (context) => EditMedicineScreen(
+            //     medicine: medicine,
+            //     patient: patient,
+            //     index: index,
+            //     // prescription: prescription,
+            //     // presNum: prescriptionProvider.presNum,
+            //   ),
+            // );
           },
           icon: FaIcon(
             FontAwesomeIcons.pen,
@@ -151,13 +164,17 @@ class MedicineCard extends StatelessWidget {
               ),
             ),
             onTap: () {
-              showDialog(
-                context: context,
-                builder: (context) => EditMedicineScreen(
-                  medicine: medicine,
-                  index: index,
-                ),
-              );
+               
+              // showDialog(
+              //   context: context,
+              //   builder: (context) => EditMedicineScreen(
+              //     medicine: medicine,
+              //     patient: patient,
+              //     index: index,
+              //     // prescription: prescription,
+              //     // presNum: prescriptionProvider.presNum,
+              //   ),
+              // );
             },
           ),
         ),

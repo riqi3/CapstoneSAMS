@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:capstone_sams/models/AccountModel.dart';
+import 'package:capstone_sams/models/MedicineModel.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:flutter/foundation.dart';
 
@@ -18,6 +19,7 @@ class PrescriptionProvider with ChangeNotifier {
   // List? get accounts => _prescription?.accounts;
   // String? get acc => _prescription?.account;
   // String? get patientID => _prescription?.patientID;
+  List<Prescription> get prescripts => _prescriptions;
   int? get presNum => _prescription?.presNum;
   // List? get medicines => _prescription?.medicines;
   String? get acc => _prescription?.account;
@@ -37,7 +39,7 @@ class PrescriptionProvider with ChangeNotifier {
 
     final response = await http.get(
       Uri.parse(
-        _getUrl('cpoe/prescription/get-patient/$patientID/'),
+        _getUrl('cpoe/prescription/get-patient/${patientID}/'),
       ),
       headers: headers,
     );
@@ -63,38 +65,60 @@ class PrescriptionProvider with ChangeNotifier {
     }
   }
 
-  Future<void> fetchAccountPrescriptions(String accountID) async {
+  Future updatePrescription(
+      Prescription prescription, Medicine medicine, String patientID) async {
     final headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     };
-
-    final response = await http.get(
-      Uri.parse(
-        _getUrl('cpoe/prescription/get-account/$accountID/'),
-      ),
-      headers: headers,
-    );
+    final response = await http.put(
+        Uri.parse(
+          _getUrl(
+              'cpoe/prescription/get-prescription/update/${prescription.presNum}'),
+        ),
+        headers: headers,
+        body: jsonEncode(medicine.toJson()));
     await Future.delayed(Duration(milliseconds: 3000));
-    if (response.statusCode == 200) {
-      final items = json.decode(response.body);
-      List<Prescription> newPrescriptions = items["prescriptions"]
-          .map<Prescription>((json) => Prescription.fromJson(json))
-          .toList();
-      List<Account> newAccounts = items["accounts"]
-          .map<Account>((json) => Account.fromJson(json))
-          .toList();
 
-      if (!listEquals(_prescriptions, newPrescriptions) ||
-          !listEquals(_physicians, newAccounts)) {
-        _prescriptions = newPrescriptions;
-        _physicians = newAccounts;
-        notifyListeners();
-      }
+    if (response.statusCode == 204) {
+      fetchPrescriptions(patientID);
+      notifyListeners();
     } else {
-      throw Exception(
-          'Failed to fetch account created prescriptions ${jsonDecode(response.body)}');
+      throw Exception('Failed to update prescription');
     }
   }
+
+  // Future<void> fetchAccountPrescriptions(String accountID) async {
+  //   final headers = <String, String>{
+  //     'Content-Type': 'application/json; charset=UTF-8',
+  //   };
+
+  //   final response = await http.get(
+  //     Uri.parse(
+  //       _getUrl('cpoe/prescription/get-account/$accountID/'),
+  //     ),
+  //     headers: headers,
+  //   );
+  //   await Future.delayed(Duration(milliseconds: 3000));
+  //   if (response.statusCode == 200) {
+  //     final items = json.decode(response.body);
+  //     List<Prescription> newPrescriptions = items["prescriptions"]
+  //         .map<Prescription>((json) => Prescription.fromJson(json))
+  //         .toList();
+  //     List<Account> newAccounts = items["accounts"]
+  //         .map<Account>((json) => Account.fromJson(json))
+  //         .toList();
+
+  //     if (!listEquals(_prescriptions, newPrescriptions) ||
+  //         !listEquals(_physicians, newAccounts)) {
+  //       _prescriptions = newPrescriptions;
+  //       _physicians = newAccounts;
+  //       notifyListeners();
+  //     }
+  //   } else {
+  //     throw Exception(
+  //         'Failed to fetch account created prescriptions ${jsonDecode(response.body)}');
+  //   }
+  // }
 
   // Future<void> fetchPrescriptions(String patientID) async {
   //   final headers = <String, String>{

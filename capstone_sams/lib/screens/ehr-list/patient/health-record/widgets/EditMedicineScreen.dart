@@ -1,6 +1,12 @@
 import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/models/MedicineModel.dart';
+import 'package:capstone_sams/models/PatientModel.dart';
+import 'package:capstone_sams/models/PrescriptionModel.dart';
+import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/MedicineProvider.dart';
+import 'package:capstone_sams/providers/PatientProvider.dart';
+import 'package:capstone_sams/providers/PrescriptionProvider.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/health-record/HealthRecordScreen.dart';
 
 import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -12,9 +18,17 @@ import '../../../../../constants/theme/pallete.dart';
 
 class EditMedicineScreen extends StatefulWidget {
   final Medicine medicine;
+  late Prescription? prescription;
+  late int? presNum;
+  final Patient patient;
   final int index;
 
-  EditMedicineScreen({required this.medicine, required this.index});
+  EditMedicineScreen(
+      {required this.medicine,
+      required this.prescription,
+      required this.presNum,
+      required this.patient,
+      required this.index});
 
   @override
   _EditMedicineScreenState createState() => _EditMedicineScreenState();
@@ -22,16 +36,57 @@ class EditMedicineScreen extends StatefulWidget {
 
 class _EditMedicineScreenState extends State<EditMedicineScreen> {
   final _formKey = GlobalKey<FormState>();
-  late Medicine _editedMedicine;
-  DateTime? _selectedStartDate;
-  DateTime? _selectedEndDate;
+  late String? name;
+  late String? drugId;
+  late String? drugCode;
+  late String? instructions;
+  late DateTime? selectedStartDate;
+  late DateTime? selectedEndDate;
+  late int? quantity;
+
+  late List<dynamic>? medicines;
 
   @override
   void initState() {
     super.initState();
-    _editedMedicine = Medicine.copy(widget.medicine);
-    _selectedStartDate = _editedMedicine.startDate;
-    _selectedEndDate = _editedMedicine.endDate;
+    name = widget.medicine.drugName;
+    drugId = widget.medicine.drugId;
+    drugCode = widget.medicine.drugCode;
+    instructions = widget.medicine.instructions;
+    selectedStartDate = widget.medicine.startDate;
+    selectedEndDate = widget.medicine.endDate;
+    quantity = widget.medicine.quantity;
+    medicines = widget.prescription?.medicines;
+  }
+
+  void savePrescription() {
+    final isValid = _formKey.currentState!.validate();
+
+    if (!isValid) {
+      return;
+    } else {
+      final provider =
+          Provider.of<PrescriptionProvider>(context, listen: false);
+      provider.updatePrescription(
+        Prescription(
+          presNum: widget.presNum,
+          medicines: medicines,
+          account: widget.prescription?.account,
+          patientID: widget.prescription?.patientID,
+        ),
+        Medicine(
+          drugName: name,
+          drugId: drugId,
+          drugCode: drugCode,
+          instructions: instructions,
+          startDate: selectedStartDate,
+          endDate: selectedEndDate,
+          quantity: quantity,
+        ),
+        widget.patient.patientId,
+      );
+      Navigator.of(context).pop();
+    }
   }
 
   @override
@@ -75,14 +130,12 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
                             return models;
                           },
                           itemAsString: (Medicine medicine) =>
-                              medicine.name.toString(),
-                          onChanged: (Medicine? data) {
-                            _editedMedicine.drugId = data?.drugId.toString();
-                            _editedMedicine.name = data?.name.toString();
-                            _editedMedicine.drugCode =
-                                data?.drugCode.toString();
-                            print('EDIT MEDICATION: ${data?.name.toString()}');
-                          },
+                              medicine.drugName.toString(),
+                          onChanged: (Medicine? data) => setState(() {
+                            this.drugId = data?.drugId.toString();
+                            this.name = data?.drugName.toString();
+                            this.drugCode = data?.drugCode.toString();
+                          }),
                         ),
                         SizedBox(height: 10),
                         Flexible(
@@ -100,8 +153,9 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
                             minLines: 4,
                             maxLines: null,
                             keyboardType: TextInputType.multiline,
-                            onSaved: (value) =>
-                                _editedMedicine.instructions = value,
+                            onChanged: (value) => setState(() {
+                              this.instructions = value;
+                            }),
                           ),
                         ),
                         SizedBox(height: 10),
@@ -131,14 +185,14 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
                                   ).then((selectedDate) {
                                     if (selectedDate != null) {
                                       setState(() {
-                                        _selectedStartDate = selectedDate;
+                                        selectedStartDate = selectedDate;
                                       });
                                     }
                                   });
                                 },
                                 controller: TextEditingController(
-                                  text: _selectedStartDate != null
-                                      ? _selectedStartDate!
+                                  text: selectedStartDate != null
+                                      ? selectedStartDate!
                                           .toLocal()
                                           .toString()
                                           .split(' ')[0]
@@ -165,22 +219,22 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
                                   showDatePicker(
                                     context: context,
                                     initialDate:
-                                        _selectedStartDate ?? DateTime.now(),
+                                        selectedStartDate ?? DateTime.now(),
                                     firstDate:
-                                        _selectedStartDate ?? DateTime.now(),
+                                        selectedStartDate ?? DateTime.now(),
                                     lastDate:
                                         DateTime.now().add(Duration(days: 365)),
                                   ).then((selectedDate) {
                                     if (selectedDate != null) {
                                       setState(() {
-                                        _selectedEndDate = selectedDate;
+                                        selectedEndDate = selectedDate;
                                       });
                                     }
                                   });
                                 },
                                 controller: TextEditingController(
-                                  text: _selectedEndDate != null
-                                      ? _selectedEndDate!
+                                  text: selectedEndDate != null
+                                      ? selectedEndDate!
                                           .toLocal()
                                           .toString()
                                           .split(' ')[0]
@@ -206,8 +260,9 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
                                   fillColor: Pallete.palegrayColor,
                                 ),
                                 keyboardType: TextInputType.number,
-                                onSaved: (value) => _editedMedicine.quantity =
-                                    int.tryParse(value ?? ''),
+                                onChanged: (value) => setState(() {
+                                  this.quantity = int.tryParse(value);
+                                }),
                               ),
                             ),
                           ],
@@ -229,19 +284,30 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
                             SizedBox(width: 10),
                             ElevatedButton(
                               child: Text('Submit'),
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  _formKey.currentState!.save();
-                                  _editedMedicine.startDate =
-                                      _selectedStartDate;
-                                  _editedMedicine.endDate = _selectedEndDate;
-                                  Provider.of<MedicineProvider>(context,
-                                          listen: false)
-                                      .editMedicine(
-                                          widget.index, _editedMedicine);
-                                  Navigator.pop(context);
-                                }
-                              },
+                              onPressed: savePrescription,
+
+                              // () async {
+                              //   if (_formKey.currentState!.validate()) {
+                              //     _formKey.currentState!.save();
+                              //     this.selectedStartDate = selectedStartDate;
+                              //     this.selectedEndDate = selectedEndDate;
+                              //     Provider.of<MedicineProvider>(context,
+                              //         listen: false);
+                              //     // .editMedicine(
+                              //     //     widget.index, _editedMedicine);
+                              //     // Navigator.pop(context);
+                              //     var patient = await context
+                              //         .read<PatientProvider>()
+                              //         .fetchPatient(widget.index.toString());
+                              //     Navigator.of(context).push(
+                              //       MaterialPageRoute(
+                              //         builder: (context) => HealthRecordsScreen(
+                              //           patient: patient,
+                              //         ),
+                              //       ),
+                              //     );
+                              //   }
+                              // },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Pallete.mainColor,
                                 shape: RoundedRectangleBorder(

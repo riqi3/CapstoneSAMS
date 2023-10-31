@@ -1,4 +1,6 @@
+import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/providers/PatientProvider.dart';
+import 'package:capstone_sams/providers/PrescriptionProvider.dart';
 
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/api/api_service.dart';
@@ -51,7 +53,7 @@ class CpoeFormScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final medicineProvider = Provider.of<MedicineProvider>(context);
-
+ 
     return Scaffold(
       appBar: AppBar(
         title: Text('Analyze Page'),
@@ -157,7 +159,8 @@ class CpoeFormScreen extends StatelessWidget {
                         itemCount: medicineProvider.medicines.length,
                         itemBuilder: (ctx, index) => MedicineCard(
                           medicine: medicineProvider.medicines[index],
-                          index: index,
+                          patient: patient,
+                          index: index, 
                         ),
                       ),
                       SizedBox(height: 10),
@@ -188,18 +191,17 @@ class CpoeFormScreen extends StatelessWidget {
                   children: [
                     ElevatedButton(
                       onPressed: () async {
-                         var accountID = context.read<AccountProvider>().id;
+                        var accountID = context.read<AccountProvider>().id;
                         // final patientID =
                         //     context.read<PatientProvider>().fetchPatient(index.toString());
-                         
-                         var patient = await context
+
+                        var patient = await context
                             .read<PatientProvider>()
                             .fetchPatient(index.toString());
-                         var patientID = patient.patientId;
-                        var medicineProvider =
-                            context.read<MedicineProvider>();
-                        var success = await medicineProvider
-                            .saveToPrescription(accountID, patientID);
+                        var patientID = patient.patientId;
+                        var medicineProvider = context.read<MedicineProvider>();
+                        var success = await medicineProvider.saveToPrescription(
+                            accountID, patientID);
 
                         print('PATIENT $patientID ACCOUNT $accountID');
 
@@ -212,7 +214,7 @@ class CpoeFormScreen extends StatelessWidget {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => PatientTabsScreen(
-                                patient: patient, 
+                                patient: patient,
                                 index: index,
                               ),
                             ),

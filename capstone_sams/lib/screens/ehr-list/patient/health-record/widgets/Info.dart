@@ -4,9 +4,11 @@ import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/MedicineModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
+import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/MedicineProvider.dart';
+import 'package:capstone_sams/providers/PatientProvider.dart';
 import 'package:capstone_sams/providers/PrescriptionProvider.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/EditMedicineScreen.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/EditMedicineScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -29,13 +31,24 @@ class Info extends StatefulWidget {
 class _InfoState extends State<Info> {
   late Future<List<Prescription>> prescriptions;
   late Future<List<Account>> physicians;
+  // List<Prescription> _physicianPrescriptions = [];
 
   @override
   void initState() {
     super.initState();
     prescriptions = fetchPrescriptions();
     physicians = fetchPhysicians();
+    // _fetchWrittenPrescriptions();
   }
+
+  // Future<void> _fetchWrittenPrescriptions() async {
+  //   final provider = Provider.of<PrescriptionProvider>(context, listen: false);
+  //   final patientID = context.read<PatientProvider>().id;
+  //   await provider.fetchPrescriptions(patientID!);
+  //   setState(() {
+  //     _physicianPrescriptions = provider.prescripts;
+  //   });
+  // }
 
   Future<List<Prescription>> fetchPrescriptions() async {
     try {
@@ -122,8 +135,8 @@ class _InfoState extends State<Info> {
                             }).toList(),
                           ),
                           trailing: popupAction(
-                            index,
-                            widget.medicine,
+                            index, 
+                            prescription, 
                             medicineProvider,
                           ),
                         ),
@@ -137,8 +150,28 @@ class _InfoState extends State<Info> {
     );
   }
 
+  void editPrescription(
+      BuildContext context, Prescription prescription, int index, int? presNum ) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => EditMedicineScreen(
+          medicine: widget.medicine,
+          patient: widget.patient,
+          index: index,
+          prescription: prescription,
+          presNum: presNum,
+        ),
+      ),
+    );
+  }
+
   PopupMenuButton<dynamic> popupAction(
-      int index, Medicine medicine, MedicineProvider medicineProvider) {
+    int index,
+    // int? presNum,
+    Prescription prescription,
+    // Medicine medicine,
+    MedicineProvider medicineProvider,
+  ) {
     return PopupMenuButton(
       itemBuilder: (context) => [
         PopupMenuItem(
@@ -154,14 +187,16 @@ class _InfoState extends State<Info> {
               ),
             ),
             onTap: () {
-              print('${index} edit');
-              showDialog(
-                context: context,
-                builder: (context) => EditMedicineScreen(
-                  medicine: medicine,
-                  index: index,
-                ),
-              );
+              print('${prescription.presNum} edit');
+              editPrescription(context, prescription, index, prescription.presNum);
+              // showDialog(
+              //   context: context,
+              //   builder: (context) => EditMedicineScreen(
+              //     medicine: medicine,
+              //     patient: widget.patient,
+              //     index: index,
+              //   ),
+              // );
             },
           ),
         ),
@@ -176,7 +211,7 @@ class _InfoState extends State<Info> {
               style: TextStyle(color: Pallete.redColor),
             ),
             onTap: () {
-              print('${index} delete');
+              print('${prescription.presNum} delete');
               medicineProvider.removeMedicine(index);
             },
           ),

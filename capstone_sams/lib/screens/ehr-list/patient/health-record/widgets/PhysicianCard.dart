@@ -3,6 +3,7 @@ import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/MedicineModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
+import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/providers/PrescriptionProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/Info.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +11,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class PhysicianCard extends StatefulWidget {
-  final Patient patient;
-  const PhysicianCard({Key? key, required this.patient}) : super(key: key);
+  final Patient patient; 
+  const PhysicianCard({
+    Key? key,
+    required this.patient, 
+  }) : super(key: key);
 
   @override
   State<PhysicianCard> createState() => _PhysicianCardState();
@@ -82,8 +86,20 @@ class _PhysicianCardState extends State<PhysicianCard> {
                       press(context, widget.patient, physician);
                     },
                     child: ListTile(
-                      title: Text(
-                          'ID# ${physician.accountID} | ${physician.firstName} ${physician.lastName}'),
+                      title: Row(
+                        children: [
+                          Text(
+                            'ID# ${physician.accountID}',
+                            style: TextStyle(
+                              color: Pallete.mainColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            ' | ${physician.firstName} ${physician.lastName}',
+                          ),
+                        ],
+                      ),
                       trailing: FaIcon(
                         FontAwesomeIcons.chevronRight,
                         color: Pallete.mainColor,
@@ -145,7 +161,7 @@ class _PhysicianCardState extends State<PhysicianCard> {
             Info(
               patient: patient,
               medicine: medicine,
-              index: physician.accountID.toString(),
+              index: physician.accountID.toString(), 
             ),
           ],
         ),

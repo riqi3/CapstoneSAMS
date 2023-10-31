@@ -1,7 +1,10 @@
+import 'package:capstone_sams/models/PrescriptionModel.dart';
+import 'package:capstone_sams/providers/PrescriptionProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/MedicationOrderSection.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/PatientInfoCard.dart';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../../constants/theme/sizing.dart';
 import '../../../../models/PatientModel.dart';
 
@@ -25,6 +28,7 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
     print('Patient ID: ${widget.patient.patientId}');
     return Scaffold(
       body: SingleChildScrollView(
@@ -41,7 +45,7 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen> {
             // PhysicianCard(patient: widget.patient),
             // Info(patient: widget.patient),
             MedicationOrderSection(
-              patient: widget.patient,
+              patient: widget.patient, 
             ),
             PatientInfoCard(
               patient: widget.patient,

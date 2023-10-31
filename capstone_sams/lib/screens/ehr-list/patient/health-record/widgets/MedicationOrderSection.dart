@@ -1,8 +1,10 @@
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
+import 'package:capstone_sams/providers/PrescriptionProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/PhysicianCard.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../../constants/theme/pallete.dart';
 import '../../../../../constants/theme/sizing.dart';
@@ -57,12 +59,13 @@ class _MedicationOrderSectionState extends State<MedicationOrderSection> {
                   bottomLeft: Radius.circular(Sizing.borderRadius)),
             ),
             padding: const EdgeInsets.only(
-              // vertical: Sizing.sectionSymmPadding * 2,
               left: Sizing.sectionSymmPadding,
               right: Sizing.sectionSymmPadding,
               bottom: Sizing.sectionSymmPadding,
             ),
-            child: PhysicianCard(patient: widget.patient),
+            child: PhysicianCard(
+              patient: widget.patient,
+            ),
           ),
         ),
       ],

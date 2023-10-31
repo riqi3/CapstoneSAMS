@@ -5,7 +5,7 @@ class Medicine {
   Patient? patient;
   String? drugId;
   String? drugCode;
-  String? name;
+  String? drugName;
   String? instructions;
   DateTime? startDate;
   DateTime? endDate;
@@ -15,7 +15,7 @@ class Medicine {
     this.patient,
     this.drugId,
     this.drugCode,
-    this.name,
+    this.drugName,
     this.instructions,
     this.startDate,
     this.endDate,
@@ -25,7 +25,7 @@ class Medicine {
   Medicine.copy(Medicine other) {
     patient = other.patient;
     drugId = other.drugId;
-    name = other.name;
+    drugName = other.drugName;
     instructions = other.instructions;
     startDate = other.startDate;
     endDate = other.endDate;
@@ -35,7 +35,7 @@ class Medicine {
   Map<String, dynamic> toJson() => {
         'drugId': drugId,
         'drugCode': drugCode,
-        'drugName': name,
+        'drugName': drugName,
         'instructions': instructions,
         'startDate': startDate?.toIso8601String(),
         'endDate': endDate?.toIso8601String(),
@@ -46,7 +46,7 @@ class Medicine {
     return Medicine(
       drugId: json['drugId'],
       drugCode: json['drugCode'],
-      name: json['drugName'] as String,
+      drugName: json['drugName'],
       instructions: json['instructions'],
       startDate: json['startDate'],
       endDate: json['endDate'],

@@ -85,12 +85,12 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                           return models;
                         },
                         itemAsString: (Medicine medicine) =>
-                            medicine.name.toString(),
+                            medicine.drugName.toString(),
                         onChanged: (Medicine? data) {
                           _medicine.drugId = data?.drugId.toString();
-                          _medicine.name = data?.name.toString();
+                          _medicine.drugName = data?.drugName.toString();
                           _medicine.drugCode = data?.drugCode.toString();
-                          print('ADD MEDICATION: ${data?.name.toString()}');
+                          print('ADD MEDICATION: ${data?.drugName.toString()}');
                         },
                       ),
                       SizedBox(height: 10),

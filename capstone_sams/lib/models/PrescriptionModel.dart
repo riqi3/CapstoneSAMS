@@ -1,5 +1,5 @@
 class Prescription {
-  final int presNum;
+  final int? presNum;
   final List<dynamic>? medicines;
   final String? account;
   // final int? health_record;
