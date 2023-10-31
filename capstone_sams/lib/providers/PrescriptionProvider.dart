@@ -86,4 +86,24 @@ class PrescriptionProvider with ChangeNotifier {
       throw Exception('Failed to update prescription');
     }
   }
+
+  Future removePrescription(Prescription prescription, String patientID) async {
+    final headers = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
+    final body = jsonEncode({'account': prescription.account});
+    final response = await http.delete(
+      Uri.parse(_getUrl(
+          'cpoe/prescription/get-prescription/delete/${prescription.presNum}')),
+      headers: headers,
+      body: body,
+    );
+    await Future.delayed(Duration(milliseconds: 3000));
+    if (response.statusCode == 204) {
+      fetchPrescriptions(patientID);
+    } else {
+      throw Exception(
+          'Failed to delete prescription ${jsonDecode(response.body)}');
+    }
+  }
 }

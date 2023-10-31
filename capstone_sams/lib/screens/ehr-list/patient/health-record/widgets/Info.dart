@@ -4,6 +4,7 @@ import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/MedicineModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
+import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/MedicineProvider.dart';
 import 'package:capstone_sams/providers/PrescriptionProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/EditMedicineScreen.dart';
@@ -150,6 +151,18 @@ class _InfoState extends State<Info> {
     );
   }
 
+  void deletePrescription(BuildContext context, Prescription prescription) {
+    // final accountID = context.read<AccountProvider>().id;
+    final provider = Provider.of<PrescriptionProvider>(context, listen: false);
+    provider.removePrescription(prescription, widget.patient.patientId);
+    Navigator.of(context).pop();
+
+    const snackBar = SnackBar(
+      content: Text('Deleted the prescription'),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   void editPrescription(BuildContext context, Prescription prescription,
       int index, int? presNum) {
     Navigator.of(context).push(
@@ -167,10 +180,8 @@ class _InfoState extends State<Info> {
 
   PopupMenuButton<dynamic> popupAction(
     int index,
-    // int? presNum,
     List<Prescription> prescriptionList,
     Prescription prescription,
-    // Medicine medicine,
     MedicineProvider medicineProvider,
   ) {
     return PopupMenuButton(
@@ -194,35 +205,7 @@ class _InfoState extends State<Info> {
                 editPrescription(
                     context, prescription, index, prescription.presNum);
               } else {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: Text('Select a prescription'),
-                    content: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: prescription.medicines!.map((medicine) {
-                        return InkWell(
-                          onTap: () {
-                            editPrescription(context, prescription, index,
-                                prescription.presNum);
-                          },
-                          child: ListTile(
-                            title: Text('${medicine["drugName"]}'),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                    actions: <Widget>[
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Text('Close'),
-                      ),
-                    ],
-                  ),
-                );
+                showPrescriptionDetails(context, prescription, index);
               }
             },
           ),
@@ -239,7 +222,8 @@ class _InfoState extends State<Info> {
             ),
             onTap: () {
               print('${prescription.presNum} delete');
-              medicineProvider.removeMedicine(index);
+              deletePrescription(context, prescription);
+              Navigator.pop(context); 
             },
           ),
         ),
@@ -247,27 +231,45 @@ class _InfoState extends State<Info> {
     );
   }
 
-  void showPrescriptionDetails(
-      BuildContext context, Prescription prescription) {
-    showDialog(
+  Future<dynamic> showPrescriptionDetails(
+    BuildContext context,
+    Prescription prescription,
+    int index,
+  ) {
+    return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Prescription Number: ${prescription.presNum}'),
+        title: Text('Select a prescription'),
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
-          children: prescription.medicines!.map((medicine) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Medicine: ${medicine["drugName"]}',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+          children: List.generate(
+            prescription.medicines!.length,
+            (medicineIndex) {
+              final medicine = prescription.medicines![medicineIndex];
+              return InkWell(
+                onTap: () {
+                  editPrescription(context, prescription, medicineIndex,
+                      prescription.presNum);
+                },
+                child: ListTile(
+                  title: Text('${medicine["drugName"]}'),
                 ),
-                // Add additional details of the medicine here if needed
-              ],
-            );
-          }).toList(),
+              );
+            },
+          ),
+
+          // prescription.medicines!.map((medicine) {
+          //   return InkWell(
+          //     onTap: () {
+          //       editPrescription(
+          //           context, prescription, index, prescription.presNum);
+          //     },
+          //     child: ListTile(
+          //       title: Text('${medicine["drugName"]}'),
+          //     ),
+          //   );
+          // }).toList(),
         ),
         actions: <Widget>[
           ElevatedButton(

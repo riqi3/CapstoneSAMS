@@ -11,10 +11,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class PhysicianCard extends StatefulWidget {
-  final Patient patient; 
+  final Patient patient;
   const PhysicianCard({
     Key? key,
-    required this.patient, 
+    required this.patient,
   }) : super(key: key);
 
   @override
@@ -161,7 +161,7 @@ class _PhysicianCardState extends State<PhysicianCard> {
             Info(
               patient: patient,
               medicine: medicine,
-              index: physician.accountID.toString(), 
+              index: physician.accountID.toString(),
             ),
           ],
         ),

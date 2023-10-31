@@ -85,8 +85,8 @@ class CommentView(viewsets.ModelViewSet):
             comment = Comment.objects.get(pk = comNum)
             comment.delete()
             data_log = Data_Log.objects.create(
-                event = f"{comment.account.username} deleted personal note code {comNum}",
-                type = "User Deleted Personal Note",
+                event = f"{comment.account.username} deleted comment code {comNum}",
+                type = "User Deleted Personal Prescription",
                 account = comment.account 
             )
             return Response({"message": "Comment successfully deleted"}, status=status.HTTP_204_NO_CONTENT)
@@ -212,6 +212,22 @@ class PrescriptionView(viewsets.ViewSet):
         except Exception as e:
             print(e)
             return Response({"message": "Failed to update prescription", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+    @api_view(['DELETE'])
+    def delete_prescription(request, presNum):
+        try:
+            prescription = Prescription.objects.get(presNum = presNum)
+            data_log = Data_Log.objects.create(
+                event = f"{prescription.account.username} deleted prescription code {prescription}",
+                type = "User Deleted Prescription",
+                account = prescription.account 
+            )
+            prescription.delete()
+            return Response({"message": "Prescription successfully deleted"}, status=status.HTTP_204_NO_CONTENT)
+        except Exception as e:
+             return Response({"message": "Failed to delete prescription", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
     # @api_view(['PUT'])
     # def update_prescription(request, presNum):

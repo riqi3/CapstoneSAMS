@@ -66,16 +66,9 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
     if (!isValid) {
       return;
     } else {
-      final provider =
-          Provider.of<PrescriptionProvider>(context, listen: false);
-      provider.updatePrescription(
-        Prescription(
-          presNum: widget.presNum,
-          medicines: medicines,
-          account: widget.prescription?.account,
-          patientID: widget.prescription?.patientID,
-        ),
-        Medicine(
+      if (widget.prescription != null && medicines != null) {
+        // Assuming 'index' refers to the index of the medicine being edited within the prescription's medicines list.
+        medicines![widget.index] = Medicine(
           drugId: drugId,
           endDate: selectedEndDate,
           drugCode: drugCode,
@@ -83,24 +76,83 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
           quantity: quantity,
           startDate: selectedStartDate,
           instructions: instructions,
-        ),
-        widget.patient.patientId,
-      );
-      // Navigator.of(context).pop();
+        );
+
+        // Create a new Prescription object with the modified medicines list
+        final updatedPrescription = Prescription(
+          presNum: widget.prescription!.presNum,
+          medicines: medicines,
+          account: widget.prescription!.account,
+          patientID: widget.prescription!.patientID,
+        );
+
+        // Update the prescription with the modified medicines list
+        final provider =
+            Provider.of<PrescriptionProvider>(context, listen: false);
+        provider.updatePrescription(
+          updatedPrescription,
+          medicines![widget.index],
+          // Medicine(
+          //   drugId: drugId,
+          //   endDate: selectedEndDate,
+          //   drugCode: drugCode,
+          //   drugName: name,
+          //   quantity: quantity,
+          //   startDate: selectedStartDate,
+          //   instructions: instructions,
+          // ),
+          widget.patient.patientId,
+        );
+      }
+
+      // Navigate back to the previous screen or wherever required
       Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => PatientTabsScreen(
                   patient: widget.patient,
                   index: widget.index,
-                )
-            // HealthRecordsScreen(
-            //   patient: widget.patient,
-            // ),
-            ),
+                )),
       );
     }
   }
+
+  // void savePrescription() {
+  //   final isValid = _formKey.currentState!.validate();
+
+  //   if (!isValid) {
+  //     return;
+  //   } else {
+  //     final provider =
+  //         Provider.of<PrescriptionProvider>(context, listen: false);
+  //     provider.updatePrescription(
+  //       Prescription(
+  //         presNum: widget.presNum,
+  //         medicines: medicines,
+  //         account: widget.prescription?.account,
+  //         patientID: widget.prescription?.patientID,
+  //       ),
+  //       Medicine(
+  //         drugId: drugId,
+  //         endDate: selectedEndDate,
+  //         drugCode: drugCode,
+  //         drugName: name,
+  //         quantity: quantity,
+  //         startDate: selectedStartDate,
+  //         instructions: instructions,
+  //       ),
+  //       widget.patient.patientId,
+  //     );
+  // Navigator.push(
+  //   context,
+  //   MaterialPageRoute(
+  //       builder: (context) => PatientTabsScreen(
+  //             patient: widget.patient,
+  //             index: widget.index,
+  //           )),
+  // );
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -298,29 +350,6 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
                             ElevatedButton(
                               child: Text('Submit'),
                               onPressed: savePrescription,
-
-                              // () async {
-                              //   if (_formKey.currentState!.validate()) {
-                              //     _formKey.currentState!.save();
-                              //     this.selectedStartDate = selectedStartDate;
-                              //     this.selectedEndDate = selectedEndDate;
-                              //     Provider.of<MedicineProvider>(context,
-                              //         listen: false);
-                              //     // .editMedicine(
-                              //     //     widget.index, _editedMedicine);
-                              //     // Navigator.pop(context);
-                              //     var patient = await context
-                              //         .read<PatientProvider>()
-                              //         .fetchPatient(widget.index.toString());
-                              //     Navigator.of(context).push(
-                              //       MaterialPageRoute(
-                              //         builder: (context) => HealthRecordsScreen(
-                              //           patient: patient,
-                              //         ),
-                              //       ),
-                              //     );
-                              //   }
-                              // },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Pallete.mainColor,
                                 shape: RoundedRectangleBorder(
