@@ -177,9 +177,13 @@ class PrescriptionView(viewsets.ViewSet):
         try:
             prescription_data = json.loads(request.body)
             prescription = Prescription.objects.get(pk=presNum)
-            prescription.medicines = prescription_data 
+            prescription.medicines = prescription_data
+            medicines = []
+            medicines.append(prescription_data)
+            prescription.medicines = medicines 
             prescription.save()
-            accountID = prescription_data['account']
+            # accountID = prescription_data['account']
+            accountID = prescription_data['prescriptions']['account']
             account = get_object_or_404(Account, pk=accountID) 
             data_log = Data_Log.objects.create(
                 event = f"{account.username} updated prescription",

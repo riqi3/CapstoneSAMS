@@ -75,17 +75,25 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
           patientID: widget.prescription?.patientID,
         ),
         Medicine(
-          drugName: name,
           drugId: drugId,
-          drugCode: drugCode,
-          instructions: instructions,
-          startDate: selectedStartDate,
           endDate: selectedEndDate,
+          drugCode: drugCode,
+          drugName: name,
           quantity: quantity,
+          startDate: selectedStartDate,
+          instructions: instructions,
         ),
         widget.patient.patientId,
       );
-      Navigator.of(context).pop();
+      // Navigator.of(context).pop();
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HealthRecordsScreen(
+            patient: widget.patient,
+          ),
+        ),
+      );
     }
   }
 

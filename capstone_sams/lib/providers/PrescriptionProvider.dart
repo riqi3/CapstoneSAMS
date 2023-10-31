@@ -66,7 +66,10 @@ class PrescriptionProvider with ChangeNotifier {
   }
 
   Future updatePrescription(
-      Prescription prescription, Medicine medicine, String patientID) async {
+    Prescription prescription,
+    Medicine medicine,
+    String patientID
+  ) async {
     final headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     };
