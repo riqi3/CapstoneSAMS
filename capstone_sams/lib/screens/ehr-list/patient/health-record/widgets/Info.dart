@@ -4,9 +4,7 @@ import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/MedicineModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
-import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/MedicineProvider.dart';
-import 'package:capstone_sams/providers/PatientProvider.dart';
 import 'package:capstone_sams/providers/PrescriptionProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/EditMedicineScreen.dart';
 import 'package:flutter/material.dart';
@@ -109,6 +107,7 @@ class _InfoState extends State<Info> {
               itemBuilder: (context, index) {
                 final medicineProvider =
                     Provider.of<MedicineProvider>(context, listen: false);
+
                 final prescription = prescriptionList[index];
                 return prescription.account == widget.index
                     ? Card(
@@ -135,8 +134,9 @@ class _InfoState extends State<Info> {
                             }).toList(),
                           ),
                           trailing: popupAction(
-                            index, 
-                            prescription, 
+                            index,
+                            prescriptionList,
+                            prescription,
                             medicineProvider,
                           ),
                         ),
@@ -150,8 +150,8 @@ class _InfoState extends State<Info> {
     );
   }
 
-  void editPrescription(
-      BuildContext context, Prescription prescription, int index, int? presNum ) {
+  void editPrescription(BuildContext context, Prescription prescription,
+      int index, int? presNum) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => EditMedicineScreen(
@@ -168,6 +168,7 @@ class _InfoState extends State<Info> {
   PopupMenuButton<dynamic> popupAction(
     int index,
     // int? presNum,
+    List<Prescription> prescriptionList,
     Prescription prescription,
     // Medicine medicine,
     MedicineProvider medicineProvider,
@@ -188,15 +189,41 @@ class _InfoState extends State<Info> {
             ),
             onTap: () {
               print('${prescription.presNum} edit');
-              editPrescription(context, prescription, index, prescription.presNum);
-              // showDialog(
-              //   context: context,
-              //   builder: (context) => EditMedicineScreen(
-              //     medicine: medicine,
-              //     patient: widget.patient,
-              //     index: index,
-              //   ),
-              // );
+
+              if (prescription.medicines?.length == 1) {
+                editPrescription(
+                    context, prescription, index, prescription.presNum);
+              } else {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text('Select a prescription'),
+                    content: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: prescription.medicines!.map((medicine) {
+                        return InkWell(
+                          onTap: () {
+                            editPrescription(context, prescription, index,
+                                prescription.presNum);
+                          },
+                          child: ListTile(
+                            title: Text('${medicine["drugName"]}'),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    actions: <Widget>[
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('Close'),
+                      ),
+                    ],
+                  ),
+                );
+              }
             },
           ),
         ),
@@ -217,6 +244,40 @@ class _InfoState extends State<Info> {
           ),
         ),
       ],
+    );
+  }
+
+  void showPrescriptionDetails(
+      BuildContext context, Prescription prescription) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Prescription Number: ${prescription.presNum}'),
+        content: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: prescription.medicines!.map((medicine) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Medicine: ${medicine["drugName"]}',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                // Add additional details of the medicine here if needed
+              ],
+            );
+          }).toList(),
+        ),
+        actions: <Widget>[
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Close'),
+          ),
+        ],
+      ),
     );
   }
 }

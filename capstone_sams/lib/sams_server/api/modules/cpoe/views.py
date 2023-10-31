@@ -182,18 +182,60 @@ class PrescriptionView(viewsets.ViewSet):
             medicines.append(prescription_data)
             prescription.medicines = medicines 
             prescription.save()
-            # accountID = prescription_data['account']
-            accountID = prescription_data['prescriptions']['account']
-            account = get_object_or_404(Account, pk=accountID) 
-            data_log = Data_Log.objects.create(
-                event = f"{account.username} updated prescription",
-                type = "User Updated Prescription",
-                account = account
-            )
+            prescriptions = prescription_data.get('prescriptions', [])
+        
+        # Loop through prescriptions to find the one matching presNum
+            for prescription in prescriptions:
+                if prescription.get('presNum') == presNum:
+                    accountID = prescription.get('account')
+                    account = get_object_or_404(Account, pk=accountID)
+                
+                # Use the account information for logging or other purposes
+                    data_log = Data_Log.objects.create(
+                        event=f"{account.username} updated prescription",
+                        type="User Updated Prescription",
+                        account=account
+                    )
+            # prescription_data = json.loads(request.body)
+            # prescription = Prescription.objects.get(pk=presNum)
+            # prescription.medicines = prescription_data["prescriptions"][0]["medicines"] 
+            # prescription.save()
+            # # accountID = prescription_data['account']
+            # accountID = prescription_data["accounts"][0]["accountID"]
+            # account = Account.objects.get(pk=accountID)
+            # data_log = Data_Log.objects.create(
+            #     event = f"{account.username} updated prescription",
+            #     type = "User Updated Prescription",
+            #     account = account
+            # )
             return Response({"message": "Prescription updated successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
             print(e)
             return Response({"message": "Failed to update prescription", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    # @api_view(['PUT'])
+    # def update_prescription(request, presNum):
+    #     try:
+    #         prescription_data = json.loads(request.body)
+    #         prescription = Prescription.objects.get(pk=presNum)
+    #         prescription.medicines = prescription_data
+    #         medicines = []
+    #         medicines.append(prescription_data)
+    #         prescription.medicines = medicines 
+    #         prescription.save()
+    #         # accountID = prescription_data['account']
+    #         accountID = prescription_data['account']
+    #         print(accountID)
+    #         account = get_object_or_404(Account, pk=accountID) 
+    #         data_log = Data_Log.objects.create(
+    #             event = f"{account.username} updated prescription",
+    #             type = "User Updated Prescription",
+    #             account = account
+    #         )
+    #         return Response({"message": "Prescription updated successfully"}, status=status.HTTP_200_OK)
+    #     except Exception as e:
+    #         print(e)
+    #         return Response({"message": "Failed to update prescription", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
     @api_view(['GET'])

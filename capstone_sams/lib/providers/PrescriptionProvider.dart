@@ -66,10 +66,7 @@ class PrescriptionProvider with ChangeNotifier {
   }
 
   Future updatePrescription(
-    Prescription prescription,
-    Medicine medicine,
-    String patientID
-  ) async {
+      Prescription prescription, Medicine medicine, String patientID) async {
     final headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     };
@@ -82,112 +79,11 @@ class PrescriptionProvider with ChangeNotifier {
         body: jsonEncode(medicine.toJson()));
     await Future.delayed(Duration(milliseconds: 3000));
 
-    if (response.statusCode == 204) {
+    if (response.statusCode == 200) {
       fetchPrescriptions(patientID);
       notifyListeners();
     } else {
       throw Exception('Failed to update prescription');
     }
   }
-
-  // Future<void> fetchAccountPrescriptions(String accountID) async {
-  //   final headers = <String, String>{
-  //     'Content-Type': 'application/json; charset=UTF-8',
-  //   };
-
-  //   final response = await http.get(
-  //     Uri.parse(
-  //       _getUrl('cpoe/prescription/get-account/$accountID/'),
-  //     ),
-  //     headers: headers,
-  //   );
-  //   await Future.delayed(Duration(milliseconds: 3000));
-  //   if (response.statusCode == 200) {
-  //     final items = json.decode(response.body);
-  //     List<Prescription> newPrescriptions = items["prescriptions"]
-  //         .map<Prescription>((json) => Prescription.fromJson(json))
-  //         .toList();
-  //     List<Account> newAccounts = items["accounts"]
-  //         .map<Account>((json) => Account.fromJson(json))
-  //         .toList();
-
-  //     if (!listEquals(_prescriptions, newPrescriptions) ||
-  //         !listEquals(_physicians, newAccounts)) {
-  //       _prescriptions = newPrescriptions;
-  //       _physicians = newAccounts;
-  //       notifyListeners();
-  //     }
-  //   } else {
-  //     throw Exception(
-  //         'Failed to fetch account created prescriptions ${jsonDecode(response.body)}');
-  //   }
-  // }
-
-  // Future<void> fetchPrescriptions(String patientID) async {
-  //   final headers = <String, String>{
-  //     'Content-Type': 'application/json; charset=UTF-8',
-  //   };
-
-  //   final response = await http.get(
-  //     Uri.parse(
-  //       _getUrl('cpoe/prescription/get/${patientID}/'),
-  //     ),
-  //     headers: headers,
-  //   );
-  //   await Future.delayed(Duration(milliseconds: 3000));
-  //   if (response.statusCode == 200) {
-  //     final items = json.decode(response.body);
-  //     List<Prescription> prescriptions = items["prescriptions"]
-  //         .map<Prescription>((json) => Prescription.fromJson(json))
-  //         .toList();
-  //     List<Account> accounts = items["accounts"]
-  //         .map<Account>((json) => Account.fromJson(json))
-  //         .toList();
-  //     // print(prescriptions);
-  //     // print(accounts);
-  // _prescriptions = prescriptions;
-  // _physicians = accounts;
-  //     notifyListeners();
-
-  //   } else {
-  //     throw Exception(
-  //         'Failed to fetch prescriptions ${jsonDecode(response.body)}');
-  //   }
-  // }
-
-  // Future<List<Prescription>> fetchPrescriptions(String? patientID) async {
-  //   print('PATIENT ID: ${patientID}');
-  //   final response = await http
-  //       .get(Uri.parse('${Env.prefix}/cpoe/prescription/get/${patientID}/'));
-  //   await Future.delayed(Duration(milliseconds: 3000));
-  //   print('PRESCRIPTION RESPOSNSE CODE1: ${response.statusCode}');
-  //   if (response.statusCode == 200) {
-  //     final data = json.decode(response.body);
-
-  //     print('PRESCRIPTION RESPOSNSE CODE2: ${response.statusCode}');
-  //     List<Prescription> prescription = data.map<Prescription>((json) {
-  //       return Prescription.fromJson(json);
-  //     }).toList();
-  //     return prescription;
-  //   } else {
-  //     print('PRESCRIPTION RESPOSNSE CODE3: ${response.statusCode}');
-  //     throw Exception('Failed to fetch prescriptions');
-  //   }
-  // }
-
-  // Future<List<Prescription>> fetchPrescriptions(int recordNum) async {
-  //   final response = await http
-  //       .get(Uri.parse('${Env.prefix}/cpoe/prescription/get/${recordNum}/'));
-  //   print(response.statusCode);
-  //   await Future.delayed(Duration(milliseconds: 3000));
-  //   if (response.statusCode == 200) {
-  //     final data = json.decode(response.body);
-  //     List<Prescription> prescriptions = data.map<Prescription>((json) {
-  //       return Prescription.fromJson(json);
-  //     }).toList();
-  //     return prescriptions;
-  //   } else {
-  //     throw Exception('Failed to fetch prescriptions');
-  //   }
-  // }
 }

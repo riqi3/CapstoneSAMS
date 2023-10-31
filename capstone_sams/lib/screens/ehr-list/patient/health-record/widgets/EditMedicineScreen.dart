@@ -7,6 +7,7 @@ import 'package:capstone_sams/providers/MedicineProvider.dart';
 import 'package:capstone_sams/providers/PatientProvider.dart';
 import 'package:capstone_sams/providers/PrescriptionProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/HealthRecordScreen.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
 
 import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -89,10 +90,14 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => HealthRecordsScreen(
-            patient: widget.patient,
-          ),
-        ),
+            builder: (context) => PatientTabsScreen(
+                  patient: widget.patient,
+                  index: widget.index,
+                )
+            // HealthRecordsScreen(
+            //   patient: widget.patient,
+            // ),
+            ),
       );
     }
   }
