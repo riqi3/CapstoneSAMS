@@ -4,6 +4,7 @@ import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/MedicineModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
+import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/PrescriptionProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/EditMedicineScreen.dart';
@@ -121,11 +122,8 @@ class _InfoState extends State<Info> {
                               );
                             }).toList(),
                           ),
-                          trailing: popupAction(
-                            index,
-                            prescriptionList,
-                            prescription,
-                          ),
+                          trailing: popupActionWidget(
+                              index, prescriptionList, prescription),
                         ),
                       )
                     : Text('');
@@ -134,6 +132,23 @@ class _InfoState extends State<Info> {
           }
         },
       ),
+    );
+  }
+
+  PopupMenuButton<dynamic> popupActionWidget(int index,
+      List<Prescription> prescriptionList, Prescription prescription) {
+    final accountProvider = Provider.of<AccountProvider>(context);
+    if (accountProvider.role == 'nurse') {
+      return nurseAction(
+        index,
+        prescriptionList,
+        prescription,
+      );
+    }
+    return physicianAction(
+      index,
+      prescriptionList,
+      prescription,
     );
   }
 
@@ -197,7 +212,42 @@ class _InfoState extends State<Info> {
     );
   }
 
-  PopupMenuButton<dynamic> popupAction(
+  PopupMenuButton<dynamic> nurseAction(
+    int index,
+    List<Prescription> prescriptionList,
+    Prescription prescription,
+  ) {
+    return PopupMenuButton(
+      itemBuilder: (context) => [
+        PopupMenuItem(
+          child: ListTile(
+            leading: FaIcon(
+              FontAwesomeIcons.trash,
+              color: Pallete.redColor,
+            ),
+            title: Text(
+              'sub',
+              style: TextStyle(
+                color: Pallete.redColor,
+              ),
+            ),
+            onTap: () {
+              print('${prescription.presNum} sub');
+
+              if (prescription.medicines?.length == 1) {
+                editPrescription(
+                    context, prescription, index, prescription.presNum);
+              } else {
+                subtractMedicineQuantity(context, prescription);
+              }
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  PopupMenuButton<dynamic> physicianAction(
     int index,
     List<Prescription> prescriptionList,
     Prescription prescription,
@@ -257,6 +307,44 @@ class _InfoState extends State<Info> {
     );
   }
 
+  Future<dynamic> subtractMedicineQuantity(
+      BuildContext context, Prescription prescription) {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Select a medicine to subtract'),
+        content: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: List.generate(
+            prescription.medicines!.length,
+            (medicineIndex) {
+              final medicine = prescription.medicines![medicineIndex];
+              return InkWell(
+                onTap: () {
+                  print('${medicine["drugName"]} ${medicineIndex}');
+                  editPrescription(context, prescription, medicineIndex,
+                      prescription.presNum);
+                },
+                child: ListTile(
+                  title: Text('${medicine["drugName"]}'),
+                ),
+              );
+            },
+          ),
+        ),
+        actions: <Widget>[
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<dynamic> editPrescriptionDetails(
       BuildContext context, Prescription prescription) {
     return showDialog(
@@ -273,8 +361,8 @@ class _InfoState extends State<Info> {
               return InkWell(
                 onTap: () {
                   print('${medicine["drugName"]} ${medicineIndex}');
-                  editPrescription(
-                      context, prescription, medicine, prescription.presNum);
+                  editPrescription(context, prescription, medicineIndex,
+                      prescription.presNum);
                 },
                 child: ListTile(
                   title: Text('${medicine["drugName"]}'),
@@ -333,6 +421,19 @@ class _InfoState extends State<Info> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class nurseAction extends StatelessWidget {
+  const nurseAction({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton(
+      itemBuilder: (context) => [],
     );
   }
 }
