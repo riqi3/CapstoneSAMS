@@ -48,8 +48,8 @@ class Medicine {
       drugCode: json['drugCode'],
       drugName: json['drugName'],
       instructions: json['instructions'],
-      startDate: json['startDate'],
-      endDate: json['endDate'],
+      startDate: json['startDate']!= null ? DateTime.parse(json['startDate']) : null,
+      endDate: json['endDate']!= null ? DateTime.parse(json['endDate']) : null,
       quantity: json['quantity'],
     );
   }

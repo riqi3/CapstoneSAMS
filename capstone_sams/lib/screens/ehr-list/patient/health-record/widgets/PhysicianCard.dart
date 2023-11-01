@@ -2,8 +2,7 @@ import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/MedicineModel.dart';
-import 'package:capstone_sams/models/PatientModel.dart';
-import 'package:capstone_sams/models/PrescriptionModel.dart';
+import 'package:capstone_sams/models/PatientModel.dart'; 
 import 'package:capstone_sams/providers/PrescriptionProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/Info.dart';
 import 'package:flutter/material.dart';
@@ -161,6 +160,7 @@ class _PhysicianCardState extends State<PhysicianCard> {
             Info(
               patient: patient,
               medicine: medicine,
+              physician: physician,
               index: physician.accountID.toString(),
             ),
           ],

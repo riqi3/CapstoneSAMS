@@ -177,37 +177,21 @@ class PrescriptionView(viewsets.ViewSet):
         try:
             prescription_data = json.loads(request.body)
             prescription = Prescription.objects.get(pk=presNum)
-            prescription.medicines = prescription_data
-            medicines = []
-            medicines.append(prescription_data)
-            prescription.medicines = medicines 
+            if 'medicines' in prescription_data:
+                prescription.medicines = prescription_data['medicines']
+            if 'account' in prescription_data:
+                account_id = prescription_data['account']
+                account = get_object_or_404(Account, pk=account_id)
+            if 'health_record' in prescription_data:
+                prescription.health_record_id = prescription_data['health_record']
+            if 'patient' in prescription_data:
+                prescription.patient_id = prescription_data['patient']
             prescription.save()
-            prescriptions = prescription_data.get('prescriptions', [])
-        
-        # Loop through prescriptions to find the one matching presNum
-            for prescription in prescriptions:
-                if prescription.get('presNum') == presNum:
-                    accountID = prescription.get('account')
-                    account = get_object_or_404(Account, pk=accountID)
-                
-                # Use the account information for logging or other purposes
-                    data_log = Data_Log.objects.create(
-                        event=f"{account.username} updated prescription",
-                        type="User Updated Prescription",
-                        account=account
-                    )
-            # prescription_data = json.loads(request.body)
-            # prescription = Prescription.objects.get(pk=presNum)
-            # prescription.medicines = prescription_data["prescriptions"][0]["medicines"] 
-            # prescription.save()
-            # # accountID = prescription_data['account']
-            # accountID = prescription_data["accounts"][0]["accountID"]
-            # account = Account.objects.get(pk=accountID)
-            # data_log = Data_Log.objects.create(
-            #     event = f"{account.username} updated prescription",
-            #     type = "User Updated Prescription",
-            #     account = account
-            # )
+            data_log = Data_Log.objects.create(
+                event=f"{account.username} updated prescription",
+                type="User Updated Prescription",
+                account=account
+                )
             return Response({"message": "Prescription updated successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
             print(e)
@@ -227,6 +211,31 @@ class PrescriptionView(viewsets.ViewSet):
             return Response({"message": "Prescription successfully deleted"}, status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
              return Response({"message": "Failed to delete prescription", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    @api_view(['DELETE'])
+    def delete_medicine(request, presNum, drugId):
+        try:
+            prescription = Prescription.objects.get(presNum = presNum)
+            medicines = prescription.medicines
+            medicine_index = None
+            for index, medicine in enumerate(medicines):
+                if medicine['drugId'] == drugId:
+                    medicine_index = index
+                    break
+
+            if medicine_index is not None: 
+                del medicines[medicine_index]
+                prescription.save()
+            data_log = Data_Log.objects.create(
+                event = f"{prescription.account.username} deleted medicine code {prescription}",
+                type = "User Deleted Medicine",
+                account = prescription.account 
+            )
+            # prescription.delete()
+            return Response({"message": "Medicine successfully deleted"}, status=status.HTTP_204_NO_CONTENT)
+        except Exception as e:
+             return Response({"message": "Failed to delete medicine", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
     # @api_view(['PUT'])

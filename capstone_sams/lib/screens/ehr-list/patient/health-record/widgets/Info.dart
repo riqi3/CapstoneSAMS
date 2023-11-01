@@ -4,8 +4,6 @@ import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/MedicineModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
-import 'package:capstone_sams/providers/AccountProvider.dart';
-import 'package:capstone_sams/providers/MedicineProvider.dart';
 import 'package:capstone_sams/providers/PrescriptionProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/EditMedicineScreen.dart';
 import 'package:flutter/material.dart';
@@ -14,11 +12,13 @@ import 'package:provider/provider.dart';
 
 class Info extends StatefulWidget {
   late Medicine medicine;
+  final Account physician;
   final Patient patient;
   final String index;
   Info(
       {Key? key,
       required this.patient,
+      required this.physician,
       required this.medicine,
       required this.index})
       : super(key: key);
@@ -30,24 +30,13 @@ class Info extends StatefulWidget {
 class _InfoState extends State<Info> {
   late Future<List<Prescription>> prescriptions;
   late Future<List<Account>> physicians;
-  // List<Prescription> _physicianPrescriptions = [];
 
   @override
   void initState() {
     super.initState();
     prescriptions = fetchPrescriptions();
     physicians = fetchPhysicians();
-    // _fetchWrittenPrescriptions();
   }
-
-  // Future<void> _fetchWrittenPrescriptions() async {
-  //   final provider = Provider.of<PrescriptionProvider>(context, listen: false);
-  //   final patientID = context.read<PatientProvider>().id;
-  //   await provider.fetchPrescriptions(patientID!);
-  //   setState(() {
-  //     _physicianPrescriptions = provider.prescripts;
-  //   });
-  // }
 
   Future<List<Prescription>> fetchPrescriptions() async {
     try {
@@ -106,9 +95,6 @@ class _InfoState extends State<Info> {
               physics: BouncingScrollPhysics(),
               itemCount: prescriptionList!.length,
               itemBuilder: (context, index) {
-                final medicineProvider =
-                    Provider.of<MedicineProvider>(context, listen: false);
-
                 final prescription = prescriptionList[index];
                 return prescription.account == widget.index
                     ? Card(
@@ -138,7 +124,6 @@ class _InfoState extends State<Info> {
                             index,
                             prescriptionList,
                             prescription,
-                            medicineProvider,
                           ),
                         ),
                       )
@@ -152,13 +137,25 @@ class _InfoState extends State<Info> {
   }
 
   void deletePrescription(BuildContext context, Prescription prescription) {
-    // final accountID = context.read<AccountProvider>().id;
     final provider = Provider.of<PrescriptionProvider>(context, listen: false);
     provider.removePrescription(prescription, widget.patient.patientId);
     Navigator.of(context).pop();
 
     const snackBar = SnackBar(
       content: Text('Deleted the prescription'),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  void deleteMedicine(
+      BuildContext context, Prescription prescription, String? medicine) {
+    final provider = Provider.of<PrescriptionProvider>(context, listen: false);
+    provider.removeMedicine(
+        prescription, widget.patient.patientId, widget.medicine.drugId);
+    Navigator.of(context).pop();
+
+    const snackBar = SnackBar(
+      content: Text('Deleted the medicine'),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
@@ -182,7 +179,6 @@ class _InfoState extends State<Info> {
     int index,
     List<Prescription> prescriptionList,
     Prescription prescription,
-    MedicineProvider medicineProvider,
   ) {
     return PopupMenuButton(
       itemBuilder: (context) => [
@@ -205,7 +201,7 @@ class _InfoState extends State<Info> {
                 editPrescription(
                     context, prescription, index, prescription.presNum);
               } else {
-                showPrescriptionDetails(context, prescription, index);
+                editPrescriptionDetails(context, prescription);
               }
             },
           ),
@@ -221,9 +217,14 @@ class _InfoState extends State<Info> {
               style: TextStyle(color: Pallete.redColor),
             ),
             onTap: () {
+              if (prescription.medicines?.length == 1) {
+                deletePrescription(context, prescription);
+              } else {
+                deletePrescriptionDetails(context, prescription);
+                // deleteMedicine(context, prescription, widget.medicine.drugId);
+              }
               print('${prescription.presNum} delete');
-              deletePrescription(context, prescription);
-              Navigator.pop(context); 
+              Navigator.pop(context);
             },
           ),
         ),
@@ -231,15 +232,12 @@ class _InfoState extends State<Info> {
     );
   }
 
-  Future<dynamic> showPrescriptionDetails(
-    BuildContext context,
-    Prescription prescription,
-    int index,
-  ) {
+  Future<dynamic> editPrescriptionDetails(
+      BuildContext context, Prescription prescription) {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Select a prescription'),
+        title: Text('Select a prescription to edit'),
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -249,6 +247,7 @@ class _InfoState extends State<Info> {
               final medicine = prescription.medicines![medicineIndex];
               return InkWell(
                 onTap: () {
+                  print('${medicine["drugName"]} ${medicineIndex}');
                   editPrescription(context, prescription, medicineIndex,
                       prescription.presNum);
                 },
@@ -258,18 +257,45 @@ class _InfoState extends State<Info> {
               );
             },
           ),
+        ),
+        actions: <Widget>[
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
 
-          // prescription.medicines!.map((medicine) {
-          //   return InkWell(
-          //     onTap: () {
-          //       editPrescription(
-          //           context, prescription, index, prescription.presNum);
-          //     },
-          //     child: ListTile(
-          //       title: Text('${medicine["drugName"]}'),
-          //     ),
-          //   );
-          // }).toList(),
+  Future<dynamic> deletePrescriptionDetails(
+      BuildContext context, Prescription prescription) {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Select a prescription to delete'),
+        content: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: List.generate(
+            prescription.medicines!.length,
+            (medicineIndex) {
+              final medicine = prescription.medicines![medicineIndex];
+              return InkWell(
+                onTap: () {
+                  print('${medicine["drugName"]} ${medicineIndex}');
+
+                  // deletePrescription(context, prescription);
+                  deleteMedicine(context, prescription, widget.medicine.drugId);
+                },
+                child: ListTile(
+                  title: Text('${medicine["drugName"]}'),
+                ),
+              );
+            },
+          ),
         ),
         actions: <Widget>[
           ElevatedButton(

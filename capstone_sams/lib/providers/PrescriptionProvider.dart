@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:capstone_sams/models/AccountModel.dart';
-import 'package:capstone_sams/models/MedicineModel.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:flutter/foundation.dart';
 
@@ -14,14 +13,8 @@ class PrescriptionProvider with ChangeNotifier {
   List<Account> _physicians = [];
   Prescription? _prescription;
   Prescription? get prescription => _prescription;
-  // int? get presNum => _prescription?.presNum;
-  // List? get presc => _prescription?.prescriptions;
-  // List? get accounts => _prescription?.accounts;
-  // String? get acc => _prescription?.account;
-  // String? get patientID => _prescription?.patientID;
   List<Prescription> get prescripts => _prescriptions;
   int? get presNum => _prescription?.presNum;
-  // List? get medicines => _prescription?.medicines;
   String? get acc => _prescription?.account;
   String? get patientID => _prescription?.patientID;
 
@@ -65,18 +58,19 @@ class PrescriptionProvider with ChangeNotifier {
     }
   }
 
-  Future updatePrescription(
-      Prescription prescription, Medicine medicine, String patientID) async {
+  Future updatePrescription(Prescription prescription, String patientID) async {
     final headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     };
+
     final response = await http.put(
-        Uri.parse(
-          _getUrl(
-              'cpoe/prescription/get-prescription/update/${prescription.presNum}'),
-        ),
-        headers: headers,
-        body: jsonEncode(medicine.toJson()));
+      Uri.parse(
+        _getUrl(
+            'cpoe/prescription/get-prescription/update/${prescription.presNum}'),
+      ),
+      headers: headers,
+      body: jsonEncode(prescription),
+    );
     await Future.delayed(Duration(milliseconds: 3000));
 
     if (response.statusCode == 200) {
@@ -104,6 +98,26 @@ class PrescriptionProvider with ChangeNotifier {
     } else {
       throw Exception(
           'Failed to delete prescription ${jsonDecode(response.body)}');
+    }
+  }
+
+  Future removeMedicine(
+      Prescription prescription, String patientID, String? drugId) async {
+    final headers = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
+    final body = jsonEncode({'account': prescription.account});
+    final response = await http.delete(
+      Uri.parse(_getUrl(
+          'cpoe/prescription/get-prescription/delete-medicine/${drugId}')),
+      headers: headers,
+      body: body,
+    );
+    await Future.delayed(Duration(milliseconds: 3000));
+    if (response.statusCode == 204) {
+      fetchPrescriptions(patientID);
+    } else {
+      throw Exception('Failed to delete medicine ${jsonDecode(response.body)}');
     }
   }
 }
