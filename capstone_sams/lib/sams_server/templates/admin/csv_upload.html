@@ -1,7 +1,7 @@
 {% extends 'admin/base.html' %}
 
 {% block content %}
-    <div>
+    <div class="container">
         <form id='bulk_upload' name='bulk_upload' action="." method="POST" enctype="multipart/form-data">
             
             {% csrf_token %}
@@ -59,6 +59,42 @@
           top: 0;
           padding: 10px;
           cursor: pointer;
+        }
+
+        .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        }
+
+        .form-table {
+        width: 50%;
+        max-width: 500px;
+        }
+
+        body {
+        /* display: flex; */
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        }
+
+        button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: rgb(26, 126, 71);
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        }
+
+        button:hover {
+        background-color: rgb(36, 179, 100);
         }
       </style>
       
