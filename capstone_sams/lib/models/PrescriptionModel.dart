@@ -35,9 +35,7 @@ class Prescription {
         medicines: json['medicines'],
         account: json['account'],
         patientID: json['patient'],
-        health_record: json['health_record'],
-        // prescriptions: json['prescriptions'],
-        // accounts: json['accounts'],
+        health_record: json['health_record'], 
         );
   }
 }

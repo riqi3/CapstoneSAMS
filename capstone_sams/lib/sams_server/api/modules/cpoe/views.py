@@ -217,25 +217,23 @@ class PrescriptionView(viewsets.ViewSet):
         try:
             prescription = Prescription.objects.get(presNum = presNum)
             medicines = prescription.medicines
-            medicine_index = None
-            for index, medicine in enumerate(medicines):
+            for medicine in medicines:
                 if medicine['drugId'] == drugId:
-                    medicine_index = index
-                    break
-
-            if medicine_index is not None: 
-                del medicines[medicine_index]
-                prescription.save()
+                    medicines.remove(medicine)
+                    prescription.save()
+                    return Response({"message": "Medicine successfully deleted"}, status=status.HTTP_204_NO_CONTENT)
             data_log = Data_Log.objects.create(
                 event = f"{prescription.account.username} deleted medicine code {prescription}",
                 type = "User Deleted Medicine",
                 account = prescription.account 
             )
-            # prescription.delete()
-            return Response({"message": "Medicine successfully deleted"}, status=status.HTTP_204_NO_CONTENT)
-        except Exception as e:
-             return Response({"message": "Failed to delete medicine", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            
+            return Response({"message": "Medicine with given drugId not found"}, status=status.HTTP_404_NOT_FOUND)
 
+        except Prescription.DoesNotExist:
+            return Response({"message": "Prescription not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"message": "Failed to delete medicine", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
     # @api_view(['PUT'])

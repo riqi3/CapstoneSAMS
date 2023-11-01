@@ -5,13 +5,14 @@ import 'package:capstone_sams/models/MedicineModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/providers/PrescriptionProvider.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/EditMedicineScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class Info extends StatefulWidget {
-  late Medicine medicine;
+  final Medicine medicine;
   final Account physician;
   final Patient patient;
   final String index;
@@ -139,7 +140,18 @@ class _InfoState extends State<Info> {
   void deletePrescription(BuildContext context, Prescription prescription) {
     final provider = Provider.of<PrescriptionProvider>(context, listen: false);
     provider.removePrescription(prescription, widget.patient.patientId);
-    Navigator.of(context).pop();
+    // Navigator.of(context).pop();
+    int? index = int.tryParse(widget.index);
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PatientTabsScreen(
+          patient: widget.patient,
+          index: index!,
+        ),
+      ),
+    );
 
     const snackBar = SnackBar(
       content: Text('Deleted the prescription'),
@@ -148,11 +160,21 @@ class _InfoState extends State<Info> {
   }
 
   void deleteMedicine(
-      BuildContext context, Prescription prescription, String? medicine) {
+      BuildContext context, Prescription prescription, String? drugId) {
     final provider = Provider.of<PrescriptionProvider>(context, listen: false);
-    provider.removeMedicine(
-        prescription, widget.patient.patientId, widget.medicine.drugId);
-    Navigator.of(context).pop();
+    provider.removeMedicine(prescription, widget.patient.patientId, drugId);
+
+    int? index = int.tryParse(widget.index);
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PatientTabsScreen(
+          patient: widget.patient,
+          index: index!,
+        ),
+      ),
+    );
 
     const snackBar = SnackBar(
       content: Text('Deleted the medicine'),
@@ -214,17 +236,20 @@ class _InfoState extends State<Info> {
             ),
             title: Text(
               'Delete',
-              style: TextStyle(color: Pallete.redColor),
+              style: TextStyle(
+                color: Pallete.redColor,
+              ),
             ),
             onTap: () {
+              print('${prescription.presNum} delete');
+
               if (prescription.medicines?.length == 1) {
                 deletePrescription(context, prescription);
               } else {
                 deletePrescriptionDetails(context, prescription);
+                // editPrescriptionDetails(context, prescription);
                 // deleteMedicine(context, prescription, widget.medicine.drugId);
               }
-              print('${prescription.presNum} delete');
-              Navigator.pop(context);
             },
           ),
         ),
@@ -248,8 +273,8 @@ class _InfoState extends State<Info> {
               return InkWell(
                 onTap: () {
                   print('${medicine["drugName"]} ${medicineIndex}');
-                  editPrescription(context, prescription, medicineIndex,
-                      prescription.presNum);
+                  editPrescription(
+                      context, prescription, medicine, prescription.presNum);
                 },
                 child: ListTile(
                   title: Text('${medicine["drugName"]}'),
@@ -282,13 +307,15 @@ class _InfoState extends State<Info> {
           children: List.generate(
             prescription.medicines!.length,
             (medicineIndex) {
+              // String? medIndex = medicineIndex.toString();
               final medicine = prescription.medicines![medicineIndex];
               return InkWell(
                 onTap: () {
-                  print('${medicine["drugName"]} ${medicineIndex}');
+                  print(
+                      '${medicine['drugId']} ${medicine["drugName"]} ${medicineIndex}');
 
                   // deletePrescription(context, prescription);
-                  deleteMedicine(context, prescription, widget.medicine.drugId);
+                  deleteMedicine(context, prescription, medicine['drugId']);
                 },
                 child: ListTile(
                   title: Text('${medicine["drugName"]}'),

@@ -109,7 +109,7 @@ class PrescriptionProvider with ChangeNotifier {
     final body = jsonEncode({'account': prescription.account});
     final response = await http.delete(
       Uri.parse(_getUrl(
-          'cpoe/prescription/get-prescription/delete-medicine/${drugId}')),
+          'cpoe/prescription/get-prescription-${prescription.presNum}/delete-medicine/${drugId}')),
       headers: headers,
       body: body,
     );

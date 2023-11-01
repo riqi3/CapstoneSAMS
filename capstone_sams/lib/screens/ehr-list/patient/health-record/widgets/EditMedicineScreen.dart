@@ -1,8 +1,8 @@
 import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/models/MedicineModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
-import 'package:capstone_sams/models/PrescriptionModel.dart'; 
-import 'package:capstone_sams/providers/PrescriptionProvider.dart'; 
+import 'package:capstone_sams/models/PrescriptionModel.dart';
+import 'package:capstone_sams/providers/PrescriptionProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
 
 import 'package:dio/dio.dart';
@@ -15,8 +15,8 @@ import '../../../../../constants/theme/pallete.dart';
 
 class EditMedicineScreen extends StatefulWidget {
   final Medicine medicine;
-  late Prescription? prescription;
-  late int? presNum;
+  final Prescription? prescription;
+  final int? presNum;
   final Patient patient;
   final int index;
 
@@ -55,70 +55,7 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
     quantity = widget.medicine.quantity;
     medicines = widget.prescription?.medicines;
   }
-
-  // void savePrescription() {
-  //   final isValid = _formKey.currentState!.validate();
-
-  //   if (!isValid) {
-  //     return;
-  //   } else {
-  //     if (medicines != null && widget.prescription != null) {
-  //       final selectedMedicineIndex = widget.index;
-  //       List<dynamic> combinedMedicines = [];
-  //       List<dynamic> updatedMedicines = List.from(medicines!);
-
-  //       if (selectedMedicineIndex >= 0 &&
-  //           selectedMedicineIndex < updatedMedicines.length) {
-  //         Medicine modifiedMedicine = Medicine(
-  //           drugId: drugId,
-  //           endDate: selectedEndDate,
-  //           drugCode: drugCode,
-  //           drugName: name,
-  //           quantity: quantity,
-  //           startDate: selectedStartDate,
-  //           instructions: instructions,
-  //         );
-
-  //         combinedMedicines.add(modifiedMedicine);
-  //         for (int i = 0; i < medicines!.length; i++) {
-  //           if (i != selectedMedicineIndex) {
-  //             combinedMedicines.add(medicines![i]);
-  //           }
-  //         }
-  //       }
-
-  //       final provider =
-  //           Provider.of<PrescriptionProvider>(context, listen: false);
-  //       provider.updatePrescription(
-  //         Prescription(
-  //           presNum: widget.presNum,
-  //           medicines: combinedMedicines,
-  //           account: widget.prescription?.account,
-  //           patientID: widget.prescription?.patientID,
-  //         ),
-  //         Medicine(
-  //           drugId: drugId,
-  //           endDate: selectedEndDate,
-  //           drugCode: drugCode,
-  //           drugName: name,
-  //           quantity: quantity,
-  //           startDate: selectedStartDate,
-  //           instructions: instructions,
-  //         ),
-  //         widget.patient.patientId,
-  //       );
-  //       Navigator.push(
-  //         context,
-  //         MaterialPageRoute(
-  //             builder: (context) => PatientTabsScreen(
-  //                   patient: widget.patient,
-  //                   index: widget.index,
-  //                 )),
-  //       );
-  //     }
-  //   }
-  // }
-
+ 
   void savePrescription() {
     final isValid = _formKey.currentState!.validate();
 
@@ -126,52 +63,52 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
       return;
     } else {
       // if (medicines != null && widget.prescription != null) {
-        final selectedMedicineIndex = widget.index;
+      final selectedMedicineIndex = widget.index;
 
-        List<dynamic> updatedMedicines = List.from(medicines!);
+      List<dynamic> updatedMedicines = List.from(medicines!);
 
-        if (selectedMedicineIndex >= 0 &&
-            selectedMedicineIndex < updatedMedicines.length) {
-          Medicine modifiedMedicine = Medicine(
-            drugId: drugId,
-            endDate: selectedEndDate,
-            drugCode: drugCode,
-            drugName: name,
-            quantity: quantity,
-            startDate: selectedStartDate,
-            instructions: instructions,
-          );
+      if (selectedMedicineIndex >= 0 &&
+          selectedMedicineIndex < updatedMedicines.length) {
+        Medicine modifiedMedicine = Medicine(
+          drugId: drugId,
+          endDate: selectedEndDate,
+          drugCode: drugCode,
+          drugName: name,
+          quantity: quantity,
+          startDate: selectedStartDate,
+          instructions: instructions,
+        );
 
-          updatedMedicines[selectedMedicineIndex] = modifiedMedicine;
-          print('list ${updatedMedicines}');
+        updatedMedicines[selectedMedicineIndex] = modifiedMedicine;
+        print('list ${updatedMedicines}');
 
-          final provider =
-              Provider.of<PrescriptionProvider>(context, listen: false);
-          provider.updatePrescription(
-            Prescription(
-              presNum: widget.presNum,
-              medicines: updatedMedicines,  
-              account: widget.prescription!.account,
-              patientID: widget.prescription!.patientID,
-              health_record: widget.prescription!.health_record,
-            ), 
-            widget.patient.patientId,
-          );
+        final provider =
+            Provider.of<PrescriptionProvider>(context, listen: false);
+        provider.updatePrescription(
+          Prescription(
+            presNum: widget.presNum,
+            medicines: updatedMedicines,
+            account: widget.prescription!.account,
+            patientID: widget.prescription!.patientID,
+            health_record: widget.prescription!.health_record,
+          ),
+          widget.patient.patientId,
+        );
 
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => PatientTabsScreen(
-                patient: widget.patient,
-                index: widget.index,
-              ),
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PatientTabsScreen(
+              patient: widget.patient,
+              index: widget.index,
             ),
-          );
-        }
+          ),
+        );
+      }
       // }
     }
   }
- 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
