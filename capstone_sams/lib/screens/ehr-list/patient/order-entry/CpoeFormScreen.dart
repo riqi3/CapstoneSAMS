@@ -187,7 +187,7 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
                         itemCount: medicineProvider.medicines.length,
                         itemBuilder: (ctx, index) => MedicineCard(
                           medicine: medicineProvider.medicines[index],
-                          patient: patient,
+                          patient: widget.patient,
                           index: index, 
                         ),
                       ),
