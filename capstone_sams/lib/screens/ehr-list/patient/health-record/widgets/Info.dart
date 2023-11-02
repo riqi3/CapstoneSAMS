@@ -213,10 +213,12 @@ class _InfoState extends State<Info> {
     );
   }
 
-  void prescriptionCounter(BuildContext context) {
+  void prescriptionCounter(BuildContext context, Prescription prescription) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => CounterScreen(),
+        builder: (context) => CounterScreen(
+          prescription: prescription,
+        ),
       ),
     );
   }
@@ -244,9 +246,7 @@ class _InfoState extends State<Info> {
               print('${prescription.presNum} sub');
 
               if (prescription.medicines?.length == 1) {
-                prescriptionCounter(context);
-                // editPrescription(
-                //     context, prescription, index, prescription.presNum);
+                prescriptionCounter(context, prescription);
               } else {
                 subtractMedicineQuantity(context, prescription);
               }
@@ -274,7 +274,7 @@ class _InfoState extends State<Info> {
                 onTap: () {
                   print('${medicine["drugName"]} ${medicineIndex}');
 
-                  prescriptionCounter(context);
+                  prescriptionCounter(context, prescription);
                 },
                 child: ListTile(
                   title: Text('${medicine["drugName"]}'),

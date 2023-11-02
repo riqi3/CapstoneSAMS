@@ -6,10 +6,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../constants/theme/pallete.dart';
 import '../constants/theme/sizing.dart';
 
-class TitleAppBar extends StatelessWidget {
-  const TitleAppBar({
+class SearchAppBar extends StatelessWidget {
+  const SearchAppBar({
     super.key,
-    required this.text,
     required this.iconColorLeading,
     required this.iconColorTrailing,
     required this.backgroundColor,
@@ -18,7 +17,6 @@ class TitleAppBar extends StatelessWidget {
 
   final Color backgroundColor, iconColorLeading, iconColorTrailing;
   final PreferredSize? bottom;
-  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -47,17 +45,8 @@ class TitleAppBar extends StatelessWidget {
           ),
         ),
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Flexible(
-              child: Text(
-                text,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            SizedBox(
-              width: 5,
-            ),
             SearchBarWidget(),
           ],
         ),

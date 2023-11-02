@@ -55,7 +55,7 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
     quantity = widget.medicine.quantity;
     medicines = widget.prescription?.medicines;
   }
- 
+
   void savePrescription() {
     final isValid = _formKey.currentState!.validate();
 
@@ -118,203 +118,262 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(Sizing.sectionSymmPadding),
-          child: Center(
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.8,
+          child: Container(
+            margin: EdgeInsets.symmetric(vertical: Sizing.sectionSymmPadding),
+            child: Material(
+              elevation: Sizing.cardElevation,
+              borderRadius: BorderRadius.all(
+                Radius.circular(Sizing.borderRadius),
+              ),
               child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        DropdownSearch<Medicine>(
-                          dropdownDecoratorProps: DropDownDecoratorProps(
-                            dropdownSearchDecoration:
-                                InputDecoration(labelText: "Medication"),
-                          ),
-                          clearButtonProps: ClearButtonProps(isVisible: true),
-                          popupProps: PopupProps.modalBottomSheet(
-                            showSearchBox: true,
-                            // showSelectedItems: true,
-                          ),
-                          asyncItems: (String filter) async {
-                            var response = await Dio().get(
-                              '${Env.prefix}/cpoe/medicines/',
-                              queryParameters: {"filter": filter},
-                            );
-                            // var models = Medicine.fromJson(response.data);
-                            var models = List<Medicine>.from(response.data
-                                .map((json) => Medicine.fromJson(json)));
-                            return models;
-                          },
-                          itemAsString: (Medicine medicine) =>
-                              medicine.drugName.toString(),
-                          onChanged: (Medicine? data) => setState(() {
-                            this.drugId = data?.drugId.toString();
-                            this.name = data?.drugName.toString();
-                            this.drugCode = data?.drugCode.toString();
-                          }),
-                        ),
-                        SizedBox(height: 10),
-                        Flexible(
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'Instructions',
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Pallete.paleblueColor,
-                                ),
-                              ),
-                              filled: true,
-                              fillColor: Pallete.palegrayColor,
-                            ),
-                            minLines: 4,
-                            maxLines: null,
-                            keyboardType: TextInputType.multiline,
-                            onChanged: (value) => setState(() {
-                              this.instructions = value;
-                            }),
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Row(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Pallete.mainColor,
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(Sizing.borderRadius),
+                          topLeft: Radius.circular(Sizing.borderRadius)),
+                    ),
+                    alignment: Alignment.centerLeft,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: Sizing.sectionSymmPadding),
+                    width: MediaQuery.of(context).size.width,
+                    height: Sizing.cardContainerHeight,
+                    child: Text(
+                      'Edit Medication Form',
+                      style: TextStyle(
+                          color: Pallete.whiteColor,
+                          fontSize: Sizing.header3,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  Material(
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(Sizing.borderRadius),
+                        bottomRight: Radius.circular(Sizing.borderRadius)),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        color: Pallete.whiteColor,
+                        borderRadius: BorderRadius.only(
+                            bottomRight: Radius.circular(Sizing.borderRadius),
+                            bottomLeft: Radius.circular(Sizing.borderRadius)),
+                      ),
+                      padding: const EdgeInsets.only(
+                        left: Sizing.sectionSymmPadding,
+                        right: Sizing.sectionSymmPadding,
+                        bottom: Sizing.sectionSymmPadding,
+                      ),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            Expanded(
-                              child: TextFormField(
-                                decoration: InputDecoration(
-                                  labelText: 'Start Date',
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Pallete.paleblueColor,
+                            Form(
+                              key: _formKey,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  DropdownSearch<Medicine>(
+                                    dropdownDecoratorProps:
+                                        DropDownDecoratorProps(
+                                      dropdownSearchDecoration: InputDecoration(
+                                          labelText: "Medication"),
+                                    ),
+                                    clearButtonProps:
+                                        ClearButtonProps(isVisible: true),
+                                    popupProps: PopupProps.modalBottomSheet(
+                                      showSearchBox: true,
+                                      // showSelectedItems: true,
+                                    ),
+                                    asyncItems: (String filter) async {
+                                      var response = await Dio().get(
+                                        '${Env.prefix}/cpoe/medicines/',
+                                        queryParameters: {"filter": filter},
+                                      );
+                                      // var models = Medicine.fromJson(response.data);
+                                      var models = List<Medicine>.from(
+                                          response.data.map((json) =>
+                                              Medicine.fromJson(json)));
+                                      return models;
+                                    },
+                                    itemAsString: (Medicine medicine) =>
+                                        medicine.drugName.toString(),
+                                    onChanged: (Medicine? data) => setState(() {
+                                      this.drugId = data?.drugId.toString();
+                                      this.name = data?.drugName.toString();
+                                      this.drugCode = data?.drugCode.toString();
+                                    }),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Flexible(
+                                    child: TextFormField(
+                                      decoration: InputDecoration(
+                                        labelText: 'Instructions',
+                                        border: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Pallete.paleblueColor,
+                                          ),
+                                        ),
+                                        filled: true,
+                                        fillColor: Pallete.palegrayColor,
+                                      ),
+                                      minLines: 4,
+                                      maxLines: null,
+                                      keyboardType: TextInputType.multiline,
+                                      onChanged: (value) => setState(() {
+                                        this.instructions = value;
+                                      }),
                                     ),
                                   ),
-                                  filled: true,
-                                  fillColor: Pallete.palegrayColor,
-                                  suffixIcon: Icon(Icons.calendar_today),
-                                ),
-                                readOnly: true,
-                                onTap: () {
-                                  showDatePicker(
-                                    context: context,
-                                    initialDate: DateTime.now(),
-                                    firstDate: DateTime.now(),
-                                    lastDate:
-                                        DateTime.now().add(Duration(days: 365)),
-                                  ).then((selectedDate) {
-                                    if (selectedDate != null) {
-                                      setState(() {
-                                        selectedStartDate = selectedDate;
-                                      });
-                                    }
-                                  });
-                                },
-                                controller: TextEditingController(
-                                  text: selectedStartDate != null
-                                      ? selectedStartDate!
-                                          .toLocal()
-                                          .toString()
-                                          .split(' ')[0]
-                                      : '',
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            Expanded(
-                              child: TextFormField(
-                                decoration: InputDecoration(
-                                  labelText: 'End Date',
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Pallete.paleblueColor,
-                                    ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: TextFormField(
+                                          decoration: InputDecoration(
+                                            labelText: 'Start Date',
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Pallete.paleblueColor,
+                                              ),
+                                            ),
+                                            filled: true,
+                                            fillColor: Pallete.palegrayColor,
+                                            suffixIcon:
+                                                Icon(Icons.calendar_today),
+                                          ),
+                                          readOnly: true,
+                                          onTap: () {
+                                            showDatePicker(
+                                              context: context,
+                                              initialDate: DateTime.now(),
+                                              firstDate: DateTime.now(),
+                                              lastDate: DateTime.now()
+                                                  .add(Duration(days: 365)),
+                                            ).then((selectedDate) {
+                                              if (selectedDate != null) {
+                                                setState(() {
+                                                  selectedStartDate =
+                                                      selectedDate;
+                                                });
+                                              }
+                                            });
+                                          },
+                                          controller: TextEditingController(
+                                            text: selectedStartDate != null
+                                                ? selectedStartDate!
+                                                    .toLocal()
+                                                    .toString()
+                                                    .split(' ')[0]
+                                                : '',
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+                                      Expanded(
+                                        child: TextFormField(
+                                          decoration: InputDecoration(
+                                            labelText: 'End Date',
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Pallete.paleblueColor,
+                                              ),
+                                            ),
+                                            filled: true,
+                                            fillColor: Pallete.palegrayColor,
+                                            suffixIcon:
+                                                Icon(Icons.calendar_today),
+                                          ),
+                                          readOnly: true,
+                                          onTap: () {
+                                            showDatePicker(
+                                              context: context,
+                                              initialDate: selectedStartDate ??
+                                                  DateTime.now(),
+                                              firstDate: selectedStartDate ??
+                                                  DateTime.now(),
+                                              lastDate: DateTime.now()
+                                                  .add(Duration(days: 365)),
+                                            ).then((selectedDate) {
+                                              if (selectedDate != null) {
+                                                setState(() {
+                                                  selectedEndDate =
+                                                      selectedDate;
+                                                });
+                                              }
+                                            });
+                                          },
+                                          controller: TextEditingController(
+                                            text: selectedEndDate != null
+                                                ? selectedEndDate!
+                                                    .toLocal()
+                                                    .toString()
+                                                    .split(' ')[0]
+                                                : '',
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  filled: true,
-                                  fillColor: Pallete.palegrayColor,
-                                  suffixIcon: Icon(Icons.calendar_today),
-                                ),
-                                readOnly: true,
-                                onTap: () {
-                                  showDatePicker(
-                                    context: context,
-                                    initialDate:
-                                        selectedStartDate ?? DateTime.now(),
-                                    firstDate:
-                                        selectedStartDate ?? DateTime.now(),
-                                    lastDate:
-                                        DateTime.now().add(Duration(days: 365)),
-                                  ).then((selectedDate) {
-                                    if (selectedDate != null) {
-                                      setState(() {
-                                        selectedEndDate = selectedDate;
-                                      });
-                                    }
-                                  });
-                                },
-                                controller: TextEditingController(
-                                  text: selectedEndDate != null
-                                      ? selectedEndDate!
-                                          .toLocal()
-                                          .toString()
-                                          .split(' ')[0]
-                                      : '',
-                                ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: TextFormField(
+                                          decoration: InputDecoration(
+                                            labelText: 'Quantity',
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Pallete.paleblueColor,
+                                              ),
+                                            ),
+                                            filled: true,
+                                            fillColor: Pallete.palegrayColor,
+                                          ),
+                                          keyboardType: TextInputType.number,
+                                          onChanged: (value) => setState(() {
+                                            this.quantity = int.tryParse(value);
+                                          }),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      ElevatedButton(
+                                        child: Text('Cancel'),
+                                        onPressed: () => Navigator.pop(context),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Pallete.greyColor,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(15.0),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+                                      ElevatedButton(
+                                        child: Text('Submit'),
+                                        onPressed: savePrescription,
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Pallete.mainColor,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(15.0),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 10),
-                        Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: TextFormField(
-                                decoration: InputDecoration(
-                                  labelText: 'Quantity',
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Pallete.paleblueColor,
-                                    ),
-                                  ),
-                                  filled: true,
-                                  fillColor: Pallete.palegrayColor,
-                                ),
-                                keyboardType: TextInputType.number,
-                                onChanged: (value) => setState(() {
-                                  this.quantity = int.tryParse(value);
-                                }),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            ElevatedButton(
-                              child: Text('Cancel'),
-                              onPressed: () => Navigator.pop(context),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Pallete.greyColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15.0),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            ElevatedButton(
-                              child: Text('Submit'),
-                              onPressed: savePrescription,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Pallete.mainColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15.0),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ],

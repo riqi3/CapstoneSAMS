@@ -41,9 +41,7 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen> {
         scrollDirection: Axis.vertical,
         physics: BouncingScrollPhysics(),
         child: Column(
-          children: [
-            // PhysicianCard(patient: widget.patient),
-            // Info(patient: widget.patient),
+          children: [ 
             MedicationOrderSection(
               patient: widget.patient, 
             ),

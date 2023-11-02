@@ -5,6 +5,7 @@ import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/MedicineProvider.dart';
 import 'package:capstone_sams/providers/PrescriptionProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/EditMedicineScreen.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/EditMedicineDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -19,8 +20,9 @@ class MedicineCard extends StatelessWidget {
   final int index;
 
   MedicineCard(
-      {required this.medicine, required this.patient,
-      // required this.prescription, 
+      {required this.medicine,
+      required this.patient,
+      // required this.prescription,
       required this.index});
 
   @override
@@ -101,17 +103,14 @@ class MedicineCard extends StatelessWidget {
       children: [
         ElevatedButton.icon(
           onPressed: () {
-             
-            // showDialog(
-            //   context: context,
-            //   builder: (context) => EditMedicineScreen(
-            //     medicine: medicine,
-            //     patient: patient,
-            //     index: index,
-            //     // prescription: prescription,
-            //     // presNum: prescriptionProvider.presNum,
-            //   ),
-            // );
+            print('edit order by dialog phone');
+            showDialog(
+              context: context,
+              builder: (context) => EditMedicineDialog(
+                medicine: medicine,
+                index: index,
+              ),
+            );
           },
           icon: FaIcon(
             FontAwesomeIcons.pen,
@@ -164,17 +163,14 @@ class MedicineCard extends StatelessWidget {
               ),
             ),
             onTap: () {
-               
-              // showDialog(
-              //   context: context,
-              //   builder: (context) => EditMedicineScreen(
-              //     medicine: medicine,
-              //     patient: patient,
-              //     index: index,
-              //     // prescription: prescription,
-              //     // presNum: prescriptionProvider.presNum,
-              //   ),
-              // );
+              print('edit order by dialog tablet');
+              showDialog(
+                context: context,
+                builder: (context) => EditMedicineDialog(
+                  medicine: medicine,
+                  index: index,
+                ),
+              );
             },
           ),
         ),

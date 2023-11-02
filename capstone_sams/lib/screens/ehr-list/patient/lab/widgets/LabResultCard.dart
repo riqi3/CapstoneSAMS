@@ -12,32 +12,10 @@ class LabResultCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final titles = ["TEST", '', "VALUE", "UNIT", "REFERENCE"];
-    // final matrix = labresult.jsonTables?[0][0][0][1]['data'];
-
-    // final haematologyArray = labresult.jsonTables![0][0][1];
-    // final haematologyMatrix = haematologyArray['data'];
-    // final patientArray = labresult.jsonTables![0][0][0][1];
-    // final patientMatrix = patientArray['data'];
     print('index in lab card ${a}');
-
     final array = labresult.jsonTables![a];
     final matrix = array['data'];
 
-    // final patientArray = labresult.jsonTables![0];
-    // final patientMatrix = patientArray['data'];
-
-    // final firstColumn = matrix.map((row) => row[0]['text']).toList();
-    // final second2lastColumn = List.generate(
-    //   matrix[0].length - 1,
-    //   (int columnIndex) =>
-    //       matrix.map((row) => row[columnIndex + 1]["text"]).toList(),
-    // );
-    // Color getColor(Set<MaterialState> states) {
-    //   return Colors.grey;
-    // }
-
-    // print('secondCOLYUMN${second2lastColumn}');
-    // print('FIRST COLUMN${firstColumn}');
     return Container(
       margin: EdgeInsets.only(bottom: Sizing.sectionSymmPadding),
       child: Column(
