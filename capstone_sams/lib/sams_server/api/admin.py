@@ -615,12 +615,14 @@ class PrescriptionAdmin(admin.ModelAdmin):
     autocomplete_fields = ["patient"]
     list_display = (
         "presNum",
+        "disease",
         # "dosage",
         # "timeFrame",
         # "amount",
         "medicines",
         "account",
         "patient",
+        
     )
     list_filter = ("account", "patient")
     search_fields = ("presNum",)

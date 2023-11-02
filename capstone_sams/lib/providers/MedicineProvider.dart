@@ -46,7 +46,9 @@ class MedicineProvider with ChangeNotifier {
                   element.drugId!
                       .toLowerCase()
                       .contains((query.toLowerCase())) ||
-                  element.drugName!.toLowerCase().contains((query.toLowerCase()));
+                  element.drugName!
+                      .toLowerCase()
+                      .contains((query.toLowerCase()));
             },
           ).toList();
         } else {
@@ -61,9 +63,8 @@ class MedicineProvider with ChangeNotifier {
     return _medicines;
   }
 
-
-
-  Future<bool> saveToPrescription(String? accountId, String? patientId) async {
+  Future<bool> saveToPrescription(
+      String? accountId, String? patientId, String? finalPrediction) async {
     final headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     };
@@ -74,8 +75,9 @@ class MedicineProvider with ChangeNotifier {
       'medicines': medicinesJson,
       'account': accountId,
       'patient': patientId,
+      'disease': finalPrediction,
     };
- 
+
     print('DATADATA$data');
 
     final response = await http.post(
