@@ -33,6 +33,7 @@ class Info extends StatefulWidget {
 class _InfoState extends State<Info> {
   late Future<List<Prescription>> prescriptions;
   late Future<List<Account>> physicians;
+  var _isValid = false;
 
   @override
   void initState() {
@@ -99,6 +100,7 @@ class _InfoState extends State<Info> {
               itemCount: prescriptionList!.length,
               itemBuilder: (context, index) {
                 final prescription = prescriptionList[index];
+                
                 return prescription.account == widget.index
                     ? Card(
                         margin: EdgeInsets.only(
@@ -127,7 +129,7 @@ class _InfoState extends State<Info> {
                               index, prescriptionList, prescription),
                         ),
                       )
-                    : Text('');
+                    : null;
               },
             );
           }
@@ -174,7 +176,11 @@ class _InfoState extends State<Info> {
     );
 
     const snackBar = SnackBar(
-      content: Text('Deleted the prescription'),
+      backgroundColor: Pallete.dangerColor,
+      content: Text(
+        'Deleted the prescription',
+        style: TextStyle(fontWeight: FontWeight.w700),
+      ),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
@@ -197,7 +203,11 @@ class _InfoState extends State<Info> {
     );
 
     const snackBar = SnackBar(
-      content: Text('Deleted the medicine'),
+      backgroundColor: Pallete.dangerColor,
+      content: Text(
+        'Deleted the medicine',
+        style: TextStyle(fontWeight: FontWeight.w700),
+      ),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
@@ -237,13 +247,14 @@ class _InfoState extends State<Info> {
         PopupMenuItem(
           child: ListTile(
             leading: FaIcon(
-              FontAwesomeIcons.trash,
-              color: Pallete.redColor,
+              FontAwesomeIcons.pills,
+              color: Pallete.infoColor,
             ),
             title: Text(
-              'sub',
+              'Manage',
               style: TextStyle(
-                color: Pallete.redColor,
+                fontWeight: FontWeight.w700,
+                color: Pallete.infoColor,
               ),
             ),
             onTap: () {
@@ -252,7 +263,7 @@ class _InfoState extends State<Info> {
               if (prescription.medicines?.length == 1) {
                 prescriptionCounter(context, prescription);
               } else {
-                subtractMedicineQuantity(context, prescription);
+                manageMedicineQuantity(context, prescription);
               }
             },
           ),
@@ -261,12 +272,12 @@ class _InfoState extends State<Info> {
     );
   }
 
-  Future<dynamic> subtractMedicineQuantity(
+  Future<dynamic> manageMedicineQuantity(
       BuildContext context, Prescription prescription) {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Select a medicine to subtract'),
+        title: Text('Select a medicine to manage'),
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -310,18 +321,19 @@ class _InfoState extends State<Info> {
           child: ListTile(
             leading: FaIcon(
               FontAwesomeIcons.pen,
-              color: Pallete.greenColor,
+              color: Pallete.successColor,
             ),
             title: Text(
               'Edit',
               style: TextStyle(
-                color: Pallete.greenColor,
+                fontWeight: FontWeight.w700,
+                color: Pallete.successColor,
               ),
             ),
             onTap: () {
               print('${prescription.presNum} edit');
 
-              if (prescription.medicines?.length == 1) {
+              if (prescription.medicines?.length == 0) {
                 editPrescription(
                     context, prescription, index, prescription.presNum);
               } else {
@@ -334,12 +346,13 @@ class _InfoState extends State<Info> {
           child: ListTile(
             leading: FaIcon(
               FontAwesomeIcons.trash,
-              color: Pallete.redColor,
+              color: Pallete.dangerColor,
             ),
             title: Text(
               'Delete',
               style: TextStyle(
-                color: Pallete.redColor,
+                fontWeight: FontWeight.w700,
+                color: Pallete.dangerColor,
               ),
             ),
             onTap: () {
@@ -435,19 +448,6 @@ class _InfoState extends State<Info> {
           ),
         ],
       ),
-    );
-  }
-}
-
-class nurseAction extends StatelessWidget {
-  const nurseAction({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return PopupMenuButton(
-      itemBuilder: (context) => [],
     );
   }
 }

@@ -104,6 +104,15 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
             ),
           ),
         );
+
+        const snackBar = SnackBar(
+          backgroundColor: Pallete.successColor,
+          content: Text(
+            'Updated the medicine',
+            style: TextStyle(fontWeight: FontWeight.w700),
+          ),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
       // }
     }
@@ -111,6 +120,7 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('medicine index ${widget.index}');
     return Scaffold(
       appBar: AppBar(
         title: Text('Edit Medication Order'),
@@ -212,7 +222,7 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
                                         labelText: 'Instructions',
                                         border: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: Pallete.paleblueColor,
+                                            color: Pallete.primaryColor,
                                           ),
                                         ),
                                         filled: true,
@@ -235,7 +245,7 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
                                             labelText: 'Start Date',
                                             border: OutlineInputBorder(
                                               borderSide: BorderSide(
-                                                color: Pallete.paleblueColor,
+                                                color: Pallete.primaryColor,
                                               ),
                                             ),
                                             filled: true,
@@ -277,7 +287,7 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
                                             labelText: 'End Date',
                                             border: OutlineInputBorder(
                                               borderSide: BorderSide(
-                                                color: Pallete.paleblueColor,
+                                                color: Pallete.primaryColor,
                                               ),
                                             ),
                                             filled: true,
@@ -325,7 +335,7 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
                                             labelText: 'Quantity',
                                             border: OutlineInputBorder(
                                               borderSide: BorderSide(
-                                                color: Pallete.paleblueColor,
+                                                color: Pallete.primaryColor,
                                               ),
                                             ),
                                             filled: true,

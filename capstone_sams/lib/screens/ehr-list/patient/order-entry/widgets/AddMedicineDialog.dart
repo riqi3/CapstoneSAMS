@@ -104,7 +104,7 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                             labelText: 'Instructions',
                             border: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: Pallete.paleblueColor,
+                                color: Pallete.primaryColor,
                               ),
                             ),
                             filled: true,
@@ -125,7 +125,7 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                                 labelText: 'Start Date',
                                 border: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: Pallete.paleblueColor,
+                                    color: Pallete.primaryColor,
                                   ),
                                 ),
                                 filled: true,
@@ -165,7 +165,7 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                                 labelText: 'End Date',
                                 border: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: Pallete.paleblueColor,
+                                    color: Pallete.primaryColor,
                                   ),
                                 ),
                                 filled: true,
@@ -208,7 +208,7 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                           labelText: 'Quantity',
                           border: OutlineInputBorder(
                             borderSide: BorderSide(
-                              color: Pallete.paleblueColor,
+                              color: Pallete.primaryColor,
                             ),
                           ),
                           filled: true,

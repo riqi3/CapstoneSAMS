@@ -114,11 +114,11 @@ class MedicineCard extends StatelessWidget {
           },
           icon: FaIcon(
             FontAwesomeIcons.pen,
-            color: Pallete.greenColor,
+            color: Pallete.successColor,
           ),
           label: Text('Edit'),
           style: ElevatedButton.styleFrom(
-            backgroundColor: Pallete.greenColor,
+            backgroundColor: Pallete.successColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0),
             ),
@@ -132,11 +132,11 @@ class MedicineCard extends StatelessWidget {
           },
           icon: FaIcon(
             FontAwesomeIcons.trash,
-            color: Pallete.redColor,
+            color: Pallete.dangerColor,
           ),
           label: Text('Remove'),
           style: ElevatedButton.styleFrom(
-            backgroundColor: Pallete.redColor,
+            backgroundColor: Pallete.dangerColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0),
             ),
@@ -154,12 +154,12 @@ class MedicineCard extends StatelessWidget {
           child: ListTile(
             leading: FaIcon(
               FontAwesomeIcons.pen,
-              color: Pallete.greenColor,
+              color: Pallete.successColor,
             ),
             title: Text(
               'Edit',
               style: TextStyle(
-                color: Pallete.greenColor,
+                color: Pallete.successColor,
               ),
             ),
             onTap: () {
@@ -178,11 +178,11 @@ class MedicineCard extends StatelessWidget {
           child: ListTile(
             leading: FaIcon(
               FontAwesomeIcons.trash,
-              color: Pallete.redColor,
+              color: Pallete.dangerColor,
             ),
             title: Text(
               'Delete',
-              style: TextStyle(color: Pallete.redColor),
+              style: TextStyle(color: Pallete.dangerColor),
             ),
             onTap: () {
               medicineProvider.removeMedicine(index);

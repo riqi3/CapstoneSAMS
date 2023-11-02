@@ -49,14 +49,14 @@ class _LoginScreenState extends State<LoginScreen> {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 25,
-              color: Pallete.redColor,
+              color: Pallete.dangerColor,
             ),
           ),
           content: const Text("Failed to login.",
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
-                color: Pallete.redColor,
+                color: Pallete.dangerColor,
               )),
           actions: [
             TextButton(

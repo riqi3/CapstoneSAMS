@@ -59,6 +59,14 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
           ),
         ),
       );
+      const snackBar = SnackBar(
+        backgroundColor: Pallete.successColor,
+        content: Text(
+          'Successfully added prescription',
+          style: TextStyle(fontWeight: FontWeight.w700),
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else {
       print("Failed to save prescription.");
     }
@@ -220,26 +228,26 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
                           index: index,
                         ),
                       ),
-                      SizedBox(height: 10),
-                      Text(
-                        'Comment Section',
-                        style: TextStyle(
-                            color: Pallete.paleblueColor,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 2),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF9EC6FA)),
-                          ),
-                          filled: true,
-                          fillColor: Pallete.palegrayColor,
-                        ),
-                        maxLines: null,
-                        keyboardType: TextInputType.multiline,
-                      ),
+                      // SizedBox(height: 10),
+                      // Text(
+                      //   'Comment Section',
+                      //   style: TextStyle(
+                      //       color: Pallete.primaryColor,
+                      //       fontSize: 20,
+                      //       fontWeight: FontWeight.bold),
+                      // ),
+                      // SizedBox(height: 2),
+                      // TextFormField(
+                      //   decoration: InputDecoration(
+                      //     border: OutlineInputBorder(
+                      //       borderSide: BorderSide(color: Color(0xFF9EC6FA)),
+                      //     ),
+                      //     filled: true,
+                      //     fillColor: Pallete.palegrayColor,
+                      //   ),
+                      //   maxLines: null,
+                      //   keyboardType: TextInputType.multiline,
+                      // ),
                     ],
                   ),
                 SizedBox(height: 10),
