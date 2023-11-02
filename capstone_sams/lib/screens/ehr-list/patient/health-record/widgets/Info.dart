@@ -7,6 +7,7 @@ import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/PrescriptionProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/CounterScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/EditMedicineScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -212,6 +213,14 @@ class _InfoState extends State<Info> {
     );
   }
 
+  void prescriptionCounter(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => CounterScreen(),
+      ),
+    );
+  }
+
   PopupMenuButton<dynamic> nurseAction(
     int index,
     List<Prescription> prescriptionList,
@@ -235,8 +244,9 @@ class _InfoState extends State<Info> {
               print('${prescription.presNum} sub');
 
               if (prescription.medicines?.length == 1) {
-                editPrescription(
-                    context, prescription, index, prescription.presNum);
+                prescriptionCounter(context);
+                // editPrescription(
+                //     context, prescription, index, prescription.presNum);
               } else {
                 subtractMedicineQuantity(context, prescription);
               }
@@ -244,6 +254,44 @@ class _InfoState extends State<Info> {
           ),
         ),
       ],
+    );
+  }
+
+  Future<dynamic> subtractMedicineQuantity(
+      BuildContext context, Prescription prescription) {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Select a medicine to subtract'),
+        content: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: List.generate(
+            prescription.medicines!.length,
+            (medicineIndex) {
+              final medicine = prescription.medicines![medicineIndex];
+              return InkWell(
+                onTap: () {
+                  print('${medicine["drugName"]} ${medicineIndex}');
+
+                  prescriptionCounter(context);
+                },
+                child: ListTile(
+                  title: Text('${medicine["drugName"]}'),
+                ),
+              );
+            },
+          ),
+        ),
+        actions: <Widget>[
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Close'),
+          ),
+        ],
+      ),
     );
   }
 
@@ -304,44 +352,6 @@ class _InfoState extends State<Info> {
           ),
         ),
       ],
-    );
-  }
-
-  Future<dynamic> subtractMedicineQuantity(
-      BuildContext context, Prescription prescription) {
-    return showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Select a medicine to subtract'),
-        content: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: List.generate(
-            prescription.medicines!.length,
-            (medicineIndex) {
-              final medicine = prescription.medicines![medicineIndex];
-              return InkWell(
-                onTap: () {
-                  print('${medicine["drugName"]} ${medicineIndex}');
-                  editPrescription(context, prescription, medicineIndex,
-                      prescription.presNum);
-                },
-                child: ListTile(
-                  title: Text('${medicine["drugName"]}'),
-                ),
-              );
-            },
-          ),
-        ),
-        actions: <Widget>[
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text('Close'),
-          ),
-        ],
-      ),
     );
   }
 
