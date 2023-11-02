@@ -98,8 +98,9 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
                   'Diagnosis',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
+                SizedBox(height: 15),
                 Text(
-                  'Prognosis: $finalPrediction',
+                  'Suspected Disease: $finalPrediction',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 Text(
@@ -113,7 +114,12 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
                       child: ElevatedButton.icon(
                         onPressed: () => _handleAnalyzeAgain(context),
                         icon: Icon(Icons.search),
-                        label: Text('Analyze Again'),
+                        label: Text(
+                          'Analyze Again',
+                          style: TextStyle(
+                            fontSize: 12.5,
+                          ),
+                        ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Pallete.mainColor,
                           shape: RoundedRectangleBorder(
@@ -127,7 +133,12 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
                       child: ElevatedButton.icon(
                         onPressed: () => _showPrognosisUpdateDialog(context),
                         icon: Icon(Icons.edit),
-                        label: Text('Change Value'),
+                        label: Text(
+                          'Change Value',
+                          style: TextStyle(
+                            fontSize: 12.5,
+                          ),
+                        ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Pallete.mainColor,
                           shape: RoundedRectangleBorder(
