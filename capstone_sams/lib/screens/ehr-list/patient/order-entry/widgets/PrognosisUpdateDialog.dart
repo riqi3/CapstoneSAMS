@@ -1,3 +1,4 @@
+import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/api/api_service.dart';
 
@@ -7,41 +8,73 @@ class PrognosisUpdateDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Change Prognosis Value'),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+      title: Text(
+        'Edit Suspected Disease',
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          TextField(
-            controller: controller,
-            decoration: InputDecoration(labelText: 'New Prognosis'),
+          Container(
+            decoration: BoxDecoration(
+              color: Pallete.palegrayColor,
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: TextField(
+              controller: controller,
+              decoration: InputDecoration(
+                labelText: 'New Disease',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                contentPadding: EdgeInsets.all(10.0),
+              ),
+            ),
           ),
-          ElevatedButton(
-            onPressed: () async {
-              final newPrognosis = controller.text;
-              final isSuccess =
-                  await ApiService.updatePrognosis(context, newPrognosis);
+          SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                onPressed: () async {
+                  final newPrognosis = controller.text;
+                  final isSuccess =
+                      await ApiService.updatePrognosis(context, newPrognosis);
 
-              if (isSuccess) {
-                // Close the dialog when prognosis is updated successfully
-                Navigator.of(context).pop();
-              } else {
-                // Handle the case where updating the prognosis fails
-                // You can display an error message or perform any necessary actions here
-                print('Failed to update prognosis.');
-              }
-            },
-            child: Text('Submit'),
+                  if (isSuccess) {
+                    Navigator.of(context).pop(newPrognosis);
+                  } else {
+                    print('Failed to update diagnosis.');
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Pallete.mainColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+                child: Text('Submit'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Pallete.mainColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+                child: Text('Cancel'),
+              ),
+            ],
           ),
         ],
       ),
-      actions: <Widget>[
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: Text('Cancel'),
-        ),
-      ],
     );
   }
 }

@@ -2,6 +2,7 @@ from datetime import timedelta
 from pathlib import Path
 import os
 from .webui import JAZZMIN_SETTINGS
+from .webtweak import JAZZMIN_UI_TWEAKS
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -189,3 +190,4 @@ SIMPLE_JWT = {
 }
 
 JAZZMIN_SETTINGS = JAZZMIN_SETTINGS
+JAZZMIN_UI_TWEAKS = JAZZMIN_UI_TWEAKS

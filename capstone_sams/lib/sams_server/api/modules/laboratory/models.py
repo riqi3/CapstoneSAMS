@@ -12,6 +12,10 @@ class LabResult(models.Model):
 
     def __str__(self):
         return self.title
+    
+    class Meta:
+        verbose_name = "Laboratory Record"
+        verbose_name_plural = "Laboratory Record"
 
 class JsonLabResult(models.Model):
     labresult = models.ForeignKey(LabResult, on_delete = models.CASCADE)

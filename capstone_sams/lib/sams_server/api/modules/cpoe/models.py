@@ -29,6 +29,10 @@ class Prescription(models.Model):
     health_record = models.ForeignKey(Health_Record, on_delete = models.CASCADE)
     patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
 
+    class Meta:
+        verbose_name = "Prescription Record"
+        verbose_name_plural = "Prescription Record"
+
 '''
 This model represent the medicines currently
 stored into the system.
@@ -38,6 +42,10 @@ class Medicine(models.Model):
     drugId = models.CharField(primary_key = True)
     drugCode = models.CharField(blank = False)
     drugName = models.CharField(blank = False)
+
+    class Meta:
+        verbose_name = "Medicine Record"
+        verbose_name_plural = "Medicine Record"
 
 # class Prescribed_Medicine(models.Model):
 #     prescription = models.ForeignKey(Prescription, on_delete=models.CASCADE)

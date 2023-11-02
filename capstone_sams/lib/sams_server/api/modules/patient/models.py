@@ -27,6 +27,10 @@ class Patient(models.Model):
     
     def __str__(self):
         return f"{self.patientID} - {self.firstName} {self.middleName} {self.lastName}"
+    
+    class Meta:
+        verbose_name = "Patient Record"
+        verbose_name_plural = "Patient Record"
 
 '''
 This model represent the health records
@@ -39,6 +43,10 @@ class Health_Record(models.Model):
     symptoms = models.JSONField(blank = True, default=None)
     diseases = models.JSONField(blank = True, default=None)
     patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
+
+    class Meta:
+        verbose_name = "Health Record"
+        verbose_name_plural = "Health Record"
 
 # class Symptom(models.Model):
 #     sympNum = models.AutoField(primary_key = True)

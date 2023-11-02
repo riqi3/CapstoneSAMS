@@ -55,8 +55,8 @@ class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
             builder: (context) => CpoeFormScreen(
               patient: widget.patient,
               index: widget.index,
-              finalPrediction: finalPrediction,
-              finalConfidence: finalConfidence, 
+              initialPrediction: finalPrediction,
+              initialConfidence: finalConfidence,
             ),
           ),
         );
@@ -85,7 +85,6 @@ class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
         ),
         physics: AlwaysScrollableScrollPhysics(),
         child: Container(
-          // margin: EdgeInsets.all(20),
           padding: EdgeInsets.all(
             Sizing.sectionSymmPadding,
           ),

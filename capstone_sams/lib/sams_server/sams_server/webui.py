@@ -5,6 +5,8 @@ JAZZMIN_SETTINGS = {
     # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
     "site_header": "SAMS WEB",
 
+    "theme": "minty",
+
     # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
     "site_brand": "User Panel",
 
@@ -46,7 +48,7 @@ JAZZMIN_SETTINGS = {
         {"name": "Home",  "url": "admin:index", "permissions": ["auth.view_user"]},
 
         # external url that opens in a new window (Permissions can be added)
-        {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
+        {"name": "Support", "url": "https://github.com/riqi3/CapstoneSAMS/issues", "new_window": True},
 
         # model admin to link to (Permissions checked against model)
         {"model": "auth.User"},
@@ -61,7 +63,7 @@ JAZZMIN_SETTINGS = {
 
     # Additional links to include in the user menu on the top right ("app" url type is not allowed)
     "usermenu_links": [
-        {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
+        {"name": "Support", "url": "https://github.com/riqi3/CapstoneSAMS/issues", "new_window": True},
         {"model": "auth.user"}
     ],
 
@@ -75,4 +77,11 @@ JAZZMIN_SETTINGS = {
     # Whether to aut expand the menu
     "navigation_expanded": True,
 
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+    },
 }
+JAZZMIN_SETTINGS["show_ui_builder"] = True
+

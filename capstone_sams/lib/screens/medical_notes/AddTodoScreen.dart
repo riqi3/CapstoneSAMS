@@ -31,12 +31,6 @@ class _AddTodoPageState extends State<AddTodoPage> {
             icon: Icon(Icons.check),
             onPressed: addTodo,
           ),
-          IconButton(
-            icon: Icon(Icons.menu),
-            onPressed: () {
-              // TODO: Implement hamburger icon action
-            },
-          ),
         ],
       ),
       body: Form(
