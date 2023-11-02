@@ -33,7 +33,6 @@ class Info extends StatefulWidget {
 class _InfoState extends State<Info> {
   late Future<List<Prescription>> prescriptions;
   late Future<List<Account>> physicians;
-  var _isValid = false;
 
   @override
   void initState() {
@@ -100,7 +99,7 @@ class _InfoState extends State<Info> {
               itemCount: prescriptionList!.length,
               itemBuilder: (context, index) {
                 final prescription = prescriptionList[index];
-                
+
                 return prescription.account == widget.index
                     ? Card(
                         margin: EdgeInsets.only(
@@ -227,11 +226,13 @@ class _InfoState extends State<Info> {
     );
   }
 
-  void prescriptionCounter(BuildContext context, Prescription prescription) {
+  void prescriptionCounter(
+      BuildContext context, Prescription prescription, int index) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => CounterScreen(
           prescription: prescription,
+          index: index,
         ),
       ),
     );
@@ -258,10 +259,10 @@ class _InfoState extends State<Info> {
               ),
             ),
             onTap: () {
-              print('${prescription.presNum} sub');
+              print('${prescription.presNum} manage');
 
               if (prescription.medicines?.length == 1) {
-                prescriptionCounter(context, prescription);
+                prescriptionCounter(context, prescription, index);
               } else {
                 manageMedicineQuantity(context, prescription);
               }
@@ -289,7 +290,7 @@ class _InfoState extends State<Info> {
                 onTap: () {
                   print('${medicine["drugName"]} ${medicineIndex}');
 
-                  prescriptionCounter(context, prescription);
+                  prescriptionCounter(context, prescription, medicineIndex);
                 },
                 child: ListTile(
                   title: Text('${medicine["drugName"]}'),
