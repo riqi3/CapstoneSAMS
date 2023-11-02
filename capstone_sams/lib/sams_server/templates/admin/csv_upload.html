@@ -1,14 +1,16 @@
 {% extends 'admin/base.html' %}
 
 {% block content %}
-    <div>
+    <div class="container">
+      <div class="file-icon">
+        <i class="fas fa-file" ></i>
+    </div>
         <form id='bulk_upload' name='bulk_upload' action="." method="POST" enctype="multipart/form-data">
             
             {% csrf_token %}
             <table>
                 {{ form.as_table }}
             </table>
-            
         </form>
         <button type="button" id="openModal" onclick="checkFormFields()">Upload File</button>
     </div>
@@ -18,9 +20,18 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">You're about to upload a bulk file!</h5>
-             
           </div>
+           
           <div class="modal-body">
+            <table>
+              {% for row in csv_data %}
+                  <tr>
+                      {% for cell in row %}
+                          <td>{{ cell }}</td>
+                      {% endfor %}
+                  </tr>
+              {% endfor %}
+          </table>
             Are you sure to upload this file? This process is permanent and cannot be edited.
           </div>
           <div class="modal-footer">
@@ -60,11 +71,53 @@
           padding: 10px;
           cursor: pointer;
         }
+
+        .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        }
+
+        .form-table {
+        width: 50%;
+        max-width: 500px;
+        }
+
+        body {
+        /* display: flex; */
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        }
+
+        button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: rgb(36, 179, 100);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        }
+
+        button:hover {
+        background-color: rgb(26, 126, 71);
+        }
+
+        .file-icon {
+        font-size: 300px; 
+        color: rgb(117, 218, 122);
+        display: none;
+        margin-top: -20px;
+        text-align: center;
+    }
       </style>
       
 
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
   function checkFormFields() { 
     var allFieldsFilled = true;
@@ -89,6 +142,15 @@
   $("#closeModal").click(function() {
     $("#myModal").hide();
   });
+
+  $('input[type="file"]').change(function () {
+        var fileName = $(this).val().split('\\').pop();
+        if (fileName) {
+            $('.file-icon').fadeIn(300);
+        } else {
+            $('.file-icon').hide();
+        }
+    });
 </script>
 
 {% endblock %}

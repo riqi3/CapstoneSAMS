@@ -36,9 +36,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _fetchUserTodos() async {
     final provider = Provider.of<TodosProvider>(context, listen: false);
     final accountID = context.read<AccountProvider>().id;
-    final test = context.read<PrescriptionProvider>().healthRecord;
+    // final test = context.read<PrescriptionProvider>().healthRecord;
     await provider.fetchTodos(accountID!);
-    print('healthRecord numbner ${test}');
+    // print('healthRecord numbner ${test}');
     setState(() {
       _userTodos = provider.todos;
     });

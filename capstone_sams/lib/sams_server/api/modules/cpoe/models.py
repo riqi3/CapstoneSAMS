@@ -1,7 +1,7 @@
 
 from django.db import models
 from api.modules.user.models import Account
-from api.modules.patient.models import Health_Record
+from api.modules.patient.models import Health_Record, Patient
 
 '''
 This model represent the comments that
@@ -27,6 +27,11 @@ class Prescription(models.Model):
     medicines = models.JSONField(blank = True, default=None)
     account = models.ForeignKey(Account, on_delete = models.CASCADE)
     health_record = models.ForeignKey(Health_Record, on_delete = models.CASCADE)
+    patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
+
+    class Meta:
+        verbose_name = "Prescription Record"
+        verbose_name_plural = "Prescription Record"
 
 '''
 This model represent the medicines currently
@@ -37,6 +42,10 @@ class Medicine(models.Model):
     drugId = models.CharField(primary_key = True)
     drugCode = models.CharField(blank = False)
     drugName = models.CharField(blank = False)
+
+    class Meta:
+        verbose_name = "Medicine Record"
+        verbose_name_plural = "Medicine Record"
 
 # class Prescribed_Medicine(models.Model):
 #     prescription = models.ForeignKey(Prescription, on_delete=models.CASCADE)

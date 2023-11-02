@@ -63,6 +63,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     class Meta:
         db_table = "account"
+        verbose_name = "Account Record"
+        verbose_name_plural = "Account Record"
     
     @property
     def is_anonymous(self):
@@ -105,3 +107,7 @@ class Data_Log(models.Model):
     date = models.DateTimeField(default=timezone.now)
     type = models.CharField(max_length = 1000)
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = "Data Logs"
+        verbose_name_plural = "Data Logs"

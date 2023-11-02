@@ -134,3 +134,7 @@ class HealthSymptom(models.Model):
     red_sore_around_nose = models.IntegerField()
     yellow_crust_ooze = models.IntegerField()
     prognosis = models.CharField(max_length=255)
+
+    class Meta:
+        verbose_name = "Symptom Dataset"
+        verbose_name_plural = "Symptom Dataset"

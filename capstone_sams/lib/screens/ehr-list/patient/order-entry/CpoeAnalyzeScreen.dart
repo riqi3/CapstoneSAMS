@@ -1,3 +1,4 @@
+import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/models/SymptomsModel.dart';
 import 'package:capstone_sams/providers/SymptomsFieldsProvider.dart';
 
@@ -5,20 +6,19 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
- 
 
 import '../../../../constants/Env.dart';
 import '../../../../constants/theme/pallete.dart';
 import '../../../../constants/theme/sizing.dart';
 import '../../../../models/PatientModel.dart';
- 
+
 import 'CpoeFormScreen.dart';
 
 class CpoeAnalyzeScreen extends StatefulWidget {
-  final int index;
+  final int index; 
   final Patient patient;
   CpoeAnalyzeScreen({
-    required this.patient,
+    required this.patient, 
     required this.index,
   });
 
@@ -55,8 +55,8 @@ class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
             builder: (context) => CpoeFormScreen(
               patient: widget.patient,
               index: widget.index,
-              finalPrediction: finalPrediction,
-              finalConfidence: finalConfidence,
+              initialPrediction: finalPrediction,
+              initialConfidence: finalConfidence,
             ),
           ),
         );
@@ -85,7 +85,6 @@ class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
         ),
         physics: AlwaysScrollableScrollPhysics(),
         child: Container(
-          // margin: EdgeInsets.all(20),
           padding: EdgeInsets.all(
             Sizing.sectionSymmPadding,
           ),

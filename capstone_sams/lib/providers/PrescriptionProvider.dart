@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -8,47 +10,114 @@ import '../constants/Env.dart';
 
 class PrescriptionProvider with ChangeNotifier {
   List<Prescription> _prescriptions = [];
+  List<Account> _physicians = [];
   Prescription? _prescription;
   Prescription? get prescription => _prescription;
+  List<Prescription> get prescripts => _prescriptions;
   int? get presNum => _prescription?.presNum;
-  List? get medicines => _prescription?.medicines;
   String? get acc => _prescription?.account;
-  int? get healthRecord => _prescription?.health_record;
+  String? get patientID => _prescription?.patientID;
 
-  List<Prescription> get prescriptions => _prescriptions;
+  Future<List<Prescription>> get prescriptions => Future.value(_prescriptions);
+  Future<List<Account>> get physicians => Future.value(_physicians);
 
-  Future<List<Prescription>> fetchPrescriptions(int? recordNum) async {
-    print('HEALTH RECORD NUMBER: ${recordNum}');
-    final response = await http
-        .get(Uri.parse('${Env.prefix}/cpoe/prescription/get/${recordNum}/'));
+  String _getUrl(String endpoint) {
+    return '${Env.prefix}/$endpoint';
+  }
+
+  Future<void> fetchPrescriptions(String patientID) async {
+    final headers = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
+
+    final response = await http.get(
+      Uri.parse(
+        _getUrl('cpoe/prescription/get-patient/${patientID}/'),
+      ),
+      headers: headers,
+    );
     await Future.delayed(Duration(milliseconds: 3000));
-    print('PRESCRIPTION RESPOSNSE CODE1: ${response.statusCode}');
     if (response.statusCode == 200) {
-      final data = json.decode(response.body);
+      final items = json.decode(response.body);
+      List<Prescription> newPrescriptions = items["prescriptions"]
+          .map<Prescription>((json) => Prescription.fromJson(json))
+          .toList();
+      List<Account> newAccounts = items["accounts"]
+          .map<Account>((json) => Account.fromJson(json))
+          .toList();
 
-      print('PRESCRIPTION RESPOSNSE CODE2: ${response.statusCode}');
-      List<Prescription> prescription = data.map<Prescription>((json) {
-        return Prescription.fromJson(json);
-      }).toList();
-      return prescription;
+      if (!listEquals(_prescriptions, newPrescriptions) ||
+          !listEquals(_physicians, newAccounts)) {
+        _prescriptions = newPrescriptions;
+        _physicians = newAccounts;
+        notifyListeners();
+      }
     } else {
-      print('PRESCRIPTION RESPOSNSE CODE3: ${response.statusCode}');
-      throw Exception('Failed to fetch prescriptions');
+      throw Exception(
+          'Failed to fetch patient prescriptions ${jsonDecode(response.body)}');
     }
   }
-  // Future<List<Prescription>> fetchPrescriptions(int recordNum) async {
-  //   final response = await http
-  //       .get(Uri.parse('${Env.prefix}/cpoe/prescription/get/${recordNum}/'));
-  //   print(response.statusCode);
-  //   await Future.delayed(Duration(milliseconds: 3000));
-  //   if (response.statusCode == 200) {
-  //     final data = json.decode(response.body);
-  //     List<Prescription> prescriptions = data.map<Prescription>((json) {
-  //       return Prescription.fromJson(json);
-  //     }).toList();
-  //     return prescriptions;
-  //   } else {
-  //     throw Exception('Failed to fetch prescriptions');
-  //   }
-  // }
+
+  Future updatePrescription(Prescription prescription, String patientID) async {
+    final headers = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
+
+    final response = await http.put(
+      Uri.parse(
+        _getUrl(
+            'cpoe/prescription/get-prescription/update/${prescription.presNum}'),
+      ),
+      headers: headers,
+      body: jsonEncode(prescription),
+    );
+    await Future.delayed(Duration(milliseconds: 3000));
+
+    if (response.statusCode == 200) {
+      fetchPrescriptions(patientID);
+      notifyListeners();
+    } else {
+      throw Exception('Failed to update prescription');
+    }
+  }
+
+  Future removePrescription(Prescription prescription, String patientID) async {
+    final headers = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
+    final body = jsonEncode({'account': prescription.account});
+    final response = await http.delete(
+      Uri.parse(_getUrl(
+          'cpoe/prescription/get-prescription/delete/${prescription.presNum}')),
+      headers: headers,
+      body: body,
+    );
+    await Future.delayed(Duration(milliseconds: 3000));
+    if (response.statusCode == 204) {
+      fetchPrescriptions(patientID);
+    } else {
+      throw Exception(
+          'Failed to delete prescription ${jsonDecode(response.body)}');
+    }
+  }
+
+  Future removeMedicine(
+      Prescription prescription, String patientID, String? drugId) async {
+    final headers = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
+    final body = jsonEncode({'account': prescription.account});
+    final response = await http.delete(
+      Uri.parse(_getUrl(
+          'cpoe/prescription/get-prescription-${prescription.presNum}/delete-medicine/${drugId}')),
+      headers: headers,
+      body: body,
+    );
+    await Future.delayed(Duration(milliseconds: 3000));
+    if (response.statusCode == 204) {
+      fetchPrescriptions(patientID);
+    } else {
+      throw Exception('Failed to delete medicine ${jsonDecode(response.body)}');
+    }
+  }
 }

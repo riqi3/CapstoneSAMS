@@ -1,5 +1,5 @@
-import 'package:capstone_sams/providers/PatientProvider.dart';
- 
+import 'package:capstone_sams/models/PrescriptionModel.dart';
+import 'package:capstone_sams/providers/PatientProvider.dart'; 
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/api/api_service.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/AddMedicineDialog.dart';
@@ -10,25 +10,38 @@ import 'package:provider/provider.dart';
 
 import 'package:capstone_sams/providers/SymptomsFieldsProvider.dart';
 
- 
-
 import '../../../../constants/theme/pallete.dart';
 import '../../../../models/PatientModel.dart';
 import '../../../../providers/AccountProvider.dart';
 import '../../../../providers/MedicineProvider.dart';
- 
 
-class CpoeFormScreen extends StatelessWidget {
-  final String finalPrediction;
-  final double finalConfidence;
+class CpoeFormScreen extends StatefulWidget {
+  final String initialPrediction;
+  final double initialConfidence;
   final int index;
   final Patient patient;
   CpoeFormScreen({
     required this.patient,
     required this.index,
-    required this.finalPrediction,
-    required this.finalConfidence,
+    required this.initialPrediction,
+    required this.initialConfidence,
   });
+
+  @override
+  _CpoeFormScreenState createState() => _CpoeFormScreenState();
+}
+
+class _CpoeFormScreenState extends State<CpoeFormScreen> {
+  late String finalPrediction;
+  late double finalConfidence;
+
+  @override
+  void initState() {
+    super.initState();
+    finalPrediction = widget.initialPrediction;
+    finalConfidence = widget.initialConfidence;
+  }
+
   Future<void> _handleAnalyzeAgain(BuildContext context) async {
     try {
       await ApiService.deleteLatestRecord();
@@ -36,8 +49,6 @@ class CpoeFormScreen extends StatelessWidget {
       Provider.of<SymptomFieldsProvider>(context, listen: false).reset();
       Navigator.pop(context);
     } catch (error) {
-      // Handle the case where the record deletion fails
-      // You can display an error message or perform any necessary actions here
       print('Failed to delete the latest record: $error');
     }
   }
@@ -48,13 +59,18 @@ class CpoeFormScreen extends StatelessWidget {
       builder: (context) => PrognosisUpdateDialog(),
     );
 
-    if (newPrognosis != null && newPrognosis.isNotEmpty) {}
+    if (newPrognosis != null && newPrognosis.isNotEmpty) {
+      setState(() {
+        finalPrediction = newPrognosis;
+        finalConfidence = 0;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final medicineProvider = Provider.of<MedicineProvider>(context);
-
+ 
     return Scaffold(
       appBar: AppBar(
         title: Text('Analyze Page'),
@@ -82,8 +98,9 @@ class CpoeFormScreen extends StatelessWidget {
                   'Diagnosis',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
+                SizedBox(height: 15),
                 Text(
-                  'Prognosis: $finalPrediction',
+                  'Suspected Disease: $finalPrediction',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 Text(
@@ -97,7 +114,12 @@ class CpoeFormScreen extends StatelessWidget {
                       child: ElevatedButton.icon(
                         onPressed: () => _handleAnalyzeAgain(context),
                         icon: Icon(Icons.search),
-                        label: Text('Analyze Again'),
+                        label: Text(
+                          'Analyze Again',
+                          style: TextStyle(
+                            fontSize: 12.5,
+                          ),
+                        ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Pallete.mainColor,
                           shape: RoundedRectangleBorder(
@@ -111,7 +133,12 @@ class CpoeFormScreen extends StatelessWidget {
                       child: ElevatedButton.icon(
                         onPressed: () => _showPrognosisUpdateDialog(context),
                         icon: Icon(Icons.edit),
-                        label: Text('Change Value'),
+                        label: Text(
+                          'Change Value',
+                          style: TextStyle(
+                            fontSize: 12.5,
+                          ),
+                        ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Pallete.mainColor,
                           shape: RoundedRectangleBorder(
@@ -149,7 +176,7 @@ class CpoeFormScreen extends StatelessWidget {
                 ),
                 if (medicineProvider.medicines.isEmpty)
                   Text(
-                    '\n\nNo Orders\n\n',
+                    '\n\nNo current orders\n\n',
                     style: TextStyle(color: Pallete.greyColor),
                   )
                 else
@@ -160,7 +187,8 @@ class CpoeFormScreen extends StatelessWidget {
                         itemCount: medicineProvider.medicines.length,
                         itemBuilder: (ctx, index) => MedicineCard(
                           medicine: medicineProvider.medicines[index],
-                          index: index,
+                          patient: patient,
+                          index: index, 
                         ),
                       ),
                       SizedBox(height: 10),
@@ -172,13 +200,6 @@ class CpoeFormScreen extends StatelessWidget {
                             fontWeight: FontWeight.bold),
                       ),
                       SizedBox(height: 2),
-                      // Flexible(
-                      //   child: TextAreaField(
-                      //     validator: 'pls input',
-                      //     hintText: 'Instructions',
-                      //     onSaved: _medicine.instructions,
-                      //   ),
-                      // ),
                       TextFormField(
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
@@ -198,17 +219,19 @@ class CpoeFormScreen extends StatelessWidget {
                   children: [
                     ElevatedButton(
                       onPressed: () async {
-                        final accountID = context.read<AccountProvider>().id;
+                        var accountID = context.read<AccountProvider>().id;
                         // final patientID =
                         //     context.read<PatientProvider>().fetchPatient(index.toString());
-                        final patient = await context
+
+                        var patient = await context
                             .read<PatientProvider>()
-                            .fetchPatient(index.toString());
+ 
+                            .fetchPatient(widget.index.toString());
                         final patientID = patient.patientId;
                         final medicineProvider =
                             context.read<MedicineProvider>();
                         final success = await medicineProvider
-                            .saveToPrescription(accountID, patientID);
+                            .saveToPrescription(accountID, patientID); 
 
                         print('PATIENT $patientID ACCOUNT $accountID');
 
@@ -217,12 +240,12 @@ class CpoeFormScreen extends StatelessWidget {
                         print(success);
 
                         if (success) {
-                          print('test this selected PATIENT $index');
+                          // print('test this selected PATIENT $index');
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => PatientTabsScreen(
                                 patient: patient,
-                                index: index,
+                                index: widget.index,
                               ),
                             ),
                           );

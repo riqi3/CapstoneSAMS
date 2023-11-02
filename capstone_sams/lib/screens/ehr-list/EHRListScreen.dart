@@ -112,9 +112,9 @@ class _EhrListScreenState extends State<EhrListScreen> {
             return LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
                 if (constraints.maxWidth >= Dimensions.mobileWidth) {
-                  return _tabletView(snapshot, dataToShow, start);
+                  return _tabletView(dataToShow, start);
                 } else {
-                  return _mobileView(snapshot, dataToShow, start);
+                  return _mobileView(dataToShow, start);
                 }
               },
             );
@@ -183,8 +183,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
     );
   }
 
-  GridView _mobileView(AsyncSnapshot<List<Patient>> snapshot,
-      List<Patient> dataToShow, int start) {
+  GridView _mobileView(List<Patient> dataToShow, int start) {
     return GridView.builder(
       shrinkWrap: true,
       padding: EdgeInsets.only(),
@@ -209,8 +208,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
 
   // MediaQuery.of(context).size.width / (MediaQuery.of(context).size.height / 1)
 
-  GridView _tabletView(AsyncSnapshot<List<Patient>> snapshot,
-      List<Patient> dataToShow, int start) {
+  GridView _tabletView(List<Patient> dataToShow, int start) {
     return GridView.builder(
       shrinkWrap: true,
       physics: const BouncingScrollPhysics(),

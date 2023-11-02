@@ -7,7 +7,8 @@ from rest_framework import status
 
 from api.modules.user.models import Account, Data_Log
 from api.modules.user.serializers import AccountSerializer
-from api.modules.patient.serializers import Health_Record
+# from api.modules.patient.serializers import Health_Record
+from api.modules.patient.models import Health_Record, Patient
 from api.modules.cpoe.models import Comment, Medicine, Prescription
 from api.modules.cpoe.serializers import CommentSerializer, MedicineSerializer, PrescriptionSerializer
 
@@ -59,6 +60,7 @@ class CommentView(viewsets.ModelViewSet):
         except Exception as e:
             return Response({"message": "Failed to fetch comments.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
+        
     @api_view(['PUT'])
     def update_comment(request, comNum):
         try:
@@ -83,8 +85,8 @@ class CommentView(viewsets.ModelViewSet):
             comment = Comment.objects.get(pk = comNum)
             comment.delete()
             data_log = Data_Log.objects.create(
-                event = f"{comment.account.username} deleted personal note code {comNum}",
-                type = "User Deleted Personal Note",
+                event = f"{comment.account.username} deleted comment code {comNum}",
+                type = "User Deleted Personal Prescription",
                 account = comment.account 
             )
             return Response({"message": "Comment successfully deleted"}, status=status.HTTP_204_NO_CONTENT)
@@ -134,10 +136,12 @@ class PrescriptionView(viewsets.ViewSet):
             patientID = prescription_data['patient']
             account = Account.objects.get(pk=accountID)
             record = Health_Record.objects.get(patient=patientID)
+            patiente = Patient.objects.get(pk=patientID)
             prescription = Prescription.objects.create(
                 medicines=prescription_data['medicines'],
                 account=account,
-                health_record = record
+                health_record = record,
+                patient = patiente
             )
             data_log = Data_Log.objects.create(
                 event = f"{account.username} created prescription",
@@ -167,13 +171,144 @@ class PrescriptionView(viewsets.ViewSet):
         except Exception as e:
             print(e)
             return Response({"message": "Failed to update prescription amount", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        
-    @api_view(['GET'])
-    def fetch_prescription_by_ids(request, recordNum):
+
+    @api_view(['PUT'])
+    def update_prescription(request, presNum):
         try:
-            record = Health_Record.objects.get(pk=recordNum)
-            prescription = Prescription.objects.filter(health_record = record)
-            serializer = PrescriptionSerializer(prescription, many = True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            prescription_data = json.loads(request.body)
+            prescription = Prescription.objects.get(pk=presNum)
+            if 'medicines' in prescription_data:
+                prescription.medicines = prescription_data['medicines']
+            if 'account' in prescription_data:
+                account_id = prescription_data['account']
+                account = get_object_or_404(Account, pk=account_id)
+            if 'health_record' in prescription_data:
+                prescription.health_record_id = prescription_data['health_record']
+            if 'patient' in prescription_data:
+                prescription.patient_id = prescription_data['patient']
+            prescription.save()
+            data_log = Data_Log.objects.create(
+                event=f"{account.username} updated prescription",
+                type="User Updated Prescription",
+                account=account
+                )
+            return Response({"message": "Prescription updated successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
-             return Response({"message": "Failed to fetch prescription", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            print(e)
+            return Response({"message": "Failed to update prescription", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+    @api_view(['DELETE'])
+    def delete_prescription(request, presNum):
+        try:
+            prescription = Prescription.objects.get(presNum = presNum)
+            data_log = Data_Log.objects.create(
+                event = f"{prescription.account.username} deleted prescription code {prescription}",
+                type = "User Deleted Prescription",
+                account = prescription.account 
+            )
+            prescription.delete()
+            return Response({"message": "Prescription successfully deleted"}, status=status.HTTP_204_NO_CONTENT)
+        except Exception as e:
+             return Response({"message": "Failed to delete prescription", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    @api_view(['DELETE'])
+    def delete_medicine(request, presNum, drugId):
+        try:
+            prescription = Prescription.objects.get(presNum = presNum)
+            medicines = prescription.medicines
+            for medicine in medicines:
+                if medicine['drugId'] == drugId:
+                    medicines.remove(medicine)
+                    prescription.save()
+                    return Response({"message": "Medicine successfully deleted"}, status=status.HTTP_204_NO_CONTENT)
+            data_log = Data_Log.objects.create(
+                event = f"{prescription.account.username} deleted medicine code {prescription}",
+                type = "User Deleted Medicine",
+                account = prescription.account 
+            )
+            
+            return Response({"message": "Medicine with given drugId not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        except Prescription.DoesNotExist:
+            return Response({"message": "Prescription not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"message": "Failed to delete medicine", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+    # @api_view(['PUT'])
+    # def update_prescription(request, presNum):
+    #     try:
+    #         prescription_data = json.loads(request.body)
+    #         prescription = Prescription.objects.get(pk=presNum)
+    #         prescription.medicines = prescription_data
+    #         medicines = []
+    #         medicines.append(prescription_data)
+    #         prescription.medicines = medicines 
+    #         prescription.save()
+    #         # accountID = prescription_data['account']
+    #         accountID = prescription_data['account']
+    #         print(accountID)
+    #         account = get_object_or_404(Account, pk=accountID) 
+    #         data_log = Data_Log.objects.create(
+    #             event = f"{account.username} updated prescription",
+    #             type = "User Updated Prescription",
+    #             account = account
+    #         )
+    #         return Response({"message": "Prescription updated successfully"}, status=status.HTTP_200_OK)
+    #     except Exception as e:
+    #         print(e)
+    #         return Response({"message": "Failed to update prescription", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+    @api_view(['GET'])
+    def fetch_prescription_by_patientIds(request, patientID):
+        try: 
+            patient = Patient.objects.get(pk=patientID) 
+            prescriptions = Prescription.objects.filter(patient=patient) 
+            prescriptionData = PrescriptionSerializer(prescriptions, many=True) 
+            accountData = [] 
+            for prescription in prescriptions:
+                account = Account.objects.get(pk=prescription.account_id)
+                accountSerializer = AccountSerializer(account)
+                accountData.append(accountSerializer.data)
+        
+            data = {
+                "prescriptions": prescriptionData.data,
+                "accounts": accountData
+            }
+            # temp = json.loads(data)
+            unique_accounts = {}
+            new_accounts = []
+            for account in data['accounts']:
+                account_id = account['accountID']
+                if account_id not in unique_accounts:
+                    unique_accounts[account_id] = True
+                    new_accounts.append(account)
+            data['accounts'] = new_accounts
+            updated_json_data = json.dumps(data)
+            data_clean = json.loads(updated_json_data)
+        
+            return Response(data_clean, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"message": "Failed to fetch prescriptions", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+    # @api_view(['GET'])
+    # def fetch_prescription_by_ids(request, patientID): 
+    #     try:
+    #         id = Patient.objects.get(pk=patientID)
+    #         prescription = Prescription.objects.filter(patient = id)
+    #         accountID = prescription.account
+    #         account = Account.objects.get(pk=accountID)
+    #         prescriptionData = PrescriptionSerializer(prescription, many = True)
+    #         accountData = AccountSerializer(account, many = True)
+    #         data = {
+    #             "prescription" : prescriptionData.data,
+    #             "account": accountData.data
+    #             }
+    #         return Response(data, status=status.HTTP_200_OK)
+    #     except Exception as e:
+    #          return Response({"message": "Failed to fetch prescription", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+

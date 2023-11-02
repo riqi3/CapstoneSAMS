@@ -1,4 +1,3 @@
- 
 import 'package:flutter/material.dart';
 
 import '../../constants/theme/pallete.dart';
@@ -69,25 +68,43 @@ class TextAreaField extends StatelessWidget {
   }
 }
 
-class PasswordTextfield extends StatelessWidget {
+class PasswordTextfield extends StatefulWidget {
+  final TextEditingController controller;
+  final String validator;
+  final String hintText;
+
   const PasswordTextfield({
-    super.key,
     required this.controller,
     required this.validator,
     required this.hintText,
   });
 
-  final TextEditingController controller;
-  final String validator, hintText;
+  @override
+  _PasswordTextfieldState createState() => _PasswordTextfieldState();
+}
+
+class _PasswordTextfieldState extends State<PasswordTextfield> {
+  bool _isObscure = true;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: controller,
-      obscureText: true,
-      validator: (value) => value == '' ? validator : null,
+      controller: widget.controller,
+      obscureText: _isObscure,
+      validator: (value) => value!.isEmpty ? widget.validator : null,
       decoration: InputDecoration(
-        hintText: hintText,
+        hintText: widget.hintText,
+        suffixIcon: IconButton(
+          icon: Icon(
+            _isObscure ? Icons.visibility : Icons.visibility_off,
+            color: Colors.grey,
+          ),
+          onPressed: () {
+            setState(() {
+              _isObscure = !_isObscure;
+            });
+          },
+        ),
         filled: true,
         fillColor: Pallete.palegrayColor,
       ),
