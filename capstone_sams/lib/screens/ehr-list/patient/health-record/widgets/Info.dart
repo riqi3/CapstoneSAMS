@@ -146,11 +146,15 @@ class _InfoState extends State<Info> {
         prescription,
       );
     }
-    return physicianAction(
-      index,
-      prescriptionList,
-      prescription,
-    );
+    if (accountProvider.id != prescription.account) {
+      return PopupMenuButton(itemBuilder: (context) => []);
+    } else {
+      return physicianAction(
+        index,
+        prescriptionList,
+        prescription,
+      );
+    }
   }
 
   void deletePrescription(BuildContext context, Prescription prescription) {

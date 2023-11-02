@@ -19,7 +19,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
+  var _isLoading = false;
   // Future<Account?> _login() async {
   //   final url = Uri.parse('${Env.prefix}/login/');
   //   final response = await http.post(url,
@@ -49,14 +49,14 @@ class _LoginScreenState extends State<LoginScreen> {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 25,
-              color: Colors.red,
+              color: Pallete.redColor,
             ),
           ),
           content: const Text("Failed to login.",
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
-                color: Colors.purple,
+                color: Pallete.redColor,
               )),
           actions: [
             TextButton(
@@ -78,6 +78,77 @@ class _LoginScreenState extends State<LoginScreen> {
 
   //   super.dispose();
   // }
+
+  void _onSubmit() async {
+    setState(() => _isLoading = true);
+
+    final username = usernameController.text;
+    final password = passwordController.text;
+    final success =
+        await context.read<AccountProvider>().login(username, password);
+    if (success) {
+      usernameController.clear();
+      passwordController.clear();
+      // if (context.read<AccountProvider>().role ==
+      //     'Physician') {
+      //   Navigator.of(context).push(
+      //     MaterialPageRoute(
+      //       builder: (context) => const HomeScreen(),
+      //     ),
+      //   );
+      // } else {
+      //   Navigator.of(context).push(MaterialPageRoute(
+      //       builder: (context) => const AdminScreen()));
+      // }
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const HomeScreen(),
+        ),
+      );
+      // switch (context.read<AccountProvider>().role) {
+      //   case 'Physician':
+      //     {
+      //       Navigator.of(context).push(
+      //         MaterialPageRoute(
+      //           builder: (context) => const HomeScreen(),
+      //         ),
+      //       );
+      //     }
+      //     break;
+      //   case 'MedTech':
+      //     {
+      //       Navigator.of(context).push(
+      //         MaterialPageRoute(
+      //           builder: (context) => const HomeScreen(),
+      //         ),
+      //       );
+      //     }
+      //     break;
+      //   case 'Nurse':
+      //     {
+      //       Navigator.of(context).push(
+      //         MaterialPageRoute(
+      //           builder: (context) => const HomeScreen(),
+      //         ),
+      //       );
+      //     }
+      //     break;
+      //   default:
+      //     Navigator.of(context).push(
+      //       MaterialPageRoute(
+      //         builder: (context) => const AdminScreen(),
+      //       ),
+      //     );
+      // }
+    } else {
+      showFailure(context);
+      Future.delayed(
+        const Duration(seconds: 2),
+        () => setState(() => _isLoading = false),
+      );
+    }
+    print('login');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -124,83 +195,35 @@ class _LoginScreenState extends State<LoginScreen> {
                           hintText: 'Password',
                         ),
                         SizedBox(height: 20),
-                        TextButton(
-                          onPressed: () async {
-                            final username = usernameController.text;
-                            final password = passwordController.text;
-                            final success = await context
-                                .read<AccountProvider>()
-                                .login(username, password);
-                            if (success) {
-                              usernameController.clear();
-                              passwordController.clear();
-                              // if (context.read<AccountProvider>().role ==
-                              //     'Physician') {
-                              //   Navigator.of(context).push(
-                              //     MaterialPageRoute(
-                              //       builder: (context) => const HomeScreen(),
-                              //     ),
-                              //   );
-                              // } else {
-                              //   Navigator.of(context).push(MaterialPageRoute(
-                              //       builder: (context) => const AdminScreen()));
-                              // }
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => const HomeScreen(),
-                                ),
-                              );
-                              // switch (context.read<AccountProvider>().role) {
-                              //   case 'Physician':
-                              //     {
-                              //       Navigator.of(context).push(
-                              //         MaterialPageRoute(
-                              //           builder: (context) => const HomeScreen(),
-                              //         ),
-                              //       );
-                              //     }
-                              //     break;
-                              //   case 'MedTech':
-                              //     {
-                              //       Navigator.of(context).push(
-                              //         MaterialPageRoute(
-                              //           builder: (context) => const HomeScreen(),
-                              //         ),
-                              //       );
-                              //     }
-                              //     break;
-                              //   case 'Nurse':
-                              //     {
-                              //       Navigator.of(context).push(
-                              //         MaterialPageRoute(
-                              //           builder: (context) => const HomeScreen(),
-                              //         ),
-                              //       );
-                              //     }
-                              //     break;
-                              //   default:
-                              //     Navigator.of(context).push(
-                              //       MaterialPageRoute(
-                              //         builder: (context) => const AdminScreen(),
-                              //       ),
-                              //     );
-                              // }
-                            } else {
-                              showFailure(context);
-                            }
-                            print('login');
-                          },
-                          child: const Text(
-                            "Login",
-                            style: TextStyle(color: Pallete.mainColor),
-                          ),
+                        ElevatedButton.icon(
+                          onPressed: _isLoading ? null : _onSubmit,
                           style: ElevatedButton.styleFrom(
+                            minimumSize: Size(elementWidth, elementWidth / 8),
                             backgroundColor: Pallete.whiteColor,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
+                              borderRadius:
+                                  BorderRadius.circular(Sizing.borderRadius),
                             ),
-                            elevation: Sizing.cardElevation,
-                            minimumSize: Size(elementWidth, elementWidth / 8),
+                          ),
+                          icon: _isLoading
+                              ? Container(
+                                  width: 24,
+                                  height: 24,
+                                  padding: const EdgeInsets.all(4),
+                                  child: const CircularProgressIndicator(
+                                    color: Pallete.mainColor,
+                                    strokeWidth: 3,
+                                  ),
+                                )
+                              : const Icon(
+                                  Icons.login,
+                                  color: Pallete.mainColor,
+                                ),
+                          label: const Text(
+                            'Login',
+                            style: TextStyle(
+                              color: Pallete.mainColor,
+                            ),
                           ),
                         ),
                       ],

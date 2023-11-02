@@ -1,5 +1,6 @@
+import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
-import 'package:capstone_sams/providers/PatientProvider.dart'; 
+import 'package:capstone_sams/providers/PatientProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/api/api_service.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/AddMedicineDialog.dart';
@@ -34,6 +35,34 @@ class CpoeFormScreen extends StatefulWidget {
 class _CpoeFormScreenState extends State<CpoeFormScreen> {
   late String finalPrediction;
   late double finalConfidence;
+
+  var _isLoading = false;
+
+  void _onSubmit() async {
+    setState(() => _isLoading = true);
+    var accountID = context.read<AccountProvider>().id;
+
+    var patient = await context
+        .read<PatientProvider>()
+        .fetchPatient(widget.index.toString());
+    final patientID = patient.patientId;
+    final medicineProvider = context.read<MedicineProvider>();
+    final success =
+        await medicineProvider.saveToPrescription(accountID, patientID);
+
+    if (success) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => PatientTabsScreen(
+            patient: patient,
+            index: widget.index,
+          ),
+        ),
+      );
+    } else {
+      print("Failed to save prescription.");
+    }
+  }
 
   @override
   void initState() {
@@ -70,7 +99,7 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
   @override
   Widget build(BuildContext context) {
     final medicineProvider = Provider.of<MedicineProvider>(context);
- 
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Analyze Page'),
@@ -188,7 +217,7 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
                         itemBuilder: (ctx, index) => MedicineCard(
                           medicine: medicineProvider.medicines[index],
                           patient: widget.patient,
-                          index: index, 
+                          index: index,
                         ),
                       ),
                       SizedBox(height: 10),
@@ -217,62 +246,48 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(
-                      onPressed: () async {
-                        var accountID = context.read<AccountProvider>().id;
-                        // final patientID =
-                        //     context.read<PatientProvider>().fetchPatient(index.toString());
-
-                        var patient = await context
-                            .read<PatientProvider>()
- 
-                            .fetchPatient(widget.index.toString());
-                        final patientID = patient.patientId;
-                        final medicineProvider =
-                            context.read<MedicineProvider>();
-                        final success = await medicineProvider
-                            .saveToPrescription(accountID, patientID); 
-
-                        print('PATIENT $patientID ACCOUNT $accountID');
-
-                        print('TESTING PO ITO SA SUCCESS $success');
-
-                        print(success);
-
-                        if (success) {
-                          // print('test this selected PATIENT $index');
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => PatientTabsScreen(
-                                patient: patient,
-                                index: widget.index,
-                              ),
-                            ),
-                          );
-                        } else {
-                          print("Failed to save prescription.");
-                        }
-                      },
-                      child: Text('Submit'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Pallete.mainColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: _isLoading ? null : _onSubmit,
+                        style: ElevatedButton.styleFrom(
+                          // padding: const EdgeInsets.all(16.0),
+                          backgroundColor: Pallete.mainColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(Sizing.borderRadius),
+                          ),
                         ),
+                        icon: _isLoading
+                            ? Container(
+                                width: 24,
+                                height: 24,
+                                padding: const EdgeInsets.all(4),
+                                child: const CircularProgressIndicator(
+                                  color: Pallete.mainColor,
+                                  strokeWidth: 3,
+                                ),
+                              )
+                            : const Icon(
+                                Icons.upload,
+                              ),
+                        label: const Text('Submit'),
                       ),
                     ),
                     SizedBox(width: 10),
-                    ElevatedButton.icon(
-                      onPressed: () => showDialog(
-                        context: context,
-                        builder: (ctx) => AddMedicineDialog(),
-                      ),
-                      icon: Icon(Icons.edit),
-                      label: Text('Write Rx'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Pallete.mainColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () => showDialog(
+                          context: context,
+                          builder: (ctx) => AddMedicineDialog(),
+                        ),
+                        icon: Icon(Icons.edit),
+                        label: Text('Write Rx'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Pallete.mainColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(Sizing.borderRadius),
+                          ),
                         ),
                       ),
                     ),
