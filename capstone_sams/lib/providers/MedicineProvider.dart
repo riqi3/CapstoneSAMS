@@ -143,4 +143,12 @@ class MedicineProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  void resetState() {
+    Future.delayed(Duration.zero, () {
+      data = [];
+      _medicines = [];
+      notifyListeners();
+    });
+  }
 }

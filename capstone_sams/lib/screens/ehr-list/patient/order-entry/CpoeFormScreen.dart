@@ -40,6 +40,7 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
     super.initState();
     finalPrediction = widget.initialPrediction;
     finalConfidence = widget.initialConfidence;
+    Provider.of<MedicineProvider>(context, listen: false).resetState();
   }
 
   Future<void> _handleAnalyzeAgain(BuildContext context) async {
