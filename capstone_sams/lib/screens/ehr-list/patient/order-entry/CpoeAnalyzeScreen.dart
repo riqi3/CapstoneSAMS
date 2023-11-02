@@ -1,3 +1,4 @@
+import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/models/SymptomsModel.dart';
 import 'package:capstone_sams/providers/SymptomsFieldsProvider.dart';
 
@@ -14,10 +15,10 @@ import '../../../../models/PatientModel.dart';
 import 'CpoeFormScreen.dart';
 
 class CpoeAnalyzeScreen extends StatefulWidget {
-  final int index;
+  final int index; 
   final Patient patient;
   CpoeAnalyzeScreen({
-    required this.patient,
+    required this.patient, 
     required this.index,
   });
 

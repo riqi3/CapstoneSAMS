@@ -1,4 +1,5 @@
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
+import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -60,10 +61,8 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
         children: [
           HealthRecordsScreen(
             patient: widget.patient,
-            // index: widget.index,
           ),
           LaboratoriesScreen(index: widget.index),
-          // OrderEntryScreen(),
           if (accountProvider.role == 'physician')
             CpoeAnalyzeScreen(patient: widget.patient, index: widget.index),
         ],

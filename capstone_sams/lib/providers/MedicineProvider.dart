@@ -46,7 +46,7 @@ class MedicineProvider with ChangeNotifier {
                   element.drugId!
                       .toLowerCase()
                       .contains((query.toLowerCase())) ||
-                  element.name!.toLowerCase().contains((query.toLowerCase()));
+                  element.drugName!.toLowerCase().contains((query.toLowerCase()));
             },
           ).toList();
         } else {
@@ -75,12 +75,7 @@ class MedicineProvider with ChangeNotifier {
       'account': accountId,
       'patient': patientId,
     };
-
-    // final data = <String, dynamic>{
-    //   'medicines': _medicines,
-    //   'account': accountId,
-    //   'patient': patientId,
-    // };
+ 
     print('DATADATA$data');
 
     final response = await http.post(

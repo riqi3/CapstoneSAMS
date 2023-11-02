@@ -14,9 +14,10 @@ class TodoListWidget extends StatelessWidget {
     return todos.isEmpty
         ? const Center(
             child: Text(
-            'No notes.',
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-          ))
+              'No notes.',
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+            ),
+          )
         : ListView.separated(
             physics: const BouncingScrollPhysics(),
             padding: const EdgeInsets.all(16),

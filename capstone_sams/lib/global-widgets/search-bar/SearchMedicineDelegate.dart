@@ -84,7 +84,7 @@ class SearchMedicineDelegate extends SearchDelegate<String> {
                         ),
                         SizedBox(width: 5),
                         Text(
-                          '${medicine[index].name}',
+                          '${medicine[index].drugName}',
                           style: TextStyle(
                             fontSize: Sizing.header5,
                             fontWeight: FontWeight.normal,

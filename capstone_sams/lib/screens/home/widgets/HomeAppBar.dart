@@ -27,35 +27,7 @@ class HomeAppBar extends StatelessWidget {
             // backgroundImage: NetworkImage(profile),
             backgroundColor: Colors.transparent,
           ),
-        ),
-        // title: Row(
-        //   children: <Widget>[
-        //     SizedBox(
-        //       width: 5,
-        //     ),
-        //     Text(
-        //       'Welcome ',
-        //       style: TextStyle(
-        //         fontSize: Sizing.textSizeAppBar,
-        //         color: Pallete.textColor,
-        //       ),
-        //     ),
-        //     Text(
-        //       'NAME',
-        //       style: TextStyle(
-        //         fontSize: Sizing.textSizeAppBar,
-        //         color: Pallete.mainColor,
-        //       ),
-        //     ),
-        //     Text(
-        //       '!',
-        //       style: TextStyle(
-        //         fontSize: Sizing.textSizeAppBar,
-        //         color: Pallete.textColor,
-        //       ),
-        //     ),
-        //   ],
-        // ),
+        ), 
       ),
     );
   }

@@ -99,6 +99,11 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_web_plugins:
+    dependency: transitive
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   font_awesome_flutter:
     dependency: "direct main"
     description:
@@ -107,6 +112,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "10.5.0"
+  go_router:
+    dependency: "direct main"
+    description:
+      name: go_router
+      sha256: e156bc1b2088eb5ece9351bccd48c3e1719a4858eacbd44e59162e98a68205d1
+      url: "https://pub.dev"
+    source: hosted
+    version: "12.0.1"
   http:
     dependency: "direct main"
     description:
@@ -130,7 +143,16 @@ packages:
       sha256: "3bc132a9dbce73a7e4a21a17d06e1878839ffbf975568bc875c60537824b0c4d"
       url: "https://pub.dev"
     source: hosted
-    version: "0.18.1"
+    version: "0.18.1" 
+  logging:
+    dependency: transitive
+    description:
+      name: logging
+      sha256: "623a88c9594aa774443aa3eb2d41807a48486b5613e67599fb4c41c0ad47c340"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
+ 
   matcher:
     dependency: transitive
     description:
@@ -273,5 +295,6 @@ packages:
     source: hosted
     version: "0.1.4-beta"
 sdks:
-  dart: ">=3.1.0-185.0.dev <4.0.0"
-  flutter: ">=3.0.0"
+  dart: ">=3.1.0-185.0.dev <4.0.0" 
+  flutter: ">=3.7.0"
+ 
