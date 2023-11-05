@@ -1,15 +1,52 @@
 
 {% extends "admin/base.html" %} {%block content %} {% load static %}
+ 
+ <style>
+  .float-right.d-none.d-sm-inline {
+    display: none!important;
+}
+
+  
+</style>  
 
 <div>
   <form action="." method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    <table>
-      {{ form.as_table }}
-    </table>
+    {% csrf_token %} 
+    <div class="field">
+      <label for="lab_title">{{ form.title.label }}</label>
+      <div>
+        {{ form.title }}
+      </div>
+    </div>
 
+    <div class="field">
+      <label for="lab_comments">{{ form.comment.label }}</label>
+      <div>
+        {{ form.comment }}
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="lab_result_file">{{ form.pdf.label }}</label>
+      <div>
+        {{ form.pdf }}
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="select_patient">{{ form.patient.label }}</label>
+      <div>
+        {{ form.patient }}
+      </div>
+    </div>
+
+     
+    {% comment %} <table>
+      {{ form.as_table }}
+    </table>  {% endcomment %}
     <button type="submit">Upload File</button>
   </form>
 </div>
- 
+  
+
 {{ block.super }} {% endblock %}

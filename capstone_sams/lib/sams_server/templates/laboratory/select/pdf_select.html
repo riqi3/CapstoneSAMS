@@ -2,8 +2,14 @@
 
 {% extends "admin/base.html" %} {% load static %} {%block content %}
 
+
+ <style>
+  .float-right.d-none.d-sm-inline {
+    display: none!important;
+}
+</style>  
+
 <div>
-  
   <form action="." method="POST" enctype="multipart/form-data">
     {%csrf_token%}
 
