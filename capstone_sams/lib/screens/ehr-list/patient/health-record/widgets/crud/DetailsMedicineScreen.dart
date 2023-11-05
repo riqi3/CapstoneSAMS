@@ -4,23 +4,26 @@ import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/global-widgets/SearchAppBar.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class CounterScreen extends StatefulWidget {
+class DetailsMedicineScreen extends StatefulWidget {
   final Prescription prescription;
   final int index;
-  const CounterScreen({
+  const DetailsMedicineScreen({
     Key? key,
     required this.prescription,
     required this.index,
   }) : super(key: key);
 
   @override
-  State<CounterScreen> createState() => _CounterScreenState();
+  State<DetailsMedicineScreen> createState() => _DetailsMedicineScreenState();
 }
 
-class _CounterScreenState extends State<CounterScreen> {
-  // final array = prescription.medicines[];
+class _DetailsMedicineScreenState extends State<DetailsMedicineScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,25 +69,12 @@ class _CounterScreenState extends State<CounterScreen> {
                   child: Text(
                     'Medication Information',
                     style: TextStyle(
-                        color: Pallete.whiteColor,
-                        fontSize: Sizing.header3,
-                        fontWeight: FontWeight.w600),
+                      color: Pallete.whiteColor,
+                      fontSize: Sizing.header3,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
-                // Container(
-                //   padding: EdgeInsets.all(Sizing.sectionSymmPadding),
-                //   alignment: Alignment.centerLeft,
-                //   decoration: BoxDecoration(
-                //     color: Pallete.whiteColor,
-                //   ),
-                //   child: Text(
-                //     '${widget.prescription.medicines![widget.index]}',
-                //     style: TextStyle(
-                //         color: Pallete.mainColor,
-                //         fontSize: Sizing.header4,
-                //         fontWeight: FontWeight.w600),
-                //   ),
-                // ),
                 Material(
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(Sizing.borderRadius),
@@ -151,94 +141,23 @@ class _CounterScreenState extends State<CounterScreen> {
                                     '${widget.prescription.medicines![widget.index]['instructions']}')),
                               ],
                             ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                width: 100,
-                                height: 100,
-                                child: Center(
-                                  child: Plus(),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Container(
-                                width: 100,
-                                height: 100,
-                                // color: Colors.red,
-                                child: Column(
-                                  // mainAxisAlignment: MainAxisAlignment.center,
-                                  // crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Quantity',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: Sizing.header4),
-                                    ),
-                                    Text(
-                                      '${widget.prescription.medicines![widget.index]['quantity']}',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: Sizing.header1),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Container(
-                                width: 100,
-                                height: 100,
-                                child: Center(
-                                  child: Subtract(),
-                                ),
-                              ),
+                            DataRow(
+                              cells: <DataCell>[
+                                DataCell(Text('Quantity')),
+                                DataCell(Text(
+                                    '${widget.prescription.medicines![widget.index]['quantity']}')),
+                              ],
                             ),
                           ],
                         ),
                       ],
                     ),
-                    // Text('${widget.prescription.medicines![widget.index]}'),
                   ),
                 ),
               ],
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  ElevatedButton Subtract() {
-    return ElevatedButton(
-      onPressed: () => {print('prev')},
-      child: const FaIcon(FontAwesomeIcons.minus),
-      style: ElevatedButton.styleFrom(
-        primary: Pallete.mainColor,
-        elevation: 3,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(100.0),
-        ),
-        minimumSize: Size(50, 50),
-      ),
-    );
-  }
-
-  ElevatedButton Plus() {
-    return ElevatedButton(
-      onPressed: () => {print('next')},
-      child: const FaIcon(FontAwesomeIcons.plus),
-      style: ElevatedButton.styleFrom(
-        primary: Pallete.mainColor,
-        elevation: 3,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(100.0),
-        ),
-        minimumSize: Size(50, 50),
       ),
     );
   }

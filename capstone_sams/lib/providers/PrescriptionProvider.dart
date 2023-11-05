@@ -81,6 +81,30 @@ class PrescriptionProvider with ChangeNotifier {
     }
   }
 
+  Future updatePrescriptionAmount(
+      Prescription prescription, String patientID) async {
+    final headers = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
+
+    final response = await http.put(
+      Uri.parse(
+        _getUrl(
+            'cpoe/prescription/get-prescription/update-amount/${prescription.presNum}'),
+      ),
+      headers: headers,
+      body: jsonEncode(prescription),
+    );
+    await Future.delayed(Duration(milliseconds: 3000));
+
+    if (response.statusCode == 200) {
+      fetchPrescriptions(patientID);
+      notifyListeners();
+    } else {
+      throw Exception('Failed to update prescription amount');
+    }
+  }
+
   Future removePrescription(Prescription prescription, String patientID) async {
     final headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',

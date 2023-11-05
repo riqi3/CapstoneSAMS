@@ -10,8 +10,8 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../../constants/Env.dart';
-import '../../../../../constants/theme/pallete.dart';
+import '../../../../../../constants/Env.dart';
+import '../../../../../../constants/theme/pallete.dart';
 
 class EditMedicineScreen extends StatefulWidget {
   final Medicine medicine;
@@ -20,12 +20,13 @@ class EditMedicineScreen extends StatefulWidget {
   final Patient patient;
   final int index;
 
-  EditMedicineScreen(
-      {required this.medicine,
-      required this.prescription,
-      required this.presNum,
-      required this.patient,
-      required this.index});
+  EditMedicineScreen({
+    required this.medicine,
+    required this.prescription,
+    required this.presNum,
+    required this.patient,
+    required this.index,
+  });
 
   @override
   _EditMedicineScreenState createState() => _EditMedicineScreenState();
