@@ -54,11 +54,17 @@ class LabResultForm(forms.ModelForm):
             "patient": "Select Patient",
         }
         widgets = {
-            "title": forms.TextInput(attrs={"id": "lab_title"}),
-            "comment": forms.Textarea(attrs={"id": "lab_comments"}),
+            "title": forms.TextInput(attrs={"id": "id_title"}),
+            "comment": forms.Textarea(attrs={"id": "id_comment"}),
             "pdf": forms.ClearableFileInput(attrs={"id": "lab_result_file"}),
             "patient": forms.Select(attrs={"id": "select_patient"}),
         }
+        # widgets = {
+        #     "title": forms.TextInput(attrs={"id": "id_title"}),
+        #     "comment": forms.Textarea(attrs={"id": "lab_comment"}),
+        #     "pdf": forms.ClearableFileInput(attrs={"id": "lab_result_file"}),
+        #     "patient": forms.Select(attrs={"id": "select_patient"}),
+        # }
 
 
 class ProcessPdf(APIView):
@@ -101,55 +107,7 @@ class ProcessPdf(APIView):
             return Response(
                 {"message": "Failed to fetch labresult.", "error": str(e)},
                 status=status.HTTP_400_BAD_REQUEST,
-            )
-
-    # def select_pdf(request):
-    #     if request.method == 'POST':
-    #         selected_pdfs = request.POST.getlist('item')
-    #         pdf_contents = []
-
-    #         for pdf_id in selected_pdfs:
-    #             pdf = LabResult.objects.get(pdfId=pdf_id)
-    #             with pdf.pdf.open('rb') as file:
-    #                 reader = PyPDF2.PdfReader(file)
-    #                 content = []
-
-    #                 for page in reader.pages:
-    #                     content.append(page.extract_text())
-
-    #                 pdf_contents.append(content)
-    #                 # print(pdf_contents)
-
-    #     # Convert the extracted text to a JSON-parsed dictionary
-    #         parsed_data = {'pdf_contents': pdf_contents}
-    #         json_data = json.dumps(parsed_data)
-    #         # print(json_data)
-    #         return JsonResponse({'result': json.loads(json_data)})
-
-    # PyPDF2
-    # def select_pdf(request):
-    #     if request.method == 'POST':
-    #         selected_pdfs = request.POST.getlist('item')
-    #         pdf_contents = []
-
-    #         for pdf_id in selected_pdfs:
-    #             pdf = LabResult.objects.get(pdfId=pdf_id)
-    #             with pdf.pdf.open('rb') as file:
-    #                 reader = PyPDF2.PdfReader(file)
-    #                 content = []
-
-    #                 for page in reader.pages:
-    #                     content.append(page.extract_text())
-
-    #                 pdf_contents.append(content)
-
-    #         json_data = json.dumps(pdf_contents)
-    #         print(json_data)
-    #         # simplejson.loads('[%s]'%json_data[:-1])
-    #         # text = json.loads(r'[' + json_data[:-1] + ']')
-    #         return JsonResponse({'result': json.loads(json_data)})
-
-    # tabnula
+            ) 
 
     def select_pdf(request, patient):
         if request.method == "POST":
@@ -197,7 +155,6 @@ class ProcessPdf(APIView):
                     readTable = tables[index]
                     tableAppend = [tableAppend, readTable]
 
-                # print('\n\n\n\n')
                 cleaned_data = cleanJsonTable(tableAppend)
 
                 def get_data_and_move_higher(arr):
@@ -259,7 +216,8 @@ class ProcessPdf(APIView):
 
                 pdf_contents.append(jsonLabResult)
                 json_data = json.dumps(pdf_contents)
-            return JsonResponse({"result": json.loads(json_data)})
+            # return JsonResponse({"result": json.loads(json_data)})
+            return HttpResponseRedirect(reverse("admin"))
         else:
             pdf_list = LabResult.objects.filter(patient_id=patient)
             return render(

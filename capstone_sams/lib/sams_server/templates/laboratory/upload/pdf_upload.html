@@ -1,52 +1,153 @@
 
 {% extends "admin/base.html" %} {%block content %} {% load static %}
- 
- <style>
+{% load i18n admin_urls %}
+
+<style>
   .float-right.d-none.d-sm-inline {
-    display: none!important;
+    display: none !important;
+  }
+
+
+  .content.border-bottom.mb-2 {
+    padding: 0px 0px;
 }
 
-  
-</style>  
+  .laboratory-title-section {
+    padding-bottom: 25px;
+}
+</style>
 
-<div>
+<div class="content border-bottom mb-2">
+  <div class="container-fluid laboratory-title-section">
+    <div class="row">
+      <div class="col-12 col-md-auto d-flex flex-grow-1 align-items-center">
+        <h1 class="h4 m-0 pr-3 mr-3 border-right">Laboratory Record</h1>
+
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/admin/">Home</a></li>
+           
+          {% comment %} <li class="breadcrumb-item">
+            <a href="/laboratory/upload/">Upload Laboratory Result</a>
+          </li>
+          <li class="breadcrumb-item">
+            <a href="/admin/api/labresult/">Laboratory Record</a> {% endcomment %}
+          </li> 
+          <li class="breadcrumb-item active">Add Laboratory Record</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="content-main" class="col-12">
   <form action="." method="POST" enctype="multipart/form-data">
-    {% csrf_token %} 
-    <div class="field">
-      <label for="lab_title">{{ form.title.label }}</label>
-      <div>
-        {{ form.title }}
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-12 col-lg-9">
+        <div class="card">
+          <div class="card-body">
+            <div class="form-group field-title">
+              <div class="row">
+                <label class="col-sm-3 text-left" for="id_title">
+                  {{ form.title.label }} <span class="text-red">*</span>
+                </label>
+                <div class="col-sm-7">{{ form.title }}</div>
+              </div>
+            </div>
+            <div class="form-group field-comment">
+              <div class="row">
+                <label class="col-sm-3 text-left" for="id_comment">
+                  {{ form.comment.label }} <span class="text-red">*</span>
+                </label>
+                <div class="col-sm-7">{{ form.comment }}</div>
+              </div>
+            </div>
+            <div class="form-group field-pdf">
+              <div class="row">
+                <label class="col-sm-3 text-left" for="id_pdf">
+                  {{ form.pdf.label }} <span class="text-red">*</span>
+                </label>
+                <div class="col-sm-7 field-pdf">{{ form.pdf }}</div>
+              </div>
+            </div>
+
+            <div class="form-group field-patient">
+              <div class="row">
+                <label class="col-sm-3 text-left" for="id_patient">
+                  Patient
+            
+                  <span class="text-red">* </span>
+                </label>
+                <div class="col-sm-7 field-patient">
+                  <div class="related-widget-wrapper" data-model-ref="Patient Record">
+                    {{ form.patient }}
+                  </div>
+            
+                  <div class="help-block red"></div>
+            
+                  <div class="help-block text-red"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-3">
+        <div id="jazzy-actions">
+          <div class="form-group">
+            <input
+              type="submit"
+              value="Upload File"
+              class="btn btn-success form-control"
+            />
+          </div>
+        </div>
       </div>
     </div>
-
-    <div class="field">
-      <label for="lab_comments">{{ form.comment.label }}</label>
-      <div>
-        {{ form.comment }}
-      </div>
-    </div>
-
-    <div class="field">
-      <label for="lab_result_file">{{ form.pdf.label }}</label>
-      <div>
-        {{ form.pdf }}
-      </div>
-    </div>
-
-    <div class="field">
-      <label for="select_patient">{{ form.patient.label }}</label>
-      <div>
-        {{ form.patient }}
-      </div>
-    </div>
-
-     
-    {% comment %} <table>
-      {{ form.as_table }}
-    </table>  {% endcomment %}
-    <button type="submit">Upload File</button>
   </form>
 </div>
-  
+
+
 
 {{ block.super }} {% endblock %}
+
+
+{% comment %} 
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% block head %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <meta charset="UTF-8">
+    <title>my title goes here</title>
+{% endblock %}
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <nav class="navbar custom-navbar">
+                    <h1>World Truthers</h1>
+
+                    <div class="col navbar-buttons">
+                        <button class="btn custom-button"><p><b>Contact</b></p></button>
+                        <button class="btn custom-button"><p><b>About</b></p></button>
+                        <button class="btn custom-button"><p><b>Returns</b></p></button>
+                        <button class="btn custom-button"><p><b>Payment</b></p></button>
+                        <button class="btn custom-button"><p><b>Delivery</b></p></button>
+                        <button class="btn custom-button"><p><b>Store</b></p></button>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+    {% block content %}
+    {% endblock %}
+</body> {% endcomment %}
