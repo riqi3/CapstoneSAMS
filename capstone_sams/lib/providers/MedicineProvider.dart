@@ -15,8 +15,13 @@ class MedicineProvider with ChangeNotifier {
 
   List<Medicine> get medicines => _medicines;
 
-  Future<List<Medicine>> fetchMedicines() async {
-    final response = await http.get(Uri.parse('${Env.prefix}/cpoe/medicines/'));
+  Future<List<Medicine>> fetchMedicines(String token) async {
+    final header = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token',
+    };
+    final response = await http.get(Uri.parse('${Env.prefix}/cpoe/medicines/'),
+        headers: header);
     await Future.delayed(Duration(milliseconds: 3000));
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
@@ -29,8 +34,13 @@ class MedicineProvider with ChangeNotifier {
     }
   }
 
-  Future<List<Medicine>> searchMedicines({String? query}) async {
-    final response = await http.get(Uri.parse('${Env.prefix}/cpoe/medicines/'));
+  Future<List<Medicine>> searchMedicines({String? query, String? token}) async {
+    final header = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token',
+    };
+    final response = await http.get(Uri.parse('${Env.prefix}/cpoe/medicines/'),
+        headers: header);
     await Future.delayed(Duration(milliseconds: 3000));
     try {
       if (response.statusCode == 200) {
@@ -46,7 +56,9 @@ class MedicineProvider with ChangeNotifier {
                   element.drugId!
                       .toLowerCase()
                       .contains((query.toLowerCase())) ||
-                  element.drugName!.toLowerCase().contains((query.toLowerCase()));
+                  element.drugName!
+                      .toLowerCase()
+                      .contains((query.toLowerCase()));
             },
           ).toList();
         } else {
@@ -61,11 +73,11 @@ class MedicineProvider with ChangeNotifier {
     return _medicines;
   }
 
-
-
-  Future<bool> saveToPrescription(String? accountId, String? patientId) async {
-    final headers = <String, String>{
+  Future<bool> saveToPrescription(
+      String? accountId, String? patientId, String token) async {
+    final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token',
     };
     final medicinesJson =
         _medicines.map((medicine) => medicine.toJson()).toList();
@@ -75,12 +87,12 @@ class MedicineProvider with ChangeNotifier {
       'account': accountId,
       'patient': patientId,
     };
- 
+
     print('DATADATA$data');
 
     final response = await http.post(
       Uri.parse('${Env.prefix}/cpoe/prescription/save/'),
-      headers: headers,
+      headers: header,
       body: jsonEncode(data),
     );
     await Future.delayed(Duration(milliseconds: 3000));

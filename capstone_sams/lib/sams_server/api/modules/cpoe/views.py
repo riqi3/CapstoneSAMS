@@ -1,7 +1,8 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 import json
 from rest_framework import status
 
@@ -96,8 +97,9 @@ class CommentView(viewsets.ModelViewSet):
 
 
 class MedicineView(viewsets.ModelViewSet):
-
+    
     @api_view(['GET'])
+    @permission_classes([IsAuthenticated])
     def fetch_medicine(request):
         try:
             queryset = Medicine.objects.all()
@@ -129,6 +131,7 @@ class MedicineView(viewsets.ModelViewSet):
 
 class PrescriptionView(viewsets.ViewSet):
     @api_view(['POST'])
+    @permission_classes([IsAuthenticated])
     def save_prescription(request):
         try:
             prescription_data = json.loads(request.body)

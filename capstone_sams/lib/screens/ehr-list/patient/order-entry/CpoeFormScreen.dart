@@ -1,5 +1,5 @@
 import 'package:capstone_sams/models/PrescriptionModel.dart';
-import 'package:capstone_sams/providers/PatientProvider.dart'; 
+import 'package:capstone_sams/providers/PatientProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/api/api_service.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/AddMedicineDialog.dart';
@@ -34,10 +34,12 @@ class CpoeFormScreen extends StatefulWidget {
 class _CpoeFormScreenState extends State<CpoeFormScreen> {
   late String finalPrediction;
   late double finalConfidence;
+  late String token;
 
   @override
   void initState() {
     super.initState();
+    token = context.read<AccountProvider>().token!;
     finalPrediction = widget.initialPrediction;
     finalConfidence = widget.initialConfidence;
   }
@@ -70,7 +72,7 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
   @override
   Widget build(BuildContext context) {
     final medicineProvider = Provider.of<MedicineProvider>(context);
- 
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Analyze Page'),
@@ -188,7 +190,7 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
                         itemBuilder: (ctx, index) => MedicineCard(
                           medicine: medicineProvider.medicines[index],
                           patient: widget.patient,
-                          index: index, 
+                          index: index,
                         ),
                       ),
                       SizedBox(height: 10),
@@ -225,13 +227,12 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
 
                         var patient = await context
                             .read<PatientProvider>()
- 
-                            .fetchPatient(widget.index.toString());
+                            .fetchPatient(widget.index.toString(), token);
                         final patientID = patient.patientId;
                         final medicineProvider =
                             context.read<MedicineProvider>();
                         final success = await medicineProvider
-                            .saveToPrescription(accountID, patientID); 
+                            .saveToPrescription(accountID, patientID, token);
 
                         print('PATIENT $patientID ACCOUNT $accountID');
 
