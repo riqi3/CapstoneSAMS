@@ -15,10 +15,10 @@ import '../../../../models/PatientModel.dart';
 import 'CpoeFormScreen.dart';
 
 class CpoeAnalyzeScreen extends StatefulWidget {
-  final int index; 
+  final int index;
   final Patient patient;
   CpoeAnalyzeScreen({
-    required this.patient, 
+    required this.patient,
     required this.index,
   });
 
@@ -27,6 +27,12 @@ class CpoeAnalyzeScreen extends StatefulWidget {
 }
 
 class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<SymptomFieldsProvider>(context, listen: false).resetState();
+  }
+
   void _analyzeSymptoms() async {
     var symptomFieldsProvider =
         Provider.of<SymptomFieldsProvider>(context, listen: false);

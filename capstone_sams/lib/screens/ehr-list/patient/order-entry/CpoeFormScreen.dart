@@ -1,5 +1,5 @@
 import 'package:capstone_sams/models/PrescriptionModel.dart';
-import 'package:capstone_sams/providers/PatientProvider.dart'; 
+import 'package:capstone_sams/providers/PatientProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/api/api_service.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/AddMedicineDialog.dart';
@@ -40,6 +40,7 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
     super.initState();
     finalPrediction = widget.initialPrediction;
     finalConfidence = widget.initialConfidence;
+    Provider.of<MedicineProvider>(context, listen: false).resetState();
   }
 
   Future<void> _handleAnalyzeAgain(BuildContext context) async {
@@ -70,7 +71,7 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
   @override
   Widget build(BuildContext context) {
     final medicineProvider = Provider.of<MedicineProvider>(context);
- 
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Analyze Page'),
@@ -100,7 +101,7 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
                 ),
                 SizedBox(height: 15),
                 Text(
-                  'Suspected Disease: $finalPrediction',
+                  'Suspected Disease: \n $finalPrediction',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 Text(
@@ -188,7 +189,7 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
                         itemBuilder: (ctx, index) => MedicineCard(
                           medicine: medicineProvider.medicines[index],
                           patient: widget.patient,
-                          index: index, 
+                          index: index,
                         ),
                       ),
                       SizedBox(height: 10),
@@ -225,13 +226,13 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
 
                         var patient = await context
                             .read<PatientProvider>()
- 
                             .fetchPatient(widget.index.toString());
                         final patientID = patient.patientId;
                         final medicineProvider =
                             context.read<MedicineProvider>();
-                        final success = await medicineProvider
-                            .saveToPrescription(accountID, patientID); 
+                        final success =
+                            await medicineProvider.saveToPrescription(
+                                accountID, patientID, finalPrediction);
 
                         print('PATIENT $patientID ACCOUNT $accountID');
 
