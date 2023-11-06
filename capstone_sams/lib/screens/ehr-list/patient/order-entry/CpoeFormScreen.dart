@@ -1,3 +1,4 @@
+import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/providers/PatientProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
@@ -35,6 +36,41 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
   late String finalPrediction;
   late double finalConfidence;
   late String token;
+
+  var _isLoading = false;
+
+  void _onSubmit() async {
+    setState(() => _isLoading = true);
+    var accountID = context.read<AccountProvider>().id;
+    var patient = await context
+            .read<PatientProvider>()
+            .fetchPatient(widget.index.toString(), token);
+    final medicineProvider = context.read<MedicineProvider>();
+    final patientID = patient.patientId;
+    final success = await medicineProvider.saveToPrescription(
+                        accountID, patientID, finalPrediction, token);
+
+    if (success) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => PatientTabsScreen(
+            patient: patient,
+            index: widget.index,
+          ),
+        ),
+      );
+      const snackBar = SnackBar(
+        backgroundColor: Pallete.successColor,
+        content: Text(
+          'Successfully added prescription',
+          style: TextStyle(fontWeight: FontWeight.w700),
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else {
+      print("Failed to save prescription.");
+    }
+  }
 
   @override
   void initState() {
@@ -194,82 +230,73 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
                           index: index,
                         ),
                       ),
-                      SizedBox(height: 10),
-                      Text(
-                        'Comment Section',
-                        style: TextStyle(
-                            color: Pallete.paleblueColor,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 2),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF9EC6FA)),
-                          ),
-                          filled: true,
-                          fillColor: Pallete.palegrayColor,
-                        ),
-                        maxLines: null,
-                        keyboardType: TextInputType.multiline,
-                      ),
+                      // SizedBox(height: 10),
+                      // Text(
+                      //   'Comment Section',
+                      //   style: TextStyle(
+                      //       color: Pallete.primaryColor,
+                      //       fontSize: 20,
+                      //       fontWeight: FontWeight.bold),
+                      // ),
+                      // SizedBox(height: 2),
+                      // TextFormField(
+                      //   decoration: InputDecoration(
+                      //     border: OutlineInputBorder(
+                      //       borderSide: BorderSide(color: Color(0xFF9EC6FA)),
+                      //     ),
+                      //     filled: true,
+                      //     fillColor: Pallete.palegrayColor,
+                      //   ),
+                      //   maxLines: null,
+                      //   keyboardType: TextInputType.multiline,
+                      // ),
                     ],
                   ),
                 SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(
-                      onPressed: () async {
-                        var accountID = context.read<AccountProvider>().id;
-                        // final patientID =
-                        //     context.read<PatientProvider>().fetchPatient(index.toString());
-
-                        var patient = await context
-                            .read<PatientProvider>()
-                            .fetchPatient(widget.index.toString(), token);
-                        final patientID = patient.patientId;
-                        final medicineProvider =
-                            context.read<MedicineProvider>();
-                        final success =
-                            await medicineProvider.saveToPrescription(
-                                accountID, patientID, finalPrediction, token);
-
-                        if (success) {
-                          // print('test this selected PATIENT $index');
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => PatientTabsScreen(
-                                patient: patient,
-                                index: widget.index,
-                              ),
-                            ),
-                          );
-                        } else {
-                          print("Failed to save prescription.");
-                        }
-                      },
-                      child: Text('Submit'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Pallete.mainColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: _isLoading ? null : _onSubmit,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Pallete.mainColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(Sizing.borderRadius),
+                          ),
                         ),
+                        icon: _isLoading
+                            ? Container(
+                                width: 24,
+                                height: 24,
+                                padding: const EdgeInsets.all(4),
+                                child: const CircularProgressIndicator(
+                                  color: Pallete.mainColor,
+                                  strokeWidth: 3,
+                                ),
+                              )
+                            : const Icon(
+                                Icons.upload,
+                              ),
+                        label: const Text('Submit'),
                       ),
                     ),
                     SizedBox(width: 10),
-                    ElevatedButton.icon(
-                      onPressed: () => showDialog(
-                        context: context,
-                        builder: (ctx) => AddMedicineDialog(),
-                      ),
-                      icon: Icon(Icons.edit),
-                      label: Text('Write Rx'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Pallete.mainColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () => showDialog(
+                          context: context,
+                          builder: (ctx) => AddMedicineDialog(),
+                        ),
+                        icon: Icon(Icons.edit),
+                        label: Text('Write Rx'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Pallete.mainColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(Sizing.borderRadius),
+                          ),
                         ),
                       ),
                     ),

@@ -4,7 +4,8 @@ import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/MedicineProvider.dart';
 import 'package:capstone_sams/providers/PrescriptionProvider.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/EditMedicineScreen.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/crud/EditMedicineScreen.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/EditMedicineDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -19,8 +20,9 @@ class MedicineCard extends StatelessWidget {
   final int index;
 
   MedicineCard(
-      {required this.medicine, required this.patient,
-      // required this.prescription, 
+      {required this.medicine,
+      required this.patient,
+      // required this.prescription,
       required this.index});
 
   @override
@@ -101,25 +103,22 @@ class MedicineCard extends StatelessWidget {
       children: [
         ElevatedButton.icon(
           onPressed: () {
-             
-            // showDialog(
-            //   context: context,
-            //   builder: (context) => EditMedicineScreen(
-            //     medicine: medicine,
-            //     patient: patient,
-            //     index: index,
-            //     // prescription: prescription,
-            //     // presNum: prescriptionProvider.presNum,
-            //   ),
-            // );
+            print('edit order by dialog phone');
+            showDialog(
+              context: context,
+              builder: (context) => EditMedicineDialog(
+                medicine: medicine,
+                index: index,
+              ),
+            );
           },
           icon: FaIcon(
             FontAwesomeIcons.pen,
-            color: Pallete.greenColor,
+            color: Pallete.successColor,
           ),
           label: Text('Edit'),
           style: ElevatedButton.styleFrom(
-            backgroundColor: Pallete.greenColor,
+            backgroundColor: Pallete.successColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0),
             ),
@@ -133,11 +132,11 @@ class MedicineCard extends StatelessWidget {
           },
           icon: FaIcon(
             FontAwesomeIcons.trash,
-            color: Pallete.redColor,
+            color: Pallete.dangerColor,
           ),
           label: Text('Remove'),
           style: ElevatedButton.styleFrom(
-            backgroundColor: Pallete.redColor,
+            backgroundColor: Pallete.dangerColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0),
             ),
@@ -155,26 +154,23 @@ class MedicineCard extends StatelessWidget {
           child: ListTile(
             leading: FaIcon(
               FontAwesomeIcons.pen,
-              color: Pallete.greenColor,
+              color: Pallete.successColor,
             ),
             title: Text(
               'Edit',
               style: TextStyle(
-                color: Pallete.greenColor,
+                color: Pallete.successColor,
               ),
             ),
             onTap: () {
-               
-              // showDialog(
-              //   context: context,
-              //   builder: (context) => EditMedicineScreen(
-              //     medicine: medicine,
-              //     patient: patient,
-              //     index: index,
-              //     // prescription: prescription,
-              //     // presNum: prescriptionProvider.presNum,
-              //   ),
-              // );
+              print('edit order by dialog tablet');
+              showDialog(
+                context: context,
+                builder: (context) => EditMedicineDialog(
+                  medicine: medicine,
+                  index: index,
+                ),
+              );
             },
           ),
         ),
@@ -182,11 +178,11 @@ class MedicineCard extends StatelessWidget {
           child: ListTile(
             leading: FaIcon(
               FontAwesomeIcons.trash,
-              color: Pallete.redColor,
+              color: Pallete.dangerColor,
             ),
             title: Text(
               'Delete',
-              style: TextStyle(color: Pallete.redColor),
+              style: TextStyle(color: Pallete.dangerColor),
             ),
             onTap: () {
               medicineProvider.removeMedicine(index);

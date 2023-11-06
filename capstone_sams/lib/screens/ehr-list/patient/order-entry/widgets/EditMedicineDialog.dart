@@ -1,42 +1,51 @@
-// add_medicine_dialog.dart
-
 import 'package:capstone_sams/models/MedicineModel.dart';
 import 'package:capstone_sams/providers/MedicineProvider.dart';
-
+ 
 import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../constants/Env.dart';
 import '../../../../../constants/theme/pallete.dart';
+import '../../../../../constants/theme/sizing.dart';
+ 
 
-class AddMedicineDialog extends StatefulWidget {
+class EditMedicineDialog extends StatefulWidget {
+  final Medicine medicine;
+  final int index;
+
+  EditMedicineDialog({required this.medicine, required this.index});
+
   @override
-  _AddMedicineDialogState createState() => _AddMedicineDialogState();
+  _EditMedicineDialogState createState() => _EditMedicineDialogState();
 }
 
-class _AddMedicineDialogState extends State<AddMedicineDialog> {
+class _EditMedicineDialogState extends State<EditMedicineDialog> {
   final _formKey = GlobalKey<FormState>();
-  final _medicine = Medicine();
+  late Medicine _editedMedicine;
   DateTime? _selectedStartDate;
   DateTime? _selectedEndDate;
 
-  late Future<List<Medicine>> medicines;
-  late bool _autoValidate = false;
+  @override
+  void initState() {
+    super.initState();
+    _editedMedicine = Medicine.copy(widget.medicine);
+    _selectedStartDate = _editedMedicine.startDate;
+    _selectedEndDate = _editedMedicine.endDate;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
+        borderRadius: BorderRadius.circular(Sizing.borderRadius),
       ),
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Container(
-            width: MediaQuery.of(context).size.width,
+            width: MediaQuery.of(context).size.width * 0.7,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -46,7 +55,7 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'Medication Order',
+                          'Edit Medication Order',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -63,9 +72,6 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                 SizedBox(height: 10),
                 Form(
                   key: _formKey,
-                  autovalidateMode: _autoValidate
-                      ? AutovalidateMode.always
-                      : AutovalidateMode.disabled,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
@@ -84,6 +90,7 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                             '${Env.prefix}/cpoe/medicines/',
                             queryParameters: {"filter": filter},
                           );
+                          // var models = Medicine.fromJson(response.data);
                           var models = List<Medicine>.from(response.data
                               .map((json) => Medicine.fromJson(json)));
                           return models;
@@ -91,13 +98,18 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                         itemAsString: (Medicine medicine) =>
                             medicine.drugName.toString(),
                         onChanged: (Medicine? data) {
-                          _medicine.drugId = data?.drugId.toString();
-                          _medicine.drugName = data?.drugName.toString();
-                          _medicine.drugCode = data?.drugCode.toString();
-                          print('ADD MEDICATION: ${data?.drugName.toString()}');
+                          _editedMedicine.drugName = data?.drugName.toString();
+                          print('MEDICATION: ${data?.drugName.toString()}');
                         },
                       ),
                       SizedBox(height: 10),
+                      // Flexible(
+                      //   child: TextAreaField(
+                      //     validator: 'pls input',
+                      //     hintText: 'Instructions',
+                      //     onSaved: _editedMedicine.instructions,
+                      //   ),
+                      // ),
                       Flexible(
                         child: TextFormField(
                           decoration: InputDecoration(
@@ -113,7 +125,8 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                           minLines: 4,
                           maxLines: null,
                           keyboardType: TextInputType.multiline,
-                          onSaved: (value) => _medicine.instructions = value,
+                          onSaved: (value) =>
+                              _editedMedicine.instructions = value,
                         ),
                       ),
                       SizedBox(height: 10),
@@ -203,20 +216,26 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                         ],
                       ),
                       SizedBox(height: 10),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Quantity',
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Pallete.primaryColor,
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                labelText: 'Quantity',
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Pallete.primaryColor,
+                                  ),
+                                ),
+                                filled: true,
+                                fillColor: Pallete.palegrayColor,
+                              ),
+                              keyboardType: TextInputType.number,
+                              onSaved: (value) => _editedMedicine.quantity =
+                                  int.tryParse(value ?? ''),
                             ),
-                          ),
-                          filled: true,
-                          fillColor: Pallete.palegrayColor,
-                        ),
-                        keyboardType: TextInputType.number,
-                        onSaved: (value) =>
-                            _medicine.quantity = int.tryParse(value ?? ''),
+                          ), 
+                        ],
                       ),
                       SizedBox(height: 10),
                       Row(
@@ -238,19 +257,13 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
-                                if (_medicine.drugName!.isNotEmpty) {
-                                  _medicine.startDate = _selectedStartDate;
-                                  _medicine.endDate = _selectedEndDate;
-                                  Provider.of<MedicineProvider>(context,
-                                          listen: false)
-                                      .addMedicine(_medicine);
-                                  Navigator.pop(context);
-                                }
-                              } else {
-                                setState(() {
-                                  _autoValidate =
-                                      true; // Enable auto validation
-                                });
+                                _editedMedicine.startDate = _selectedStartDate;
+                                _editedMedicine.endDate = _selectedEndDate;
+                                Provider.of<MedicineProvider>(context,
+                                        listen: false)
+                                    .editMedicine(
+                                        widget.index, _editedMedicine);
+                                Navigator.pop(context);
                               }
                             },
                             style: ElevatedButton.styleFrom(

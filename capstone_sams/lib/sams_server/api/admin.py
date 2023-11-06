@@ -988,7 +988,7 @@ class HealthSymptomAdmin(admin.ModelAdmin):
 #     list_display = ("sympNum", "symptom")
 #     search_fields = ("sympNum", "symptom")
 
-# Now register the new UserAdmin...
+# Now register the new UserAdmin... 
 admin.site.register(Account, UserAdmin)
 admin.site.register(Patient, PatientAdmin)
 admin.site.register(Data_Log, DataLogsAdmin)

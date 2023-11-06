@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
- 
-
 import '../../../constants/Strings.dart';
 import '../../../constants/theme/pallete.dart';
 import '../SearchPatientDelegate.dart';
@@ -21,8 +19,8 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
   @override
   Widget build(BuildContext context) {
     final currentWidth = MediaQuery.of(context).size.width;
-    final double minWidth = 200;
-    final double maxWidth = 250;
+    final double minWidth = 250;
+    final double maxWidth = 300;
     return Container(
       alignment: Alignment.center,
       child: GestureDetector(

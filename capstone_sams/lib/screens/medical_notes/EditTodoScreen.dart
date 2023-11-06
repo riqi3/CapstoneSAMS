@@ -1,3 +1,4 @@
+import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/screens/medical_notes/widgets/TodoFormWidget.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +45,15 @@ class _EditTodoPageState extends State<EditTodoPage> {
           ),
           accountID!);
       Navigator.of(context).pop();
+
+      const snackBar = SnackBar(
+        backgroundColor: Pallete.successColor,
+        content: Text(
+          'Successfully update the note',
+          style: TextStyle(fontWeight: FontWeight.w700),
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
 

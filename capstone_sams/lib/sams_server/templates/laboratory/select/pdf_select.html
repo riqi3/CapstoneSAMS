@@ -2,33 +2,63 @@
 
 {% extends "admin/base.html" %} {% load static %} {%block content %}
 
-<div>
-  
+
+ <style>
+  .float-right.d-none.d-sm-inline {
+    display: none!important;
+}
+</style>  
+
+<div id='content-main' class='col-12'>
   <form action="." method="POST" enctype="multipart/form-data">
     {%csrf_token%}
-
-    <table class="table">
-      <tbody>
-        {% for pdf in pdf_list%}
+    <div class='row'>
+      <div class='col-12 col-lg-9'>
+        <div class='card'>
+          <div class='card-body'>  
+            <table class="table table-hover">
+              <tbody>
+                <thead>
+                  <tr>
+                    <th scope="col" style='text-align:center;'>Select Result</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Investigation</th>
+                  </tr>
+                </thead>
+                {% for pdf in pdf_list%}
         
-        <tr>
-          <td>
-            <input
-              type="radio"
-              id="labresult"
-              name="item"
-              value="{{ pdf.pdfId}}"
-            />
-          </td>
-          <td>{{pdf.pdfId}}</td>
-          <td>{{pdf.title}}</td>
-          <td>{{pdf.comment}}</td>
-           
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    <input type="submit" value="Submit" />
+                <tbody>
+                  <tr>
+                    <th style='text-align:center;'>
+                      <input
+                        type="radio"
+                        id="labresult"
+                        name="item"
+                        value="{{ pdf.pdfId}}"
+                      />
+                    </th>
+                    <td>{{pdf.pdfId}}</td>
+                    <td>{{pdf.title}}</td>
+                    <td>{{pdf.comment}}</td>
+                     
+                  </tr>
+                </tbody>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class='col-12 col-lg-3'>
+        <div id='jazzy-actions'>
+          <div class='form-group'>
+            <input type='submit' value="Submit" class='btn btn-success form-control'/>
+            {% comment %} <button type="submit">Upload File</button> {% endcomment %}
+          </div>
+        </div>
+      </div>
+    </div>
   </form>
 </div>
 
