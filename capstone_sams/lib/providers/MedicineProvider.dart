@@ -1,12 +1,9 @@
 import 'dart:convert';
 
 import 'package:capstone_sams/models/MedicineModel.dart';
-import 'package:capstone_sams/models/PatientModel.dart';
-import 'package:capstone_sams/providers/AccountProvider.dart';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 import '../constants/Env.dart';
 
 class MedicineProvider with ChangeNotifier {
@@ -89,8 +86,6 @@ class MedicineProvider with ChangeNotifier {
       'disease': finalPrediction,
     };
 
-    print('DATADATA$data');
-
     final response = await http.post(
       Uri.parse('${Env.prefix}/cpoe/prescription/save/'),
       headers: header,
@@ -103,11 +98,6 @@ class MedicineProvider with ChangeNotifier {
       print('cannot add medicine!');
       return false;
     }
-    // try {
-    // } on Exception catch(error){
-    //   print('error saving prescription $error');
-    //   return false;
-    // }
   }
 
   Future<bool> updateAmount(String? accountId, String? patientId) async {

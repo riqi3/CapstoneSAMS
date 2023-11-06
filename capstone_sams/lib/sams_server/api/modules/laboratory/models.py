@@ -8,7 +8,7 @@ class LabResult(models.Model):
     comment = models.TextField(blank = False,max_length=512)
     pdf = models.FileField(blank = False,upload_to='upload-pdf/')
     patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
-
+    user = models.CharField(null = True, blank = True)
     def __str__(self):
         return self.title
     

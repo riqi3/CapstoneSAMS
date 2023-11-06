@@ -6,6 +6,7 @@ import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/MedicineModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
+import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/PrescriptionProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
 import 'package:flutter/material.dart';
@@ -47,10 +48,12 @@ class _CounterScreenState extends State<CounterScreen> {
   late int? quantity;
   late int updateQuantity;
   late List<dynamic>? medicines;
+  late String token;
 
   @override
   void initState() {
     super.initState();
+    token = context.read<AccountProvider>().token!;
     _counter = widget.prescription.medicines![widget.index]['quantity'] as int;
     name = widget.prescription.medicines![widget.index]['drugName'];
     drugId = widget.prescription.medicines![widget.index]['drugId'];
@@ -94,8 +97,10 @@ class _CounterScreenState extends State<CounterScreen> {
           account: widget.prescription.account,
           patientID: widget.prescription.patientID,
           health_record: widget.prescription.health_record,
+          disease: widget.prescription.disease,
         ),
         widget.patient.patientId,
+        token,
       );
 
       Navigator.push(

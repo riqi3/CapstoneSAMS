@@ -104,8 +104,8 @@ class Data_Log(models.Model):
     #Log Attributes
     logNum = models.AutoField(primary_key = True) #Auto incrementing field
     event = models.CharField(max_length = 500)
-    date = models.DateTimeField(default=timezone.now)
-    type = models.CharField(max_length = 1000)
+    date = models.DateTimeField(default=timezone.now, blank=True)
+    type = models.CharField(max_length = 1000, blank = True)
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
 
     class Meta:

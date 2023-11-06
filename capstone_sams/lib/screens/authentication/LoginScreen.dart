@@ -86,7 +86,11 @@ class _LoginScreenState extends State<LoginScreen> {
     final password = passwordController.text;
     final success =
         await context.read<AccountProvider>().login(username, password);
+
     if (success) {
+      final AccountProvider profile =
+          Provider.of<AccountProvider>(context, listen: false);
+      profile.isAuthentificated = true;
       usernameController.clear();
       passwordController.clear();
       // if (context.read<AccountProvider>().role ==
