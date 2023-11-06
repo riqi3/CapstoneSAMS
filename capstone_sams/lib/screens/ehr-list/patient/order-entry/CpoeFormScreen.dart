@@ -34,10 +34,12 @@ class CpoeFormScreen extends StatefulWidget {
 class _CpoeFormScreenState extends State<CpoeFormScreen> {
   late String finalPrediction;
   late double finalConfidence;
+  late String token;
 
   @override
   void initState() {
     super.initState();
+    token = context.read<AccountProvider>().token!;
     finalPrediction = widget.initialPrediction;
     finalConfidence = widget.initialConfidence;
     Provider.of<MedicineProvider>(context, listen: false).resetState();
@@ -226,19 +228,13 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
 
                         var patient = await context
                             .read<PatientProvider>()
-                            .fetchPatient(widget.index.toString());
+                            .fetchPatient(widget.index.toString(), token);
                         final patientID = patient.patientId;
                         final medicineProvider =
                             context.read<MedicineProvider>();
                         final success =
                             await medicineProvider.saveToPrescription(
-                                accountID, patientID, finalPrediction);
-
-                        print('PATIENT $patientID ACCOUNT $accountID');
-
-                        print('TESTING PO ITO SA SUCCESS $success');
-
-                        print(success);
+                                accountID, patientID, finalPrediction, token);
 
                         if (success) {
                           // print('test this selected PATIENT $index');

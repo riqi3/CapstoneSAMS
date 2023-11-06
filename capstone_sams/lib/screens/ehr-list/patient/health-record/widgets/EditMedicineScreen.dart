@@ -2,6 +2,7 @@ import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/models/MedicineModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
+import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/PrescriptionProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
 
@@ -94,6 +95,7 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
             disease: widget.prescription!.disease,
           ),
           widget.patient.patientId,
+          context.read<AccountProvider>().token!
         );
 
         Navigator.push(

@@ -44,7 +44,8 @@ class _InfoState extends State<Info> {
     try {
       final provider =
           Provider.of<PrescriptionProvider>(context, listen: false);
-      await provider.fetchPrescriptions(widget.patient.patientId);
+      await provider.fetchPrescriptions(
+          widget.patient.patientId, context.read<AccountProvider>().token!);
       return provider.prescriptions;
     } catch (error, stackTrace) {
       print("Error fetching data: $error");
@@ -57,7 +58,8 @@ class _InfoState extends State<Info> {
     try {
       final provider =
           Provider.of<PrescriptionProvider>(context, listen: false);
-      await provider.fetchPrescriptions(widget.patient.patientId);
+      await provider.fetchPrescriptions(
+          widget.patient.patientId, context.read<AccountProvider>().token!);
       return provider.physicians;
     } catch (error, stackTrace) {
       print("Error fetching data: $error");
@@ -156,7 +158,8 @@ class _InfoState extends State<Info> {
 
   void deletePrescription(BuildContext context, Prescription prescription) {
     final provider = Provider.of<PrescriptionProvider>(context, listen: false);
-    provider.removePrescription(prescription, widget.patient.patientId);
+    provider.removePrescription(prescription, widget.patient.patientId,
+        context.read<AccountProvider>().token!);
     // Navigator.of(context).pop();
     int? index = int.tryParse(widget.index);
 
@@ -179,7 +182,8 @@ class _InfoState extends State<Info> {
   void deleteMedicine(
       BuildContext context, Prescription prescription, String? drugId) {
     final provider = Provider.of<PrescriptionProvider>(context, listen: false);
-    provider.removeMedicine(prescription, widget.patient.patientId, drugId);
+    provider.removeMedicine(prescription, widget.patient.patientId, drugId,
+        context.read<AccountProvider>().token!);
 
     int? index = int.tryParse(widget.index);
 

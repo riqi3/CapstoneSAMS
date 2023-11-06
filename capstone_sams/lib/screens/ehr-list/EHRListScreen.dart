@@ -6,6 +6,7 @@ import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/global-widgets/TitleAppBar.dart';
 
 import 'package:capstone_sams/models/PatientModel.dart';
+import 'package:capstone_sams/providers/AccountProvider.dart';
 
 import 'package:capstone_sams/screens/ehr-list/widgets/PatientCard.dart';
 
@@ -25,6 +26,7 @@ class EhrListScreen extends StatefulWidget {
 
 class _EhrListScreenState extends State<EhrListScreen> {
   late Stream<List<Patient>> patients;
+  late String token;
   ScrollController _controller = ScrollController();
 
   final double items = 50;
@@ -37,8 +39,9 @@ class _EhrListScreenState extends State<EhrListScreen> {
   @override
   void initState() {
     super.initState();
+    token = context.read<AccountProvider>().token!;
     patients =
-        Stream.fromFuture(context.read<PatientProvider>().fetchPatients());
+        Stream.fromFuture(context.read<PatientProvider>().fetchPatients(token));
   }
 
   void _scrollUp() {
