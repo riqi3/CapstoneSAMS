@@ -3,7 +3,7 @@
 import 'package:capstone_sams/models/MedicalNotesModel.dart';
 import 'package:capstone_sams/providers/MedicalNotesProvider.dart';
 import 'package:capstone_sams/screens/medical_notes/EditTodoScreen.dart';
- 
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -30,7 +30,11 @@ class TodoWidget extends StatelessWidget {
     Navigator.of(context).pop();
 
     const snackBar = SnackBar(
-      content: Text('Deleted the note'),
+      backgroundColor: Pallete.dangerColor,
+      content: Text(
+        'Deleted the note',
+        style: TextStyle(fontWeight: FontWeight.w700),
+      ),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
@@ -41,6 +45,7 @@ class TodoWidget extends StatelessWidget {
         builder: (context) => EditTodoPage(todo: todo),
       ),
     );
+
   }
 
   @override
@@ -87,11 +92,16 @@ class TodoWidget extends StatelessWidget {
                             itemBuilder: (context) => [
                               PopupMenuItem(
                                 child: ListTile(
-                                  leading:
-                                      Icon(Icons.edit, color: Colors.green),
+                                  leading: Icon(
+                                    Icons.edit,
+                                    color: Pallete.successColor,
+                                  ),
                                   title: Text(
                                     'Edit',
-                                    style: TextStyle(color: Colors.green),
+                                    style: TextStyle(
+                                      color: Pallete.successColor,
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
                                   onTap: () => editTodo(context, todo),
                                 ),
@@ -100,11 +110,14 @@ class TodoWidget extends StatelessWidget {
                                 child: ListTile(
                                   leading: Icon(
                                     Icons.delete,
-                                    color: Colors.red,
+                                    color: Pallete.dangerColor,
                                   ),
                                   title: Text(
                                     'Delete',
-                                    style: TextStyle(color: Colors.red),
+                                    style: TextStyle(
+                                      color: Pallete.dangerColor,
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
                                   onTap: () => deleteTodo(context, todo),
                                 ),

@@ -8,7 +8,7 @@ JAZZMIN_SETTINGS = {
     "theme": "minty",
 
     # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    "site_brand": "User Panel",
+    "site_brand": "Dashboard",
 
     # # Logo to use for your site, must be present in static files, used for brand on top left
     "site_logo": "images/logo2.png",
@@ -46,6 +46,7 @@ JAZZMIN_SETTINGS = {
 
         # Url that gets reversed (Permissions can be added)
         {"name": "Home",  "url": "admin:index", "permissions": ["auth.view_user"]},
+        # {"name": "ssssss",  "url": "admin:index", "permissions": ["auth.view_user"]},
 
         # external url that opens in a new window (Permissions can be added)
         {"name": "Support", "url": "https://github.com/riqi3/CapstoneSAMS/issues", "new_window": True},
@@ -62,7 +63,7 @@ JAZZMIN_SETTINGS = {
     #############
 
     # Additional links to include in the user menu on the top right ("app" url type is not allowed)
-    "usermenu_links": [
+    "usermenu_links": [ 
         {"name": "Support", "url": "https://github.com/riqi3/CapstoneSAMS/issues", "new_window": True},
         {"model": "auth.user"}
     ],
@@ -71,16 +72,31 @@ JAZZMIN_SETTINGS = {
     # Side Menu #
     #############
 
+    # "custom_links": {
+    #     "api": [{
+    #         "name": "Make Metesssstssages", 
+    #         "url": "make_messages", 
+    #         "icon": "fas fa-pills",
+             
+    #     }]
+    # },
+
     # Whether to display the side menu
     "show_sidebar": True,
 
     # Whether to aut expand the menu
-    "navigation_expanded": True,
+    "navigation_expanded": True, 
 
     "icons": {
-        "auth": "fas fa-users-cog",
-        "user": "fas fa-user",
-        "auth.Group": "fas fa-users",
+        "api.health_record": "fa-solid fa-clipboard",
+        "api.labresult": "fa-solid fa-vials",
+        "api.patient": "fa-solid fa-bed-pulse",
+        "api.medicine": "fas fa-pills",
+        "api.patient": "fa-solid fa-bed-pulse",
+        "api.prescription": "fa-solid fa-head-side-cough",
+        "user.account": "fa-solid fa-user",
+        "user.data_log": "fa-solid fa-timeline",
+        # "auth.Group": "fas fa-users",
     },
 }
 JAZZMIN_SETTINGS["show_ui_builder"] = True

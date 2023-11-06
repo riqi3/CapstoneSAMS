@@ -21,9 +21,9 @@ from django import forms
 from django.contrib import admin, messages
 from django.http import HttpResponseRedirect
 import json
+from django.urls import reverse
 
 # def get_data_and_move_higher(arr):
-
 
 
 def cleanJsonTable(json_data):
@@ -47,6 +47,24 @@ class LabResultForm(forms.ModelForm):
     class Meta:
         model = LabResult
         fields = "__all__"
+        labels = {
+            "title": "Title for Laboratory Result",
+            "comment": "Comments",
+            "pdf": "PDF File",
+            "patient": "Select Patient",
+        }
+        widgets = {
+            "title": forms.TextInput(attrs={"id": "id_title"}),
+            "comment": forms.Textarea(attrs={"id": "id_comment"}),
+            "pdf": forms.ClearableFileInput(attrs={"id": "lab_result_file"}),
+            "patient": forms.Select(attrs={"id": "select_patient"}),
+        }
+        # widgets = {
+        #     "title": forms.TextInput(attrs={"id": "id_title"}),
+        #     "comment": forms.Textarea(attrs={"id": "lab_comment"}),
+        #     "pdf": forms.ClearableFileInput(attrs={"id": "lab_result_file"}),
+        #     "patient": forms.Select(attrs={"id": "select_patient"}),
+        # }
 
 
 class ProcessPdf(APIView):
@@ -78,7 +96,7 @@ class ProcessPdf(APIView):
                 {"message": "Failed to fetch json pdf.", "error": str(e)},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        
+
     @api_view(["GET"])
     def fetch_patient_labresult_by_id(request, patient):
         try:
@@ -89,72 +107,19 @@ class ProcessPdf(APIView):
             return Response(
                 {"message": "Failed to fetch labresult.", "error": str(e)},
                 status=status.HTTP_400_BAD_REQUEST,
-            )
+            ) 
 
-    # def select_pdf(request):
-    #     if request.method == 'POST':
-    #         selected_pdfs = request.POST.getlist('item')
-    #         pdf_contents = []
-
-    #         for pdf_id in selected_pdfs:
-    #             pdf = LabResult.objects.get(pdfId=pdf_id)
-    #             with pdf.pdf.open('rb') as file:
-    #                 reader = PyPDF2.PdfReader(file)
-    #                 content = []
-
-    #                 for page in reader.pages:
-    #                     content.append(page.extract_text())
-
-    #                 pdf_contents.append(content)
-    #                 # print(pdf_contents)
-
-    #     # Convert the extracted text to a JSON-parsed dictionary
-    #         parsed_data = {'pdf_contents': pdf_contents}
-    #         json_data = json.dumps(parsed_data)
-    #         # print(json_data)
-    #         return JsonResponse({'result': json.loads(json_data)})
-
-    # PyPDF2
-    # def select_pdf(request):
-    #     if request.method == 'POST':
-    #         selected_pdfs = request.POST.getlist('item')
-    #         pdf_contents = []
-
-    #         for pdf_id in selected_pdfs:
-    #             pdf = LabResult.objects.get(pdfId=pdf_id)
-    #             with pdf.pdf.open('rb') as file:
-    #                 reader = PyPDF2.PdfReader(file)
-    #                 content = []
-
-    #                 for page in reader.pages:
-    #                     content.append(page.extract_text())
-
-    #                 pdf_contents.append(content)
-
-    #         json_data = json.dumps(pdf_contents)
-    #         print(json_data)
-    #         # simplejson.loads('[%s]'%json_data[:-1])
-    #         # text = json.loads(r'[' + json_data[:-1] + ']')
-    #         return JsonResponse({'result': json.loads(json_data)})
- 
-    # tabnula
-
-
- 
- 
-    def select_pdf(request,patient):
+    def select_pdf(request, patient):
         if request.method == "POST":
             selected_pdfs = request.POST.getlist("item")
             pdf_contents = []
-            tableAppend= []
+            tableAppend = []
             tempList = []
             uniqueDataList = []
             newLista = []
             labresultTitles = []
-            
 
             for pdf_id in selected_pdfs:
-                
                 pdf_instance = LabResult.objects.get(pdfId=pdf_id)
                 pdf_title = pdf_instance.title
                 pdf_comment = pdf_instance.comment
@@ -169,14 +134,14 @@ class ProcessPdf(APIView):
                     pdf_instance.pdf.path, pages="all", output_format="json"
                 )
                 reader = PdfReader(pdf_instance.pdf.path)
-                
-                '''tables[index] retrieves the table according by index.
+
+                """tables[index] retrieves the table according by index.
                 in this case the format of the labresult has the following
                 tables: 1.) tables[0] contains the personal information. 
                 2.) tables[1] contains the haematology of the blood
                 3.) tables[3] contains the biochemistry. theese tables are 
                 then stored in their respective rows
-                '''
+                """
 
                 for page in reader.pages:
                     text = page.extract_text()
@@ -185,12 +150,11 @@ class ProcessPdf(APIView):
                     if text:
                         firstWord = text.split()[0]
                         labresultTitles.append(firstWord)
-                
-                for index, j in enumerate(tables): 
+
+                for index, j in enumerate(tables):
                     readTable = tables[index]
-                    tableAppend = [tableAppend,readTable]
-                     
-                # print('\n\n\n\n')
+                    tableAppend = [tableAppend, readTable]
+
                 cleaned_data = cleanJsonTable(tableAppend)
 
                 def get_data_and_move_higher(arr):
@@ -209,39 +173,42 @@ class ProcessPdf(APIView):
                 # print('\n\n')
 
                 for item in tempList:
-                    data_contents = item['data']
+                    data_contents = item["data"]
                     if data_contents not in uniqueDataList:
                         uniqueDataList.append(data_contents)
 
-                result_list = [{'data': data_contents} for data_contents in uniqueDataList]
+                result_list = [
+                    {"data": data_contents} for data_contents in uniqueDataList
+                ]
                 for item in result_list:
                     newLista.append(item)
 
-                
                 for item in newLista:
                     for text_data in item["data"][3]:
                         if text_data["text"] == "Collected on:":
                             str_collected_on = item["data"][3][1]["text"]
                             break
 
-                # print('bbbbbbbbb', newLista) 
+                # print('bbbbbbbbb', newLista)
                 print(str_collected_on)
-                
+
                 # h = json.dumps(collected_on)
                 # matches = re.findall(r'(\d+/\d+/\d+)',h)
                 # print(matches)
                 # print(h)
                 # collected_on = datetime.datetime.strptime(str_collected_on, '%d/%m/%Y').strftime('%B %d, %Y')
-                collected_on = datetime.datetime.strptime(str_collected_on, '%d/%m/%Y').strftime('%Y-%m-%d')
-                print('aaa ', collected_on)
+                collected_on = datetime.datetime.strptime(
+                    str_collected_on, "%d/%m/%Y"
+                ).strftime("%Y-%m-%d")
+                print("aaa ", collected_on)
 
                 jsonLabResult = JsonLabResult(
                     jsonTables=newLista,
-                    labresultTitles = labresultTitles,
-                    collectedOn = collected_on,
+                    labresultTitles=labresultTitles,
+                    collectedOn=collected_on,
                     labresult=pdf_instance,
                     title=pdf_title,
-                    comment=pdf_comment, 
+                    comment=pdf_comment,
                     patient=patient_id,
                 )
                 jsonLabResult.save()
@@ -249,34 +216,39 @@ class ProcessPdf(APIView):
 
                 pdf_contents.append(jsonLabResult)
                 json_data = json.dumps(pdf_contents)
-            return JsonResponse({"result": json.loads(json_data)})
+            # return JsonResponse({"result": json.loads(json_data)})
+            return HttpResponseRedirect(reverse("admin"))
         else:
             pdf_list = LabResult.objects.filter(patient_id=patient)
             return render(
                 request, "laboratory/select/pdf_select.html", {"pdf_list": pdf_list}
             )
- 
+
     def upload_pdf1(request):
         if request.method == "POST":
             form = LabResultForm(request.POST, request.FILES)
             if form.is_valid():
                 form.save()
-            return HttpResponseRedirect("../select/<str:patient>/")
+                a = form.save(commit=False)
+                patientID = a.patient.patientID
+            return HttpResponseRedirect(
+                reverse("select_pdf", kwargs={"patient": patientID})
+            )
 
         else:
             form = LabResultForm()
             return render(request, "laboratory/upload/pdf_upload.html", {"form": form})
 
-    def upload_pdf(self, request):
-        if request.method == "POST":
-            pdf_file = request.FILES["pdf_upload"]
-            if not pdf_file.name.endswith(".pdf"):
-                messages.warning(request, "The wrong file type was uploaded")
-                return HttpResponseRedirect(request.path_info)
+    # def upload_pdf(self, request):
+    #     if request.method == "POST":
+    #         pdf_file = request.FILES["pdf_upload"]
+    #         if not pdf_file.name.endswith(".pdf"):
+    #             messages.warning(request, "The wrong file type was uploaded")
+    #             return HttpResponseRedirect(request.path_info)
 
-        form = PdfImportLabResultForm()
-        data = {"form": form}
-        return render(request, "admin/pdf_upload.html", data)
+    #     form = PdfImportLabResultForm()
+    #     data = {"form": form}
+    #     return render(request, "admin/pdf_upload.html", data)
 
     @api_view(["POST"])
     def post(request):

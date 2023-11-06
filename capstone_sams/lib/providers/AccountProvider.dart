@@ -19,6 +19,8 @@ class AccountProvider extends ChangeNotifier {
   String? get firstName => _account?.firstName;
   String? get lastName => _account?.lastName;
   String? get role => _account?.accountRole;
+  String? get token => _account?.token;
+  bool _isAuthentificated = false;
 
   Future<bool> login(String username, String password) async {
     final response = await http.post(
@@ -41,7 +43,6 @@ class AccountProvider extends ChangeNotifier {
     }
   }
 
-   
   void setAccount(Account account) {
     _account = account;
     notifyListeners();
@@ -50,5 +51,14 @@ class AccountProvider extends ChangeNotifier {
   void setNull() {
     _account = null;
     notifyListeners();
+  }
+
+  bool get isAuthentificated {
+    return this._isAuthentificated;
+  }
+
+  set isAuthentificated(bool newVal) {
+    this._isAuthentificated = newVal;
+    this.notifyListeners();
   }
 }

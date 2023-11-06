@@ -1,6 +1,7 @@
 // add_medicine_dialog.dart
 
 import 'package:capstone_sams/models/MedicineModel.dart';
+import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/MedicineProvider.dart';
 
 import 'package:dio/dio.dart';
@@ -22,6 +23,7 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
   final _medicine = Medicine();
   DateTime? _selectedStartDate;
   DateTime? _selectedEndDate;
+  late String token = context.read<AccountProvider>().token! ;
 
   late Future<List<Medicine>> medicines;
   late bool _autoValidate = false;
@@ -83,6 +85,10 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                           var response = await Dio().get(
                             '${Env.prefix}/cpoe/medicines/',
                             queryParameters: {"filter": filter},
+                            options: Options(headers: {
+                              "Content-Type": "application/json",
+                              "Authorization": "Bearer $token",
+                            }),
                           );
                           var models = List<Medicine>.from(response.data
                               .map((json) => Medicine.fromJson(json)));
@@ -104,7 +110,7 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                             labelText: 'Instructions',
                             border: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: Pallete.paleblueColor,
+                                color: Pallete.primaryColor,
                               ),
                             ),
                             filled: true,
@@ -125,7 +131,7 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                                 labelText: 'Start Date',
                                 border: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: Pallete.paleblueColor,
+                                    color: Pallete.primaryColor,
                                   ),
                                 ),
                                 filled: true,
@@ -165,7 +171,7 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                                 labelText: 'End Date',
                                 border: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: Pallete.paleblueColor,
+                                    color: Pallete.primaryColor,
                                   ),
                                 ),
                                 filled: true,
@@ -208,7 +214,7 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                           labelText: 'Quantity',
                           border: OutlineInputBorder(
                             borderSide: BorderSide(
-                              color: Pallete.paleblueColor,
+                              color: Pallete.primaryColor,
                             ),
                           ),
                           filled: true,

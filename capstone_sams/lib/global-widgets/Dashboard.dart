@@ -1,9 +1,12 @@
+import 'package:capstone_sams/models/AccountModel.dart';
+import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/screens/home/HomeScreen.dart';
 
 import 'package:capstone_sams/screens/medical_notes/MedicalNotesScreen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 import '../constants/theme/sizing.dart';
 import '../screens/ehr-list/EhrListScreen.dart';
@@ -127,6 +130,9 @@ class Dashboard extends StatelessWidget {
             title: const Text('Logout'),
             onTap: () {
               print('logout');
+              final AccountProvider profile =
+                  Provider.of<AccountProvider>(context, listen: false);
+              profile.isAuthentificated = false;
             },
           ),
         ],

@@ -6,8 +6,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../constants/theme/pallete.dart';
 import '../constants/theme/sizing.dart';
 
- 
-
 class TitleAppBar extends StatelessWidget {
   const TitleAppBar({
     super.key,

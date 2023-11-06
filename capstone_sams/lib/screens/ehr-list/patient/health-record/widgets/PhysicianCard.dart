@@ -2,7 +2,9 @@ import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/MedicineModel.dart';
-import 'package:capstone_sams/models/PatientModel.dart'; 
+import 'package:capstone_sams/models/PatientModel.dart';
+
+import 'package:capstone_sams/providers/AccountProvider.dart'; 
 import 'package:capstone_sams/providers/PrescriptionProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/Info.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +36,7 @@ class _PhysicianCardState extends State<PhysicianCard> {
     try {
       final provider =
           Provider.of<PrescriptionProvider>(context, listen: false);
-      await provider.fetchPrescriptions(widget.patient.patientId);
+      await provider.fetchPrescriptions(widget.patient.patientId, context.read<AccountProvider>().token!);
       return provider.physicians;
     } catch (error, stackTrace) {
       print("Error fetching data: $error");
@@ -69,6 +71,7 @@ class _PhysicianCardState extends State<PhysicianCard> {
             );
           } else if (snapshot.hasError) {
             print('Error: ${snapshot.hasError}');
+            print(physicians);
             return Text('Error: ${snapshot.hasError}');
           } else {
             final physicianList = snapshot.data;

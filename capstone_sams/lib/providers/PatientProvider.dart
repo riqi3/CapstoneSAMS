@@ -25,9 +25,13 @@ class PatientProvider extends ChangeNotifier {
 
   List<Patient> get patients => _patients;
 
-  Future<List<Patient>> fetchPatients() async {
-    final response =
-        await http.get(Uri.parse('${Env.prefix}/patient/patients/'));
+  Future<List<Patient>> fetchPatients(String token) async {
+    final header = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token',
+    };
+    final response = await http
+        .get(Uri.parse('${Env.prefix}/patient/patients/'), headers: header);
     await Future.delayed(Duration(milliseconds: 3000));
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
@@ -41,9 +45,14 @@ class PatientProvider extends ChangeNotifier {
     }
   }
 
-  Future<Patient> fetchPatient(String index) async {
-    final response =
-        await http.get(Uri.parse('${Env.prefix}/patient/patients/${index}'));
+  Future<Patient> fetchPatient(String index, String token) async {
+    final header = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token',
+    };
+    final response = await http.get(
+        Uri.parse('${Env.prefix}/patient/patients/${index}'),
+        headers: header);
     await Future.delayed(Duration(milliseconds: 3000));
     if (response.statusCode == 200) {
       return Patient.fromJson(jsonDecode(response.body));
@@ -52,9 +61,13 @@ class PatientProvider extends ChangeNotifier {
     }
   }
 
-  Future<List<Patient>> searchPatients({String? query}) async {
-    final response =
-        await http.get(Uri.parse('${Env.prefix}/patient/patients/'));
+  Future<List<Patient>> searchPatients({String? query, String? token}) async {
+    final header = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token',
+    };
+    final response = await http
+        .get(Uri.parse('${Env.prefix}/patient/patients/'), headers: header);
     await Future.delayed(Duration(milliseconds: 3000));
     try {
       if (response.statusCode == 200) {

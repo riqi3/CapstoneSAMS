@@ -84,4 +84,5 @@ class Account {
       throw Exception('Failed to login');
     }
   }
+  
 }

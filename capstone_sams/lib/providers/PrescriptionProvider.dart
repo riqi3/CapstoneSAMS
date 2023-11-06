@@ -25,16 +25,17 @@ class PrescriptionProvider with ChangeNotifier {
     return '${Env.prefix}/$endpoint';
   }
 
-  Future<void> fetchPrescriptions(String patientID) async {
-    final headers = <String, String>{
+  Future<void> fetchPrescriptions(String patientID, String token) async {
+    final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token',
     };
 
     final response = await http.get(
       Uri.parse(
         _getUrl('cpoe/prescription/get-patient/${patientID}/'),
       ),
-      headers: headers,
+      headers: header,
     );
     await Future.delayed(Duration(milliseconds: 3000));
     if (response.statusCode == 200) {
@@ -58,64 +59,92 @@ class PrescriptionProvider with ChangeNotifier {
     }
   }
 
-  Future updatePrescription(Prescription prescription, String patientID) async {
-    final headers = <String, String>{
+  Future updatePrescription(
+      Prescription prescription, String patientID, String token) async {
+    final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token',
     };
-
     final response = await http.put(
       Uri.parse(
         _getUrl(
             'cpoe/prescription/get-prescription/update/${prescription.presNum}'),
       ),
-      headers: headers,
+      headers: header,
       body: jsonEncode(prescription),
     );
     await Future.delayed(Duration(milliseconds: 3000));
 
     if (response.statusCode == 200) {
-      fetchPrescriptions(patientID);
+      fetchPrescriptions(patientID, token);
       notifyListeners();
     } else {
       throw Exception('Failed to update prescription');
     }
   }
 
-  Future removePrescription(Prescription prescription, String patientID) async {
-    final headers = <String, String>{
+  Future updatePrescriptionAmount(
+      Prescription prescription, String patientID, String token) async {
+    final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token',
+    };
+
+    final response = await http.put(
+      Uri.parse(
+        _getUrl(
+            'cpoe/prescription/get-prescription/update-amount/${prescription.presNum}'),
+      ),
+      headers: header,
+      body: jsonEncode(prescription),
+    );
+    await Future.delayed(Duration(milliseconds: 3000));
+    if (response.statusCode == 200) {
+      fetchPrescriptions(patientID, token);
+      notifyListeners();
+    } else {
+      throw Exception('Failed to update prescription amount');
+    }
+  }
+
+  Future removePrescription(
+      Prescription prescription, String patientID, String token) async {
+    final header = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token',
     };
     final body = jsonEncode({'account': prescription.account});
     final response = await http.delete(
       Uri.parse(_getUrl(
           'cpoe/prescription/get-prescription/delete/${prescription.presNum}')),
-      headers: headers,
+      headers: header,
       body: body,
     );
     await Future.delayed(Duration(milliseconds: 3000));
     if (response.statusCode == 204) {
-      fetchPrescriptions(patientID);
+      fetchPrescriptions(patientID, token);
     } else {
       throw Exception(
           'Failed to delete prescription ${jsonDecode(response.body)}');
     }
   }
 
-  Future removeMedicine(
-      Prescription prescription, String patientID, String? drugId) async {
-    final headers = <String, String>{
+  Future removeMedicine(Prescription prescription, String patientID,
+      String? drugId, String token) async {
+    final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token',
     };
     final body = jsonEncode({'account': prescription.account});
     final response = await http.delete(
       Uri.parse(_getUrl(
           'cpoe/prescription/get-prescription-${prescription.presNum}/delete-medicine/${drugId}')),
-      headers: headers,
+      headers: header,
       body: body,
     );
     await Future.delayed(Duration(milliseconds: 3000));
     if (response.statusCode == 204) {
-      fetchPrescriptions(patientID);
+      fetchPrescriptions(patientID, token);
     } else {
       throw Exception('Failed to delete medicine ${jsonDecode(response.body)}');
     }

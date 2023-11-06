@@ -4,6 +4,7 @@ class Prescription {
   final String? account;
   final int? health_record;
   final String? patientID;
+  final String? disease;
   // final List<dynamic>? prescriptions;
   // final List<dynamic>? accounts;
 
@@ -13,6 +14,7 @@ class Prescription {
     required this.account,
     required this.patientID,
     required this.health_record,
+    required this.disease,
     // required this.prescriptions,
     // required this.accounts,
   });
@@ -24,6 +26,7 @@ class Prescription {
       'account': account,
       'patient': patientID,
       'health_record': health_record,
+      'disease': disease,
       // 'prescriptions': prescriptions,
       // 'accounts': accounts,
     };
@@ -31,11 +34,12 @@ class Prescription {
 
   factory Prescription.fromJson(Map<String, dynamic> json) {
     return Prescription(
-        presNum: json['presNum'],
-        medicines: json['medicines'],
-        account: json['account'],
-        patientID: json['patient'],
-        health_record: json['health_record'], 
-        );
+      presNum: json['presNum'],
+      medicines: json['medicines'],
+      account: json['account'],
+      patientID: json['patient'],
+      health_record: json['health_record'],
+      disease: json['disease'],
+    );
   }
 }

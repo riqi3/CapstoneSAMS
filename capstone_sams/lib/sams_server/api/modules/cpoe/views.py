@@ -1,7 +1,8 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 import json
 from rest_framework import status
 
@@ -11,6 +12,7 @@ from api.modules.user.serializers import AccountSerializer
 from api.modules.patient.models import Health_Record, Patient
 from api.modules.cpoe.models import Comment, Medicine, Prescription
 from api.modules.cpoe.serializers import CommentSerializer, MedicineSerializer, PrescriptionSerializer
+from api.modules.disease_prediction.cdssModel.models import HealthSymptom
 
 
 class CommentView(viewsets.ModelViewSet):
@@ -96,8 +98,9 @@ class CommentView(viewsets.ModelViewSet):
 
 
 class MedicineView(viewsets.ModelViewSet):
-
+    
     @api_view(['GET'])
+    @permission_classes([IsAuthenticated])
     def fetch_medicine(request):
         try:
             queryset = Medicine.objects.all()
@@ -129,6 +132,7 @@ class MedicineView(viewsets.ModelViewSet):
 
 class PrescriptionView(viewsets.ViewSet):
     @api_view(['POST'])
+    @permission_classes([IsAuthenticated])
     def save_prescription(request):
         try:
             prescription_data = json.loads(request.body)
@@ -137,11 +141,13 @@ class PrescriptionView(viewsets.ViewSet):
             account = Account.objects.get(pk=accountID)
             record = Health_Record.objects.get(patient=patientID)
             patiente = Patient.objects.get(pk=patientID)
+            disease = prescription_data.get('disease')
             prescription = Prescription.objects.create(
                 medicines=prescription_data['medicines'],
                 account=account,
                 health_record = record,
-                patient = patiente
+                patient = patiente,
+                disease=disease
             )
             data_log = Data_Log.objects.create(
                 event = f"{account.username} created prescription",
@@ -153,26 +159,35 @@ class PrescriptionView(viewsets.ViewSet):
             print(e)
             return Response({"message": "Failed to save prescription", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
-    @api_view(['POST'])
-    def update_prescription_amount(request, patientID):
+    @api_view(['PUT'])
+    @permission_classes([IsAuthenticated])
+    def update_prescription_amount(request, presNum):
         try:
             prescription_data = json.loads(request.body)
-            accountID  = prescription_data['account']
-            record = Health_Record.objects.get(patient=patientID)
-            account = Account.objects.get(pk=accountID)
-            prescription = Prescription.objects.get(health_record=record)
-            prescription.medicines = prescription_data["medicines"]
+            prescription = Prescription.objects.get(pk=presNum)
+            if 'medicines' in prescription_data:
+                prescription.medicines = prescription_data['medicines']
+            if 'account' in prescription_data:
+                account_id = prescription_data['account']
+                account = get_object_or_404(Account, pk=account_id)
+            if 'health_record' in prescription_data:
+                prescription.health_record_id = prescription_data['health_record']
+            if 'patient' in prescription_data:
+                prescription.patient_id = prescription_data['patient']
+            prescription.save()
             data_log = Data_Log.objects.create(
-                event = f"{account.username} updated dosage",
-                type = "User Updated Dosage",
-                account = account
-            )
+                event=f"{account.username} updated prescription amount",
+                type="User Updated Prescription Amount",
+                account=account
+                )
             return Response({"message": "Prescription amount updated successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
             print(e)
             return Response({"message": "Failed to update prescription amount", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+
     @api_view(['PUT'])
+    @permission_classes([IsAuthenticated])
     def update_prescription(request, presNum):
         try:
             prescription_data = json.loads(request.body)
@@ -199,6 +214,7 @@ class PrescriptionView(viewsets.ViewSet):
 
 
     @api_view(['DELETE'])
+    @permission_classes([IsAuthenticated])
     def delete_prescription(request, presNum):
         try:
             prescription = Prescription.objects.get(presNum = presNum)
@@ -213,6 +229,7 @@ class PrescriptionView(viewsets.ViewSet):
              return Response({"message": "Failed to delete prescription", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     @api_view(['DELETE'])
+    @permission_classes([IsAuthenticated])
     def delete_medicine(request, presNum, drugId):
         try:
             prescription = Prescription.objects.get(presNum = presNum)
@@ -262,6 +279,7 @@ class PrescriptionView(viewsets.ViewSet):
 
 
     @api_view(['GET'])
+    @permission_classes([IsAuthenticated])
     def fetch_prescription_by_patientIds(request, patientID):
         try: 
             patient = Patient.objects.get(pk=patientID) 

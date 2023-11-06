@@ -1,12 +1,9 @@
 import 'dart:convert';
 
 import 'package:capstone_sams/models/MedicineModel.dart';
-import 'package:capstone_sams/models/PatientModel.dart';
-import 'package:capstone_sams/providers/AccountProvider.dart';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 import '../constants/Env.dart';
 
 class MedicineProvider with ChangeNotifier {
@@ -15,8 +12,13 @@ class MedicineProvider with ChangeNotifier {
 
   List<Medicine> get medicines => _medicines;
 
-  Future<List<Medicine>> fetchMedicines() async {
-    final response = await http.get(Uri.parse('${Env.prefix}/cpoe/medicines/'));
+  Future<List<Medicine>> fetchMedicines(String token) async {
+    final header = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token',
+    };
+    final response = await http.get(Uri.parse('${Env.prefix}/cpoe/medicines/'),
+        headers: header);
     await Future.delayed(Duration(milliseconds: 3000));
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
@@ -29,8 +31,13 @@ class MedicineProvider with ChangeNotifier {
     }
   }
 
-  Future<List<Medicine>> searchMedicines({String? query}) async {
-    final response = await http.get(Uri.parse('${Env.prefix}/cpoe/medicines/'));
+  Future<List<Medicine>> searchMedicines({String? query, String? token}) async {
+    final header = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token',
+    };
+    final response = await http.get(Uri.parse('${Env.prefix}/cpoe/medicines/'),
+        headers: header);
     await Future.delayed(Duration(milliseconds: 3000));
     try {
       if (response.statusCode == 200) {
@@ -46,7 +53,9 @@ class MedicineProvider with ChangeNotifier {
                   element.drugId!
                       .toLowerCase()
                       .contains((query.toLowerCase())) ||
-                  element.drugName!.toLowerCase().contains((query.toLowerCase()));
+                  element.drugName!
+                      .toLowerCase()
+                      .contains((query.toLowerCase()));
             },
           ).toList();
         } else {
@@ -61,11 +70,11 @@ class MedicineProvider with ChangeNotifier {
     return _medicines;
   }
 
-
-
-  Future<bool> saveToPrescription(String? accountId, String? patientId) async {
-    final headers = <String, String>{
+  Future<bool> saveToPrescription(
+      String? accountId, String? patientId, String? finalPrediction, String token) async {
+    final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token',
     };
     final medicinesJson =
         _medicines.map((medicine) => medicine.toJson()).toList();
@@ -74,13 +83,12 @@ class MedicineProvider with ChangeNotifier {
       'medicines': medicinesJson,
       'account': accountId,
       'patient': patientId,
+      'disease': finalPrediction,
     };
- 
-    print('DATADATA$data');
 
     final response = await http.post(
       Uri.parse('${Env.prefix}/cpoe/prescription/save/'),
-      headers: headers,
+      headers: header,
       body: jsonEncode(data),
     );
     await Future.delayed(Duration(milliseconds: 3000));
@@ -90,11 +98,6 @@ class MedicineProvider with ChangeNotifier {
       print('cannot add medicine!');
       return false;
     }
-    // try {
-    // } on Exception catch(error){
-    //   print('error saving prescription $error');
-    //   return false;
-    // }
   }
 
   Future<bool> updateAmount(String? accountId, String? patientId) async {
@@ -140,5 +143,13 @@ class MedicineProvider with ChangeNotifier {
       _medicines[index] = editedMedicine;
       notifyListeners();
     }
+  }
+
+  void resetState() {
+    Future.delayed(Duration.zero, () {
+      data = [];
+      _medicines = [];
+      notifyListeners();
+    });
   }
 }

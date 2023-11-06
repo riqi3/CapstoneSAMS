@@ -82,7 +82,6 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                       bottomLeft: Radius.circular(Sizing.borderRadius)),
                 ),
                 padding: const EdgeInsets.only(
-                  // vertical: Sizing.sectionSymmPadding * 2,
                   left: Sizing.sectionSymmPadding,
                   right: Sizing.sectionSymmPadding,
                   bottom: Sizing.sectionSymmPadding,
@@ -108,32 +107,6 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                         );
                       },
                     ),
-
-                    // rows: titles.map<DataRow>((title) {
-                    //   // final value = widget.patient.toJson()[title];
-                    //   MapEntry value =
-                    //       widget.patient.toJson().entries.elementAt(title);
-                    //   return DataRow(
-                    //     cells: <DataCell>[
-                    //       DataCell(Text(title)),
-                    //       DataCell(Text(value.toString())),
-                    //     ],
-                    //   );
-                    // }).toList(),
-
-                    // rows: List<DataRow>.generate(
-                    //   widget.patient.toJson().entries.length,
-                    //   (int index) {
-                    //     MapEntry entry =
-                    //         widget.patient.toJson().entries.elementAt(index);
-                    // return DataRow(
-                    //   cells: <DataCell>[
-                    //     DataCell(Text(entry.key)),
-                    //     DataCell(Text(entry.value.toString())),
-                    //   ],
-                    //     );
-                    //   },
-                    // ),
                   ),
                 ),
               ),

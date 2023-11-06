@@ -5,9 +5,8 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, logout
 from django.shortcuts import get_object_or_404
-
 import json
 
 from api.modules.user.models import Personal_Note, Account, Data_Log
@@ -57,6 +56,10 @@ class LogInView(viewsets.ModelViewSet):
     @api_view(['POST'])
     def photo(request):
         photo = request.data.get('profile_photo')
+
+    @api_view(['GET'])
+    def logout_view(request):
+        logout(request)
         
     @api_view(['POST'])
     def login(request):

@@ -2,6 +2,7 @@
 from django.db import models
 from api.modules.user.models import Account
 from api.modules.patient.models import Health_Record, Patient
+from api.modules.disease_prediction.cdssModel.models import HealthSymptom
 
 '''
 This model represent the comments that
@@ -28,6 +29,7 @@ class Prescription(models.Model):
     account = models.ForeignKey(Account, on_delete = models.CASCADE)
     health_record = models.ForeignKey(Health_Record, on_delete = models.CASCADE)
     patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
+    disease = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
         verbose_name = "Prescription Record"

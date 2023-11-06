@@ -14,7 +14,7 @@ import random
 import os
 import csv
 from api.modules.disease_prediction.cdssModel.forms import CsvImportHealthSymptomForm 
-from .utils import delete_profile_photo
+from .utils import delete_profile_photo 
 # from io import StringIO as io
 # import csv
 from django.urls import reverse
@@ -77,6 +77,25 @@ def create_data_log_instance(sender, instance, created, **kwargs):
         data_log.save()
 
 '''
+This is a signal that will create a data log if an admin user does
+anything in the admin form.
+'''
+@receiver(post_save, sender=LabResult)
+def create_log_for_pdf_upload(sender, instance, created, **kwargs):
+    if created:
+        # Get the admin user associated with this LogEntry
+        account = instance.user
+
+        if account:
+            # Set the account attribute of the Data_Log instance
+            data_log = Data_Log(
+                event=f"User added/changed a model: {instance}",
+                type="Added/Changed Model",
+                account=account,
+            )
+        data_log.save()
+
+'''
 This is a signal that will create a data log if an admin user deletes
 any data.
 '''
@@ -95,6 +114,7 @@ def create_data_log_for_deletion(sender, instance, using, **kwargs):
                 account=admin_account,
             )
             data_log.save()
+
 
 '''
 This is a signal that will create a data log if an admin user deletes
@@ -615,12 +635,14 @@ class PrescriptionAdmin(admin.ModelAdmin):
     autocomplete_fields = ["patient"]
     list_display = (
         "presNum",
+        "disease",
         # "dosage",
         # "timeFrame",
         # "amount",
         "medicines",
         "account",
         "patient",
+        
     )
     list_filter = ("account", "patient")
     search_fields = ("presNum",)
@@ -966,7 +988,7 @@ class HealthSymptomAdmin(admin.ModelAdmin):
 #     list_display = ("sympNum", "symptom")
 #     search_fields = ("sympNum", "symptom")
 
-# Now register the new UserAdmin...
+# Now register the new UserAdmin... 
 admin.site.register(Account, UserAdmin)
 admin.site.register(Patient, PatientAdmin)
 admin.site.register(Data_Log, DataLogsAdmin)

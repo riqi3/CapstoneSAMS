@@ -1,10 +1,12 @@
  
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../constants/theme/pallete.dart';
 import '../../constants/theme/sizing.dart';
 import '../../models/PatientModel.dart';
 
+import '../../providers/AccountProvider.dart';
 import '../../providers/PatientProvider.dart';
 import '../../screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
  
@@ -12,6 +14,7 @@ import '../../screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
 class SearchPatientDelegate extends SearchDelegate {
   PatientProvider _patientList = PatientProvider();
   late Future<List<Patient>> patients;
+  
 
   @override
   List<Widget>? buildActions(BuildContext context) {
@@ -38,7 +41,7 @@ class SearchPatientDelegate extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     return FutureBuilder<List<Patient>>(
-      future: _patientList.searchPatients(query: query),
+      future: _patientList.searchPatients(query: query, token: context.read<AccountProvider>().token!),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(
