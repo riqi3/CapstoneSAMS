@@ -109,7 +109,9 @@ class _InfoState extends State<Info> {
                         ),
                         child: ListTile(
                           title: Text(
-                              'Prescription Number: ${prescription.presNum}'),
+                              'Prescription Number: ${prescription.presNum} \nDisease: ${prescription.disease}',
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.bold)),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: prescription.medicines!.map((medicine) {

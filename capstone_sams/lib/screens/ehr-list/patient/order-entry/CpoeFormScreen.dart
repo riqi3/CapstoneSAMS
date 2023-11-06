@@ -42,6 +42,7 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
     token = context.read<AccountProvider>().token!;
     finalPrediction = widget.initialPrediction;
     finalConfidence = widget.initialConfidence;
+    Provider.of<MedicineProvider>(context, listen: false).resetState();
   }
 
   Future<void> _handleAnalyzeAgain(BuildContext context) async {
@@ -102,7 +103,7 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
                 ),
                 SizedBox(height: 15),
                 Text(
-                  'Suspected Disease: $finalPrediction',
+                  'Suspected Disease: \n $finalPrediction',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 Text(
@@ -231,14 +232,9 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
                         final patientID = patient.patientId;
                         final medicineProvider =
                             context.read<MedicineProvider>();
-                        final success = await medicineProvider
-                            .saveToPrescription(accountID, patientID, token);
-
-                        print('PATIENT $patientID ACCOUNT $accountID');
-
-                        print('TESTING PO ITO SA SUCCESS $success');
-
-                        print(success);
+                        final success =
+                            await medicineProvider.saveToPrescription(
+                                accountID, patientID, finalPrediction, token);
 
                         if (success) {
                           // print('test this selected PATIENT $index');

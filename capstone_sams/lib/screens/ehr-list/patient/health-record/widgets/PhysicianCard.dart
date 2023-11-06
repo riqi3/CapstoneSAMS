@@ -3,6 +3,7 @@ import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/MedicineModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
+
 import 'package:capstone_sams/providers/AccountProvider.dart'; 
 import 'package:capstone_sams/providers/PrescriptionProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/Info.dart';
@@ -70,6 +71,7 @@ class _PhysicianCardState extends State<PhysicianCard> {
             );
           } else if (snapshot.hasError) {
             print('Error: ${snapshot.hasError}');
+            print(physicians);
             return Text('Error: ${snapshot.hasError}');
           } else {
             final physicianList = snapshot.data;

@@ -56,7 +56,7 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
     quantity = widget.medicine.quantity;
     medicines = widget.prescription?.medicines;
   }
- 
+
   void savePrescription() {
     final isValid = _formKey.currentState!.validate();
 
@@ -92,6 +92,7 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
             account: widget.prescription!.account,
             patientID: widget.prescription!.patientID,
             health_record: widget.prescription!.health_record,
+            disease: widget.prescription!.disease,
           ),
           widget.patient.patientId,
           context.read<AccountProvider>().token!

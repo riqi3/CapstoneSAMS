@@ -12,6 +12,7 @@ from api.modules.user.serializers import AccountSerializer
 from api.modules.patient.models import Health_Record, Patient
 from api.modules.cpoe.models import Comment, Medicine, Prescription
 from api.modules.cpoe.serializers import CommentSerializer, MedicineSerializer, PrescriptionSerializer
+from api.modules.disease_prediction.cdssModel.models import HealthSymptom
 
 
 class CommentView(viewsets.ModelViewSet):
@@ -140,11 +141,13 @@ class PrescriptionView(viewsets.ViewSet):
             account = Account.objects.get(pk=accountID)
             record = Health_Record.objects.get(patient=patientID)
             patiente = Patient.objects.get(pk=patientID)
+            disease = prescription_data.get('disease')
             prescription = Prescription.objects.create(
                 medicines=prescription_data['medicines'],
                 account=account,
                 health_record = record,
-                patient = patiente
+                patient = patiente,
+                disease=disease
             )
             data_log = Data_Log.objects.create(
                 event = f"{account.username} created prescription",

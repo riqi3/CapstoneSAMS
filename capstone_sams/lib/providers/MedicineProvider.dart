@@ -74,7 +74,7 @@ class MedicineProvider with ChangeNotifier {
   }
 
   Future<bool> saveToPrescription(
-      String? accountId, String? patientId, String token) async {
+      String? accountId, String? patientId, String? finalPrediction, String token) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',
@@ -86,6 +86,7 @@ class MedicineProvider with ChangeNotifier {
       'medicines': medicinesJson,
       'account': accountId,
       'patient': patientId,
+      'disease': finalPrediction,
     };
 
     print('DATADATA$data');
@@ -152,5 +153,13 @@ class MedicineProvider with ChangeNotifier {
       _medicines[index] = editedMedicine;
       notifyListeners();
     }
+  }
+
+  void resetState() {
+    Future.delayed(Duration.zero, () {
+      data = [];
+      _medicines = [];
+      notifyListeners();
+    });
   }
 }
