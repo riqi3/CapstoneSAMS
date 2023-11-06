@@ -74,7 +74,7 @@ def create_data_log_instance(sender, instance, created, **kwargs):
                 type="Added/Changed Model",
                 account=admin_account,
             )
-        data_log.save()
+            data_log.save()
 
 '''
 This is a signal that will create a data log if an admin user does
@@ -93,7 +93,7 @@ def create_log_for_pdf_upload(sender, instance, created, **kwargs):
                 type="Added/Changed Model",
                 account=account,
             )
-        data_log.save()
+            data_log.save()
 
 '''
 This is a signal that will create a data log if an admin user deletes
