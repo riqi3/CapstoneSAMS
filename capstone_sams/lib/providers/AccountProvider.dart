@@ -43,6 +43,20 @@ class AccountProvider extends ChangeNotifier {
     }
   }
 
+  Future<bool> logout() async {
+    final response = await http.post(
+      Uri.parse('${Env.prefix}/user/logout/${id}'),
+    );
+    await Future.delayed(Duration(milliseconds: 3000));
+    if (response.statusCode == 200) {
+      // The user was authenticated, so store the account data in the provider
+      return true;
+    } else {
+      // The login request failed, so return false
+      return false;
+    }
+  }
+
   void setAccount(Account account) {
     _account = account;
     notifyListeners();

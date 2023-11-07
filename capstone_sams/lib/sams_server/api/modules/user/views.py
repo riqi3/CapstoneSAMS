@@ -82,6 +82,17 @@ class LogInView(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid credentials'}, status=400)
+        
+    @api_view(['POST'])
+    def logout(request, accountID):
+        user = Account.objects.get(pk=accountID)
+        data_log = Data_Log(
+            event=f"User logged out: {user.username}",
+            type="User Logout",
+            account=user,
+        )
+        data_log.save()
+        return Response({'message': 'Successfully logged out'}, status=200)
 
 '''
 This view represent all the function necessary to fetch
