@@ -1,10 +1,10 @@
 from rest_framework import viewsets
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.contrib.auth import authenticate, logout
 from django.shortcuts import get_object_or_404
 import json
@@ -120,6 +120,7 @@ class PersonalNotesView(viewsets.ModelViewSet):
     Certain to exception handlers were coded to ensure continued operations.
     '''
     @api_view(['GET'])
+    @permission_classes([IsAuthenticated])
     def fetch_personal_notes(request, accountID):
         try:
             personal_notes = Personal_Note.objects.filter(account__pk=accountID)
@@ -154,6 +155,7 @@ class PersonalNotesView(viewsets.ModelViewSet):
     Certain to exception handlers were coded to ensure continued operations.
     '''
     @api_view(['POST']) 
+    @permission_classes([IsAuthenticated])
     def create_personal_note(request):
         try:
             notes_data = json.loads(request.body)
@@ -184,6 +186,7 @@ class PersonalNotesView(viewsets.ModelViewSet):
     Certain to exception handlers were coded to ensure continued operations.
     '''
     @api_view(['PUT'])
+    @permission_classes([IsAuthenticated])
     def update_personal_note(request, noteNum):
         try:
             notes_data = json.loads(request.body)
@@ -209,6 +212,7 @@ class PersonalNotesView(viewsets.ModelViewSet):
     Certain to exception handlers were coded to ensure continued operations.
     '''
     @api_view(['PUT'])
+    @permission_classes([IsAuthenticated])
     def set_done(request, noteNum):
         try:
             notes_data = json.loads(request.body)
@@ -232,6 +236,7 @@ class PersonalNotesView(viewsets.ModelViewSet):
     Certain to exception handlers were coded to ensure continued operations.
     '''
     @api_view(['DELETE'])
+    @permission_classes([IsAuthenticated])
     def delete_personal_note(request, noteNum):
         try:
             note = Personal_Note.objects.get(noteNum = noteNum)

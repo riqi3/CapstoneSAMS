@@ -20,13 +20,15 @@ class TodoWidget extends StatelessWidget {
   void toggleTodoStatus(BuildContext context) {
     final accountID = context.read<AccountProvider>().id;
     final provider = Provider.of<TodosProvider>(context, listen: false);
-    provider.toggleTodoStatus(todo, accountID!);
+    final token = context.read<AccountProvider>().token!;
+    provider.toggleTodoStatus(todo, accountID!, token);
   }
 
   void deleteTodo(BuildContext context, Todo todo) {
     final accountID = context.read<AccountProvider>().id;
     final provider = Provider.of<TodosProvider>(context, listen: false);
-    provider.removeTodo(todo, accountID!);
+    final token = context.read<AccountProvider>().token!;
+    provider.removeTodo(todo, accountID!, token);
     Navigator.of(context).pop();
 
     const snackBar = SnackBar(
