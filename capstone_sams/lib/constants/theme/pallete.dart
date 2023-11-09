@@ -15,12 +15,3 @@ class Pallete {
   static const Color infoColor = Color(0xFF17a2b8);
   static const Color palegrayColor = Color.fromARGB(255, 238, 238, 238);
 }
-
-
-// scaffold F6F6FA
-// main color FF6969
-// black 323232
-// white ffffff
-// grey a1a1a1
-// green 55BA98
-// red F62121

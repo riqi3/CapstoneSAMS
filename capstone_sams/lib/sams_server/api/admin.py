@@ -11,10 +11,8 @@ from django.urls import path
 from IPython.display import display, HTML
 from PIL import Image, ImageDraw, ImageFont 
 import random   
-import os
-import csv
+import os 
 from api.modules.disease_prediction.cdssModel.forms import CsvImportHealthSymptomForm 
-from .utils import delete_profile_photo 
 from django.urls import reverse
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
@@ -279,8 +277,7 @@ class UserAdmin(BaseUserAdmin):
         "accountRole",
         "is_active",
         "is_staff",
-        "is_superuser",
-        "profile_photo",
+        "is_superuser", 
     )
     list_filter = ("accountRole", "is_staff", "is_superuser")
     fieldsets = (
