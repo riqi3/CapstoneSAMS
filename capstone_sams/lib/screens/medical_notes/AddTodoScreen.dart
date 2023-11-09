@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/screens/medical_notes/widgets/TodoFormWidget.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
   final _formKey = GlobalKey<FormState>();
   String title = '';
   String description = '';
+  bool _isAddingTodo = false;
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +28,18 @@ class _AddTodoPageState extends State<AddTodoPage> {
       appBar: AppBar(
         title: const Text('Add Note'),
         actions: [
-          IconButton(
-            icon: Icon(Icons.check),
-            onPressed: addTodo,
-          ),
+          _isAddingTodo
+              ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CircularProgressIndicator(
+                    color: const Color.fromARGB(255, 110, 40, 40),
+                    strokeWidth: 3,
+                  ),
+                )
+              : IconButton(
+                  icon: Icon(Icons.check),
+                  onPressed: _isAddingTodo ? null : addTodo,
+                ),
         ],
       ),
       body: Form(
@@ -57,6 +67,10 @@ class _AddTodoPageState extends State<AddTodoPage> {
     if (!isValid) {
       return;
     } else {
+      setState(() {
+        _isAddingTodo = true;
+      });
+
       final accountID = context.read<AccountProvider>().id;
       final todo = Todo(
           title: title,
@@ -67,8 +81,17 @@ class _AddTodoPageState extends State<AddTodoPage> {
 
       final provider = Provider.of<TodosProvider>(context, listen: false);
       final token = context.read<AccountProvider>().token!;
-      provider.addTodo(todo, accountID, token);
-      Navigator.of(context).pop();
+      provider.addTodo(todo, accountID, token).then((value) {
+        setState(() {
+          _isAddingTodo = false;
+        });
+        Navigator.of(context).pop();
+      }).catchError((error) {
+        setState(() {
+          _isAddingTodo = false;
+        });
+        print('Error: $error');
+      });
     }
   }
 }

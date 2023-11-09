@@ -8,16 +8,19 @@ import '../constants/Env.dart';
 
 class TodosProvider extends ChangeNotifier {
   List<Todo> _todos = [];
+  bool _isLoading = false;
 
   List<Todo> get todos => _todos.where((todo) => todo.isDone == false).toList();
   List<Todo> get todosCompleted =>
       _todos.where((todo) => todo.isDone == true).toList();
-
+  bool get isLoading => _isLoading;
   String _getUrl(String endpoint) {
     return '${Env.prefix}/$endpoint';
   }
 
   Future fetchTodos(String accountID, String token) async {
+    _isLoading = true;
+
     final headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',
@@ -34,8 +37,11 @@ class TodosProvider extends ChangeNotifier {
       final items = json.decode(response.body).cast<Map<String, dynamic>>();
       List<Todo> list = items.map<Todo>((json) => Todo.fromJson(json)).toList();
       _todos = list;
+      _isLoading = false;
       notifyListeners();
     } else {
+      _isLoading = false;
+      notifyListeners();
       throw Exception('Failed to load todos  ${jsonDecode(response.body)}');
     }
   }
