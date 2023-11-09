@@ -4,6 +4,7 @@ import 'package:capstone_sams/models/MedicalNotesModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/MedicalNotesProvider.dart';
 import 'package:capstone_sams/providers/PrescriptionProvider.dart';
+import 'package:capstone_sams/screens/authentication/LoginScreen.dart';
 
 import 'package:capstone_sams/screens/ehr-list/EhrListScreen.dart';
 import 'package:capstone_sams/screens/home/widgets/EhrSection.dart';
@@ -36,8 +37,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _fetchUserTodos() async {
     final provider = Provider.of<TodosProvider>(context, listen: false);
     final accountID = context.read<AccountProvider>().id;
+    final token = context.read<AccountProvider>().token!;
     // final test = context.read<PrescriptionProvider>().healthRecord;
-    await provider.fetchTodos(accountID!);
+    await provider.fetchTodos(accountID!, token);
     // print('healthRecord numbner ${test}');
     setState(() {
       _userTodos = provider.todos;
@@ -67,6 +69,20 @@ class _HomeScreenState extends State<HomeScreen> {
               }
             },
           ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            var success = await context.read<AccountProvider>().logout();
+            if (success) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => LoginScreen(),
+                ),
+              );
+            }
+          },
+          child: const Text('Log out'),
         ),
       ),
     );

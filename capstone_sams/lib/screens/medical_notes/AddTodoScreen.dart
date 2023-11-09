@@ -67,7 +67,8 @@ class _AddTodoPageState extends State<AddTodoPage> {
           account: accountID!);
 
       final provider = Provider.of<TodosProvider>(context, listen: false);
-      provider.addTodo(todo, accountID);
+      final token = context.read<AccountProvider>().token!;
+      provider.addTodo(todo, accountID, token);
       Navigator.of(context).pop();
     }
   }

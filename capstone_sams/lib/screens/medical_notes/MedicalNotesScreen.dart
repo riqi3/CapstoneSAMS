@@ -32,7 +32,8 @@ class _MedicalNotesState extends State<MedicalNotes>
 
     final provider = Provider.of<TodosProvider>(context, listen: false);
     final accountID = context.read<AccountProvider>().id;
-    provider.fetchTodos(accountID!);
+    final token = context.read<AccountProvider>().token!;
+    provider.fetchTodos(accountID!, token);
   }
 
   @override

@@ -35,6 +35,7 @@ class _EditTodoPageState extends State<EditTodoPage> {
     } else {
       final accountID = context.read<AccountProvider>().id;
       final provider = Provider.of<TodosProvider>(context, listen: false);
+      final token = context.read<AccountProvider>().token!;
       provider.updateTodo(
           Todo(
             noteNum: widget.todo.noteNum,
@@ -43,7 +44,8 @@ class _EditTodoPageState extends State<EditTodoPage> {
             isDone: widget.todo.isDone,
             account: accountID!,
           ),
-          accountID!);
+          accountID!,
+          token);
       Navigator.of(context).pop();
 
       const snackBar = SnackBar(
@@ -72,7 +74,8 @@ class _EditTodoPageState extends State<EditTodoPage> {
                 final accountID = context.read<AccountProvider>().id!;
                 final provider =
                     Provider.of<TodosProvider>(context, listen: false);
-                provider.removeTodo(widget.todo, accountID!);
+                final token = context.read<AccountProvider>().token!;
+                provider.removeTodo(widget.todo, accountID!, token);
                 Navigator.of(context).pop();
               },
               icon: const Icon(Icons.delete))
