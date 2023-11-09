@@ -81,6 +81,8 @@ JAZZMIN_SETTINGS = {
     #     }]
     # },
 
+    "custom_css": "/css/styles.css",
+
     # Whether to display the side menu
     "show_sidebar": True,
 
