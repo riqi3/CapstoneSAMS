@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
-
 import '../constants/Env.dart';
 
 class Account {
@@ -72,17 +70,12 @@ class Account {
     );
 
     if (response.statusCode == 200) {
-      final decodedResponse = json.decode(response.body);
-      final token = decodedResponse['token'];
-      final accountJson = decodedResponse['account'];
-
-      // Save the token to shared preferences for later use
-      // ...
+      final decodedResponse = json.decode(response.body); 
+      final accountJson = decodedResponse['account']; 
 
       return Account.fromJson(accountJson);
     } else {
       throw Exception('Failed to login');
     }
   }
-  
 }

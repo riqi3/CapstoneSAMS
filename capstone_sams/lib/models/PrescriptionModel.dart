@@ -5,8 +5,6 @@ class Prescription {
   final int? health_record;
   final String? patientID;
   final String? disease;
-  // final List<dynamic>? prescriptions;
-  // final List<dynamic>? accounts;
 
   Prescription({
     required this.presNum,
@@ -15,8 +13,6 @@ class Prescription {
     required this.patientID,
     required this.health_record,
     required this.disease,
-    // required this.prescriptions,
-    // required this.accounts,
   });
 
   Map<String, dynamic> toJson() {
@@ -27,8 +23,6 @@ class Prescription {
       'patient': patientID,
       'health_record': health_record,
       'disease': disease,
-      // 'prescriptions': prescriptions,
-      // 'accounts': accounts,
     };
   }
 

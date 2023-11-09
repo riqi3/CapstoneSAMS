@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../constants/theme/pallete.dart';
 
 class ShortTextfield extends StatelessWidget {

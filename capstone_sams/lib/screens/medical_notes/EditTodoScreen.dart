@@ -3,7 +3,6 @@ import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/screens/medical_notes/widgets/TodoFormWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../models/MedicalNotesModel.dart';
 import '../../providers/MedicalNotesProvider.dart';
 
@@ -44,7 +43,7 @@ class _EditTodoPageState extends State<EditTodoPage> {
             isDone: widget.todo.isDone,
             account: accountID!,
           ),
-          accountID!,
+          accountID,
           token);
       Navigator.of(context).pop();
 
@@ -75,7 +74,7 @@ class _EditTodoPageState extends State<EditTodoPage> {
                 final provider =
                     Provider.of<TodosProvider>(context, listen: false);
                 final token = context.read<AccountProvider>().token!;
-                provider.removeTodo(widget.todo, accountID!, token);
+                provider.removeTodo(widget.todo, accountID, token);
                 Navigator.of(context).pop();
               },
               icon: const Icon(Icons.delete))

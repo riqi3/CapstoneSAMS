@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
+import 'package:font_awesome_flutter/font_awesome_flutter.dart'; 
 import '../../../constants/Strings.dart';
 import '../../../constants/theme/pallete.dart';
 import '../SearchPatientDelegate.dart';
-
-//home app bar
+ 
 class SearchBarWidget extends StatefulWidget {
   const SearchBarWidget({
     super.key,
@@ -29,7 +27,6 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
             context: context,
             delegate: SearchPatientDelegate(),
           );
-          print('search patient');
         },
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20),

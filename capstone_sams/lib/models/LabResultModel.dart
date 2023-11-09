@@ -1,7 +1,6 @@
-// medicine_model.dart
 class Labresult {
   final int jsonId;
-  // final Map<String, dynamic> jsonTables;
+
   final List<dynamic>? labresultTitles;
   final DateTime collectedOn;
   final List<dynamic>? jsonTables;
@@ -9,7 +8,6 @@ class Labresult {
   final String title;
   final String comment;
   final String patient;
-  // List<Labresult> subMenu = [];
 
   Labresult({
     required this.jsonId,
@@ -35,26 +33,12 @@ class Labresult {
     };
   }
 
-  // factory Labresult.fromJson(Map<String, dynamic> json) {
-  //   Map<String, dynamic>? tables =
-  //       json['jsonTables'] is Map<String, dynamic> ? json['jsonTables'] : {};
-  //   return Labresult(
-  //     jsonId: json['jsonId'],
-  //     // jsonData: Labresult.fromJson(jsonDecode(json['jsonData'])),
-  //     jsonTables: tables,
-  //     createdAt: DateTime.parse(json['createdAt']),
-  //     title: json['title'],
-  //     comment: json['comment'],
-  //     patient: json['patient'],
-  //   );
-  // }
   factory Labresult.fromJson(Map<String, dynamic> json) {
     List<dynamic>? tables =
         json['jsonTables'] is List<dynamic> ? json['jsonTables'] : [];
     List<dynamic>? titles =
         json['labresultTitles'] is List<dynamic> ? json['labresultTitles'] : [];
 
-    // print(tables);
     return Labresult(
       jsonId: json['jsonId'],
       labresultTitles: titles,

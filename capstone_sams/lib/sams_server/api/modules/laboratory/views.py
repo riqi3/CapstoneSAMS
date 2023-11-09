@@ -23,8 +23,6 @@ from django.http import HttpResponseRedirect
 import json
 from django.urls import reverse
 
-# def get_data_and_move_higher(arr):
-
 
 def cleanJsonTable(json_data):
     if isinstance(json_data, dict):
@@ -59,20 +57,9 @@ class LabResultForm(forms.ModelForm):
             "pdf": forms.ClearableFileInput(attrs={"id": "lab_result_file"}),
             "patient": forms.Select(attrs={"id": "select_patient"}),
         }
-        # widgets = {
-        #     "title": forms.TextInput(attrs={"id": "id_title"}),
-        #     "comment": forms.Textarea(attrs={"id": "lab_comment"}),
-        #     "pdf": forms.ClearableFileInput(attrs={"id": "lab_result_file"}),
-        #     "patient": forms.Select(attrs={"id": "select_patient"}),
-        # }
 
 
 class ProcessPdf(APIView):
-    # def scan_pdf(request):
-    #     # selected_pdfs = request.GET.get('selected_pdfs', '').split(',')
-    #     # , {'selected_pdfs':selected_pdfs}
-    #     return render(request, "laboratory/select/scan/pdf_scan.html")
-
     @api_view(["GET"])
     def fetch_json_pdf(request):
         try:
@@ -125,10 +112,6 @@ class ProcessPdf(APIView):
                 pdf_comment = pdf_instance.comment
                 patient_id = pdf_instance.patient
                 str_collected_on = None
-                # test = pdf_instance.patient
-                # patient_instance = Patient.objects.filter(patient=test)
-                # patient_id = patient_instance.patientID
-                # pdf_title= str(request.POST.get('title'))
 
                 tables = read_pdf(
                     pdf_instance.pdf.path, pages="all", output_format="json"
@@ -145,8 +128,6 @@ class ProcessPdf(APIView):
 
                 for page in reader.pages:
                     text = page.extract_text()
-                    # first_word = text.split()[0] if text else None
-                    # print(first_word)
                     if text:
                         firstWord = text.split()[0]
                         labresultTitles.append(firstWord)
@@ -169,9 +150,6 @@ class ProcessPdf(APIView):
 
                 get_data_and_move_higher(cleaned_data)
 
-                # print('aaaaaaaaaaa', tempList)
-                # print('\n\n')
-
                 for item in tempList:
                     data_contents = item["data"]
                     if data_contents not in uniqueDataList:
@@ -189,14 +167,6 @@ class ProcessPdf(APIView):
                             str_collected_on = item["data"][3][1]["text"]
                             break
 
-                # print('bbbbbbbbb', newLista)
-                print(str_collected_on)
-
-                # h = json.dumps(collected_on)
-                # matches = re.findall(r'(\d+/\d+/\d+)',h)
-                # print(matches)
-                # print(h)
-                # collected_on = datetime.datetime.strptime(str_collected_on, '%d/%m/%Y').strftime('%B %d, %Y')
                 collected_on = datetime.datetime.strptime(
                     str_collected_on, "%d/%m/%Y"
                 ).strftime("%Y-%m-%d")
@@ -212,11 +182,8 @@ class ProcessPdf(APIView):
                     patient=patient_id,
                 )
                 jsonLabResult.save()
-                # print(jsonLabResult)
-
                 pdf_contents.append(jsonLabResult)
                 json_data = json.dumps(pdf_contents)
-            # return JsonResponse({"result": json.loads(json_data)})
             return HttpResponseRedirect(reverse("admin"))
         else:
             pdf_list = LabResult.objects.filter(patient_id=patient)

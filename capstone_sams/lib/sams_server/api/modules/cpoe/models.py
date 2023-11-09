@@ -22,9 +22,6 @@ physicians will input and store into the system.
 class Prescription(models.Model):
     #Prescription Attributes
     presNum = models.AutoField(primary_key = True)
-    # dosage = models.PositiveIntegerField(blank = False)
-    # timeFrame = models.DateTimeField(blank = False)
-    # amount = models.PositiveIntegerField(blank = False)
     medicines = models.JSONField(blank = True, default=None)
     account = models.ForeignKey(Account, on_delete = models.CASCADE)
     health_record = models.ForeignKey(Health_Record, on_delete = models.CASCADE)
@@ -48,7 +45,3 @@ class Medicine(models.Model):
     class Meta:
         verbose_name = "Medicine Record"
         verbose_name_plural = "Medicine Record"
-
-# class Prescribed_Medicine(models.Model):
-#     prescription = models.ForeignKey(Prescription, on_delete=models.CASCADE)
-#     medicine = models.ForeignKey(Medicine, on_delete=models.CASCADE)

@@ -5,7 +5,6 @@ import 'package:capstone_sams/screens/medical_notes/widgets/TodoFormWidget.dart'
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
-
 import '../../models/MedicalNotesModel.dart';
 import '../../providers/MedicalNotesProvider.dart';
 

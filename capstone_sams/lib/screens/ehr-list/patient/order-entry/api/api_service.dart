@@ -5,7 +5,6 @@ import 'dart:convert';
 
 class ApiService {
   static final String apiUrl = '${Env.prefix}/cdss';
-  // Function to delete a record by ID
   static Future<int?> getLatestRecordId() async {
     final response = await http.get(
       Uri.parse('$apiUrl/get_latest_record_id/'),
@@ -22,7 +21,6 @@ class ApiService {
     }
   }
 
-  // Function to delete a record by ID
   static Future<bool> deleteRecordById(int recordId) async {
     final url = '$apiUrl/delete_symptom_record/$recordId/';
 

@@ -1,18 +1,15 @@
 import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/providers/LabResultProvider.dart';
-
 import 'package:capstone_sams/screens/ehr-list/patient/lab/widgets/LabresultCard.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../constants/Strings.dart';
 import '../../../../constants/theme/sizing.dart';
 import '../../../../models/LabResultModel.dart';
 
 class LaboratoriesScreen extends StatefulWidget {
   final int index;
-  // final Labresult labresult1;
   const LaboratoriesScreen({Key? key, required this.index}) : super(key: key);
 
   @override
@@ -78,8 +75,6 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
                       itemCount: dataLength,
                       itemBuilder: (context, index) {
                         return _buildList(
-                          // snapshot,
-                          // dataToShow,
                           dataToShow[index],
                         );
                       },
@@ -105,7 +100,6 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
     }
 
     int numLabTypes = (labresultTitles.length);
-    print('COUNT NUMBER OF DATA $numLabTypes');
 
     return ExpansionTile(
       textColor: Pallete.mainColor,
@@ -115,11 +109,8 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
         ('${formattedDate} | ${list.title}'),
         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
       ),
-
-      // trailing: FaIcon(FontAwesomeIcons.chevronDown),
       subtitle: GestureDetector(
         onTap: () {
-          print('ss');
           showDialog(
             context: context,
             builder: (context) => Dialog(
@@ -140,7 +131,6 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
         ),
       ),
       children: List.generate(numLabTypes, (index) {
-        print('aa');
         return ListTile(
           title: Text(labresultTitles[index]),
           onTap: () {
@@ -161,40 +151,4 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
       }),
     );
   }
-
-  // GridView _mobileView(AsyncSnapshot<List<Labresult>> snapshot) {
-  //   return GridView.builder(
-  //     shrinkWrap: true,
-  //     physics: const BouncingScrollPhysics(),
-  //     itemCount: snapshot.data?.length,
-  //     itemBuilder: (context, index) {
-  //       final labresult = snapshot.data![index];
-  //       return LabResultCard(labresult: labresult);
-  //     },
-  //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-  //       crossAxisCount: 1,
-  //       mainAxisSpacing: 10,
-  //       crossAxisSpacing: 10,
-  //       // childAspectRatio: 16 / 8,
-  //     ),
-  //   );
-  // }
-
-  // GridView _tabletView(AsyncSnapshot<List<Labresult>> snapshot) {
-  //   return GridView.builder(
-  //     shrinkWrap: true,
-  //     physics: const BouncingScrollPhysics(),
-  //     itemCount: snapshot.data?.length,
-  //     itemBuilder: (context, index) {
-  //       final labresult = snapshot.data![index];
-  //       return LabResultCard(labresult: labresult);
-  //     },
-  //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-  //       crossAxisCount: 1,
-  //       mainAxisSpacing: 10,
-  //       crossAxisSpacing: 10,
-  //       // childAspectRatio: 16 / 10,
-  //     ),
-  //   );
-  // }
 }

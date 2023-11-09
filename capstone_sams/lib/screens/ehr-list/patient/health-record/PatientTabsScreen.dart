@@ -1,12 +1,9 @@
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
-import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../constants/theme/sizing.dart';
 import '../../../../models/PatientModel.dart';
-
 import '../lab/LabScreen.dart';
 import '../order-entry/CpoeAnalyzeScreen.dart';
 import 'HealthRecordScreen.dart';
@@ -51,7 +48,6 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
       endDrawer: ValueDashboard(),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(Sizing.appbarHeight),
-        // child: SearchBarTabs(),
         child: ValuePatientRecord(
           tabController: tabController,
         ),

@@ -51,7 +51,7 @@ class SymptomFieldsProvider extends ChangeNotifier {
     Future.delayed(Duration.zero, () {
       symptoms.clear();
       autocompleteFields.clear();
-      notifyListeners(); // Notify listeners after resetting the state
+      notifyListeners(); 
     });
   }
 }

@@ -16,7 +16,6 @@ class ValueDashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     final username = context.watch<AccountProvider>().username;
     final filename = context.watch<AccountProvider>().photo;
-    print('PROFILE $filename');
     return Dashboard(
       username: '$username',
       profile: '$filename',

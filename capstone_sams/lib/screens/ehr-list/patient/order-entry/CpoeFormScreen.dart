@@ -7,9 +7,7 @@ import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/Medic
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/PrognosisUpdateDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'package:capstone_sams/providers/SymptomsFieldsProvider.dart';
-
 import '../../../../constants/theme/pallete.dart';
 import '../../../../models/PatientModel.dart';
 import '../../../../providers/AccountProvider.dart';

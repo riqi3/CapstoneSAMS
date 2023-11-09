@@ -1,17 +1,13 @@
-import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/models/SymptomsModel.dart';
 import 'package:capstone_sams/providers/SymptomsFieldsProvider.dart';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import '../../../../constants/Env.dart';
 import '../../../../constants/theme/pallete.dart';
 import '../../../../constants/theme/sizing.dart';
 import '../../../../models/PatientModel.dart';
-
 import 'CpoeFormScreen.dart';
 
 class CpoeAnalyzeScreen extends StatefulWidget {
@@ -46,8 +42,6 @@ class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
         body: jsonEncode(requestBody),
         headers: {"Content-Type": "application/json"},
       );
-      print('Response Status Code: ${response.statusCode}');
-      print('Response Body: ${response.body}');
 
       if (response.statusCode == 200) {
         var prediction = jsonDecode(response.body) as Map<String, dynamic>;

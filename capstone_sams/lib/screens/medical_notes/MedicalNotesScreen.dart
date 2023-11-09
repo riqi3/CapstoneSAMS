@@ -4,13 +4,10 @@ import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/MedicalNotesProvider.dart';
 import 'package:capstone_sams/screens/medical_notes/AddTodoScreen.dart';
-
 import 'package:capstone_sams/screens/medical_notes/widgets/CompletedListWidget.dart';
 import 'package:capstone_sams/screens/medical_notes/widgets/TodoListWidget.dart';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../constants/theme/pallete.dart';
 import '../../constants/theme/sizing.dart';
 

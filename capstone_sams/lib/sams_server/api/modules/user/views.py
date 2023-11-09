@@ -8,7 +8,6 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.contrib.auth import authenticate, logout
 from django.shortcuts import get_object_or_404
 import json
-
 from api.modules.user.models import Personal_Note, Account, Data_Log
 from api.modules.user.serializers import PersonalNoteSerializer, AccountSerializer
 
@@ -124,12 +123,6 @@ class PersonalNotesView(viewsets.ModelViewSet):
     def fetch_personal_notes(request, accountID):
         try:
             personal_notes = Personal_Note.objects.filter(account__pk=accountID)
-            # account = Account.objects.filter(pk=accountID)
-            # data_log = Data_Log.objects.create(
-            #     event = f"User logged in: {account.username}",
-            #     type = "User Login",
-            #     account = account
-            # )
         
         # Retrieve the Account instance using get_object_or_404
         #     account = get_object_or_404(Account, pk=accountID)

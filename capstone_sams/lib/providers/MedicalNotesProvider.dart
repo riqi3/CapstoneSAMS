@@ -52,8 +52,6 @@ class TodosProvider extends ChangeNotifier {
       body: jsonEncode(todo.toJson()),
     );
     await Future.delayed(Duration(milliseconds: 3000));
-    print('Response status code: ${response.statusCode}');
-    print('Response body: ${response.body}');
     if (response.statusCode == 201) {
       fetchTodos(accountID, token);
       notifyListeners();

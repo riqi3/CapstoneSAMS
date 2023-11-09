@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../constants/theme/pallete.dart';
 import '../../constants/theme/sizing.dart';
 import '../../global-widgets/text-fields/Textfields.dart';
-
-import '../home/HomeScreen.dart';
-
 import '../../providers/AccountProvider.dart';
+import '../home/HomeScreen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -19,7 +16,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  var _isLoading = false; 
+  var _isLoading = false;
 
   Future<void> showFailure(BuildContext context) async {
     return showDialog(
@@ -51,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       }),
     );
-  } 
+  }
 
   void _onSubmit() async {
     setState(() => _isLoading = true);
@@ -66,12 +63,12 @@ class _LoginScreenState extends State<LoginScreen> {
           Provider.of<AccountProvider>(context, listen: false);
       profile.isAuthentificated = true;
       usernameController.clear();
-      passwordController.clear(); 
+      passwordController.clear();
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => const HomeScreen(),
         ),
-      ); 
+      );
     } else {
       showFailure(context);
       Future.delayed(
@@ -79,7 +76,6 @@ class _LoginScreenState extends State<LoginScreen> {
         () => setState(() => _isLoading = false),
       );
     }
-    print('login');
   }
 
   @override
@@ -170,4 +166,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
- 

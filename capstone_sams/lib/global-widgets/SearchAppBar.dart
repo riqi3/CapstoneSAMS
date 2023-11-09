@@ -2,7 +2,6 @@
 import 'package:capstone_sams/global-widgets/search-bar/widgets/SearchBarWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import '../constants/theme/pallete.dart';
 import '../constants/theme/sizing.dart';
 
