@@ -19,25 +19,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  var _isLoading = false;
-  // Future<Account?> _login() async {
-  //   final url = Uri.parse('${Env.prefix}/login/');
-  //   final response = await http.post(url,
-  //       headers: <String, String>{
-  //         'Content-Type': 'application/json; charset=UTF-8'
-  //       },
-  //       body: jsonEncode(<String, String>{
-  //         'username': usernameController.text,
-  //         'password': passwordController.text
-  //       }));
-  //   if (response.statusCode == 200) {
-  //     final jsonBody = json.decode(response.body);
-  //     final account = Account.fromJson(jsonBody);
-  //     return account;
-  //   } else {
-  //     return null;
-  //   }
-  // }
+  var _isLoading = false; 
 
   Future<void> showFailure(BuildContext context) async {
     return showDialog(
@@ -69,15 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       }),
     );
-  }
-
-  // @override
-  // void dispose() {
-  //   _emailController.dispose();
-  //   _passwordController.dispose();
-
-  //   super.dispose();
-  // }
+  } 
 
   void _onSubmit() async {
     setState(() => _isLoading = true);
@@ -92,58 +66,12 @@ class _LoginScreenState extends State<LoginScreen> {
           Provider.of<AccountProvider>(context, listen: false);
       profile.isAuthentificated = true;
       usernameController.clear();
-      passwordController.clear();
-      // if (context.read<AccountProvider>().role ==
-      //     'Physician') {
-      //   Navigator.of(context).push(
-      //     MaterialPageRoute(
-      //       builder: (context) => const HomeScreen(),
-      //     ),
-      //   );
-      // } else {
-      //   Navigator.of(context).push(MaterialPageRoute(
-      //       builder: (context) => const AdminScreen()));
-      // }
+      passwordController.clear(); 
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => const HomeScreen(),
         ),
-      );
-      // switch (context.read<AccountProvider>().role) {
-      //   case 'Physician':
-      //     {
-      //       Navigator.of(context).push(
-      //         MaterialPageRoute(
-      //           builder: (context) => const HomeScreen(),
-      //         ),
-      //       );
-      //     }
-      //     break;
-      //   case 'MedTech':
-      //     {
-      //       Navigator.of(context).push(
-      //         MaterialPageRoute(
-      //           builder: (context) => const HomeScreen(),
-      //         ),
-      //       );
-      //     }
-      //     break;
-      //   case 'Nurse':
-      //     {
-      //       Navigator.of(context).push(
-      //         MaterialPageRoute(
-      //           builder: (context) => const HomeScreen(),
-      //         ),
-      //       );
-      //     }
-      //     break;
-      //   default:
-      //     Navigator.of(context).push(
-      //       MaterialPageRoute(
-      //         builder: (context) => const AdminScreen(),
-      //       ),
-      //     );
-      // }
+      ); 
     } else {
       showFailure(context);
       Future.delayed(
@@ -242,24 +170,4 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-
-// class ShortTextfield extends StatelessWidget {
-//   const ShortTextfield({
-//     super.key,
-//     required this.usernameController,
-//   });
-
-//   final TextEditingController usernameController;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return TextFormField(
-//       controller: usernameController,
-//       validator: (value) =>
-//           value == '' ? 'Please input username' : null,
-//       decoration: const InputDecoration(
-//         hintText: 'username',
-//       ),
-//     );
-//   }
-// }
+ 

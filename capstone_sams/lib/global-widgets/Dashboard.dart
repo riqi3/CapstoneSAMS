@@ -1,5 +1,6 @@
-import 'package:capstone_sams/models/AccountModel.dart';
+import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
+import 'package:capstone_sams/screens/authentication/LoginScreen.dart';
 import 'package:capstone_sams/screens/home/HomeScreen.dart';
 
 import 'package:capstone_sams/screens/medical_notes/MedicalNotesScreen.dart';
@@ -12,14 +13,66 @@ import '../constants/theme/sizing.dart';
 import '../screens/ehr-list/EhrListScreen.dart';
 import 'search-bar/SearchPatientDelegate.dart';
 
-class Dashboard extends StatelessWidget {
+class Dashboard extends StatefulWidget {
   const Dashboard({
     super.key,
     required this.username,
     required this.profile,
   });
   final String username, profile;
-  // final String a = '';
+
+  @override
+  State<Dashboard> createState() => _DashboardState();
+}
+
+class _DashboardState extends State<Dashboard> {
+  var _isLoading = false;
+
+  void _onSubmit() async {
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text(
+          'Are you sure?',
+          style: TextStyle(
+              color: Pallete.dangerColor, fontWeight: FontWeight.bold),
+        ),
+        content: const Text('Please confirm if you want to logout'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'Cancel'),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(
+                color: Pallete.greyColor,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () async {
+              setState(() => _isLoading = true);
+              var success = await context.read<AccountProvider>().logout();
+
+              if (success) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LoginScreen(),
+                  ),
+                );
+              }
+            },
+            child: Text(
+              'Log me out',
+              style: TextStyle(
+                color: Pallete.dangerColor,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +86,8 @@ class Dashboard extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 30,
-                  backgroundImage:
-                      AssetImage('lib/sams_server/upload-photo${profile}'),
-                  // backgroundImage:  FileImage(profile),
-                  // backgroundImage: NetworkImage(profile),
+                  backgroundImage: AssetImage(
+                      'lib/sams_server/upload-photo${widget.profile}'),
                   backgroundColor: Colors.transparent,
                 ),
                 SizedBox(
@@ -45,17 +96,10 @@ class Dashboard extends StatelessWidget {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(username),
-                    // Text(
-                    //   'fullname@gmail.com',
-                    //   style: TextStyle(),
-                    // ),
+                    Text(widget.username),
                   ],
                 ),
               ],
-            ),
-            decoration: BoxDecoration(
-              color: Colors.transparent,
             ),
           ),
           SizedBox(
@@ -69,7 +113,6 @@ class Dashboard extends StatelessWidget {
                 context: context,
                 delegate: SearchPatientDelegate(),
               );
-              print('search patient');
             },
           ),
           ListTile(
@@ -82,7 +125,6 @@ class Dashboard extends StatelessWidget {
                   builder: (context) => const HomeScreen(),
                 ),
               );
-              print('home');
             },
           ),
           ListTile(
@@ -95,7 +137,6 @@ class Dashboard extends StatelessWidget {
                   builder: (context) => EhrListScreen(),
                 ),
               );
-              print('ehr');
             },
           ),
           ListTile(
@@ -108,32 +149,33 @@ class Dashboard extends StatelessWidget {
                   builder: (context) => MedicalNotes(),
                 ),
               );
-              print('med notes');
-            },
-          ),
-          ListTile(
-            leading: FaIcon(FontAwesomeIcons.solidUser),
-            title: const Text('Profile'),
-            onTap: () {
-              print('profile');
             },
           ),
           SizedBox(
             height: Sizing.padding,
           ),
-          Divider(),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: Sizing.sectionSymmPadding),
+            child: Divider(color: Colors.black),
+          ),
           SizedBox(
             height: Sizing.padding,
           ),
           ListTile(
-            leading: FaIcon(FontAwesomeIcons.rightFromBracket),
+            leading: _isLoading
+                ? Container(
+                    width: 24,
+                    height: 24,
+                    padding: const EdgeInsets.all(4),
+                    child: const CircularProgressIndicator(
+                      color: Pallete.mainColor,
+                      strokeWidth: 3,
+                    ),
+                  )
+                : FaIcon(FontAwesomeIcons.rightFromBracket),
             title: const Text('Logout'),
-            onTap: () {
-              print('logout');
-              final AccountProvider profile =
-                  Provider.of<AccountProvider>(context, listen: false);
-              profile.isAuthentificated = false;
-            },
+            onTap: _isLoading ? null : _onSubmit,
           ),
         ],
       ),
