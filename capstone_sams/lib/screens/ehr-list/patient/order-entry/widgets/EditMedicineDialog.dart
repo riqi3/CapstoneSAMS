@@ -1,15 +1,12 @@
 import 'package:capstone_sams/models/MedicineModel.dart';
 import 'package:capstone_sams/providers/MedicineProvider.dart';
- 
 import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../../constants/Env.dart';
 import '../../../../../constants/theme/pallete.dart';
 import '../../../../../constants/theme/sizing.dart';
- 
 
 class EditMedicineDialog extends StatefulWidget {
   final Medicine medicine;
@@ -99,17 +96,9 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                             medicine.drugName.toString(),
                         onChanged: (Medicine? data) {
                           _editedMedicine.drugName = data?.drugName.toString();
-                          print('MEDICATION: ${data?.drugName.toString()}');
                         },
                       ),
                       SizedBox(height: 10),
-                      // Flexible(
-                      //   child: TextAreaField(
-                      //     validator: 'pls input',
-                      //     hintText: 'Instructions',
-                      //     onSaved: _editedMedicine.instructions,
-                      //   ),
-                      // ),
                       Flexible(
                         child: TextFormField(
                           decoration: InputDecoration(
@@ -234,7 +223,7 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                               onSaved: (value) => _editedMedicine.quantity =
                                   int.tryParse(value ?? ''),
                             ),
-                          ), 
+                          ),
                         ],
                       ),
                       SizedBox(height: 10),

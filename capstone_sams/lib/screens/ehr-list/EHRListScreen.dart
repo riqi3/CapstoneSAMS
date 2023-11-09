@@ -1,20 +1,14 @@
 import 'dart:math';
-
 import 'package:capstone_sams/constants/Dimensions.dart';
 import 'package:capstone_sams/constants/Strings.dart';
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/global-widgets/TitleAppBar.dart';
-
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
-
 import 'package:capstone_sams/screens/ehr-list/widgets/PatientCard.dart';
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import 'package:provider/provider.dart';
-
 import '../../constants/theme/pallete.dart';
 import '../../constants/theme/sizing.dart';
 import '../../providers/PatientProvider.dart';
@@ -45,7 +39,6 @@ class _EhrListScreenState extends State<EhrListScreen> {
   }
 
   void _scrollUp() {
-    // _controller.jumpTo(_controller.position.minScrollExtent);
     _controller.animateTo(
       _controller.position.minScrollExtent,
       duration: Duration(seconds: 1),
@@ -80,7 +73,6 @@ class _EhrListScreenState extends State<EhrListScreen> {
           builder: (context, snapshot) {
             List<Patient> dataToShow = [];
             if (snapshot.hasError) {
-              print('EHR snapshot error message: ${snapshot.error}');
               return Center(
                 child: Text('Error: ${snapshot.error}'),
               );
@@ -98,18 +90,13 @@ class _EhrListScreenState extends State<EhrListScreen> {
               final end = min(
                   (currentPageIndex.toInt() * items.toInt()) + items.toInt(),
                   dataToShow.length);
-              print('start ${start} end ${end}');
 
               dataToShow = dataToShow.sublist(start, end);
               totalPatients = snapshot.data?.length.toDouble();
               pages1 = (totalPatients! / items);
-              print('items display per page ${items}');
 
               if (pages1 > items) pages1++;
               pageRounded = pages1.ceil();
-
-              print(
-                  "number of pagess ${pageRounded} aa  number of patients ${totalPatients}");
             }
 
             return LayoutBuilder(
@@ -194,7 +181,6 @@ class _EhrListScreenState extends State<EhrListScreen> {
       itemCount: dataToShow.length,
       itemBuilder: (context, index) {
         final patient = dataToShow[index];
-        print("phone ${pageRounded}");
         final labresult = int.parse(patient.patientId);
         return PatientCard(patient: patient, labresult: labresult);
       },
@@ -204,22 +190,17 @@ class _EhrListScreenState extends State<EhrListScreen> {
         crossAxisSpacing: 10,
         childAspectRatio: MediaQuery.of(context).size.width /
             (MediaQuery.of(context).size.height / 4),
-        // childAspectRatio: MediaQuery.of(context).size.width / 200,
       ),
     );
   }
-
-  // MediaQuery.of(context).size.width / (MediaQuery.of(context).size.height / 1)
 
   GridView _tabletView(List<Patient> dataToShow, int start) {
     return GridView.builder(
       shrinkWrap: true,
       physics: const BouncingScrollPhysics(),
       itemCount: dataToShow.length,
-      // itemCount: snapshot.data?.length,
       itemBuilder: (context, index) {
         final patient = dataToShow[index];
-        print("tablet ${pageRounded}");
         final labresult = int.parse(patient.patientId);
         return PatientCard(patient: patient, labresult: labresult);
       },

@@ -1,14 +1,13 @@
 from rest_framework import viewsets
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.contrib.auth import authenticate, logout
 from django.shortcuts import get_object_or_404
 import json
-
 from api.modules.user.models import Personal_Note, Account, Data_Log
 from api.modules.user.serializers import PersonalNoteSerializer, AccountSerializer
 
@@ -82,6 +81,17 @@ class LogInView(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid credentials'}, status=400)
+        
+    @api_view(['POST'])
+    def logout(request, accountID):
+        user = Account.objects.get(pk=accountID)
+        data_log = Data_Log(
+            event=f"User logged out: {user.username}",
+            type="User Logout",
+            account=user,
+        )
+        data_log.save()
+        return Response({'message': 'Successfully logged out'}, status=200)
 
 '''
 This view represent all the function necessary to fetch
@@ -109,15 +119,10 @@ class PersonalNotesView(viewsets.ModelViewSet):
     Certain to exception handlers were coded to ensure continued operations.
     '''
     @api_view(['GET'])
+    @permission_classes([IsAuthenticated])
     def fetch_personal_notes(request, accountID):
         try:
             personal_notes = Personal_Note.objects.filter(account__pk=accountID)
-            # account = Account.objects.filter(pk=accountID)
-            # data_log = Data_Log.objects.create(
-            #     event = f"User logged in: {account.username}",
-            #     type = "User Login",
-            #     account = account
-            # )
         
         # Retrieve the Account instance using get_object_or_404
         #     account = get_object_or_404(Account, pk=accountID)
@@ -143,6 +148,7 @@ class PersonalNotesView(viewsets.ModelViewSet):
     Certain to exception handlers were coded to ensure continued operations.
     '''
     @api_view(['POST']) 
+    @permission_classes([IsAuthenticated])
     def create_personal_note(request):
         try:
             notes_data = json.loads(request.body)
@@ -173,6 +179,7 @@ class PersonalNotesView(viewsets.ModelViewSet):
     Certain to exception handlers were coded to ensure continued operations.
     '''
     @api_view(['PUT'])
+    @permission_classes([IsAuthenticated])
     def update_personal_note(request, noteNum):
         try:
             notes_data = json.loads(request.body)
@@ -198,6 +205,7 @@ class PersonalNotesView(viewsets.ModelViewSet):
     Certain to exception handlers were coded to ensure continued operations.
     '''
     @api_view(['PUT'])
+    @permission_classes([IsAuthenticated])
     def set_done(request, noteNum):
         try:
             notes_data = json.loads(request.body)
@@ -221,6 +229,7 @@ class PersonalNotesView(viewsets.ModelViewSet):
     Certain to exception handlers were coded to ensure continued operations.
     '''
     @api_view(['DELETE'])
+    @permission_classes([IsAuthenticated])
     def delete_personal_note(request, noteNum):
         try:
             note = Personal_Note.objects.get(noteNum = noteNum)

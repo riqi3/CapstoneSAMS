@@ -1,4 +1,3 @@
- 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -9,12 +8,10 @@ import '../../models/PatientModel.dart';
 import '../../providers/AccountProvider.dart';
 import '../../providers/PatientProvider.dart';
 import '../../screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
- 
 
 class SearchPatientDelegate extends SearchDelegate {
   PatientProvider _patientList = PatientProvider();
   late Future<List<Patient>> patients;
-  
 
   @override
   List<Widget>? buildActions(BuildContext context) {
@@ -41,7 +38,8 @@ class SearchPatientDelegate extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     return FutureBuilder<List<Patient>>(
-      future: _patientList.searchPatients(query: query, token: context.read<AccountProvider>().token!),
+      future: _patientList.searchPatients(
+          query: query, token: context.read<AccountProvider>().token!),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(
@@ -57,12 +55,11 @@ class SearchPatientDelegate extends SearchDelegate {
             final patient1 = snapshot.data![index];
             return GestureDetector(
               onTap: () {
-                // print(patient.firstName);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PatientTabsScreen(
-                        patient: patient1, index: index),
+                    builder: (context) =>
+                        PatientTabsScreen(patient: patient1, index: index),
                   ),
                 );
               },
@@ -160,43 +157,4 @@ class SearchPatientDelegate extends SearchDelegate {
       child: Text('Search Patient'),
     );
   }
-
-  // @override
-  // Widget buildResults(BuildContext context) {
-  //   List<String> matchQuery = [];
-  //   for (var searchPatient in searchTerms) {
-  //     if (searchPatient.toLowerCase().contains(query.toLowerCase())) {
-  //       matchQuery.add(searchPatient);
-  //     }
-  //   }
-  //   return ListView.builder(
-  //     itemCount: matchQuery.length,
-  //     itemBuilder: (context, index) {
-  //       var result = matchQuery[index];
-  //       return ListTile(
-  //         title: Text(result),
-  //       );
-  //     },
-  //   );
-  // }
-
-  // @override
-  // Widget buildSuggestions(BuildContext context) {
-  //   List<String> matchQuery = [];
-
-  //   for (var fruit in _patientList) {
-  //     if (fruit.toLowerCase().contains(query.toLowerCase())) {
-  //       matchQuery.add(fruit);
-  //     }
-  //   }
-  //   return ListView.builder(
-  //     itemCount: matchQuery.length,
-  //     itemBuilder: (context, index) {
-  //       var result = matchQuery[index];
-  //       return ListTile(
-  //         title: Text(result),
-  //       );
-  //     },
-  //   );
-  // }
 }

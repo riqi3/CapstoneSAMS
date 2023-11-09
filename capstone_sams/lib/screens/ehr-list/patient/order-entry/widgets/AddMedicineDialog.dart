@@ -3,13 +3,10 @@
 import 'package:capstone_sams/models/MedicineModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/MedicineProvider.dart';
-
 import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../../constants/Env.dart';
 import '../../../../../constants/theme/pallete.dart';
 
@@ -23,7 +20,7 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
   final _medicine = Medicine();
   DateTime? _selectedStartDate;
   DateTime? _selectedEndDate;
-  late String token = context.read<AccountProvider>().token! ;
+  late String token = context.read<AccountProvider>().token!;
 
   late Future<List<Medicine>> medicines;
   late bool _autoValidate = false;
@@ -79,7 +76,6 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                         clearButtonProps: ClearButtonProps(isVisible: true),
                         popupProps: PopupProps.modalBottomSheet(
                           showSearchBox: true,
-                          // showSelectedItems: true,
                         ),
                         asyncItems: (String filter) async {
                           var response = await Dio().get(
@@ -100,7 +96,6 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                           _medicine.drugId = data?.drugId.toString();
                           _medicine.drugName = data?.drugName.toString();
                           _medicine.drugCode = data?.drugCode.toString();
-                          print('ADD MEDICATION: ${data?.drugName.toString()}');
                         },
                       ),
                       SizedBox(height: 10),
