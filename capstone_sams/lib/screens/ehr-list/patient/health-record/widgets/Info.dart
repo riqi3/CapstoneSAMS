@@ -113,14 +113,19 @@ class _InfoState extends State<Info> {
                     ),
                     child: ListTile(
                       title: Text(
-                        'Prescription Number: ${prescription.presNum} \nDisease: ${prescription.disease}',
+                        'Prescription Number: ${prescription.presNum}',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: prescription.medicines!.map((medicine) {
                           return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Text(
+                                'Disease: ${prescription.disease}',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
                               if (medicine['quantity'] == 0)
                                 Text(
                                   'Medicine: ${medicine["drugName"]}',
@@ -135,6 +140,7 @@ class _InfoState extends State<Info> {
                                   'Medicine: ${medicine["drugName"]}',
                                   style: TextStyle(fontWeight: FontWeight.w500),
                                 ),
+                              Text('Quantity: ${medicine['quantity']}'),
                             ],
                           );
                         }).toList(),
@@ -164,32 +170,33 @@ class _InfoState extends State<Info> {
     }
     if (accountProvider.id != prescription.account) {
       return PopupMenuButton(
-          itemBuilder: (context) => [
-                PopupMenuItem(
-                  child: ListTile(
-                    leading: FaIcon(
-                      FontAwesomeIcons.solidEye,
-                      color: Pallete.infoColor,
-                    ),
-                    title: Text(
-                      'View',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: Pallete.infoColor,
-                      ),
-                    ),
-                    onTap: () {
-                      print('${prescription.presNum} details');
-
-                      if (prescription.medicines?.length == 0) {
-                        detailsPrescription(context, prescription, index);
-                      } else {
-                        detailsPrescriptionDetails(context, prescription);
-                      }
-                    },
-                  ),
+        itemBuilder: (context) => [
+          PopupMenuItem(
+            child: ListTile(
+              leading: FaIcon(
+                FontAwesomeIcons.solidEye,
+                color: Pallete.infoColor,
+              ),
+              title: Text(
+                'View',
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  color: Pallete.infoColor,
                 ),
-              ]);
+              ),
+              onTap: () {
+                print('${prescription.presNum} details');
+
+                if (prescription.medicines?.length == 0) {
+                  detailsPrescription(context, prescription, index);
+                } else {
+                  detailsPrescriptionDetails(context, prescription);
+                }
+              },
+            ),
+          ),
+        ],
+      );
     } else {
       return physicianAction(
         index,

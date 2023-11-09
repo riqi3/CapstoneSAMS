@@ -1,5 +1,5 @@
 import 'package:capstone_sams/providers/MedicalNotesProvider.dart';
- 
+
 import 'package:flutter/material.dart';
 
 import 'package:capstone_sams/models/MedicalNotesModel.dart';
@@ -26,7 +26,6 @@ class NotesSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final username = context.watch<AccountProvider>().username;
     int numTodos = todosPreview.length;
-    print("todos ${numTodos}");
     return Column(
       children: [
         Padding(
@@ -109,7 +108,10 @@ class NotesSection extends StatelessWidget {
                     ),
                     SizedBox(height: 10),
                     ...todosPreview
-                        .map((todo) => TodoCard(todo: todo))
+                        .map((todo) => TodoCard(
+                              todo: todo,
+                              token: context.read<AccountProvider>().token!,
+                            ))
                         .toList(),
                   ],
                 ),
@@ -124,8 +126,9 @@ class NotesSection extends StatelessWidget {
 
 class TodoCard extends StatefulWidget {
   final Todo todo;
+  final String token;
 
-  const TodoCard({required this.todo});
+  const TodoCard({required this.todo, required this.token});
 
   @override
   _TodoCardState createState() => _TodoCardState();
@@ -160,7 +163,8 @@ class _TodoCardState extends State<TodoCard> {
                     });
                     final provider =
                         Provider.of<TodosProvider>(context, listen: false);
-                    provider.toggleTodoStatus(widget.todo, 'accountID');
+                    provider.toggleTodoStatus(
+                        widget.todo, 'accountID', widget.token);
                   },
                 ),
                 const SizedBox(width: 8),

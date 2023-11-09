@@ -1,4 +1,3 @@
-// medicine_model.dart
 import 'PatientModel.dart';
 
 class Medicine {

@@ -63,8 +63,7 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
 
     if (!isValid) {
       return;
-    } else {
-      // if (medicines != null && widget.prescription != null) {
+    } else { 
       final selectedMedicineIndex = widget.index;
 
       List<dynamic> updatedMedicines = List.from(medicines!);
@@ -197,15 +196,14 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
                                     clearButtonProps:
                                         ClearButtonProps(isVisible: true),
                                     popupProps: PopupProps.modalBottomSheet(
-                                      showSearchBox: true,
-                                      // showSelectedItems: true,
+                                      showSearchBox: true, 
                                     ),
                                     asyncItems: (String filter) async {
                                       var response = await Dio().get(
                                         '${Env.prefix}/cpoe/medicines/',
                                         queryParameters: {"filter": filter},
                                       );
-                                      // var models = Medicine.fromJson(response.data);
+                                       
                                       var models = List<Medicine>.from(
                                           response.data.map((json) =>
                                               Medicine.fromJson(json)));

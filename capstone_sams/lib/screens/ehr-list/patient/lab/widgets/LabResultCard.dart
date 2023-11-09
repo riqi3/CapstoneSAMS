@@ -1,6 +1,5 @@
 import 'package:capstone_sams/models/LabResultModel.dart';
 import 'package:flutter/material.dart';
-
 import '../../../../../constants/theme/pallete.dart';
 import '../../../../../constants/theme/sizing.dart';
 
@@ -12,7 +11,6 @@ class LabResultCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final titles = ["TEST", '', "VALUE", "UNIT", "REFERENCE"];
-    print('index in lab card ${a}');
     final array = labresult.jsonTables![a];
     final matrix = array['data'];
 

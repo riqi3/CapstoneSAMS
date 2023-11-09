@@ -7,7 +7,6 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 import json
 from rest_framework import status
-
 from api.modules.user.models import Account, Data_Log
 from api.modules.patient.models import Patient, Health_Record
 from api.modules.patient.serializers import PatientSerializer, HealthRecordSerializer
@@ -135,125 +134,8 @@ class HealthRecordView(viewsets.ViewSet):
     def fetch_record_by_id(request, patientID):
         try:
             patient = Patient.objects.get(pk=patientID)
-            record = Health_Record.objects.get(patient=patient) 
-            # serializer = HealthRecordSerializer(record)
+            record = Health_Record.objects.get(patient=patient)
             serializer = HealthRecordSerializer(record)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Health_Record.DoesNotExist:
             return Response({"message": "Health Record does not exist."}, status=status.HTTP_404_NOT_FOUND)
-
-
-#     @api_view(['GET'])
-#     def fetch_records(request):
-#         try:
-#             records = Health_Record.objects.all()
-#             response_data = []
-#             for record in records:
-#                 #Patient History and Symptoms
-#                 history = Medical_History.objects.filter(record=record)
-#                 patient_symptoms = Patient_Symptom.objects.filter(medical_history=history)
-#                 symptoms = [symptom.symptom for symptom in patient_symptoms]
-#                 print(symptoms)
-
-#                 #Patient Personal Info
-#                 patient = records.patient
-#                 print(patient)
-
-#                 #Accounts and Comment
-#                 comments = Comment.objects.filter(record=record)
-#                 physician = [comment.account for comment in comments]
-#                 print(physician)
-
-#                 #Medicines and Prescription
-#                 prescription = Prescription.objects.filter(health_record=record)
-#                 prescribed_medicines = Prescribed_Medicine.objects.filter(prescription=prescription)
-#                 medicines = [medicine.medicine for medicine in prescribed_medicines]
-#                 print(medicines)
-                
-#                 # Serialize the data
-#                 history_data = HealthRecordSerializer(record).data
-#                 patient_data = PatientSerializer(patient).data
-#                 symptoms_data = SymptomSerializer(symptoms, many=True).data
-#                 comments_data = CommentSerializer(comments, many=True).data
-#                 physician_data = AccountSerializer(physician, many=True).data
-#                 prescription_data = PrescriptionSerializer(prescription, many=True).data
-#                 medicines_data = MedicineSerializer(medicines, many=True).data
-
-#                 record_data = {
-#                     'history': history_data,
-#                     'physicians': physician_data,
-#                     'patients': patient_data,
-#                     'symptoms': symptoms_data,
-#                     'comments': comments_data,
-#                     'prescription': prescription_data,
-#                     'medicines': medicines_data,
-#                 }
-
-#                 response_data.append(record_data)
-            
-#             print(response_data)
-#             return Response(response_data, status=status.HTTP_200_OK)
-#         except Exception as e:
-#             return Response({"message": "Failed to fetch health records", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-
-#     @api_view(['GET'])
-#     def fetch_record_by_num(request):
-#         try:
-#             data = json.loads(request.body)
-#             recordNum = data['recordNum']
-#             record = Health_Record.objects.get(pk=recordNum)
-#             history = Medical_History.objects.filter(health_record=record)
-#             patient_symptoms = Patient_Symptom.objects.filter(
-#                 medical_history__in=history)
-#             symptoms = Symptom.objects.filter(
-#                 patient_symptoms__in=patient_symptoms)
-#             comments = Comment.objects.filter(health_record=record)
-#             physician = Account.objects.filter(comment__in=comments)
-#             prescription = Prescription.objects.filter(health_record=record)
-#             prescribed_medicines = Prescribed_Medicine.objects.filter(
-#                 prescription__in=prescription)
-#             medicines = Medicine.objects.filter(
-#                 prescribed_medicine__in=prescribed_medicines)
-
-#             history_data = HealthRecordSerializer(record)
-#             physician_data = AccountSerializer(physician, many=True)
-#             symptoms_data = SymptomSerializer(symptoms, many=True)
-#             comments_data = CommentSerializer(comments, many=True)
-#             prescription_data = PrescriptionSerializer(prescription, many=True)
-#             medicines_data = MedicineSerializer(medicines, many=True)
-
-#             response_data = {
-#                 'history': history_data.data,
-#                 'physicians': physician_data.data,
-#                 'symptoms': symptoms_data.data,
-#                 'comments': comments_data.data,
-#                 'presription': prescription_data.data,
-#                 'medicines': medicines_data.data,
-#             }
-
-#             return Response(response_data, status=status.HTTP_200_OK)
-
-#         except Exception as e:
-#             return Response({"message": "Failed to fetch health record", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-
-# class SymptomsView(viewsets.ModelViewSet):
-    
-#     @api_view(['GET'])
-#     def fetch_symptoms(request):
-#         try:
-#             symptoms = Symptom.objects.all()
-#             serializer = SymptomSerializer(symptoms, many=True)
-#             return Response(serializer.data, status=status.HTTP_200_OK)
-#         except Exception as e:
-#             return Response({"message": "Failed to fetch symptoms", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-    
-#     @api_view(['GET'])
-#     def fetch_symptoms_by_num(request, sympNum):
-#         try:
-#             symptoms = Symptom.objects.get(pk=sympNum)
-#             serializer = SymptomSerializer(symptoms)
-#             return Response(serializer.data, status=status.HTTP_200_OK)
-#         except Exception as e:
-#             return Response({"message": "Failed to fetch symptoms", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

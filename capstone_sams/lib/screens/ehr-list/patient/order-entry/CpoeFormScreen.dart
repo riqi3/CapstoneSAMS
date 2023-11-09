@@ -1,5 +1,4 @@
 import 'package:capstone_sams/constants/theme/sizing.dart';
-import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/providers/PatientProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/api/api_service.dart';
@@ -8,9 +7,7 @@ import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/Medic
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/PrognosisUpdateDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'package:capstone_sams/providers/SymptomsFieldsProvider.dart';
-
 import '../../../../constants/theme/pallete.dart';
 import '../../../../models/PatientModel.dart';
 import '../../../../providers/AccountProvider.dart';
@@ -43,12 +40,12 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
     setState(() => _isLoading = true);
     var accountID = context.read<AccountProvider>().id;
     var patient = await context
-            .read<PatientProvider>()
-            .fetchPatient(widget.index.toString(), token);
+        .read<PatientProvider>()
+        .fetchPatient(widget.index.toString(), token);
     final medicineProvider = context.read<MedicineProvider>();
     final patientID = patient.patientId;
     final success = await medicineProvider.saveToPrescription(
-                        accountID, patientID, finalPrediction, token);
+        accountID, patientID, finalPrediction, token);
 
     if (success) {
       Navigator.of(context).push(
@@ -230,26 +227,6 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
                           index: index,
                         ),
                       ),
-                      // SizedBox(height: 10),
-                      // Text(
-                      //   'Comment Section',
-                      //   style: TextStyle(
-                      //       color: Pallete.primaryColor,
-                      //       fontSize: 20,
-                      //       fontWeight: FontWeight.bold),
-                      // ),
-                      // SizedBox(height: 2),
-                      // TextFormField(
-                      //   decoration: InputDecoration(
-                      //     border: OutlineInputBorder(
-                      //       borderSide: BorderSide(color: Color(0xFF9EC6FA)),
-                      //     ),
-                      //     filled: true,
-                      //     fillColor: Pallete.palegrayColor,
-                      //   ),
-                      //   maxLines: null,
-                      //   keyboardType: TextInputType.multiline,
-                      // ),
                     ],
                   ),
                 SizedBox(height: 10),

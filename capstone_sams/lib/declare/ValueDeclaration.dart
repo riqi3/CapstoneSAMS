@@ -2,9 +2,7 @@ import 'package:capstone_sams/global-widgets/Dashboard.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
-import '../constants/Env.dart';
+import 'package:provider/provider.dart'; 
 import '../constants/theme/pallete.dart';
 import '../constants/theme/sizing.dart';
 import '../global-widgets/TitleAppBar.dart';
@@ -18,7 +16,6 @@ class ValueDashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     final username = context.watch<AccountProvider>().username;
     final filename = context.watch<AccountProvider>().photo;
-    print('PROFILE $filename');
     return Dashboard(
       username: '$username',
       profile: '$filename',

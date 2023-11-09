@@ -17,9 +17,10 @@ class TodosProvider extends ChangeNotifier {
     return '${Env.prefix}/$endpoint';
   }
 
-  Future fetchTodos(String accountID) async {
+  Future fetchTodos(String accountID, String token) async {
     final headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token',
     };
 
     final response = await http.get(
@@ -39,9 +40,10 @@ class TodosProvider extends ChangeNotifier {
     }
   }
 
-  Future addTodo(Todo todo, String accountID) async {
+  Future addTodo(Todo todo, String accountID, String token) async {
     final headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token',
     };
 
     final response = await http.post(
@@ -50,10 +52,8 @@ class TodosProvider extends ChangeNotifier {
       body: jsonEncode(todo.toJson()),
     );
     await Future.delayed(Duration(milliseconds: 3000));
-    print('Response status code: ${response.statusCode}');
-    print('Response body: ${response.body}');
     if (response.statusCode == 201) {
-      fetchTodos(accountID);
+      fetchTodos(accountID, token);
       notifyListeners();
     } else {
       throw Exception(
@@ -61,9 +61,10 @@ class TodosProvider extends ChangeNotifier {
     }
   }
 
-  Future updateTodo(Todo todo, String accountID) async {
+  Future updateTodo(Todo todo, String accountID, String token) async {
     final headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token',
     };
     final response = await http.put(
         Uri.parse(
@@ -74,16 +75,17 @@ class TodosProvider extends ChangeNotifier {
     await Future.delayed(Duration(milliseconds: 3000));
 
     if (response.statusCode == 204) {
-      fetchTodos(accountID);
+      fetchTodos(accountID, token);
       notifyListeners();
     } else {
       throw Exception('Failed to update todo');
     }
   }
 
-  Future toggleTodoStatus(Todo todo, String accountID) async {
+  Future toggleTodoStatus(Todo todo, String accountID, String token) async {
     final headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token',
     };
     final body = jsonEncode({
       'account': todo.account,
@@ -98,16 +100,17 @@ class TodosProvider extends ChangeNotifier {
 
     if (response.statusCode == 204) {
       todo.isDone = !todo.isDone;
-      fetchTodos(todo.account);
+      fetchTodos(todo.account, token);
     } else {
       throw Exception(
           'Failed to update todo status  ${jsonDecode(response.body)}');
     }
   }
 
-  Future removeTodo(Todo todo, String accountID) async {
+  Future removeTodo(Todo todo, String accountID, String token) async {
     final headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token',
     };
     final body = jsonEncode({'account': todo.account});
     final response = await http.delete(
@@ -117,7 +120,7 @@ class TodosProvider extends ChangeNotifier {
     );
     await Future.delayed(Duration(milliseconds: 3000));
     if (response.statusCode == 204) {
-      fetchTodos(todo.account);
+      fetchTodos(todo.account, token);
     } else {
       throw Exception('Failed to delete todo ${jsonDecode(response.body)}');
     }

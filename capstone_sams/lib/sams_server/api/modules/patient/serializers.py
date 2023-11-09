@@ -37,10 +37,3 @@ class HealthRecordSerializer(serializers.ModelSerializer):
             'diseases',
             'patient',
         ]
-        # fields = '__all__'
-
-
-# class SymptomSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Symptom
-#         fields = ["sympNum", "symptom"]

@@ -47,17 +47,3 @@ class Health_Record(models.Model):
     class Meta:
         verbose_name = "Health Record"
         verbose_name_plural = "Health Record"
-
-# class Symptom(models.Model):
-#     sympNum = models.AutoField(primary_key = True)
-#     symptom = models.CharField(max_length = 3000, blank = False)
-
-# class Medical_History(models.Model):
-#     histNum = models.AutoField(primary_key = True)
-#     health_record = models.ForeignKey(Health_Record, on_delete = models.CASCADE)
-
-# class Patient_Symptom(models.Model):
-#     sympID = models.AutoField(primary_key = True)
-#     medical_history = models.ForeignKey(Medical_History, on_delete = models.CASCADE)
-#     symptom =  models.ForeignKey(Symptom, on_delete = models.CASCADE)
-

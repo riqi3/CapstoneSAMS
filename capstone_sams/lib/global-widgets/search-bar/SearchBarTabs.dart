@@ -1,15 +1,11 @@
 import 'package:capstone_sams/global-widgets/search-bar/widgets/SearchBarWidget.dart';
- 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import '../../constants/Strings.dart';
 import '../../constants/theme/pallete.dart';
 import '../../constants/theme/sizing.dart';
 
- 
 
-//home app bar
 class SearchBarTabs extends StatefulWidget {
   const SearchBarTabs({
     super.key,
@@ -59,23 +55,6 @@ class _SearchBarTabsState extends State<SearchBarTabs> {
             SearchBarWidget(),
           ],
         ),
-        // bottom: TabBar(
-        //   indicatorColor: Pallete.mainColor,
-        //   controller: _controller,
-        //   isScrollable: true,
-        //   labelColor: Pallete.mainColor,
-        //   tabs: [
-        //     Tab(
-        //       child: Text('EHR'),
-        //     ),
-        //     Tab(
-        //       child: Text('LABS'),
-        //     ),
-        //     Tab(
-        //       child: Text('CPOE'),
-        //     ),
-        //   ],
-        // ),
       ),
     );
   }

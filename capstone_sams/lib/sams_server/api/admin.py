@@ -15,8 +15,6 @@ import os
 import csv
 from api.modules.disease_prediction.cdssModel.forms import CsvImportHealthSymptomForm 
 from .utils import delete_profile_photo 
-# from io import StringIO as io
-# import csv
 from django.urls import reverse
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
@@ -30,8 +28,6 @@ from api.modules.laboratory.models import LabResult
 
 from api.modules.disease_prediction.cdssModel.models import HealthSymptom
 from api.modules.disease_prediction.cdssModel.views import train_disease_prediction_model
-
-# from api.models import Account, Patient, Data_Log, Prescription, Medicine, Symptom, Health_Record, Comment, Prescribed_Medicine, Patient_Symptom
 
 '''
 This is a signal that will create a data log if a user logs in.
@@ -74,7 +70,7 @@ def create_data_log_instance(sender, instance, created, **kwargs):
                 type="Added/Changed Model",
                 account=admin_account,
             )
-        data_log.save()
+            data_log.save()
 
 '''
 This is a signal that will create a data log if an admin user does
@@ -93,7 +89,7 @@ def create_log_for_pdf_upload(sender, instance, created, **kwargs):
                 type="Added/Changed Model",
                 account=account,
             )
-        data_log.save()
+            data_log.save()
 
 '''
 This is a signal that will create a data log if an admin user deletes
@@ -202,7 +198,6 @@ class UserCreationForm(forms.ModelForm):
             rand = random.randint(0,200) 
             arr.append(rand)
             backgroundColor = tuple(arr)
-            print(backgroundColor)
         img = Image.new("RGBA", (width, height), backgroundColor)
         draw = ImageDraw.Draw(img)
         font = ImageFont.truetype(font_path, size=font_size)
@@ -261,26 +256,6 @@ class UserChangeForm(forms.ModelForm):
         # This is done here, rather than on the field, because the
         # field does not have access to the initial value
         return self.initial["password"]
-     
-    # def delete_profile_photo(user):
-    #     folder_path = 'upload-photo/'
-    #     file_name = f'{user.accountID}_{user.firstName}{user.lastName}_profilepic.png'
-    #     file_path = os.path.join(folder_path, file_name)
-    #     if os.path.exists(file_path):
-    #         os.remove(file_path)
-    #         print(f"Deleted file: {file_path}")
-    #     else:
-    #         print(f"File does not exist: {file_path}")
-
-    
-    # def save(self, commit=True): 
-    #     admin = super(UserChangeForm, self).save(commit=False) 
-    #     photo = self.delete_profile_photo(admin)
-    #     admin.profile_photo = os.path.basename(photo)
-    #     if commit:
-    #         admin.save()
-    #     return admin
- 
  
 
 '''
@@ -352,22 +327,11 @@ class UserAdmin(BaseUserAdmin):
     filter_horizontal = ()
 
 
-    # def delete_queryset(self, request, queryset):
-    #     for obj in queryset: 
-    #         if obj.file_field:
-    #             delete_profile_photo(obj)   
-    #         obj.delete()  
-    #         queryset.delete()
-    #     super(UserAdmin, self).delete_queryset(request, queryset)
- 
     def delete_queryset(self, request, queryset):
          for obj in queryset:
-            print(obj)
             folder_path = 'upload-photo/'
             file_name = f'{obj.accountID}_{obj.firstName}{obj.lastName}_profilepic.png'
-            print(file_name)
             file_path = os.path.join(folder_path, file_name)
-            print(file_path)
             if os.path.exists(file_path):
                 os.remove(file_path)
                 obj.delete()
@@ -375,12 +339,9 @@ class UserAdmin(BaseUserAdmin):
             else:
                 print(f"File does not exist: {file_path}")
     def delete_model(self, request,  obj):
-        print(obj)
         folder_path = 'upload-photo/'
         file_name = f'{obj.accountID}_{obj.firstName}{obj.lastName}_profilepic.png'
-        print(file_name)
         file_path = os.path.join(folder_path, file_name)
-        print(file_path)
         if os.path.exists(file_path):
             os.remove(file_path)
             obj.delete()
@@ -442,48 +403,6 @@ class PatientAdmin(admin.ModelAdmin):
         ]
         return new_urls + urls
     
-    # def csv_to_html_table(self, request, num_rows=10): 
-    #     if request.method == 'POST':
-    #         csv_file = request.FILES['csv_upload']
-    #         if not csv_file.name.endswith('.csv'):
-    #             messages.warning(request, 'The wrong file type was uploaded')
-    #             return HttpResponseRedirect(request.path_info)
-    #         table_html = "<table>"
-    #         with open(csv_file, 'r', newline='') as csv_file:
-    #             csv_reader = csv.reader(csv_file) 
-    #             for i, row in enumerate(csv_reader):
-    #                 if i >= num_rows:
-    #                     break
-    #                 table_html += "<tr>"
-    #                 for cell in row:
-    #                     table_html += f"<td>{cell}</td>"
-    #                 table_html += "</tr>"
-    #         table_html += "</table>"
-    #         return table_html
-    #     num_rows_to_read = 10
-    #     return render(request, "admin/csv_upload.html", {'html_table': table_html, 'row_count': num_rows_to_read})
-
-
-    # def csv_to_html_table(request, num_rows=10):
-    #     if request.method == 'POST':
-    #         csv_file = request.FILES['csv_upload']
-    #         if not csv_file.name.endswith('.csv'):
-    #             messages.warning(request, 'The wrong file type was uploaded')
-    #             return HttpResponseRedirect(request.path_info)
-        
-    #         csv_data = []
-    #         with open(csv_file, 'r', newline='') as csv_file:
-    #             csv_reader = csv.reader(csv_file)
-    #             for row in csv_reader:
-    #                 csv_data.append(row)
-        
-    #         num_rows_to_read = 10   
-        
-    #         return render(request, "admin/csv_upload.html", {'csv_data': csv_data, 'row_count': num_rows_to_read})
-
-    #     num_rows_to_read = 10
-    #     return render(request, "admin/csv_upload.html", {'csv_data': [], 'row_count': num_rows_to_read})
- 
     def upload_csv(self, request):
         if request.method == "POST":
             csv_file = request.FILES["csv_upload"]
@@ -521,7 +440,7 @@ class LabResultAdminForm(forms.ModelForm):
 
 class LabResultAdmin(admin.ModelAdmin):
     form = LabResultAdminForm
-    list_display = ("pdfId", "title", "comment", "pdf")
+    list_display = ("pdfId", "title", "comment")
 
     def get_urls(self):
         urls = super().get_urls()
@@ -636,9 +555,6 @@ class PrescriptionAdmin(admin.ModelAdmin):
     list_display = (
         "presNum",
         "disease",
-        # "dosage",
-        # "timeFrame",
-        # "amount",
         "medicines",
         "account",
         "patient",

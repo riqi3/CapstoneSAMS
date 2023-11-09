@@ -3,13 +3,10 @@
 import 'package:capstone_sams/models/MedicalNotesModel.dart';
 import 'package:capstone_sams/providers/MedicalNotesProvider.dart';
 import 'package:capstone_sams/screens/medical_notes/EditTodoScreen.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-
 import 'package:provider/provider.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
-
 import '../../../constants/theme/pallete.dart';
 
 class TodoWidget extends StatelessWidget {
@@ -20,13 +17,15 @@ class TodoWidget extends StatelessWidget {
   void toggleTodoStatus(BuildContext context) {
     final accountID = context.read<AccountProvider>().id;
     final provider = Provider.of<TodosProvider>(context, listen: false);
-    provider.toggleTodoStatus(todo, accountID!);
+    final token = context.read<AccountProvider>().token!;
+    provider.toggleTodoStatus(todo, accountID!, token);
   }
 
   void deleteTodo(BuildContext context, Todo todo) {
     final accountID = context.read<AccountProvider>().id;
     final provider = Provider.of<TodosProvider>(context, listen: false);
-    provider.removeTodo(todo, accountID!);
+    final token = context.read<AccountProvider>().token!;
+    provider.removeTodo(todo, accountID!, token);
     Navigator.of(context).pop();
 
     const snackBar = SnackBar(
@@ -45,7 +44,6 @@ class TodoWidget extends StatelessWidget {
         builder: (context) => EditTodoPage(todo: todo),
       ),
     );
-
   }
 
   @override

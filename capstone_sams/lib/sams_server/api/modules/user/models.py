@@ -102,7 +102,7 @@ To know who generated the log, a log is connected to only one user account.
 '''
 class Data_Log(models.Model):
     #Log Attributes
-    logNum = models.AutoField(primary_key = True) #Auto incrementing field
+    logNum = models.AutoField(primary_key = True)
     event = models.CharField(max_length = 500)
     date = models.DateTimeField(default=timezone.now, blank=True)
     type = models.CharField(max_length = 1000, blank = True)

@@ -1,17 +1,13 @@
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/HealthRecordProvider.dart';
 import 'package:capstone_sams/providers/LabResultProvider.dart';
-
 import 'package:capstone_sams/providers/MedicineProvider.dart';
 import 'package:capstone_sams/providers/PatientProvider.dart';
 import 'package:capstone_sams/providers/PrescriptionProvider.dart';
-
 import 'package:capstone_sams/providers/SymptomsFieldsProvider.dart';
 import 'package:capstone_sams/screens/authentication/LoginScreen.dart';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'constants/theme/AppTheme.dart';
 import 'providers/MedicalNotesProvider.dart';
 
@@ -57,7 +53,6 @@ void main() async {
 class SAMSApp extends StatelessWidget {
   const SAMSApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

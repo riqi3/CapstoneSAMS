@@ -1,13 +1,9 @@
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/MedicineProvider.dart';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../constants/theme/sizing.dart';
 import '../../models/MedicineModel.dart';
-
- 
 
 class SearchMedicineDelegate extends SearchDelegate<String> {
   MedicineProvider _medicineList = MedicineProvider();
@@ -39,7 +35,8 @@ class SearchMedicineDelegate extends SearchDelegate<String> {
   @override
   Widget buildResults(BuildContext context) {
     return FutureBuilder<List<Medicine>>(
-      future: _medicineList.searchMedicines(query: query, token: context.read<AccountProvider>().token),
+      future: _medicineList.searchMedicines(
+          query: query, token: context.read<AccountProvider>().token),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(
@@ -69,10 +66,7 @@ class SearchMedicineDelegate extends SearchDelegate<String> {
                   child: ListTile(
                     onTap: () {
                       query = result.toString();
-                      // close(context, result.toString());
                       this.close(context, this.query);
-                      // showResults(context, index);
-                      // print((context, this.query));
                     },
                     title: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
