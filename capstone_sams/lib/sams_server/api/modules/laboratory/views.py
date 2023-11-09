@@ -107,12 +107,13 @@ class ProcessPdf(APIView):
             labresultTitles = []
 
             for pdf_id in selected_pdfs:
-                pdf_instance = LabResult.objects.get(pdfId=pdf_id)
+                pdf_instance = LabResult.objects.get(pdfId=pdf_id) 
                 pdf_title = pdf_instance.title
                 pdf_comment = pdf_instance.comment
-                patient_id = pdf_instance.patient
+                patient_id = pdf_instance.patient 
                 str_collected_on = None
 
+                
                 tables = read_pdf(
                     pdf_instance.pdf.path, pages="all", output_format="json"
                 )
@@ -169,8 +170,7 @@ class ProcessPdf(APIView):
 
                 collected_on = datetime.datetime.strptime(
                     str_collected_on, "%d/%m/%Y"
-                ).strftime("%Y-%m-%d")
-                print("aaa ", collected_on)
+                ).strftime("%Y-%m-%d") 
 
                 jsonLabResult = JsonLabResult(
                     jsonTables=newLista,
@@ -190,6 +190,10 @@ class ProcessPdf(APIView):
             return render(
                 request, "laboratory/select/pdf_select.html", {"pdf_list": pdf_list}
             )
+        
+    def all_select_pdf(request): 
+        pdf_list = LabResult.objects.all()  
+        return render(request, "laboratory/select/pdf_select.html", {"pdf_list": pdf_list})
 
     def upload_pdf1(request):
         if request.method == "POST":
@@ -197,7 +201,8 @@ class ProcessPdf(APIView):
             if form.is_valid():
                 form.save()
                 a = form.save(commit=False)
-                patientID = a.patient.patientID
+                patientID = a.patient.patientID  
+                
             return HttpResponseRedirect(
                 reverse("select_pdf", kwargs={"patient": patientID})
             )
@@ -205,39 +210,17 @@ class ProcessPdf(APIView):
         else:
             form = LabResultForm()
             return render(request, "laboratory/upload/pdf_upload.html", {"form": form})
-
-    # def upload_pdf(self, request):
-    #     if request.method == "POST":
-    #         pdf_file = request.FILES["pdf_upload"]
-    #         if not pdf_file.name.endswith(".pdf"):
-    #             messages.warning(request, "The wrong file type was uploaded")
-    #             return HttpResponseRedirect(request.path_info)
-
-    #     form = PdfImportLabResultForm()
-    #     data = {"form": form}
-    #     return render(request, "admin/pdf_upload.html", data)
-
+ 
+ 
     @api_view(["POST"])
-    def post(request):
-        # s = LabResultAdmin.get_urls()
-        # base_dir = os.path.dirname(__file__)
-        # pdf_root = os.path.join(base_dir, 'upload-pdf/')
-        pdf_file = LabResult.objects.last()
-        # file_path = pdf_file.file.path
+    def post(request): 
+        pdf_file = LabResult.objects.last() 
         df = read_pdf(pdf_file, pages="all", encoding="cp1252")
         result = df[1].to_json(orient="records")
-        return JsonResponse({"result": result})
-        # pdf_path = request.POST.get('pdfPath')
+        return JsonResponse({"result": result}) 
 
 
-class LabResultView(viewsets.ModelViewSet):
-    # @api_view(['POST'])
-    # def process_pdf(request):
-    #     # pdf_path = 'upload-pdf/cbc3.pdf'
-    #     pdf_path = request.POST.get('pdfPath')
-    #     df = read_pdf(pdf_path, pages='all', encoding='cp1252')
-    #     result = df[1].to_json(orient='records')
-    #     return JsonResponse({'result':result})
+class LabResultView(viewsets.ModelViewSet): 
 
     @api_view(["GET"])
     def fetch_pdf(request):
@@ -262,35 +245,4 @@ class LabResultView(viewsets.ModelViewSet):
                 {"message": "Failed to fetch pdf.", "error": str(e)},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-
-    # @api_view(['GET'])
-    # def fetch_pdf_through_prescription(request, title):
-    #     try:
-    #         pdfId = LabResult.objects.get(pk=pdfId)
-    #         pdf_title = LabResult.objects.filter(prescription=prescription)
-    #         medicines = [prescribed_medicine.medicine for prescribed_medicine in prescribed_medicines]
-    #         serializer = MedicineSerializer(medicines, many=True)
-    #         return Response(serializer.data, status=status.HTTP_200_OK)
-    #     except Exception as e:
-    #          return Response({"message": "Failed to fetch medicine.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-    # #tabnula
-    # def select_pdf(request):
-    #     if request.method == 'POST':
-    #         selected_pdfs = request.POST.getlist('item')
-    #         pdf_contents = []
-
-    #         for pdf_id in selected_pdfs:
-    #             pdf = LabResult.objects.get(pdfId=pdf_id)
-    #             tables = read_pdf(pdf.pdf.path, pages='all', output_format='json')
-
-    #             table = tables[1]
-
-    #             # table_json = table.to_json()
-
-    #             jsonLabResult = JsonLabResult(jsonData=table)
-    #             jsonLabResult.save()
-    #             print(table)
-    #             pdf_contents.append(table)
-    #             json_data = json.dumps(pdf_contents)
-    #         return JsonResponse({'result': json.loads(json_data)})
+ 

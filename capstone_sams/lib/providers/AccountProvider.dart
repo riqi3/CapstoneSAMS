@@ -20,6 +20,7 @@ class AccountProvider extends ChangeNotifier {
   String? get lastName => _account?.lastName;
   String? get role => _account?.accountRole;
   String? get token => _account?.token;
+  bool get supera => _account!.isSuperuser;
   bool _isAuthentificated = false;
 
   Future<bool> login(String username, String password) async {

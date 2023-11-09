@@ -1,14 +1,25 @@
-{% extends "admin/index.html" %}
-{% load static %}
-{% block content %}
-    {{ block.super }}
+{% extends "admin/index.html" %} {% load static %} {% block content %} 
 
+
+{% if user.is_staff and user.is_superuser %} {{ block.super }} {% endif %} 
+
+
+{% if user.is_staff and not user.is_superuser %}
+
+<div class="col py-3">
+  <div class="model-links">
+    <p>
+      <a class="upload-button" href="{% url 'upload_pdf1' %}"
+        >Upload Laboratory Result</a
+      >
+      <p>
+        <a class="upload-button" href="{% url 'all_select_pdf' %}"
+          >Select A Patient</a
+        >
+      </p>
+    </p>
+  </div>
+</div>
  
 
-    {% if user.is_staff and not user.is_superuser %}
-        <div class="model-links">
-             
-            <p><a class="upload-button" href="{% url 'upload_pdf1' %}">Upload PDF as Staff</a></p>
-        </div>
-    {% endif %}
-{% endblock %}
+{% endif %} {% endblock %}

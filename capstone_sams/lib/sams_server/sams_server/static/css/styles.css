@@ -4,6 +4,8 @@
 
 :root{
     --primary-color: #d81b60;
+    --success-color: #56cc9d;
+    --bg-dark: #343a40;
 }
 
 .float-right.d-none.d-sm-inline {
@@ -25,13 +27,13 @@
     margin: 10px;
     border: none;
     border-radius: 10px;
-    background-color: rgb(36, 179, 100); 
+    background-color: var(--success-color); 
     color: white;
     text-align: center;
     text-decoration: none;
     font-size: 16px;
-}
-
+} 
+  
 .col-12.col-md-auto.d-flex.flex-grow-1.align-items-center{
     padding:25px 50px;
 }

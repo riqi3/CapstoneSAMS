@@ -40,9 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final filename = context.watch<AccountProvider>().photo;
-    print(filename);
+  Widget build(BuildContext context) { 
     return SafeArea(
       child: Scaffold(
         endDrawer: ValueDashboard(),

@@ -71,15 +71,7 @@ JAZZMIN_SETTINGS = {
     #############
     # Side Menu #
     #############
-
-    # "custom_links": {
-    #     "api": [{
-    #         "name": "Make Metesssstssages", 
-    #         "url": "make_messages", 
-    #         "icon": "fas fa-pills",
-             
-    #     }]
-    # },
+ 
 
     "custom_css": "/css/styles.css",
 

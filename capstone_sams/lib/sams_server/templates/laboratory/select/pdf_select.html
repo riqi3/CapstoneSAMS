@@ -16,7 +16,7 @@
                 <thead>
                   <tr>
                     <th scope="col" style='text-align:center;'>Select Result</th>
-                    <th scope="col">ID</th>
+                    <th scope="col">PDF ID</th> 
                     <th scope="col">Title</th>
                     <th scope="col">Investigation</th>
                   </tr>
@@ -33,8 +33,8 @@
                         value="{{ pdf.pdfId}}"
                       />
                     </th>
-                    <td>{{pdf.pdfId}}</td>
-                    <td>{{pdf.title}}</td>
+                    <td>{{pdf.pdfId}}</td>  
+                    <td>{{pdf.title}}</td>   
                     <td>{{pdf.comment}}</td>
                      
                   </tr>
@@ -57,74 +57,3 @@
 </div>
 
 {{ block.super }} {% endblock %}  
-
-
-
-
-
-
-
-
-
-
-{% comment %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    {% block title %}
-    <title>Select Pdf</title>
-    {% endblock %}
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
-      crossorigin="anonymous"
-    />
-    <!-- Add additional CSS in static file -->
-    {% load static %} {% comment %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
-  </head>
-  <body>
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-2">
-          <div>
-            {% comment %} ../select/scan/
-            <form action="." method="POST" enctype="multipart/form-data">
-              {%csrf_token%}
-              <table class="table">
-                <tbody>
-                  {% for pdf in pdf_list%}
-
-                  <tr>
-                    <td>
-                      <input
-                        type="radio"
-                        id="labresult"
-                        name="item"
-                        value="{{ pdf.pdfId}}"
-                      />
-                    </td>
-                    <td>{{pdf.pdfId}}</td>
-                    <td>{{pdf.title}}</td>
-                    <td>{{pdf.comment}}</td>
-                    <td>
-                      {% comment %} {{pdf.pdf}}
-                      <a href="{{ pdf.pdf.url}}" download>Download</a>
-                    </td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-              <input type="submit" value="Submit" />
-            </form>
-          </div>
-        </div>
-        <div class="col-sm-10">{% block content %}{% endblock %}</div>
-      </div>
-    </div>
-  </body>
-</html>
-{% endcomment %}
