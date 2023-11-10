@@ -186,14 +186,116 @@ class ProcessPdf(APIView):
                 json_data = json.dumps(pdf_contents)
             return HttpResponseRedirect(reverse("admin"))
         else:
-            pdf_list = LabResult.objects.filter(patient_id=patient)
+            pdf_list = LabResult.objects.select_related('patient').filter(patient_id=patient)
             return render(
                 request, "laboratory/select/pdf_select.html", {"pdf_list": pdf_list}
             )
         
+    # def search_feature(request): 
+    #     if request.method == 'POST': 
+    #         search_query = request.POST['search_query'] 
+    #         patients = Patient.objects.filter(firstName=search_query)
+    #         return render(request, 'laboratory/select/pdf_select.html', {'query':search_query, 'patients':patients})
+    #     else:
+    #         return render(request, 'laboratory/select/pdf_select.html',{})
+        
     def all_select_pdf(request): 
-        pdf_list = LabResult.objects.all()  
-        return render(request, "laboratory/select/pdf_select.html", {"pdf_list": pdf_list})
+        # pdf_list = LabResult.objects.all()  
+        # pdf_list = LabResult.objects.select_related('patient').filter()
+        # return render(request, "laboratory/select/pdf_select.html", {"pdf_list": pdf_list})
+        if request.method == "POST":
+            selected_pdfs = request.POST.getlist("item")
+            pdf_contents = []
+            tableAppend = []
+            tempList = []
+            uniqueDataList = []
+            newLista = []
+            labresultTitles = []
+
+            for pdf_id in selected_pdfs:
+                pdf_instance = LabResult.objects.get(pdfId=pdf_id) 
+                pdf_title = pdf_instance.title
+                pdf_comment = pdf_instance.comment
+                patient_id = pdf_instance.patient 
+                str_collected_on = None
+
+                
+                tables = read_pdf(
+                    pdf_instance.pdf.path, pages="all", output_format="json"
+                )
+                reader = PdfReader(pdf_instance.pdf.path)
+
+                """tables[index] retrieves the table according by index.
+                in this case the format of the labresult has the following
+                tables: 1.) tables[0] contains the personal information. 
+                2.) tables[1] contains the haematology of the blood
+                3.) tables[3] contains the biochemistry. theese tables are 
+                then stored in their respective rows
+                """
+
+                for page in reader.pages:
+                    text = page.extract_text()
+                    if text:
+                        firstWord = text.split()[0]
+                        labresultTitles.append(firstWord)
+
+                for index, j in enumerate(tables):
+                    readTable = tables[index]
+                    tableAppend = [tableAppend, readTable]
+
+                cleaned_data = cleanJsonTable(tableAppend)
+
+                def get_data_and_move_higher(arr):
+                    for item in arr:
+                        if isinstance(item, dict) and "data" in item:
+                            data_contents = item["data"]
+                            extract_list = {"data": data_contents}
+                            tempList.append(extract_list)
+
+                        if isinstance(item, list):
+                            get_data_and_move_higher(item)
+
+                get_data_and_move_higher(cleaned_data)
+
+                for item in tempList:
+                    data_contents = item["data"]
+                    if data_contents not in uniqueDataList:
+                        uniqueDataList.append(data_contents)
+
+                result_list = [
+                    {"data": data_contents} for data_contents in uniqueDataList
+                ]
+                for item in result_list:
+                    newLista.append(item)
+
+                for item in newLista:
+                    for text_data in item["data"][3]:
+                        if text_data["text"] == "Collected on:":
+                            str_collected_on = item["data"][3][1]["text"]
+                            break
+
+                collected_on = datetime.datetime.strptime(
+                    str_collected_on, "%d/%m/%Y"
+                ).strftime("%Y-%m-%d") 
+
+                jsonLabResult = JsonLabResult(
+                    jsonTables=newLista,
+                    labresultTitles=labresultTitles,
+                    collectedOn=collected_on,
+                    labresult=pdf_instance,
+                    title=pdf_title,
+                    comment=pdf_comment,
+                    patient=patient_id,
+                )
+                jsonLabResult.save()
+                pdf_contents.append(jsonLabResult)
+                json_data = json.dumps(pdf_contents)
+            return HttpResponseRedirect(reverse("admin"))
+        else:
+            pdf_list = LabResult.objects.all() 
+            return render(
+                request, "laboratory/select/pdf_select.html", {"pdf_list": pdf_list}
+            )
 
     def upload_pdf1(request):
         if request.method == "POST":
