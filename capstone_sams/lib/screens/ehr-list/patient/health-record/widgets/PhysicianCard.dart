@@ -4,7 +4,7 @@ import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/MedicineModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 
-import 'package:capstone_sams/providers/AccountProvider.dart'; 
+import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/PrescriptionProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/Info.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +36,8 @@ class _PhysicianCardState extends State<PhysicianCard> {
     try {
       final provider =
           Provider.of<PrescriptionProvider>(context, listen: false);
-      await provider.fetchPrescriptions(widget.patient.patientId, context.read<AccountProvider>().token!);
+      await provider.fetchPrescriptions(
+          widget.patient.patientId, context.read<AccountProvider>().token!);
       return provider.physicians;
     } catch (error, stackTrace) {
       print("Error fetching data: $error");
@@ -98,7 +99,7 @@ class _PhysicianCardState extends State<PhysicianCard> {
                             ),
                           ),
                           Text(
-                            ' | ${physician.firstName} ${physician.lastName}',
+                            ' | Dr. ${physician.firstName} ${physician.lastName}',
                           ),
                         ],
                       ),
@@ -152,7 +153,7 @@ class _PhysicianCardState extends State<PhysicianCard> {
                 width: MediaQuery.of(context).size.width,
                 height: Sizing.cardContainerHeight,
                 child: Text(
-                  'Order of ${physician.firstName}',
+                  'Order of Dr. ${physician.firstName}',
                   style: TextStyle(
                       color: Pallete.whiteColor,
                       fontSize: Sizing.header3,
