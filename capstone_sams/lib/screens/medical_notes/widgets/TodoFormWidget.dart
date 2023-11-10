@@ -32,38 +32,40 @@ class _TodoFormWidgetState extends State<TodoFormWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextFormField(
-          initialValue: widget.title,
-          onChanged: widget.onChangedTitle,
-          validator: (title) {
-            if (title!.isEmpty) {
-              return 'The title cannot be empty';
-            }
-            return null;
-          },
-          decoration: InputDecoration(
-            hintText: 'Title',
-            hintStyle: TextStyle(fontSize: 30),
-            border: InputBorder.none,
-            floatingLabelBehavior: FloatingLabelBehavior.never,
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextFormField(
+            initialValue: widget.title,
+            onChanged: widget.onChangedTitle,
+            validator: (title) {
+              if (title!.isEmpty) {
+                return 'The title cannot be empty';
+              }
+              return null;
+            },
+            decoration: InputDecoration(
+              hintText: 'Title',
+              hintStyle: TextStyle(fontSize: 30),
+              border: InputBorder.none,
+              floatingLabelBehavior: FloatingLabelBehavior.never,
+            ),
           ),
-        ),
-        SizedBox(height: 16),
-        TextFormField(
-          controller: _descriptionController,
-          maxLines: 3,
-          onChanged: widget.onChangedDescription,
-          decoration: InputDecoration(
-            hintText: 'Description',
-            border: InputBorder.none,
-            floatingLabelBehavior: FloatingLabelBehavior.never,
+          SizedBox(height: 16),
+          TextFormField(
+            controller: _descriptionController,
+            maxLines: 15,
+            onChanged: widget.onChangedDescription,
+            decoration: InputDecoration(
+              hintText: 'Description',
+              border: InputBorder.none,
+              floatingLabelBehavior: FloatingLabelBehavior.never,
+            ),
           ),
-        ),
-        SizedBox(height: 32),
-      ],
+          SizedBox(height: 32),
+        ],
+      ),
     );
   }
 }

@@ -29,12 +29,15 @@ class _DashboardState extends State<Dashboard> {
     showDialog<String>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
         title: const Text(
           'Are you sure?',
           style: TextStyle(
               color: Pallete.dangerColor, fontWeight: FontWeight.bold),
         ),
-        content: const Text('Please confirm if you want to logout'),
+        content: const Text('Please confirm if you want to logout.'),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context, 'Cancel'),
