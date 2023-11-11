@@ -25,6 +25,7 @@ class NotesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final username = context.watch<AccountProvider>().username;
+    final totalTodos = context.watch<TodosProvider>().todos.length;
     int numTodos = todosPreview.length;
     return Column(
       children: [
@@ -78,8 +79,7 @@ class NotesSection extends StatelessWidget {
                       color: Colors.black.withOpacity(0.1),
                       spreadRadius: 2,
                       blurRadius: 5,
-                      offset:
-                          Offset(0, 3), // changes the position of the shadow
+                      offset: Offset(0, 3),
                     ),
                   ],
                 ),
@@ -99,9 +99,10 @@ class NotesSection extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          '$numTodos Targets',
+                          '$numTodos ${numTodos == 1 ? 'target out of $totalTodos' : 'targets out of $totalTodos'}',
                           style: TextStyle(
                             color: Pallete.textColor,
+                            fontSize: 12,
                           ),
                         ),
                       ],

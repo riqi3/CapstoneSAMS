@@ -18,7 +18,7 @@ class _EditTodoPageState extends State<EditTodoPage> {
   final _formKey = GlobalKey<FormState>();
   late String title;
   late String description;
-
+  bool _isEditingTodo = false;
   @override
   void initState() {
     super.initState();
@@ -26,16 +26,22 @@ class _EditTodoPageState extends State<EditTodoPage> {
     description = widget.todo.content;
   }
 
-  void saveTodo() {
+  Future<void> saveTodo() async {
     final isValid = _formKey.currentState!.validate();
 
     if (!isValid) {
       return;
     } else {
+      setState(() {
+        _isEditingTodo = true;
+      });
+
       final accountID = context.read<AccountProvider>().id;
       final provider = Provider.of<TodosProvider>(context, listen: false);
       final token = context.read<AccountProvider>().token!;
-      provider.updateTodo(
+
+      try {
+        await provider.updateTodo(
           Todo(
             noteNum: widget.todo.noteNum,
             title: title,
@@ -44,17 +50,32 @@ class _EditTodoPageState extends State<EditTodoPage> {
             account: accountID!,
           ),
           accountID,
-          token);
-      Navigator.of(context).pop();
+          token,
+        );
 
-      const snackBar = SnackBar(
-        backgroundColor: Pallete.successColor,
-        content: Text(
-          'Successfully update the note',
-          style: TextStyle(fontWeight: FontWeight.w700),
-        ),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        if (mounted) {
+          // Only update the UI if the widget is still mounted
+          Navigator.of(context).pop();
+
+          final snackBar = SnackBar(
+            backgroundColor: Pallete.successColor,
+            content: Text(
+              'Successfully updated the note',
+              style: TextStyle(fontWeight: FontWeight.w700),
+            ),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+      } catch (error) {
+        print('Error: $error');
+      } finally {
+        await Future.delayed(Duration(seconds: 2));
+        if (mounted) {
+          setState(() {
+            _isEditingTodo = false;
+          });
+        }
+      }
     }
   }
 
@@ -64,20 +85,34 @@ class _EditTodoPageState extends State<EditTodoPage> {
       appBar: AppBar(
         title: const Text("Edit Todo"),
         actions: [
+          _isEditingTodo
+              ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CircularProgressIndicator(
+                    color: const Color.fromARGB(255, 110, 40, 40),
+                    strokeWidth: 3,
+                  ),
+                )
+              : IconButton(
+                  icon: Icon(Icons.check),
+                  onPressed: _isEditingTodo ? null : saveTodo,
+                ),
           IconButton(
-            icon: Icon(Icons.check),
-            onPressed: saveTodo,
-          ),
-          IconButton(
-              onPressed: () {
-                final accountID = context.read<AccountProvider>().id!;
-                final provider =
-                    Provider.of<TodosProvider>(context, listen: false);
-                final token = context.read<AccountProvider>().token!;
-                provider.removeTodo(widget.todo, accountID, token);
+            onPressed: () async {
+              final accountID = context.read<AccountProvider>().id!;
+              final provider =
+                  Provider.of<TodosProvider>(context, listen: false);
+              final token = context.read<AccountProvider>().token!;
+
+              try {
+                await provider.removeTodo(widget.todo, accountID, token);
                 Navigator.of(context).pop();
-              },
-              icon: const Icon(Icons.delete))
+              } catch (error) {
+                print('Error: $error');
+              }
+            },
+            icon: const Icon(Icons.delete),
+          )
         ],
       ),
       body: Padding(

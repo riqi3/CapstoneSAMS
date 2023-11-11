@@ -21,28 +21,17 @@ class ObtainTokenView(APIView):
 
     @api_view(['POST'])
     def get_token(request):
-        # Get the username and password from the request data
         username = request.data.get('username')
         password = request.data.get('password')
-
-        # Authenticate the user using the provided credentials
         user = authenticate(username=username, password=password)
 
-        # Check if the user is valid
         if user is not None:
-            # Generate the access token and refresh token
             refresh = RefreshToken.for_user(user)
             access_token = str(refresh.access_token)
             refresh_token = str(refresh)
-
-            # Optionally, you can also store the access_token in the Account model
-            # If you want to store it, you can do it here:
             user.generate_token()
-
-            # Return the access token and refresh token in the response
             return Response({'access_token': access_token, 'refresh_token': refresh_token}, status=status.HTTP_200_OK)
         else:
-            # If authentication fails, return an error response
             return Response({'error': 'Invalid credentials'}, status=400)
     
 '''
@@ -123,19 +112,6 @@ class PersonalNotesView(viewsets.ModelViewSet):
     def fetch_personal_notes(request, accountID):
         try:
             personal_notes = Personal_Note.objects.filter(account__pk=accountID)
-        
-        # Retrieve the Account instance using get_object_or_404
-        #     account = get_object_or_404(Account, pk=accountID)
-
-        # # Fetch personal notes for the given accountID
-        #     personal_notes = Personal_Note.objects.filter(account__pk=accountID)
-
-        # # Create Data_Log instance after retrieving the username from the Account instance
-        #     data_log = Data_Log.objects.create(
-        #         event=f"User {account.username} fetches notes",
-        #         type="User Fetches Personal Note",
-        #         account=account
-        #     )
             serializer = PersonalNoteSerializer(personal_notes, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:

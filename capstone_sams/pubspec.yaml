@@ -72,6 +72,7 @@ flutter:
   assets:
     - assets/images/profile1.png
     - assets/images/logo.png
+    - assets/images/admin-profilepic.png
     - assets/images/logo1.png
     - assets/images/logo2.png
     - lib/sams_server/upload-photo/

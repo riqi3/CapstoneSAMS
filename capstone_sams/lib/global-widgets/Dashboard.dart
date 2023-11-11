@@ -2,10 +2,13 @@ import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/screens/authentication/LoginScreen.dart';
 import 'package:capstone_sams/screens/home/HomeScreen.dart';
+
 import 'package:capstone_sams/screens/medical_notes/MedicalNotesScreen.dart';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+
 import '../constants/theme/sizing.dart';
 import '../screens/ehr-list/EhrListScreen.dart';
 import 'search-bar/SearchPatientDelegate.dart';
@@ -25,16 +28,23 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   var _isLoading = false;
 
+  AssetImage s() {
+    return AssetImage('lib/sams_server/upload-photo${widget.profile}');
+  }
+
   void _onSubmit() async {
     showDialog<String>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
         title: const Text(
           'Are you sure?',
           style: TextStyle(
               color: Pallete.dangerColor, fontWeight: FontWeight.bold),
         ),
-        content: const Text('Please confirm if you want to logout'),
+        content: const Text('Please confirm if you want to logout.'),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context, 'Cancel'),
@@ -83,8 +93,7 @@ class _DashboardState extends State<Dashboard> {
               children: [
                 CircleAvatar(
                   radius: 30,
-                  backgroundImage: AssetImage(
-                      'lib/sams_server/upload-photo${widget.profile}'),
+                  backgroundImage: profilepic(),
                   backgroundColor: Colors.transparent,
                 ),
                 SizedBox(
@@ -177,5 +186,13 @@ class _DashboardState extends State<Dashboard> {
         ],
       ),
     );
+  }
+
+  AssetImage profilepic() {
+    if (widget.username == 'admin') {
+      return AssetImage('assets/images/admin-profilepic.png');
+    } else {
+      return AssetImage('lib/sams_server/upload-photo${widget.profile}');
+    }
   }
 }
