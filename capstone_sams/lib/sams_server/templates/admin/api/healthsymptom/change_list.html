@@ -1,25 +1,6 @@
 {% extends "admin/change_list.html" %}
 {% load static %}
-{% block content %}
-<style>
-    .float-right.d-none.d-sm-inline {
-        display: none!important;
-    }
-
-.upload-button, .retrain-button {
-    display: inline-block;
-    padding: 10px 20px;
-    margin: 10px;
-    border: none;
-    border-radius: 10px;
-    background-color: rgb(36, 179, 100); 
-    color: white;
-    text-align: center;
-    text-decoration: none;
-    font-size: 16px;
-}
-
-</style>
+{% block content %} 
 
 <a href="upload-csv/">
     <button class="upload-button">Upload a csv file</button>

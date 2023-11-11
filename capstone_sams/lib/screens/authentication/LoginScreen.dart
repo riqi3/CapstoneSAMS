@@ -23,6 +23,9 @@ class _LoginScreenState extends State<LoginScreen> {
       context: context,
       builder: ((context) {
         return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
           title: const Text(
             "Error",
             style: TextStyle(

@@ -5,7 +5,7 @@ import '../constants/Env.dart';
 class Account {
   final String accountID;
   final String username;
-  final String profile_photo;
+  String? profile_photo;
   final String? password;
   final String firstName;
   final String lastName;
@@ -70,8 +70,8 @@ class Account {
     );
 
     if (response.statusCode == 200) {
-      final decodedResponse = json.decode(response.body); 
-      final accountJson = decodedResponse['account']; 
+      final decodedResponse = json.decode(response.body);
+      final accountJson = decodedResponse['account'];
 
       return Account.fromJson(accountJson);
     } else {

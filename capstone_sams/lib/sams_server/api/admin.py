@@ -58,11 +58,9 @@ anything in the admin form.
 @receiver(post_save, sender=LogEntry)
 def create_data_log_instance(sender, instance, created, **kwargs):
     if created:
-        # Get the admin user associated with this LogEntry
         admin_account = instance.user
 
         if admin_account:
-            # Set the account attribute of the Data_Log instance
             data_log = Data_Log(
                 event=f"Admin added/changed a model: {instance}",
                 type="Added/Changed Model",
@@ -77,11 +75,9 @@ anything in the admin form.
 @receiver(post_save, sender=LabResult)
 def create_log_for_pdf_upload(sender, instance, created, **kwargs):
     if created:
-        # Get the admin user associated with this LogEntry
         account = instance.user
 
         if account:
-            # Set the account attribute of the Data_Log instance
             data_log = Data_Log(
                 event=f"User added/changed a model: {instance}",
                 type="Added/Changed Model",
@@ -95,13 +91,10 @@ any data.
 '''
 @receiver(pre_delete, sender=LogEntry)
 def create_data_log_for_deletion(sender, instance, using, **kwargs):
-    # Check if the instance is of type LogEntry
     if isinstance(instance, LogEntry):
-        # Get the admin account associated with this deletion event (LogEntry model)
         admin_account = instance.user
 
         if admin_account:
-            # Set the account attribute of the Data_Log instance
             data_log = Data_Log(
                 event=f"Admin deleted a model: {instance}",
                 type="Deleted Model",
@@ -125,7 +118,7 @@ def create_health_record(sender, instance, created, **kwargs):
         admin_account = instance.user
 
 
-COMMON_PASSWORDS = ["password", "12345678", "qwerty", "abc123"] # These are some commonly used passwords that the system will not accept.
+COMMON_PASSWORDS = ["password", "12345678", "qwerty", "abc123"]
 
 '''
 This represent the forms that will be shown to the admin when creating a new user.
@@ -155,27 +148,22 @@ class UserCreationForm(forms.ModelForm):
         )
 
     def clean_password2(self):
-        # Check that the two password entries match
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
         if password1 and password2 and password1 != password2:
             raise forms.ValidationError("Passwords don't match")
 
-        # Check for password length
         if len(password1) < 8:
             raise forms.ValidationError("Password must be at least 8 characters long")
 
-        # Check that the password is not entirely numeric
         if password1.isdigit():
             raise forms.ValidationError("Password cannot be entirely numeric")
 
-        # Check that the password is not common
         if password1.lower() in COMMON_PASSWORDS:
             raise forms.ValidationError("Password is too common")
         return password2
     
     def save(self, commit=True):
-        # Save the provided password in hashed format
         user = super(UserCreationForm, self).save(commit=False)
         user.set_password(self.cleaned_data["password1"])
         photo = self.photo_generator(user)
@@ -250,9 +238,6 @@ class UserChangeForm(forms.ModelForm):
         )
 
     def clean_password(self):
-        # Regardless of what the user provides, return the initial value.
-        # This is done here, rather than on the field, because the
-        # field does not have access to the initial value
         return self.initial["password"]
  
 
@@ -261,14 +246,9 @@ This represent the table that will be shown to the admin looking at the currentl
 '''
 class UserAdmin(BaseUserAdmin):
     
- 
-    # The forms to add and change user instances
     form = UserChangeForm
     add_form = UserCreationForm 
     actions = ['delete_model']
-    # The fields to be used in displaying the User model.
-    # These override the definitions on the base UserAdmin
-    # that reference specific fields on auth.User.
     list_display = ( 
         "username",
         "firstName",
@@ -278,6 +258,7 @@ class UserAdmin(BaseUserAdmin):
         "is_active",
         "is_staff",
         "is_superuser", 
+        
     )
     list_filter = ("accountRole", "is_staff", "is_superuser")
     fieldsets = (
@@ -295,8 +276,6 @@ class UserAdmin(BaseUserAdmin):
         ),
         ("Permissions", {"fields": ("is_active", "is_staff", "is_superuser")}),
     )
-    # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
-    # overrides get_fieldsets to use this attribute when creating a user.
     add_fieldsets = (
         (
             None,
@@ -887,33 +866,16 @@ class HealthSymptomAdmin(admin.ModelAdmin):
 
     retrain_model.short_description = "Retrain Model"
 
-    
-
-
-# class SymptomsAdminForm(forms.ModelForm):
-#     class Meta:
-#         model = Symptom
-#         fields = "__all__"
-
-
-# class SymptomsAdmin(admin.ModelAdmin):
-#     form = SymptomsAdminForm
-#     list_display = ("sympNum", "symptom")
-#     search_fields = ("sympNum", "symptom")
-
-# Now register the new UserAdmin... 
 admin.site.register(Account, UserAdmin)
 admin.site.register(Patient, PatientAdmin)
 admin.site.register(Data_Log, DataLogsAdmin)
 admin.site.register(Medicine, MedicineAdmin)
 admin.site.register(Health_Record, HealthRecordAdmin)
 admin.site.register(Prescription, PrescriptionAdmin)
-# admin.site.register(Symptom, SymptomsAdmin)
 admin.site.register(LabResult, LabResultAdmin)
 admin.site.register(HealthSymptom, HealthSymptomAdmin)
-# ... and, since we're not using Django's built-in permissions,
-# unregister the Group model from admin.
 admin.site.unregister(Group)
+
 post_save.connect(create_data_log_instance, sender=LogEntry)
 user_logged_in.connect(log_admin_login)
 user_logged_out.connect(log_admin_logout)

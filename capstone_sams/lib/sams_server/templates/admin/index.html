@@ -1,32 +1,25 @@
-{% extends "admin/index.html" %}
-{% load static %}
-{% block content %}
-    {{ block.super }}
+{% extends "admin/index.html" %} {% load static %} {% block content %} 
 
-    <style>
-        .float-right.d-none.d-sm-inline {
-            display: none!important;
-        }
-    
-    .upload-button {
-        display: inline-block;
-        padding: 10px 20px;
-        margin: 10px;
-        border: none;
-        border-radius: 10px;
-        background-color: rgb(36, 179, 100); 
-        color: white!important;
-        text-align: center;
-        text-decoration: none;
-        font-size: 16px;
-    }
-    
-    </style>
 
-    {% if user.is_staff and not user.is_superuser %}
-        <div class="model-links">
-             
-            <p><a class="upload-button" href="{% url 'upload_pdf1' %}">Upload PDF as Staff</a></p>
-        </div>
-    {% endif %}
-{% endblock %}
+{% if user.is_staff and user.is_superuser %} {{ block.super }} {% endif %} 
+
+
+{% if user.is_staff and not user.is_superuser %}
+
+<div class="col py-3">
+  <div class="model-links">
+    <p>
+      <a class="upload-button" href="{% url 'upload_pdf1' %}"
+        >Upload Laboratory Result</a
+      >
+      <p>
+        <a class="upload-button" href="{% url 'all_select_pdf' %}"
+          >Select A Patient</a
+        >
+      </p>
+    </p>
+  </div>
+</div>
+ 
+
+{% endif %} {% endblock %}
