@@ -42,6 +42,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
         ('nurse', 'Nurse'),
         ('admin', 'Admin'),
     ]
+
+    #Account Attributes
     accountID = models.CharField(max_length=100, primary_key=True)
     profile_photo = models.ImageField(blank = True, default=None,upload_to ='upload-photo/' ) 
     username = models.CharField(max_length=100, unique=True)
@@ -87,6 +89,7 @@ own note.
 Each note is only inputted and owned by one user account.
 '''
 class Personal_Note(models.Model):
+    #Personal Note Attributes
     noteNum = models.CharField(max_length=100, primary_key = True)
     title = models.CharField(max_length = 20)
     content = models.CharField(max_length = 3000)
