@@ -15,14 +15,7 @@ class ValueDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final username = context.watch<AccountProvider>().username;
-    var filename = context.watch<AccountProvider>().photo;
-    // final s = context.watch<AccountProvider>().supera;
-    // print('is super? ${s}');
-
-    // if (s == false) {
-    //   filename = 'assets/images/admin-profilepic.png';
-    // }
-    // print('$filename');
+    var filename = context.watch<AccountProvider>().photo; 
 
     return Dashboard(
       username: '$username',

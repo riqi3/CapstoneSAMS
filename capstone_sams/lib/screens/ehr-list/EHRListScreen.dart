@@ -23,7 +23,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
   late String token;
   ScrollController _controller = ScrollController();
 
-  final double items = 50;
+  final double items = 24;
   final start = 0;
   int currentPageIndex = 0;
   int pageRounded = 0;

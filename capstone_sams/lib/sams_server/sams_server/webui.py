@@ -1,28 +1,28 @@
 JAZZMIN_SETTINGS = {
     # title of the window (Will default to current_admin_site.site_title if absent or None)
-    "site_title": "SAMS WEB",
+    "site_title": "SAMS Administrator",
 
     # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    "site_header": "SAMS WEB",
+    "site_header": "Admin",
 
     "theme": "minty",
 
     # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    "site_brand": "Dashboard",
+    "site_brand": "SAMS Adminstration",
 
     # # Logo to use for your site, must be present in static files, used for brand on top left
-    "site_logo": "images/logo2.png",
+    "site_logo": "images/sams_single2.png",
+
+     # Relative path to a favicon for your site, will default to site_logo if absent (ideally 32x32 px)
+    "site_icon": "images/sams_single2.png",
 
     # Logo to use for your site, must be present in static files, used for login form logo (defaults to site_logo)
-    "login_logo": None,
+    "login_logo": "images/sams_horizontal1.png",
 
     # Logo to use for login form in dark themes (defaults to login_logo)
-    "login_logo_dark": None,
+    # "login_logo_dark": 'images/sams_horizontal2.png',  
 
-
-
-    # Relative path to a favicon for your site, will default to site_logo if absent (ideally 32x32 px)
-    "site_icon": None,
+    # "site_logo_classes": "img-circle",
 
     # Welcome text on the login screen
     "welcome_sign": "Welcome to SAMS Dashboard",
@@ -82,14 +82,14 @@ JAZZMIN_SETTINGS = {
     "navigation_expanded": True, 
 
     "icons": {
-        "api.health_record": "fa-solid fa-clipboard",
-        "api.labresult": "fa-solid fa-vials",
-        "api.patient": "fa-solid fa-bed-pulse",
+        "api.health_record": "fa fa-file-medical",
+        "api.labresult": "fa fa-flask", 
         "api.medicine": "fas fa-pills",
-        "api.patient": "fa-solid fa-bed-pulse",
-        "api.prescription": "fa-solid fa-head-side-cough",
-        "user.account": "fa-solid fa-user",
-        "user.data_log": "fa-solid fa-timeline",
+        "api.patient": "fas fa-bed",
+        "api.prescription": "fa fa-file-prescription",
+        "api.healthsymptom": "fa fa-head-side-cough",
+        "user.account": "fa fa-user",
+        "user.data_log": "fa fa-hourglass-half",
         # "auth.Group": "fas fa-users",
     },
 }

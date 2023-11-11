@@ -110,7 +110,13 @@ class MedicineCard extends StatelessWidget {
             FontAwesomeIcons.pen,
             color: Pallete.successColor,
           ),
-          label: Text('Edit'),
+          label: Text(
+            'Edit',
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              color: Pallete.successColor,
+            ),
+          ),
           style: ElevatedButton.styleFrom(
             backgroundColor: Pallete.successColor,
             shape: RoundedRectangleBorder(
@@ -128,7 +134,13 @@ class MedicineCard extends StatelessWidget {
             FontAwesomeIcons.trash,
             color: Pallete.dangerColor,
           ),
-          label: Text('Remove'),
+          label: Text(
+            'Remove',
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              color: Pallete.dangerColor,
+            ),
+          ),
           style: ElevatedButton.styleFrom(
             backgroundColor: Pallete.dangerColor,
             shape: RoundedRectangleBorder(
@@ -153,6 +165,7 @@ class MedicineCard extends StatelessWidget {
             title: Text(
               'Edit',
               style: TextStyle(
+                fontWeight: FontWeight.w700,
                 color: Pallete.successColor,
               ),
             ),
@@ -175,7 +188,10 @@ class MedicineCard extends StatelessWidget {
             ),
             title: Text(
               'Delete',
-              style: TextStyle(color: Pallete.dangerColor),
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                color: Pallete.dangerColor,
+              ),
             ),
             onTap: () {
               medicineProvider.removeMedicine(index);

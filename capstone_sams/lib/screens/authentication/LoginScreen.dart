@@ -85,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     double elementWidth = MediaQuery.of(context).size.width / 1.5;
     return Scaffold(
-      backgroundColor: Pallete.mainColor,
+      backgroundColor: Pallete.whiteColor,
       body: LayoutBuilder(builder: (context, cons) {
         return ConstrainedBox(
           constraints: BoxConstraints(
@@ -102,15 +102,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         Padding(
                           padding:
                               const EdgeInsets.only(top: 150.0, bottom: 20),
-                          child: Image.asset('assets/images/logo2.png',
+                          child: Image.asset(
+                              'assets/images/sams_single_text1.png',
                               height: 180),
                         ),
                         Text(
-                          "SAMS",
+                          "Smarter. Faster. Healthier. - Digitally",
+                          textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 35,
+                            fontSize: Sizing.header5,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: Pallete.greyColor,
                           ),
                         ),
                         SizedBox(height: 30),

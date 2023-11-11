@@ -28,10 +28,7 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   var _isLoading = false;
 
-  AssetImage s() {
-    return AssetImage('lib/sams_server/upload-photo${widget.profile}');
-  }
-
+  
   void _onSubmit() async {
     showDialog<String>(
       context: context,
@@ -93,7 +90,8 @@ class _DashboardState extends State<Dashboard> {
               children: [
                 CircleAvatar(
                   radius: 30,
-                  backgroundImage: profilepic(),
+                  backgroundImage: AssetImage(
+                      'lib/sams_server/upload-photo${widget.profile}'),
                   backgroundColor: Colors.transparent,
                 ),
                 SizedBox(
@@ -186,13 +184,5 @@ class _DashboardState extends State<Dashboard> {
         ],
       ),
     );
-  }
-
-  AssetImage profilepic() {
-    if (widget.username == 'admin') {
-      return AssetImage('assets/images/admin-profilepic.png');
-    } else {
-      return AssetImage('lib/sams_server/upload-photo${widget.profile}');
-    }
   }
 }
