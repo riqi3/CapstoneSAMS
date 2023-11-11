@@ -494,7 +494,16 @@ class _InfoState extends State<Info> {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Select a prescription to view'),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        title: Text(
+          'Select a medication to view',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -543,6 +552,12 @@ class _InfoState extends State<Info> {
         ),
         actions: <Widget>[
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Pallete.mainColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+            ),
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -558,7 +573,13 @@ class _InfoState extends State<Info> {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Select a prescription to edit'),
+        title: Text(
+          'Select a medication to edit',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -581,6 +602,12 @@ class _InfoState extends State<Info> {
         ),
         actions: <Widget>[
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Pallete.mainColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+            ),
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -596,7 +623,13 @@ class _InfoState extends State<Info> {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Select a prescription to delete'),
+        title: Text(
+          'Select a medication to delete',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -643,6 +676,12 @@ class _InfoState extends State<Info> {
               ),
             ),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Pallete.mainColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+            ),
             onPressed: () {
               Navigator.of(context).pop();
             },
