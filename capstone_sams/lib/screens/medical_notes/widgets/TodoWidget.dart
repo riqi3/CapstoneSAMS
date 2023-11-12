@@ -19,6 +19,15 @@ class TodoWidget extends StatelessWidget {
     final provider = Provider.of<TodosProvider>(context, listen: false);
     final token = context.read<AccountProvider>().token!;
     provider.toggleTodoStatus(todo, accountID!, token);
+
+    const snackBar = SnackBar(
+      backgroundColor: Pallete.infoColor,
+      content: Text(
+        'Task updated!',
+        style: TextStyle(fontWeight: FontWeight.w700),
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   void deleteTodo(BuildContext context, Todo todo) {

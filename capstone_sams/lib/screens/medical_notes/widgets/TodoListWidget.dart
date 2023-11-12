@@ -1,3 +1,5 @@
+import 'package:capstone_sams/constants/theme/pallete.dart';
+import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/providers/MedicalNotesProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +17,10 @@ class TodoListWidget extends StatelessWidget {
         ? const Center(
             child: Text(
               'No notes.',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: Sizing.header6,
+                  fontWeight: FontWeight.bold,
+                  color: Pallete.greyColor),
             ),
           )
         : ListView.separated(

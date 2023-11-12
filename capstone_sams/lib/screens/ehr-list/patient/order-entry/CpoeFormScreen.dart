@@ -48,7 +48,8 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
         accountID, patientID, finalPrediction, token);
 
     if (success) {
-      Navigator.of(context).push(
+      Navigator.pushReplacement(
+        context,
         MaterialPageRoute(
           builder: (context) => PatientTabsScreen(
             patient: patient,

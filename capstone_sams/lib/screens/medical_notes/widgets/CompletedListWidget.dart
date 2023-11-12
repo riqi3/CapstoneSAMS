@@ -1,3 +1,4 @@
+import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/providers/MedicalNotesProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +17,10 @@ class CompletedListWidget extends StatelessWidget {
             ? const Center(
                 child: Text(
                   'No completed notes.',
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: Pallete.greyColor,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold),
                 ),
               )
             : ListView.separated(

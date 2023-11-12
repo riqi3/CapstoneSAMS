@@ -36,10 +36,10 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen> {
         physics: BouncingScrollPhysics(),
         child: Column(
           children: [
-            MedicationOrderSection(
+            PatientInfoCard(
               patient: widget.patient,
             ),
-            PatientInfoCard(
+            MedicationOrderSection(
               patient: widget.patient,
             ),
           ],

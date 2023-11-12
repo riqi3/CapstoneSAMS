@@ -63,7 +63,7 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
 
     if (!isValid) {
       return;
-    } else { 
+    } else {
       final selectedMedicineIndex = widget.index;
 
       List<dynamic> updatedMedicines = List.from(medicines!);
@@ -86,19 +86,18 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
         final provider =
             Provider.of<PrescriptionProvider>(context, listen: false);
         provider.updatePrescription(
-          Prescription(
-            presNum: widget.presNum,
-            medicines: updatedMedicines,
-            account: widget.prescription!.account,
-            patientID: widget.prescription!.patientID,
-            health_record: widget.prescription!.health_record,
-            disease: widget.prescription!.disease,
-          ),
-          widget.patient.patientId,
-          context.read<AccountProvider>().token!
-        );
+            Prescription(
+              presNum: widget.presNum,
+              medicines: updatedMedicines,
+              account: widget.prescription!.account,
+              patientID: widget.prescription!.patientID,
+              health_record: widget.prescription!.health_record,
+              disease: widget.prescription!.disease,
+            ),
+            widget.patient.patientId,
+            context.read<AccountProvider>().token!);
 
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => PatientTabsScreen(
@@ -196,14 +195,14 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
                                     clearButtonProps:
                                         ClearButtonProps(isVisible: true),
                                     popupProps: PopupProps.modalBottomSheet(
-                                      showSearchBox: true, 
+                                      showSearchBox: true,
                                     ),
                                     asyncItems: (String filter) async {
                                       var response = await Dio().get(
                                         '${Env.prefix}/cpoe/medicines/',
                                         queryParameters: {"filter": filter},
                                       );
-                                       
+
                                       var models = List<Medicine>.from(
                                           response.data.map((json) =>
                                               Medicine.fromJson(json)));

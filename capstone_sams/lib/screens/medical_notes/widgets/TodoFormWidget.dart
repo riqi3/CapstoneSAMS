@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_const_constructors
+import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:flutter/material.dart';
 
 class TodoFormWidget extends StatefulWidget {
@@ -33,38 +34,41 @@ class _TodoFormWidgetState extends State<TodoFormWidget> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextFormField(
-            initialValue: widget.title,
-            onChanged: widget.onChangedTitle,
-            validator: (title) {
-              if (title!.isEmpty) {
-                return 'The title cannot be empty';
-              }
-              return null;
-            },
-            decoration: InputDecoration(
-              hintText: 'Title',
-              hintStyle: TextStyle(fontSize: 30),
-              border: InputBorder.none,
-              floatingLabelBehavior: FloatingLabelBehavior.never,
+      child: Padding(
+        padding: const EdgeInsets.all(Sizing.sectionSymmPadding),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextFormField(
+              initialValue: widget.title,
+              onChanged: widget.onChangedTitle,
+              validator: (title) {
+                if (title!.isEmpty) {
+                  return 'The title cannot be empty';
+                }
+                return null;
+              },
+              decoration: InputDecoration(
+                hintText: 'Title',
+                hintStyle: TextStyle(fontSize: 30),
+                border: InputBorder.none,
+                floatingLabelBehavior: FloatingLabelBehavior.never,
+              ),
             ),
-          ),
-          SizedBox(height: 16),
-          TextFormField(
-            controller: _descriptionController,
-            maxLines: 15,
-            onChanged: widget.onChangedDescription,
-            decoration: InputDecoration(
-              hintText: 'Description',
-              border: InputBorder.none,
-              floatingLabelBehavior: FloatingLabelBehavior.never,
+            SizedBox(height: 16),
+            TextFormField(
+              controller: _descriptionController,
+              maxLines: 15,
+              onChanged: widget.onChangedDescription,
+              decoration: InputDecoration(
+                hintText: 'Description',
+                border: InputBorder.none,
+                floatingLabelBehavior: FloatingLabelBehavior.never,
+              ),
             ),
-          ),
-          SizedBox(height: 32),
-        ],
+            SizedBox(height: 32),
+          ],
+        ),
       ),
     );
   }
