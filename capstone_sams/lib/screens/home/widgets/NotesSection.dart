@@ -98,6 +98,13 @@ class NotesSection extends StatelessWidget {
                             fontSize: 18,
                           ),
                         ),
+                        // Text(
+                        //   '$totalTodos targets to do',
+                        //   style: TextStyle(
+                        //     color: Pallete.textColor,
+                        //     fontSize: 12,
+                        //   ),
+                        // ),
                         Text(
                           '$numTodos ${numTodos == 1 ? 'target out of $totalTodos' : 'targets out of $totalTodos'}',
                           style: TextStyle(

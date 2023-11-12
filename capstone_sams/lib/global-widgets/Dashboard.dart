@@ -28,7 +28,6 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   var _isLoading = false;
 
-  
   void _onSubmit() async {
     showDialog<String>(
       context: context,
@@ -123,10 +122,10 @@ class _DashboardState extends State<Dashboard> {
             leading: FaIcon(FontAwesomeIcons.houseMedical),
             title: const Text('Home'),
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const HomeScreen(),
+                  builder: (context) => HomeScreen(),
                 ),
               );
             },
@@ -135,7 +134,7 @@ class _DashboardState extends State<Dashboard> {
             leading: FaIcon(FontAwesomeIcons.solidAddressCard),
             title: const Text('Health Records'),
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) => EhrListScreen(),
@@ -147,7 +146,7 @@ class _DashboardState extends State<Dashboard> {
             leading: FaIcon(FontAwesomeIcons.notesMedical),
             title: const Text('Medical Notes'),
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) => MedicalNotes(),

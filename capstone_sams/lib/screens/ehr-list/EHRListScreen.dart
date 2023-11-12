@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:capstone_sams/constants/Dimensions.dart';
 import 'package:capstone_sams/constants/Strings.dart';
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
+import 'package:capstone_sams/global-widgets/SearchAppBar.dart';
 import 'package:capstone_sams/global-widgets/TitleAppBar.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
@@ -51,12 +52,11 @@ class _EhrListScreenState extends State<EhrListScreen> {
     return Scaffold(
       endDrawer: ValueDashboard(),
       appBar: PreferredSize(
-        child: TitleAppBar(
-            text: 'Health Records',
+        child: SearchAppBar(
             iconColorLeading: Pallete.whiteColor,
             iconColorTrailing: Pallete.whiteColor,
             backgroundColor: Pallete.mainColor),
-        preferredSize: Size.fromHeight(kToolbarHeight),
+        preferredSize: Size.fromHeight(kToolbarHeight), 
       ),
       body: SingleChildScrollView(
         controller: _controller,

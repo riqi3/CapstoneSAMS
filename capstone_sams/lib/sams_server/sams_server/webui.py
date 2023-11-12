@@ -11,13 +11,13 @@ JAZZMIN_SETTINGS = {
     "site_brand": "SAMS Adminstration",
 
     # # Logo to use for your site, must be present in static files, used for brand on top left
-    "site_logo": "images/sams_single2.png",
+    "site_logo": "images/sams_app_logo_circle1.png",
 
      # Relative path to a favicon for your site, will default to site_logo if absent (ideally 32x32 px)
-    "site_icon": "images/sams_single2.png",
+    "site_icon": "images/sams_icon.png",
 
     # Logo to use for your site, must be present in static files, used for login form logo (defaults to site_logo)
-    "login_logo": "images/sams_horizontal1.png",
+    "login_logo": "images/sams_horizontal1.png", 
 
     # Logo to use for login form in dark themes (defaults to login_logo)
     # "login_logo_dark": 'images/sams_horizontal2.png',  

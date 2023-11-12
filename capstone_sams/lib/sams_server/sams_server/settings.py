@@ -18,7 +18,7 @@ SECRET_KEY = 'django-insecure-celf-%q5!qz(3jy6rkzid1&$y_u6fkrl$s4!v7hd_+5ou6fhj_
 DEBUG = True
 
 # ALLOWED_HOSTS = ['localhost', '10.0.2.2', '127.0.0.1']
-ALLOWED_HOSTS = ['*','192.168.76.61','192.168.36.61', '192.168.1.9', '192.168.86.61', 'localhost', '10.0.2.2', '127.0.0.1','0.0.0.0',]
+ALLOWED_HOSTS = ['*','192.168.76.61','192.168.36.61', '192.168.1.9', '192.168.251.61', 'localhost', '10.0.2.2', '127.0.0.1','0.0.0.0',]
 # 192.168.1.9 is the public ip of the machine
 
 # Application definition

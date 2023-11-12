@@ -1,4 +1,5 @@
 import 'package:capstone_sams/global-widgets/Dashboard.dart';
+import 'package:capstone_sams/global-widgets/SearchAppBar.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -15,7 +16,7 @@ class ValueDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final username = context.watch<AccountProvider>().username;
-    var filename = context.watch<AccountProvider>().photo; 
+    var filename = context.watch<AccountProvider>().photo;
 
     return Dashboard(
       username: '$username',
@@ -43,11 +44,10 @@ class ValuePatientRecord extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TitleAppBar(
-      text: 'Health Record',
-      backgroundColor: Pallete.mainColor,
+    return SearchAppBar(
       iconColorLeading: Pallete.whiteColor,
       iconColorTrailing: Pallete.whiteColor,
+      backgroundColor: Pallete.mainColor,
       bottom: PreferredSize(
         preferredSize: Size.fromHeight(kToolbarHeight),
         child: BottomPatientTabs(tabController: tabController),

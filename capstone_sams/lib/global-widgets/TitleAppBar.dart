@@ -1,7 +1,8 @@
 //dynamic appbar
 import 'package:capstone_sams/global-widgets/search-bar/widgets/SearchBarWidget.dart';
+import 'package:capstone_sams/screens/home/HomeScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart'; 
 import '../constants/theme/pallete.dart';
 import '../constants/theme/sizing.dart';
 
@@ -36,7 +37,12 @@ class TitleAppBar extends StatelessWidget {
           ),
           child: IconButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomeScreen(),
+                ),
+              );
             },
             icon: FaIcon(
               FontAwesomeIcons.arrowLeft,

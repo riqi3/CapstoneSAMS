@@ -103,7 +103,7 @@ class _CounterScreenState extends State<CounterScreen> {
         token,
       );
 
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => PatientTabsScreen(
@@ -114,7 +114,7 @@ class _CounterScreenState extends State<CounterScreen> {
       );
 
       const snackBar = SnackBar(
-        backgroundColor: Pallete.successColor,
+        backgroundColor: Pallete.infoColor,
         content: Text(
           'Updated the medicine amount',
           style: TextStyle(fontWeight: FontWeight.w700),

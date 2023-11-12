@@ -67,9 +67,11 @@ class _LoginScreenState extends State<LoginScreen> {
       profile.isAuthentificated = true;
       usernameController.clear();
       passwordController.clear();
-      Navigator.of(context).push(
+
+      Navigator.pushReplacement(
+        context,
         MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
+          builder: (context) => HomeScreen(),
         ),
       );
     } else {
