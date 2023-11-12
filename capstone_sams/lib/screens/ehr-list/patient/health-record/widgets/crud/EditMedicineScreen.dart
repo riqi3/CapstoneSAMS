@@ -44,6 +44,7 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
   late int? quantity;
 
   late List<dynamic>? medicines;
+  late String token = context.read<AccountProvider>().token!;
 
   @override
   void initState() {
@@ -201,6 +202,10 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
                                       var response = await Dio().get(
                                         '${Env.prefix}/cpoe/medicines/',
                                         queryParameters: {"filter": filter},
+                                        options: Options(headers: {
+                                          "Content-Type": "application/json",
+                                          "Authorization": "Bearer $token",
+                                        }),
                                       );
 
                                       var models = List<Medicine>.from(

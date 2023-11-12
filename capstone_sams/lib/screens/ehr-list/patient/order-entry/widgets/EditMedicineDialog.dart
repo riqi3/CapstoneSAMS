@@ -1,4 +1,5 @@
 import 'package:capstone_sams/models/MedicineModel.dart';
+import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/MedicineProvider.dart';
 import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -23,6 +24,7 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
   late Medicine _editedMedicine;
   DateTime? _selectedStartDate;
   DateTime? _selectedEndDate;
+  late String token = context.read<AccountProvider>().token!;
 
   @override
   void initState() {
@@ -85,7 +87,11 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                         asyncItems: (String filter) async {
                           var response = await Dio().get(
                             '${Env.prefix}/cpoe/medicines/',
-                            queryParameters: {"filter": filter},
+                            queryParameters: {"filter": filter,},
+                            options: Options(headers: {
+                              "Content-Type": "application/json",
+                              "Authorization": "Bearer $token",
+                            }),
                           );
                           // var models = Medicine.fromJson(response.data);
                           var models = List<Medicine>.from(response.data
