@@ -29,18 +29,31 @@ class _HomeScreenState extends State<HomeScreen> {
     _fetchUserTodos();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   Future<void> _fetchUserTodos() async {
     final provider = Provider.of<TodosProvider>(context, listen: false);
     final accountID = context.read<AccountProvider>().id;
     final token = context.read<AccountProvider>().token!;
     await provider.fetchTodos(accountID!, token);
-    setState(() {
-      _userTodos = provider.todos;
-    });
+
+    try {
+      await provider.fetchTodos(accountID, token);
+      if (mounted) {
+        setState(() {
+          _userTodos = provider.todos;
+        });
+      }
+    } catch (e) {
+      print('Error fetching user todos: $e');
+    }
   }
 
   @override
-  Widget build(BuildContext context) { 
+  Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         endDrawer: ValueDashboard(),
@@ -107,11 +120,10 @@ class _HomeScreenState extends State<HomeScreen> {
         _userTodos.length > 3 ? _userTodos.sublist(0, 3) : _userTodos;
 
     return Column(
-      // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         Center(
           child: EHRSection(
-            title: 'ss',
+            title: ehrTitle,
             press: () {
               Navigator.push(
                 context,
@@ -119,7 +131,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   builder: (context) => EhrListScreen(),
                 ),
               );
-              print('homescreen');
             },
           ),
         ),

@@ -28,10 +28,6 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   var _isLoading = false;
 
-  AssetImage s() {
-    return AssetImage('lib/sams_server/upload-photo${widget.profile}');
-  }
-
   void _onSubmit() async {
     showDialog<String>(
       context: context,
@@ -93,7 +89,8 @@ class _DashboardState extends State<Dashboard> {
               children: [
                 CircleAvatar(
                   radius: 30,
-                  backgroundImage: profilepic(),
+                  backgroundImage: AssetImage(
+                      'lib/sams_server/upload-photo${widget.profile}'),
                   backgroundColor: Colors.transparent,
                 ),
                 SizedBox(
@@ -125,10 +122,10 @@ class _DashboardState extends State<Dashboard> {
             leading: FaIcon(FontAwesomeIcons.houseMedical),
             title: const Text('Home'),
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const HomeScreen(),
+                  builder: (context) => HomeScreen(),
                 ),
               );
             },
@@ -137,7 +134,7 @@ class _DashboardState extends State<Dashboard> {
             leading: FaIcon(FontAwesomeIcons.solidAddressCard),
             title: const Text('Health Records'),
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) => EhrListScreen(),
@@ -149,7 +146,7 @@ class _DashboardState extends State<Dashboard> {
             leading: FaIcon(FontAwesomeIcons.notesMedical),
             title: const Text('Medical Notes'),
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) => MedicalNotes(),
@@ -186,13 +183,5 @@ class _DashboardState extends State<Dashboard> {
         ],
       ),
     );
-  }
-
-  AssetImage profilepic() {
-    if (widget.username == 'admin') {
-      return AssetImage('assets/images/admin-profilepic.png');
-    } else {
-      return AssetImage('lib/sams_server/upload-photo${widget.profile}');
-    }
   }
 }

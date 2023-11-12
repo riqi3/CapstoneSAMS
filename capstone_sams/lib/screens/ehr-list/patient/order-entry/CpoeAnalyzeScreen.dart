@@ -128,124 +128,137 @@ class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
                     },
                   ),
                   SizedBox(height: 10),
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: isAddButtonEnabled
-                          ? () {
-                              symptomFieldsProvider.addSymptomField(
-                                Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Autocomplete<String>(
-                                        optionsBuilder: (TextEditingValue
-                                            textEditingValue) {
-                                          if (textEditingValue.text == '') {
-                                            return const Iterable<
-                                                String>.empty();
-                                          }
-                                          return listItems.where((String item) {
-                                            return item.contains(
-                                                textEditingValue.text
-                                                    .toLowerCase());
-                                          });
-                                        },
-                                        onSelected: (String selectedItem) {
-                                          symptomFieldsProvider
-                                              .addSymptom(selectedItem);
-                                        },
-                                        fieldViewBuilder: (BuildContext context,
-                                            TextEditingController
-                                                textEditingController,
-                                            FocusNode focusNode,
-                                            VoidCallback onFieldSubmitted) {
-                                          return TextFormField(
-                                            controller: textEditingController,
-                                            focusNode: focusNode,
-                                            decoration: InputDecoration(
-                                              border: InputBorder.none,
-                                            ),
-                                            onFieldSubmitted: (String value) {
-                                              onFieldSubmitted();
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: isAddButtonEnabled
+                              ? () {
+                                  symptomFieldsProvider.addSymptomField(
+                                    Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Autocomplete<String>(
+                                            optionsBuilder: (TextEditingValue
+                                                textEditingValue) {
+                                              if (textEditingValue.text == '') {
+                                                return const Iterable<
+                                                    String>.empty();
+                                              }
+                                              return listItems
+                                                  .where((String item) {
+                                                return item.contains(
+                                                    textEditingValue.text
+                                                        .toLowerCase());
+                                              });
                                             },
-                                          );
-                                        },
-                                        optionsViewBuilder:
-                                            (BuildContext context,
+                                            onSelected: (String selectedItem) {
+                                              symptomFieldsProvider
+                                                  .addSymptom(selectedItem);
+                                            },
+                                            fieldViewBuilder: (BuildContext
+                                                    context,
+                                                TextEditingController
+                                                    textEditingController,
+                                                FocusNode focusNode,
+                                                VoidCallback onFieldSubmitted) {
+                                              return TextFormField(
+                                                controller:
+                                                    textEditingController,
+                                                focusNode: focusNode,
+                                                decoration: InputDecoration(
+                                                  border: InputBorder.none,
+                                                ),
+                                                onFieldSubmitted:
+                                                    (String value) {
+                                                  onFieldSubmitted();
+                                                },
+                                              );
+                                            },
+                                            optionsViewBuilder: (BuildContext
+                                                    context,
                                                 AutocompleteOnSelected<String>
                                                     onSelected,
                                                 Iterable<String> options) {
-                                          return Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Material(
-                                              elevation: 4.0,
-                                              child: ListView(
-                                                padding: EdgeInsets.zero,
-                                                shrinkWrap: true,
-                                                children: options
-                                                    .map((String option) =>
-                                                        ListTile(
-                                                          title: Text(option),
-                                                          onTap: () {
-                                                            onSelected(option);
-                                                          },
-                                                        ))
-                                                    .toList(),
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
+                                              return Align(
+                                                alignment: Alignment.topLeft,
+                                                child: Material(
+                                                  elevation: 4.0,
+                                                  child: ListView(
+                                                    padding: EdgeInsets.zero,
+                                                    shrinkWrap: true,
+                                                    children: options
+                                                        .map((String option) =>
+                                                            ListTile(
+                                                              title:
+                                                                  Text(option),
+                                                              onTap: () {
+                                                                onSelected(
+                                                                    option);
+                                                              },
+                                                            ))
+                                                        .toList(),
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                        IconButton(
+                                          onPressed: () {
+                                            var index =
+                                                _autocompleteFields.length - 1;
+                                            if (index >= 0 &&
+                                                index <
+                                                    symptomFieldsProvider
+                                                        .symptoms.length) {
+                                              var symptom =
+                                                  symptomFieldsProvider
+                                                      .symptoms[index];
+                                              symptomFieldsProvider
+                                                  .removeSymptom(symptom);
+                                            }
+                                            symptomFieldsProvider
+                                                .removeSymptomField(index);
+                                          },
+                                          icon: Icon(Icons.delete_rounded),
+                                        ),
+                                      ],
                                     ),
-                                    IconButton(
-                                      onPressed: () {
-                                        var index =
-                                            _autocompleteFields.length - 1;
-                                        if (index >= 0 &&
-                                            index <
-                                                symptomFieldsProvider
-                                                    .symptoms.length) {
-                                          var symptom = symptomFieldsProvider
-                                              .symptoms[index];
-                                          symptomFieldsProvider
-                                              .removeSymptom(symptom);
-                                        }
-                                        symptomFieldsProvider
-                                            .removeSymptomField(index);
-                                      },
-                                      icon: Icon(Icons.delete_rounded),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }
-                          : null,
-                      child: Text('Add symptom',
-                          style: TextStyle(color: Pallete.backgroundColor)),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Pallete.mainColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
+                                  );
+                                }
+                              : null,
+                          child: Text('Add symptom',
+                              style: TextStyle(color: Pallete.backgroundColor)),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Pallete.mainColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed:
+                              isAnalyzeButtonEnabled ? _analyzeSymptoms : null,
+                          child: Text(
+                            'Analyze',
+                            style: TextStyle(color: Pallete.backgroundColor),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Pallete.mainColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 10),
-                  Center(
-                    child: ElevatedButton(
-                      onPressed:
-                          isAnalyzeButtonEnabled ? _analyzeSymptoms : null,
-                      child: Text(
-                        'Analyze',
-                        style: TextStyle(color: Pallete.backgroundColor),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Pallete.mainColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ],

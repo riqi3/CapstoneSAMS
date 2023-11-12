@@ -97,22 +97,6 @@ class _EditTodoPageState extends State<EditTodoPage> {
                   icon: Icon(Icons.check),
                   onPressed: _isEditingTodo ? null : saveTodo,
                 ),
-          IconButton(
-            onPressed: () async {
-              final accountID = context.read<AccountProvider>().id!;
-              final provider =
-                  Provider.of<TodosProvider>(context, listen: false);
-              final token = context.read<AccountProvider>().token!;
-
-              try {
-                await provider.removeTodo(widget.todo, accountID, token);
-                Navigator.of(context).pop();
-              } catch (error) {
-                print('Error: $error');
-              }
-            },
-            icon: const Icon(Icons.delete),
-          )
         ],
       ),
       body: Padding(

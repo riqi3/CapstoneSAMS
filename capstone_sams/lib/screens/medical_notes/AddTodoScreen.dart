@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors
-
 import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
+import 'package:capstone_sams/screens/medical_notes/MedicalNotesScreen.dart';
 import 'package:capstone_sams/screens/medical_notes/widgets/TodoFormWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -85,7 +85,21 @@ class _AddTodoPageState extends State<AddTodoPage> {
         setState(() {
           _isAddingTodo = false;
         });
-        Navigator.of(context).pop();
+        // Navigator.of(context).pop();
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MedicalNotes(),
+          ),
+        );
+        const snackBar = SnackBar(
+          backgroundColor: Pallete.successColor,
+          content: Text(
+            'Successfully the added a To Do',
+            style: TextStyle(fontWeight: FontWeight.w700),
+          ),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }).catchError((error) {
         setState(() {
           _isAddingTodo = false;
