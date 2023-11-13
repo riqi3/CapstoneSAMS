@@ -30,34 +30,42 @@ class PatientProvider extends ChangeNotifier {
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',
     };
-    final response = await http
-        .get(Uri.parse('${Env.prefix}/patient/patients/'), headers: header);
-    await Future.delayed(Duration(milliseconds: 3000));
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      List<Patient> patients = data.map<Patient>((json) {
-        return Patient.fromJson(json);
-      }).toList();
-      patients = patients.reversed.toList();
-      return patients;
-    } else {
-      throw Exception('Failed to fetch patients');
+    try {
+      final response = await http
+          .get(Uri.parse('${Env.prefix}/patient/patients/'), headers: header);
+      await Future.delayed(Duration(milliseconds: 3000));
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        List<Patient> patients = data.map<Patient>((json) {
+          return Patient.fromJson(json);
+        }).toList();
+        patients = patients.reversed.toList();
+        return patients;
+      } else {
+        return [];
+      }
+    } catch (e) {
+      return [];
     }
   }
 
-  Future<Patient> fetchPatient(String index, String token) async {
-    final header = <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization': 'Bearer $token',
-    };
-    final response = await http.get(
-        Uri.parse('${Env.prefix}/patient/patients/${index}'),
-        headers: header);
-    await Future.delayed(Duration(milliseconds: 3000));
-    if (response.statusCode == 200) {
-      return Patient.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to fetch patient');
+  Future<Patient?> fetchPatient(String index, String token) async {
+    try {
+      final header = <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      };
+      final response = await http.get(
+          Uri.parse('${Env.prefix}/patient/patients/${index}'),
+          headers: header);
+      await Future.delayed(Duration(milliseconds: 3000));
+      if (response.statusCode == 200) {
+        return Patient.fromJson(jsonDecode(response.body));
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
     }
   }
 
@@ -77,16 +85,16 @@ class PatientProvider extends ChangeNotifier {
         if (query != null) {
           _patients = _patients.where(
             (element) {
-              return element.firstName 
+              return element.firstName
                       .toLowerCase()
                       .contains((query.toLowerCase())) ||
-                  element.lastName 
+                  element.lastName
                       .toLowerCase()
                       .contains((query.toLowerCase())) ||
                   element.middleName!
                       .toLowerCase()
                       .contains((query.toLowerCase())) ||
-                  element.patientId 
+                  element.patientId
                       .toLowerCase()
                       .contains((query.toLowerCase()));
             },
