@@ -44,17 +44,17 @@ class PatientProvider extends ChangeNotifier {
       } else {
         return [];
       }
-    } catch (e) {
+    } on Exception catch (e) {
       return [];
     }
   }
 
   Future<Patient?> fetchPatient(String index, String token) async {
+    final header = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token',
+    };
     try {
-      final header = <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer $token',
-      };
       final response = await http.get(
           Uri.parse('${Env.prefix}/patient/patients/${index}'),
           headers: header);
@@ -64,20 +64,20 @@ class PatientProvider extends ChangeNotifier {
       } else {
         return null;
       }
-    } catch (e) {
+    } on Exception catch (e) {
       return null;
     }
   }
 
   Future<List<Patient>> searchPatients({String? query, String? token}) async {
-    final header = <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization': 'Bearer $token',
-    };
-    final response = await http
-        .get(Uri.parse('${Env.prefix}/patient/patients/'), headers: header);
-    await Future.delayed(Duration(milliseconds: 3000));
     try {
+      final header = <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      };
+      final response = await http
+          .get(Uri.parse('${Env.prefix}/patient/patients/'), headers: header);
+      await Future.delayed(Duration(milliseconds: 3000));
       if (response.statusCode == 200) {
         data = json.decode(response.body);
         _patients = data.map((e) => Patient.fromJson(e)).toList();
@@ -103,10 +103,10 @@ class PatientProvider extends ChangeNotifier {
           print('Patient not found!');
         }
       } else {
-        throw Exception('Failed to fetch patient');
+        return _patients;
       }
     } on Exception catch (e) {
-      print('error: $e');
+      return _patients;
     }
     return _patients;
   }
