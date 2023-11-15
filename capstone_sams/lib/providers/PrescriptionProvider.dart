@@ -27,32 +27,35 @@ class PrescriptionProvider with ChangeNotifier {
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',
     };
+    try {
+      final response = await http.get(
+        Uri.parse(
+          _getUrl('cpoe/prescription/get-patient/${patientID}/'),
+        ),
+        headers: header,
+      );
+      await Future.delayed(Duration(milliseconds: 3000));
+      if (response.statusCode == 200) {
+        final items = json.decode(response.body);
+        List<Prescription> newPrescriptions = items["prescriptions"]
+            .map<Prescription>((json) => Prescription.fromJson(json))
+            .toList();
+        List<Account> newAccounts = items["accounts"]
+            .map<Account>((json) => Account.fromJson(json))
+            .toList();
 
-    final response = await http.get(
-      Uri.parse(
-        _getUrl('cpoe/prescription/get-patient/${patientID}/'),
-      ),
-      headers: header,
-    );
-    await Future.delayed(Duration(milliseconds: 3000));
-    if (response.statusCode == 200) {
-      final items = json.decode(response.body);
-      List<Prescription> newPrescriptions = items["prescriptions"]
-          .map<Prescription>((json) => Prescription.fromJson(json))
-          .toList();
-      List<Account> newAccounts = items["accounts"]
-          .map<Account>((json) => Account.fromJson(json))
-          .toList();
-
-      if (!listEquals(_prescriptions, newPrescriptions) ||
-          !listEquals(_physicians, newAccounts)) {
-        _prescriptions = newPrescriptions;
-        _physicians = newAccounts;
-        notifyListeners();
+        if (!listEquals(_prescriptions, newPrescriptions) ||
+            !listEquals(_physicians, newAccounts)) {
+          _prescriptions = newPrescriptions;
+          _physicians = newAccounts;
+          notifyListeners();
+        }
+      } else {
+        print(
+            'Failed to fetch patient prescriptions ${jsonDecode(response.body)}');
       }
-    } else {
-      throw Exception(
-          'Failed to fetch patient prescriptions ${jsonDecode(response.body)}');
+    } on Exception catch (e) {
+      print('Failed to fetch patient prescriptions. Error: $e');
     }
   }
 
@@ -62,21 +65,25 @@ class PrescriptionProvider with ChangeNotifier {
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',
     };
-    final response = await http.put(
-      Uri.parse(
-        _getUrl(
-            'cpoe/prescription/get-prescription/update/${prescription.presNum}'),
-      ),
-      headers: header,
-      body: jsonEncode(prescription),
-    );
-    await Future.delayed(Duration(milliseconds: 3000));
+    try {
+      final response = await http.put(
+        Uri.parse(
+          _getUrl(
+              'cpoe/prescription/get-prescription/update/${prescription.presNum}'),
+        ),
+        headers: header,
+        body: jsonEncode(prescription),
+      );
+      await Future.delayed(Duration(milliseconds: 3000));
 
-    if (response.statusCode == 200) {
-      fetchPrescriptions(patientID, token);
-      notifyListeners();
-    } else {
-      throw Exception('Failed to update prescription');
+      if (response.statusCode == 200) {
+        fetchPrescriptions(patientID, token);
+        notifyListeners();
+      } else {
+        print('Failed to update prescription');
+      }
+    } on Exception catch (e) {
+      print('Failed to update prescription');
     }
   }
 
@@ -86,21 +93,24 @@ class PrescriptionProvider with ChangeNotifier {
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',
     };
-
-    final response = await http.put(
-      Uri.parse(
-        _getUrl(
-            'cpoe/prescription/get-prescription/update-amount/${prescription.presNum}'),
-      ),
-      headers: header,
-      body: jsonEncode(prescription),
-    );
-    await Future.delayed(Duration(milliseconds: 3000));
-    if (response.statusCode == 200) {
-      fetchPrescriptions(patientID, token);
-      notifyListeners();
-    } else {
-      throw Exception('Failed to update prescription amount');
+    try {
+      final response = await http.put(
+        Uri.parse(
+          _getUrl(
+              'cpoe/prescription/get-prescription/update-amount/${prescription.presNum}'),
+        ),
+        headers: header,
+        body: jsonEncode(prescription),
+      );
+      await Future.delayed(Duration(milliseconds: 3000));
+      if (response.statusCode == 200) {
+        fetchPrescriptions(patientID, token);
+        notifyListeners();
+      } else {
+        print('Failed to update prescription amount');
+      }
+    } on Exception catch (e) {
+      print('Failed to update prescription amount');
     }
   }
 
@@ -111,18 +121,21 @@ class PrescriptionProvider with ChangeNotifier {
       'Authorization': 'Bearer $token',
     };
     final body = jsonEncode({'account': prescription.account});
-    final response = await http.delete(
-      Uri.parse(_getUrl(
-          'cpoe/prescription/get-prescription/delete/${prescription.presNum}')),
-      headers: header,
-      body: body,
-    );
-    await Future.delayed(Duration(milliseconds: 3000));
-    if (response.statusCode == 204) {
-      fetchPrescriptions(patientID, token);
-    } else {
-      throw Exception(
-          'Failed to delete prescription ${jsonDecode(response.body)}');
+    try {
+      final response = await http.delete(
+        Uri.parse(_getUrl(
+            'cpoe/prescription/get-prescription/delete/${prescription.presNum}')),
+        headers: header,
+        body: body,
+      );
+      await Future.delayed(Duration(milliseconds: 3000));
+      if (response.statusCode == 204) {
+        fetchPrescriptions(patientID, token);
+      } else {
+        print('Failed to delete prescription ${jsonDecode(response.body)}');
+      }
+    } on Exception catch (e) {
+      print('Failed to delete prescription. Error: $e');
     }
   }
 
@@ -133,17 +146,21 @@ class PrescriptionProvider with ChangeNotifier {
       'Authorization': 'Bearer $token',
     };
     final body = jsonEncode({'account': prescription.account});
-    final response = await http.delete(
-      Uri.parse(_getUrl(
-          'cpoe/prescription/get-prescription-${prescription.presNum}/delete-medicine/${drugId}')),
-      headers: header,
-      body: body,
-    );
-    await Future.delayed(Duration(milliseconds: 3000));
-    if (response.statusCode == 204) {
-      fetchPrescriptions(patientID, token);
-    } else {
-      throw Exception('Failed to delete medicine ${jsonDecode(response.body)}');
+    try {
+      final response = await http.delete(
+        Uri.parse(_getUrl(
+            'cpoe/prescription/get-prescription-${prescription.presNum}/delete-medicine/${drugId}')),
+        headers: header,
+        body: body,
+      );
+      await Future.delayed(Duration(milliseconds: 3000));
+      if (response.statusCode == 204) {
+        fetchPrescriptions(patientID, token);
+      } else {
+        print('Failed to delete medicine ${jsonDecode(response.body)}');
+      }
+    } on Exception catch (e) {
+      print('Failed to delete medicine. Error: $e');
     }
   }
 }

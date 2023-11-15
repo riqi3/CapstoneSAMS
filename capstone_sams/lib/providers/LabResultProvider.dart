@@ -11,28 +11,36 @@ class LabresultProvider with ChangeNotifier {
   List<Labresult> get labResults => _labResults;
 
   Future<List<Labresult>> fetchLabResults(String index) async {
-    final response = await http.get(
-        Uri.parse('${Env.prefix}/laboratory/select/scan/labresult/${index}/'));
-    await Future.delayed(Duration(milliseconds: 3000));
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      List<Labresult> labResults = data.map<Labresult>((json) {
-        return Labresult.fromJson(json);
-      }).toList();
-      return labResults;
-    } else {
-      throw Exception('Failed to fetch lab results');
+    try {
+      final response = await http.get(Uri.parse(
+          '${Env.prefix}/laboratory/select/scan/labresult/${index}/'));
+      await Future.delayed(Duration(milliseconds: 3000));
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        List<Labresult> labResults = data.map<Labresult>((json) {
+          return Labresult.fromJson(json);
+        }).toList();
+        return labResults;
+      } else {
+        return [];
+      }
+    } on Exception catch (e) {
+      return [];
     }
   }
 
   void addLabResult(Labresult labresult) async {
-    final response = await http.post(Uri.parse('${Env.prefix}/ocr/'));
-    await Future.delayed(Duration(milliseconds: 3000));
-    if (response.statusCode == 200) {
-      _labResults.add(labresult);
-      notifyListeners();
-    } else {
-      print('Failed to scan pdf');
+    try {
+      final response = await http.post(Uri.parse('${Env.prefix}/ocr/'));
+      await Future.delayed(Duration(milliseconds: 3000));
+      if (response.statusCode == 200) {
+        _labResults.add(labresult);
+        notifyListeners();
+      } else {
+        print('Failed to scan pdf');
+      }
+    } on Exception catch (e) {
+      print('Failed to scan pdf. Error: $e');
     }
   }
 

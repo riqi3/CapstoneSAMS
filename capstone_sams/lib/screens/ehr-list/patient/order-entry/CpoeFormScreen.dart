@@ -42,31 +42,39 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
     var patient = await context
         .read<PatientProvider>()
         .fetchPatient(widget.index.toString(), token);
-    final medicineProvider = context.read<MedicineProvider>();
-    final patientID = patient.patientId;
-    final success = await medicineProvider.saveToPrescription(
-        accountID, patientID, finalPrediction, token);
-
-    if (success) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => PatientTabsScreen(
-            patient: patient,
-            index: widget.index,
+    if (patient != null) {
+      final medicineProvider = context.read<MedicineProvider>();
+      final patientID = patient.patientId;
+      final success = await medicineProvider.saveToPrescription(
+          accountID, patientID, finalPrediction, token);
+      if (success) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PatientTabsScreen(
+              patient: patient,
+              index: widget.index,
+            ),
           ),
-        ),
-      );
+        );
+        const snackBar = SnackBar(
+          backgroundColor: Pallete.successColor,
+          content: Text(
+            'Successfully added prescription',
+            style: TextStyle(fontWeight: FontWeight.w700),
+          ),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
+    } else {
       const snackBar = SnackBar(
         backgroundColor: Pallete.successColor,
         content: Text(
-          'Successfully added prescription',
+          'Failed to add prescription',
           style: TextStyle(fontWeight: FontWeight.w700),
         ),
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    } else {
-      print("Failed to save prescription.");
     }
   }
 

@@ -24,36 +24,44 @@ class AccountProvider extends ChangeNotifier {
   bool _isAuthentificated = false;
 
   Future<bool> login(String username, String password) async {
-    final response = await http.post(
-      Uri.parse('${Env.prefix}/user/login/'),
-      body: {
-        'username': username,
-        'password': password,
-      },
-    );
-    await Future.delayed(Duration(milliseconds: 3000));
-    if (response.statusCode == 200) {
-      // The user was authenticated, so store the account data in the provider
-      final data = jsonDecode(response.body);
-      final account = Account.fromJson(data);
-      setAccount(account);
-      return true;
-    } else {
-      // The login request failed, so return false
+    try {
+      final response = await http.post(
+        Uri.parse('${Env.prefix}/user/login/'),
+        body: {
+          'username': username,
+          'password': password,
+        },
+      );
+      await Future.delayed(Duration(milliseconds: 3000));
+      if (response.statusCode == 200) {
+        // The user was authenticated, so store the account data in the provider
+        final data = jsonDecode(response.body);
+        final account = Account.fromJson(data);
+        setAccount(account);
+        return true;
+      } else {
+        // The login request failed, so return false
+        return false;
+      }
+    } catch (e) {
       return false;
     }
   }
 
   Future<bool> logout() async {
-    final response = await http.post(
-      Uri.parse('${Env.prefix}/user/logout/${id}'),
-    );
-    await Future.delayed(Duration(milliseconds: 3000));
-    if (response.statusCode == 200) {
-      // The user was authenticated, so store the account data in the provider
-      return true;
-    } else {
-      // The login request failed, so return false
+    try {
+      final response = await http.post(
+        Uri.parse('${Env.prefix}/user/logout/${id}'),
+      );
+      await Future.delayed(Duration(milliseconds: 3000));
+      if (response.statusCode == 200) {
+        // The user was authenticated, so store the account data in the provider
+        return true;
+      } else {
+        // The login request failed, so return false
+        return false;
+      }
+    } catch (e) {
       return false;
     }
   }

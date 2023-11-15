@@ -25,24 +25,28 @@ class TodosProvider extends ChangeNotifier {
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',
     };
-
-    final response = await http.get(
-      Uri.parse(
-        _getUrl('user/notes/get/$accountID'),
-      ),
-      headers: headers,
-    );
-    await Future.delayed(Duration(milliseconds: 3000));
-    if (response.statusCode == 200) {
-      final items = json.decode(response.body).cast<Map<String, dynamic>>();
-      List<Todo> list = items.map<Todo>((json) => Todo.fromJson(json)).toList();
-      _todos = list;
+    try {
+      final response = await http.get(
+        Uri.parse(
+          _getUrl('user/notes/get/$accountID'),
+        ),
+        headers: headers,
+      );
+      await Future.delayed(Duration(milliseconds: 3000));
+      if (response.statusCode == 200) {
+        final items = json.decode(response.body).cast<Map<String, dynamic>>();
+        List<Todo> list =
+            items.map<Todo>((json) => Todo.fromJson(json)).toList();
+        _todos = list;
+        _isLoading = false;
+        notifyListeners();
+      } else {
+        _isLoading = false;
+        notifyListeners();
+      }
+    } on Exception catch (e) {
       _isLoading = false;
       notifyListeners();
-    } else {
-      _isLoading = false;
-      notifyListeners();
-      throw Exception('Failed to load todos  ${jsonDecode(response.body)}');
     }
   }
 
@@ -52,18 +56,22 @@ class TodosProvider extends ChangeNotifier {
       'Authorization': 'Bearer $token',
     };
 
-    final response = await http.post(
-      Uri.parse(_getUrl('user/notes/create/')),
-      headers: headers,
-      body: jsonEncode(todo.toJson()),
-    );
-    await Future.delayed(Duration(milliseconds: 3000));
-    if (response.statusCode == 201) {
-      fetchTodos(accountID, token);
-      notifyListeners();
-    } else {
-      throw Exception(
-          'Failed to add todo. Server responded with status code ${response.statusCode} ${jsonDecode(response.body)}');
+    try {
+      final response = await http.post(
+        Uri.parse(_getUrl('user/notes/create/')),
+        headers: headers,
+        body: jsonEncode(todo.toJson()),
+      );
+      await Future.delayed(Duration(milliseconds: 3000));
+      if (response.statusCode == 201) {
+        fetchTodos(accountID, token);
+        notifyListeners();
+      } else {
+        print(
+            'Failed to add todo. Server responded with status code ${response.statusCode} ${jsonDecode(response.body)}');
+      }
+    } on Exception catch (e) {
+      print('Failed to add todo. Error: $e');
     }
   }
 
@@ -72,19 +80,24 @@ class TodosProvider extends ChangeNotifier {
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',
     };
-    final response = await http.put(
-        Uri.parse(
-          _getUrl('user/notes/update/${todo.noteNum}'),
-        ),
-        headers: headers,
-        body: jsonEncode(todo.toJson()));
-    await Future.delayed(Duration(milliseconds: 3000));
+    try {
+      final response = await http.put(
+          Uri.parse(
+            _getUrl('user/notes/update/${todo.noteNum}'),
+          ),
+          headers: headers,
+          body: jsonEncode(todo.toJson()));
+      await Future.delayed(Duration(milliseconds: 3000));
 
-    if (response.statusCode == 204) {
-      fetchTodos(accountID, token);
-      notifyListeners();
-    } else {
-      throw Exception('Failed to update todo');
+      if (response.statusCode == 204) {
+        fetchTodos(accountID, token);
+        notifyListeners();
+      } else {
+        print(
+            'Failed to update todo. Server responded with status code ${response.statusCode} ${jsonDecode(response.body)}');
+      }
+    } on Exception catch (e) {
+      print('Failed to update todo. Error: $e');
     }
   }
 
@@ -97,19 +110,22 @@ class TodosProvider extends ChangeNotifier {
       'account': todo.account,
       'isDone': !todo.isDone,
     });
-    final response = await http.put(
-      Uri.parse(_getUrl('user/notes/done/${todo.noteNum}')),
-      headers: headers,
-      body: body,
-    );
-    await Future.delayed(Duration(milliseconds: 3000));
+    try {
+      final response = await http.put(
+        Uri.parse(_getUrl('user/notes/done/${todo.noteNum}')),
+        headers: headers,
+        body: body,
+      );
+      await Future.delayed(Duration(milliseconds: 3000));
 
-    if (response.statusCode == 204) {
-      todo.isDone = !todo.isDone;
-      fetchTodos(todo.account, token);
-    } else {
-      throw Exception(
-          'Failed to update todo status  ${jsonDecode(response.body)}');
+      if (response.statusCode == 204) {
+        todo.isDone = !todo.isDone;
+        fetchTodos(todo.account, token);
+      } else {
+        print('Failed to toggle todo status  ${jsonDecode(response.body)}');
+      }
+    } on Exception catch (e) {
+      print('Failed to toggle todo. Error: $e');
     }
   }
 
@@ -119,16 +135,20 @@ class TodosProvider extends ChangeNotifier {
       'Authorization': 'Bearer $token',
     };
     final body = jsonEncode({'account': todo.account});
-    final response = await http.delete(
-      Uri.parse(_getUrl('user/notes/delete/${todo.noteNum}')),
-      headers: headers,
-      body: body,
-    );
-    await Future.delayed(Duration(milliseconds: 3000));
-    if (response.statusCode == 204) {
-      fetchTodos(todo.account, token);
-    } else {
-      throw Exception('Failed to delete todo ${jsonDecode(response.body)}');
+    try {
+      final response = await http.delete(
+        Uri.parse(_getUrl('user/notes/delete/${todo.noteNum}')),
+        headers: headers,
+        body: body,
+      );
+      await Future.delayed(Duration(milliseconds: 3000));
+      if (response.statusCode == 204) {
+        fetchTodos(todo.account, token);
+      } else {
+        print('Failed to delete todo ${jsonDecode(response.body)}');
+      }
+    } on Exception catch (e) {
+      print('Failed to delete todo. Error: $e');
     }
   }
 }
