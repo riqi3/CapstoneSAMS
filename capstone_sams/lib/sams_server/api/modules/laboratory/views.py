@@ -15,7 +15,7 @@ import re
 import datetime
 from PyPDF2 import PdfReader
 from rest_framework.views import APIView
-from django.shortcuts import render
+from django.shortcuts import render,  redirect
 from api.modules.laboratory.form import PdfImportLabResultForm
 from django import forms
 from django.contrib import admin, messages
@@ -45,15 +45,13 @@ class LabResultForm(forms.ModelForm):
     class Meta:
         model = LabResult
         fields = "__all__"
-        labels = {
-            "title": "Title for Laboratory Result",
-            "comment": "Comments",
+        labels = { 
+            # "investigation": "Investigation",
             "pdf": "PDF File",
             "patient": "Select Patient",
         }
-        widgets = {
-            "title": forms.TextInput(attrs={"id": "id_title"}),
-            "comment": forms.Textarea(attrs={"id": "id_comment"}),
+        widgets = { 
+            # "comment": forms.Textarea(attrs={"id": "id_comment"}),
             "pdf": forms.ClearableFileInput(attrs={"id": "lab_result_file"}),
             "patient": forms.Select(attrs={"id": "select_patient"}),
         }
@@ -108,10 +106,10 @@ class ProcessPdf(APIView):
 
             for pdf_id in selected_pdfs:
                 pdf_instance = LabResult.objects.get(pdfId=pdf_id) 
-                pdf_title = pdf_instance.title
-                pdf_comment = pdf_instance.comment
                 patient_id = pdf_instance.patient 
+                pdf_title = pdf_instance.title
                 str_collected_on = None
+                str_investigation = None
 
                 
                 tables = read_pdf(
@@ -167,7 +165,13 @@ class ProcessPdf(APIView):
                         if text_data["text"] == "Collected on:":
                             str_collected_on = item["data"][3][1]["text"]
                             break
+                    for text_data in item["data"][4]:
+                        if text_data["text"] == "Investigations:":
+                            str_investigation = item["data"][4][1]["text"]
+                            break
 
+ 
+                investigations = str_investigation
                 collected_on = datetime.datetime.strptime(
                     str_collected_on, "%d/%m/%Y"
                 ).strftime("%Y-%m-%d") 
@@ -176,34 +180,24 @@ class ProcessPdf(APIView):
                     jsonTables=newLista,
                     labresultTitles=labresultTitles,
                     collectedOn=collected_on,
-                    labresult=pdf_instance,
                     title=pdf_title,
-                    comment=pdf_comment,
+                    labresult=pdf_instance, 
+                    investigation=investigations,
                     patient=patient_id,
                 )
                 jsonLabResult.save()
                 pdf_contents.append(jsonLabResult)
-                json_data = json.dumps(pdf_contents)
-            return HttpResponseRedirect(reverse("admin"))
-        else:
+                json_data = json.dumps(pdf_contents) 
+            # return HttpResponseRedirect(reverse("admin"))
+            return JsonResponse({'success': True})
+        else: 
             pdf_list = LabResult.objects.select_related('patient').filter(patient_id=patient)
             return render(
                 request, "laboratory/select/pdf_select.html", {"pdf_list": pdf_list}
-            )
+            ) 
         
-    # def search_feature(request): 
-    #     if request.method == 'POST': 
-    #         search_query = request.POST['search_query'] 
-    #         patients = Patient.objects.filter(firstName=search_query)
-    #         return render(request, 'laboratory/select/pdf_select.html', {'query':search_query, 'patients':patients})
-    #     else:
-    #         return render(request, 'laboratory/select/pdf_select.html',{})
-        
-    def all_select_pdf(request): 
-        # pdf_list = LabResult.objects.all()  
-        # pdf_list = LabResult.objects.select_related('patient').filter()
-        # return render(request, "laboratory/select/pdf_select.html", {"pdf_list": pdf_list})
-        if request.method == "POST":
+    def all_select_pdf(request):  
+        if request.method == "POST":  
             selected_pdfs = request.POST.getlist("item")
             pdf_contents = []
             tableAppend = []
@@ -214,24 +208,15 @@ class ProcessPdf(APIView):
 
             for pdf_id in selected_pdfs:
                 pdf_instance = LabResult.objects.get(pdfId=pdf_id) 
-                pdf_title = pdf_instance.title
-                pdf_comment = pdf_instance.comment
                 patient_id = pdf_instance.patient 
+                pdf_title = pdf_instance.title  
                 str_collected_on = None
-
+                str_investigation = None
                 
                 tables = read_pdf(
                     pdf_instance.pdf.path, pages="all", output_format="json"
                 )
-                reader = PdfReader(pdf_instance.pdf.path)
-
-                """tables[index] retrieves the table according by index.
-                in this case the format of the labresult has the following
-                tables: 1.) tables[0] contains the personal information. 
-                2.) tables[1] contains the haematology of the blood
-                3.) tables[3] contains the biochemistry. theese tables are 
-                then stored in their respective rows
-                """
+                reader = PdfReader(pdf_instance.pdf.path) 
 
                 for page in reader.pages:
                     text = page.extract_text()
@@ -273,6 +258,10 @@ class ProcessPdf(APIView):
                         if text_data["text"] == "Collected on:":
                             str_collected_on = item["data"][3][1]["text"]
                             break
+                    for text_data in item["data"][4]:
+                        if text_data["text"] == "Investigations:":
+                            str_investigation = item["data"][4][1]["text"]
+                            break
 
                 collected_on = datetime.datetime.strptime(
                     str_collected_on, "%d/%m/%Y"
@@ -284,19 +273,27 @@ class ProcessPdf(APIView):
                     collectedOn=collected_on,
                     labresult=pdf_instance,
                     title=pdf_title,
-                    comment=pdf_comment,
+                    investigation=str_investigation,
                     patient=patient_id,
                 )
                 jsonLabResult.save()
                 pdf_contents.append(jsonLabResult)
-                json_data = json.dumps(pdf_contents)
-            return HttpResponseRedirect(reverse("admin"))
-        else:
+                json_data = json.dumps(pdf_contents)  
+            return HttpResponseRedirect('/admin') 
+        else: 
             pdf_list = LabResult.objects.all() 
             return render(
-                request, "laboratory/select/pdf_select.html", {"pdf_list": pdf_list}
+                request, "laboratory/select/pdf_all_select.html", {"pdf_list": pdf_list}
             )
-
+        
+    def delete_pdf(request, pdfId):
+        try:
+            pdf = LabResult.objects.get(pdfId=pdfId)
+            pdf.delete()
+            return JsonResponse({'success': True})
+        except LabResult.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'PDF not found'})
+         
     def upload_pdf1(request):
         if request.method == "POST":
             form = LabResultForm(request.POST, request.FILES)

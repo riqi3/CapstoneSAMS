@@ -68,8 +68,8 @@ class MedicineProvider with ChangeNotifier {
     return _medicines;
   }
 
-  Future<bool> saveToPrescription(
-      String? accountId, String? patientId, String? finalPrediction, String token) async {
+  Future<bool> saveToPrescription(String? accountId, String? patientId,
+      String? finalPrediction, String token) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',
@@ -83,17 +83,21 @@ class MedicineProvider with ChangeNotifier {
       'patient': patientId,
       'disease': finalPrediction,
     };
-
-    final response = await http.post(
-      Uri.parse('${Env.prefix}/cpoe/prescription/save/'),
-      headers: header,
-      body: jsonEncode(data),
-    );
-    await Future.delayed(Duration(milliseconds: 3000));
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      print('cannot add medicine!');
+    try {
+      final response = await http.post(
+        Uri.parse('${Env.prefix}/cpoe/prescription/save/'),
+        headers: header,
+        body: jsonEncode(data),
+      );
+      await Future.delayed(Duration(milliseconds: 3000));
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        print('cannot add medicine!');
+        return false;
+      }
+    } on Exception catch (e) {
+      print(e);
       return false;
     }
   }
@@ -109,17 +113,21 @@ class MedicineProvider with ChangeNotifier {
       'account': accountId,
       'medicines': medicinesJson,
     };
-
-    final response = await http.post(
-      Uri.parse('${Env.prefix}/cpoe/prescription/update/${patientId}'),
-      headers: headers,
-      body: jsonEncode(data),
-    );
-    await Future.delayed(Duration(milliseconds: 3000));
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      print('cannot update medicine!');
+    try {
+      final response = await http.post(
+        Uri.parse('${Env.prefix}/cpoe/prescription/update/${patientId}'),
+        headers: headers,
+        body: jsonEncode(data),
+      );
+      await Future.delayed(Duration(milliseconds: 3000));
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        print('cannot update medicine!');
+        return false;
+      }
+    } on Exception catch (e) {
+      print(e);
       return false;
     }
   }

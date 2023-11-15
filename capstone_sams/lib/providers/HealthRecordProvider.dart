@@ -11,15 +11,16 @@ class HealthRecordProvider with ChangeNotifier {
   Map<String, dynamic>? get diseases => _healthrecord?.diseases;
   String? get patient => _healthrecord?.patient;
 
-  Future<void> setRecord(String patientID) async {
+  Future<bool> setRecord(String patientID) async {
     final response = await http
         .get(Uri.parse('${Env.prefix}/patient/patients/history/${patientID}'));
     await Future.delayed(Duration(milliseconds: 3000));
     if (response.statusCode == 200) {
       _healthrecord = HealthRecord.fromJson(jsonDecode(response.body));
       notifyListeners();
+      return true;
     } else {
-      throw Exception('Failed to fetch patient');
+      return false;
     }
   }
 }

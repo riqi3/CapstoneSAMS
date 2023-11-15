@@ -56,7 +56,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
             iconColorLeading: Pallete.whiteColor,
             iconColorTrailing: Pallete.whiteColor,
             backgroundColor: Pallete.mainColor),
-        preferredSize: Size.fromHeight(kToolbarHeight), 
+        preferredSize: Size.fromHeight(kToolbarHeight),
       ),
       body: SingleChildScrollView(
         controller: _controller,

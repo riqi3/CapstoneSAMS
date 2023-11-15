@@ -117,7 +117,7 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(Sizing.sectionSymmPadding),
                 child: Text(
-                  ('Investigations: ${list.comment}'),
+                  ('Investigations:\n\n${list.investigation}'),
                   style: TextStyle(fontSize: Sizing.header5),
                 ),
               ),
@@ -125,7 +125,7 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
           );
         },
         child: Text(
-          ('Investigations: ${list.comment}'),
+          ('Investigations:\n${list.investigation}'),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),

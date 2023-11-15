@@ -4,9 +4,9 @@ from rest_framework import serializers
 class LabResultSerializer(serializers.ModelSerializer):
     class Meta:
         model = LabResult
-        fields = ['patient', "title", 'comment', 'pdf']
+        fields = ['patient','title','pdf']
 
 class JsonLabResultSerializer(serializers.ModelSerializer):
     class Meta:
         model = JsonLabResult
-        fields = ['jsonId', 'labresultTitles', 'jsonTables',  'collectedOn','createdAt','labresult', 'title', 'comment', 'patient']
+        fields = ['jsonId', 'labresultTitles', 'jsonTables',  'collectedOn','createdAt', 'title','labresult', 'investigation', 'patient']
