@@ -1,0 +1,124 @@
+{% extends "admin/base.html" %} {% load static %} {%block content %}
+ 
+<style>
+  
+
+  :root{
+    --primary-color: #d81b60;
+    --success-color: #56cc9d;
+    --danger-color: #cc5656;
+    --bg-dark: #343a40;
+}
+
+.btn-delete {
+    color: white;
+    background-color: var(--danger-color);
+}
+
+</style>
+
+<div id='content-main' class='col-12'>
+  <form id="pdfForm" action="{% url 'all_select_pdf' %}" name='select_pdf_form' method="POST" enctype="multipart/form-data">
+    {%csrf_token%}
+    <div class='row'>
+      <div class='col-12 col-lg-9'>
+        <div class='card'>
+          <div class='card-body'>  
+            {%if pdf_list%}
+            <table class="table table-hover">
+                <tbody>
+                  <thead>
+                    <tr>
+                      <th scope="col" style='text-align:center;'>Select Result</th>
+                      <th scope="col">PDF ID</th>   
+                      <th scope="col">Title</th>
+                      <th scope="col">Patient ID</th>
+                      <th scope="col">Patient Name</th>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  {% for pdf in pdf_list%}
+          
+                  <tbody>
+                    <tr>
+                      <th style='text-align:center;'>
+                        <input
+                          type="radio"
+                          id="labresult"
+                          name="item"
+                          value="{{pdf.pdfId}}"
+                        />
+                      </th>
+                      <td>{{pdf.pdfId}}</td>  
+                      <td>{{pdf.title}}</td>    
+                      <td>{{ pdf.patient.patientID }}</td>
+                      <td>{{ pdf.patient.firstName }} {{ pdf.patient.middleName }} {{ pdf.patient.lastName }}</td>
+                      <td>
+                          <button type="button" class="btn btn-delete" onclick="deletePdf('{{ pdf.pdfId }}')">Delete</button>
+                          {% comment %} <input type="button" id="delete_pdf"name="delete_item" value="{{ pdf.pdfId }}"> {% endcomment %}
+                       </td>
+                    </tr>
+                  </tbody>
+                  {% endfor %}
+                </tbody>
+              </table>
+              {% else %}
+              <h5>No laboratories uploaded yet</h5>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {%if pdf_list%}
+      <div class='col-12 col-lg-3'>
+        <div id='jazzy-actions'>
+          <div class='form-group'>
+            <input type='submit' value="Submit" class='btn btn-success form-control'/>
+          </div>
+        </div>
+      </div>
+      {% else %}
+              <h1></h1>
+            {% endif %}
+    </div>
+  </form>
+</div>
+
+<script>
+    function deletePdf(pdfId) {
+        const csrftoken = getCookie('csrftoken');
+        $.ajax({
+            url: `../delete_pdf/${pdfId}/`,
+            type: 'POST',
+            dataType: 'json',
+            headers: { 'X-CSRFToken': csrftoken },
+            success: function (data) {
+                if (data.success) {
+                     
+                    alert('PDF deleted successfully');
+                    location.reload();  
+                } else {
+                    alert('Error deleting PDF: ' + data.error);
+                }
+            },
+            error: function () {
+                alert(pdfId +'Error deleting PDF');
+            }
+        });
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.startsWith(name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script> 
+{{ block.super }} {% endblock %}  

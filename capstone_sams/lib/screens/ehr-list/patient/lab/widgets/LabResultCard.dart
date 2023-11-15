@@ -53,7 +53,7 @@ class LabResultCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Comments: ',
+                  'Investigations: ',
                   style: TextStyle(
                       color: Pallete.textColor,
                       fontSize: Sizing.header6,
@@ -61,7 +61,7 @@ class LabResultCard extends StatelessWidget {
                 ),
                 Flexible(
                   child: Text(
-                    labresult.comment,
+                    labresult.investigation,
                     style: TextStyle(
                         color: Pallete.textColor,
                         fontSize: Sizing.header6,
