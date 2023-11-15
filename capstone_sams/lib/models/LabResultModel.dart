@@ -6,7 +6,7 @@ class Labresult {
   final List<dynamic>? jsonTables;
   final DateTime createdAt;
   final String title;
-  final String comment;
+  final String investigation;
   final String patient;
 
   Labresult({
@@ -16,7 +16,7 @@ class Labresult {
     required this.collectedOn,
     required this.createdAt,
     required this.title,
-    required this.comment,
+    required this.investigation,
     required this.patient,
   });
 
@@ -28,7 +28,7 @@ class Labresult {
       'jsonData': jsonTables,
       'createdAt': createdAt.toIso8601String(),
       'title': title,
-      'comment': comment,
+      'comment': investigation,
       'patient': patient,
     };
   }
@@ -46,7 +46,7 @@ class Labresult {
       jsonTables: tables,
       createdAt: DateTime.parse(json['createdAt']),
       title: json['title'],
-      comment: json['comment'],
+      investigation: json['investigation'],
       patient: json['patient'],
     );
   }

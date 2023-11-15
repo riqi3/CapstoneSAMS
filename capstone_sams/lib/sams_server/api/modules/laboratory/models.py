@@ -4,8 +4,7 @@ from django import forms
 
 class LabResult(models.Model):
     pdfId = models.AutoField(primary_key = True)
-    title = models.CharField(blank = False,max_length=128)
-    comment = models.TextField(blank = False,max_length=512)
+    title = models.CharField(blank = False,max_length=128) 
     pdf = models.FileField(blank = False,upload_to='upload-pdf/')
     patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
     user = models.CharField(null = True, blank = True)
@@ -22,9 +21,9 @@ class JsonLabResult(models.Model):
     labresultTitles = models.JSONField()
     collectedOn = models.DateField()
     jsonTables = models.JSONField()
-    createdAt = models.DateTimeField(auto_now_add=True)
+    createdAt = models.DateTimeField(auto_now_add=True) 
     title = models.CharField(blank = False,max_length=128)
-    comment = models.TextField(blank = False,max_length=512)
+    investigation = models.TextField(blank = False,max_length=512)
     patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
     def __str__(self):
         return str(self.jsonId)

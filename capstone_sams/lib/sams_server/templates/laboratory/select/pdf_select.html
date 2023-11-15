@@ -1,34 +1,22 @@
 {% extends "admin/base.html" %} {% load static %} {%block content %}
-{% comment %} <form class="d-flex" role="search" method="POST" action="{% url 'select_pdf' %}">
-  {% csrf_token %}
-  <input
-     class="form-control me-2"
-     type="search"
-     placeholder="Search"
-     name="search_query"
-     required aria-label="Search"
-  >
-  <button class="btn btn-outline-success" type="submit">Search</button>
- </form>
- {% if query %}
- <div>
-     <div> 
-     {% if patients %} 
-         {% for post in patients %}
-             <div>
-                 <!-- return search query -->
-                 <p>{{post.firstName}}</p>
-             </div>
-         {% endfor %}
-         <!-- return a message if there are no results found. -->
-     {% else %}
-         <h3>No search results found for {{post.firstName}}</h3>
-     {% endif %}
-     </div>
- </div>
-{% else %}
- <h1>Please enter a search query</h1>
-{% endif %} {% endcomment %}
+ 
+<style>
+  
+
+  :root{
+    --primary-color: #d81b60;
+    --success-color: #56cc9d;
+    --danger-color: #cc5656;
+    --bg-dark: #343a40;
+}
+
+input.btn.btn-delete.form-control {
+    color: white;
+    background-color: var(--danger-color);
+}
+
+</style>
+
 <div id='content-main' class='col-12'>
   <form action="." method="POST" enctype="multipart/form-data">
     {%csrf_token%}
@@ -41,11 +29,10 @@
                 <thead>
                   <tr>
                     <th scope="col" style='text-align:center;'>Select Result</th>
-                    <th scope="col">PDF ID</th> 
+                    <th scope="col">PDF ID</th>   
                     <th scope="col">Title</th>
-                    <th scope="col">Investigation</th>
-                    <th scope="col">Patient ID</th>
-                    <th scope="col">Patient Name</th>
+                    <th scope="col">Patient ID</th> 
+                    <th scope="col">Patient Name</th> 
                   </tr>
                 </thead>
                 {% for pdf in pdf_list%}
@@ -57,14 +44,14 @@
                         type="radio"
                         id="labresult"
                         name="item"
-                        value="{{ pdf.pdfId}}"
+                        value="{{pdf.pdfId}}"
                       />
                     </th>
-                    <td>{{pdf.pdfId}}</td>  
-                    <td>{{pdf.title}}</td>   
-                    <td>{{pdf.comment}}</td>
+                    <td>{{pdf.pdfId}}</td>    
+                    <td>{{ pdf.title }}</td>
                     <td>{{ pdf.patient.patientID }}</td>
-                    <td>{{ pdf.patient.middleName }} {{ pdf.patient.lastName }}</td>
+                    <td>{{ pdf.patient.firstName }} {{ pdf.patient.middleName }} {{ pdf.patient.lastName }}</td>
+
                   </tr>
                 </tbody>
                 {% endfor %}
