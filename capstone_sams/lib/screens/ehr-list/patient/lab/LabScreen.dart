@@ -141,8 +141,9 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
                 backgroundColor: Colors.transparent,
                 alignment: Alignment.center,
                 child: LabResultCard(
+                  labresultTitles: labresultTitles[index],
                   labresult: list,
-                  a: index + 1,
+                  index: index + 1,
                 ),
               ),
             );

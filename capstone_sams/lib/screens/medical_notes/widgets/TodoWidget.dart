@@ -84,54 +84,14 @@ class TodoWidget extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            todo.title,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                              fontSize: 22,
-                            ),
-                          ),
-                          PopupMenuButton(
-                            itemBuilder: (context) => [
-                              PopupMenuItem(
-                                child: ListTile(
-                                  leading: Icon(
-                                    Icons.edit,
-                                    color: Pallete.successColor,
-                                  ),
-                                  title: Text(
-                                    'Edit',
-                                    style: TextStyle(
-                                      color: Pallete.successColor,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                  onTap: () => editTodo(context, todo),
-                                ),
-                              ),
-                              PopupMenuItem(
-                                child: ListTile(
-                                  leading: Icon(
-                                    Icons.delete,
-                                    color: Pallete.dangerColor,
-                                  ),
-                                  title: Text(
-                                    'Delete',
-                                    style: TextStyle(
-                                      color: Pallete.dangerColor,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                  onTap: () => deleteTodo(context, todo),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+                      Text(
+                        todo.title,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                          fontSize: 22,
+                        ),
                       ),
                       if (todo.content.isNotEmpty)
                         Container(
@@ -147,6 +107,42 @@ class TodoWidget extends StatelessWidget {
                         ),
                     ],
                   ),
+                ),
+                PopupMenuButton(
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      child: ListTile(
+                        leading: Icon(
+                          Icons.edit,
+                          color: Pallete.successColor,
+                        ),
+                        title: Text(
+                          'Edit',
+                          style: TextStyle(
+                            color: Pallete.successColor,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        onTap: () => editTodo(context, todo),
+                      ),
+                    ),
+                    PopupMenuItem(
+                      child: ListTile(
+                        leading: Icon(
+                          Icons.delete,
+                          color: Pallete.dangerColor,
+                        ),
+                        title: Text(
+                          'Delete',
+                          style: TextStyle(
+                            color: Pallete.dangerColor,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        onTap: () => deleteTodo(context, todo),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

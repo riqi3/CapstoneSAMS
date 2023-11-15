@@ -112,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           "Smarter. Faster. Healthier. - Digitally",
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: Sizing.header5,
+                            fontSize: Sizing.header6,
                             fontWeight: FontWeight.bold,
                             color: Pallete.greyColor,
                           ),

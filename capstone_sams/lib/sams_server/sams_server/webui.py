@@ -18,11 +18,9 @@ JAZZMIN_SETTINGS = {
 
     # Logo to use for your site, must be present in static files, used for login form logo (defaults to site_logo)
     "login_logo": "images/sams_horizontal1.png", 
-
-    # Logo to use for login form in dark themes (defaults to login_logo)
-    # "login_logo_dark": 'images/sams_horizontal2.png',  
-
-    # "site_logo_classes": "img-circle",
+ 
+    # Hide these models when generating side menu (e.g auth.user)
+    "hide_models": ["api.health_record"],
 
     # Welcome text on the login screen
     "welcome_sign": "Welcome to SAMS Dashboard",

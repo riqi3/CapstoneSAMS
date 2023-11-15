@@ -118,32 +118,38 @@ class _InfoState extends State<Info> {
                       ),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: prescription.medicines!.map((medicine) {
-                          return Column(
+                        children: [
+                          Text(
+                            'Disease: ${prescription.disease}',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Disease: ${prescription.disease}',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              if (medicine['quantity'] == 0)
-                                Text(
-                                  'Medicine: ${medicine["drugName"]}',
-                                  style: TextStyle(
-                                    color: Pallete.greyColor,
-                                    decoration: TextDecoration.lineThrough,
-                                    decorationThickness: 1.5,
-                                  ),
-                                ),
-                              if (medicine['quantity'] > 0)
-                                Text(
-                                  'Medicine: ${medicine["drugName"]}',
-                                  style: TextStyle(fontWeight: FontWeight.w500),
-                                ),
-                              Text('Quantity: ${medicine['quantity']}'),
-                            ],
-                          );
-                        }).toList(),
+                            children: prescription.medicines!.map((medicine) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (medicine['quantity'] == 0)
+                                    Text(
+                                      'Medicine: ${medicine["drugName"]}',
+                                      style: TextStyle(
+                                        color: Pallete.greyColor,
+                                        decoration: TextDecoration.lineThrough,
+                                        decorationThickness: 1.5,
+                                      ),
+                                    ),
+                                  if (medicine['quantity'] > 0)
+                                    Text(
+                                      'Medicine: ${medicine["drugName"]}',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  Text('Quantity: ${medicine['quantity']}'),
+                                ],
+                              );
+                            }).toList(),
+                          ),
+                        ],
                       ),
                       trailing: popupActionWidget(
                           index, prescriptionList, prescription),

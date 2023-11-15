@@ -17,6 +17,24 @@ input.btn.btn-delete.form-control {
 
 </style>
 
+<div class="content border-bottom mb-2">
+  <div class="container-fluid laboratory-title-section">
+    <div class="row">
+      <div class="col-12 col-md-auto d-flex flex-grow-1 align-items-center">
+        <h1 class="h4 m-0 pr-3 mr-3 border-right">Laboratory Record</h1>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/admin/">Home</a></li>
+          </li> 
+
+          <li class="breadcrumb-item"><a href="/laboratory/upload/">Upload Laboratory Result</a></li>
+          </li> 
+          <li class="breadcrumb-item active">Select Laboratory Result To Scan</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id='content-main' class='col-12'>
   <form action="." method="POST" enctype="multipart/form-data">
     {%csrf_token%}
