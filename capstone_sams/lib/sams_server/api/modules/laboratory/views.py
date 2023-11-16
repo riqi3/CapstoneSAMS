@@ -109,21 +109,13 @@ class ProcessPdf(APIView):
                 patient_id = pdf_instance.patient 
                 pdf_title = pdf_instance.title
                 str_collected_on = None
-                str_investigation = None
-
+                str_investigation = None 
                 
                 tables = read_pdf(
                     pdf_instance.pdf.path, pages="all", output_format="json"
                 )
-                reader = PdfReader(pdf_instance.pdf.path)
-
-                """tables[index] retrieves the table according by index.
-                in this case the format of the labresult has the following
-                tables: 1.) tables[0] contains the personal information. 
-                2.) tables[1] contains the haematology of the blood
-                3.) tables[3] contains the biochemistry. theese tables are 
-                then stored in their respective rows
-                """
+                
+                reader = PdfReader(pdf_instance.pdf.path) 
 
                 for page in reader.pages:
                     text = page.extract_text()
@@ -294,13 +286,13 @@ class ProcessPdf(APIView):
         except LabResult.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'PDF not found'})
          
-    def upload_pdf1(request):
+    def upload_pdf(request):
         if request.method == "POST":
             form = LabResultForm(request.POST, request.FILES)
             if form.is_valid():
                 form.save()
-                a = form.save(commit=False)
-                patientID = a.patient.patientID  
+                saveForm = form.save(commit=False)
+                patientID = saveForm.patient.patientID  
                 
             return HttpResponseRedirect(
                 reverse("select_pdf", kwargs={"patient": patientID})
