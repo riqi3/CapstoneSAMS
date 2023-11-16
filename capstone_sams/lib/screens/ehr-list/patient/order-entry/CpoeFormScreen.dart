@@ -118,7 +118,7 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Analyze Page'),
+        title: Text('CPOE FORM'),
       ),
       body: ListView(
         children: <Widget>[

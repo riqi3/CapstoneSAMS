@@ -91,5 +91,5 @@ JAZZMIN_SETTINGS = {
         # "auth.Group": "fas fa-users",
     },
 }
-JAZZMIN_SETTINGS["show_ui_builder"] = True
+
 
