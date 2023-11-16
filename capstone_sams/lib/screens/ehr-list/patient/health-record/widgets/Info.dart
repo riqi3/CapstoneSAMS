@@ -210,16 +210,20 @@ class _InfoState extends State<Info> {
     final provider = Provider.of<PrescriptionProvider>(context, listen: false);
     provider.removePrescription(prescription, widget.patient.patientId,
         context.read<AccountProvider>().token!);
-    int? index = int.tryParse(widget.index);
-
-    Navigator.push(
+    int index = 1;
+    int routesCount = 0;
+    Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
-        builder: (context) => PatientTabsScreen(
-          patient: widget.patient,
-          index: index!,
-        ),
-      ),
+          builder: (context) =>
+              PatientTabsScreen(patient: widget.patient, index: index)),
+      (Route<dynamic> route) {
+        if (routesCount < 3) {
+          routesCount++;
+          return false;
+        }
+        return true;
+      },
     );
 
     const snackBar = SnackBar(
