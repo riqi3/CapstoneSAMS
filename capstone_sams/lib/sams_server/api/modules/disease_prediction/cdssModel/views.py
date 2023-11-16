@@ -3,13 +3,15 @@ from django.http import JsonResponse
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
-import csv
+import csv, json
 from django.core.files.base import ContentFile
 from django.core.files.storage import FileSystemStorage
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import viewsets
+
+from api.modules.user.models import Account, Data_Log
 from .models import HealthSymptom
 from .serializers import HealthSymptomSerializer
 from rest_framework.views import APIView
@@ -32,6 +34,13 @@ import warnings
 
 def train_disease_prediction_model():
     try:
+        account_id = data["accountID"] 
+        account = Account.objects.get(pk=account_id)
+        data_log = Data_Log.objects.create(
+            event=f"{account.username} has trained the model",
+            type="Model Training",
+            account=account,
+            )
         # Folder Directory
         pickle_folder = 'api/modules/disease_prediction/cdssModel'
         
@@ -123,7 +132,14 @@ class TrainModelView(APIView):
 
 @api_view(['POST'])
 def create_symptom_record(request):
-    
+    data = json.loads(request.body)
+    account_id = data["accountID"] 
+    account = Account.objects.get(pk=account_id)
+    data_log = Data_Log.objects.create(
+        event=f"{account.username} has inputted a symptom record",
+        type="Create Symptom record",
+        account=account,
+        )
     warnings.filterwarnings("ignore", category=UserWarning, module="sklearn")
 
     symptoms = request.data.get('symptoms', [])

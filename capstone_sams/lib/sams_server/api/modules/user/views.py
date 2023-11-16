@@ -74,7 +74,7 @@ class LogInView(viewsets.ModelViewSet):
     @api_view(['POST'])
     def logout(request, accountID):
         user = Account.objects.get(pk=accountID)
-        data_log = Data_Log(
+        data_log = Data_Log.objects.create(
             event=f"User logged out: {user.username}",
             type="User Logout",
             account=user,

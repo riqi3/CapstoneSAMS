@@ -1,4 +1,5 @@
 import 'package:capstone_sams/models/SymptomsModel.dart';
+import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/SymptomsFieldsProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -32,10 +33,11 @@ class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
   void _analyzeSymptoms() async {
     var symptomFieldsProvider =
         Provider.of<SymptomFieldsProvider>(context, listen: false);
+    var accountProvider = Provider.of<AccountProvider>(context, listen: false);
     List<String> symptoms = symptomFieldsProvider.symptoms;
 
     try {
-      var requestBody = {'symptoms': symptoms};
+      var requestBody = {'symptoms': symptoms, 'accountID': accountProvider.id};
 
       var response = await http.post(
         Uri.parse('${Env.prefix}/cdss/create_symptom_record/'),
