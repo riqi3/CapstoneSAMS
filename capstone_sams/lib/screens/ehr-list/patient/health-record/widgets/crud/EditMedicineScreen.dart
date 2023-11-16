@@ -118,7 +118,6 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
               routesCount++;
               return false;
             }
-            print(routesCount);
             return true;
           },
         );
