@@ -56,6 +56,7 @@ class AccountProvider extends ChangeNotifier {
       await Future.delayed(Duration(milliseconds: 3000));
       if (response.statusCode == 200) {
         // The user was authenticated, so store the account data in the provider
+        setNull();
         return true;
       } else {
         // The login request failed, so return false
