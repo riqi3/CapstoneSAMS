@@ -51,9 +51,9 @@ class _CounterScreenState extends State<CounterScreen> {
   late String token;
 
   @override
-  void initState() {  
+  void initState() {
     super.initState();
-    token = context.read<AccountProvider>().token!; 
+    token = context.read<AccountProvider>().token!;
     _counter = widget.prescription.medicines![widget.index]['quantity'] as int;
     name = widget.prescription.medicines![widget.index]['drugName'];
     drugId = widget.prescription.medicines![widget.index]['drugId'];
@@ -102,15 +102,20 @@ class _CounterScreenState extends State<CounterScreen> {
         widget.patient.patientId,
         token,
       );
-
-      Navigator.pushReplacement(
+      
+      int routesCount = 0;
+      Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (context) => PatientTabsScreen(
-            patient: widget.patient,
-            index: widget.index,
-          ),
-        ),
+            builder: (context) => PatientTabsScreen(
+                patient: widget.patient, index: widget.index)),
+        (Route<dynamic> route) {
+          if (routesCount < 5) {
+            routesCount++;
+            return false;
+          }
+          return true;
+        },
       );
 
       const snackBar = SnackBar(

@@ -97,16 +97,7 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
             ),
             widget.patient.patientId,
             context.read<AccountProvider>().token!);
-
-        /*Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => PatientTabsScreen(
-              patient: widget.patient,
-              index: widget.index,
-            ),
-          ),
-        );*/
+            
         int routesCount = 0;
         Navigator.pushAndRemoveUntil(
           context,
