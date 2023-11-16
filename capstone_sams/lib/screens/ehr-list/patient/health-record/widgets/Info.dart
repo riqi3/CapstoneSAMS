@@ -191,13 +191,7 @@ class _InfoState extends State<Info> {
                 ),
               ),
               onTap: () {
-                print('${prescription.presNum} details');
-
-                if (prescription.medicines?.length == 0) {
-                  detailsPrescription(context, prescription, index);
-                } else {
-                  detailsPrescriptionDetails(context, prescription);
-                }
+                detailsPrescriptionDetails(context, prescription);
               },
             ),
           ),
@@ -216,7 +210,6 @@ class _InfoState extends State<Info> {
     final provider = Provider.of<PrescriptionProvider>(context, listen: false);
     provider.removePrescription(prescription, widget.patient.patientId,
         context.read<AccountProvider>().token!);
-    // Navigator.of(context).pop();
     int? index = int.tryParse(widget.index);
 
     Navigator.push(
@@ -331,13 +324,6 @@ class _InfoState extends State<Info> {
               ),
             ),
             onTap: () {
-              print('${prescription.presNum} manage');
-
-              // if (prescription.medicines?.length == 1) {
-              //   prescriptionCounter(context, prescription, index);
-              // } else {
-              //   manageMedicineQuantity(context, prescription);
-              // }
               manageMedicineQuantity(context, prescription);
             },
           ),
@@ -432,13 +418,7 @@ class _InfoState extends State<Info> {
               ),
             ),
             onTap: () {
-              print('${prescription.presNum} details');
-
-              if (prescription.medicines?.length == 0) {
-                detailsPrescription(context, prescription, index);
-              } else {
-                detailsPrescriptionDetails(context, prescription);
-              }
+              detailsPrescriptionDetails(context, prescription);
             },
           ),
         ),
@@ -456,14 +436,7 @@ class _InfoState extends State<Info> {
               ),
             ),
             onTap: () {
-              print('${prescription.presNum} edit');
-
-              if (prescription.medicines?.length == 0) {
-                editPrescription(
-                    context, prescription, index, prescription.presNum);
-              } else {
-                editPrescriptionDetails(context, prescription);
-              }
+              editPrescriptionDetails(context, prescription);
             },
           ),
         ),
@@ -481,15 +454,7 @@ class _InfoState extends State<Info> {
               ),
             ),
             onTap: () {
-              print('${prescription.presNum} delete');
-
-              if (prescription.medicines?.length == 1) {
-                deletePrescription(context, prescription);
-              } else {
-                deletePrescriptionDetails(context, prescription);
-                // editPrescriptionDetails(context, prescription);
-                // deleteMedicine(context, prescription, widget.medicine.drugId);
-              }
+              deletePrescriptionDetails(context, prescription);
             },
           ),
         ),
