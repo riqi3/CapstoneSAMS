@@ -26,13 +26,13 @@ from django.urls import reverse
 
 def cleanJsonTable(json_data):
     if isinstance(json_data, dict):
-        cleaned_data = {}
+        cleanedData = {}
         for key, value in json_data.items():
             if key == "text":
-                cleaned_data[key] = value
+                cleanedData[key] = value
             elif isinstance(value, (dict, list)):
-                cleaned_data[key] = cleanJsonTable(value)
-        return cleaned_data
+                cleanedData[key] = cleanJsonTable(value)
+        return cleanedData
 
     elif isinstance(json_data, list):
         return [cleanJsonTable(item) for item in json_data]
@@ -96,15 +96,15 @@ class ProcessPdf(APIView):
 
     def select_pdf(request, patient):
         if request.method == "POST":
-            selected_pdfs = request.POST.getlist("item")
-            pdf_contents = []
+            selectPdfs = request.POST.getlist("item")
+            pdfContents = []
             tableAppend = []
             tempList = []
             uniqueDataList = []
-            newLista = []
+            newList = []
             labresultTitles = []
 
-            for pdf_id in selected_pdfs:
+            for pdf_id in selectPdfs:
                 pdf_instance = LabResult.objects.get(pdfId=pdf_id) 
                 patient_id = pdf_instance.patient 
                 pdf_title = pdf_instance.title
@@ -127,36 +127,32 @@ class ProcessPdf(APIView):
                     readTable = tables[index]
                     tableAppend = [tableAppend, readTable]
 
-                cleaned_data = cleanJsonTable(tableAppend)
+                cleanedData = cleanJsonTable(tableAppend) 
 
-                print(cleaned_data)
-
-                def get_data_and_move_higher(arr):
+                def restructureArray(arr):
                     for item in arr:
                         if isinstance(item, dict) and "data" in item:
-                            data_contents = item["data"]
-                            extract_list = {"data": data_contents}
-                            tempList.append(extract_list)
+                            dataContents = item["data"]
+                            extractList = {"data": dataContents}
+                            tempList.append(extractList)
 
                         if isinstance(item, list):
-                            get_data_and_move_higher(item)
+                            restructureArray(item)
 
-                get_data_and_move_higher(cleaned_data)
-
-                print(get_data_and_move_higher)
+                restructureArray(cleanedData) 
 
                 for item in tempList:
-                    data_contents = item["data"]
-                    if data_contents not in uniqueDataList:
-                        uniqueDataList.append(data_contents)
+                    dataContents = item["data"]
+                    if dataContents not in uniqueDataList:
+                        uniqueDataList.append(dataContents)
 
-                result_list = [
-                    {"data": data_contents} for data_contents in uniqueDataList
+                resultList = [
+                    {"data": dataContents} for dataContents in uniqueDataList
                 ]
-                for item in result_list:
-                    newLista.append(item)
+                for item in resultList:
+                    newList.append(item) 
 
-                for item in newLista:
+                for item in newList:
                     for text_data in item["data"][3]:
                         if text_data["text"] == "Collected on:":
                             str_collected_on = item["data"][3][1]["text"]
@@ -173,7 +169,7 @@ class ProcessPdf(APIView):
                 ).strftime("%Y-%m-%d") 
 
                 jsonLabResult = JsonLabResult(
-                    jsonTables=newLista,
+                    jsonTables=newList,
                     labresultTitles=labresultTitles,
                     collectedOn=collected_on,
                     title=pdf_title,
@@ -181,9 +177,7 @@ class ProcessPdf(APIView):
                     investigation=investigations,
                     patient=patient_id,
                 )
-                jsonLabResult.save()
-                pdf_contents.append(newLista)
-                json_data = json.dumps(pdf_contents)
+                jsonLabResult.save() 
                 messages.success(request, 'Scanned Laboratory Result Successfully!')
                 messages.info(request, 'Check results on the SAMS application.')
             return HttpResponseRedirect("../../../admin")
@@ -195,15 +189,15 @@ class ProcessPdf(APIView):
         
     def all_select_pdf(request):  
         if request.method == "POST":  
-            selected_pdfs = request.POST.getlist("item")
-            pdf_contents = []
+            selectPdfs = request.POST.getlist("item")
+            pdfContents = []
             tableAppend = []
             tempList = []
             uniqueDataList = []
-            newLista = []
+            newList = []
             labresultTitles = []
 
-            for pdf_id in selected_pdfs:
+            for pdf_id in selectPdfs:
                 pdf_instance = LabResult.objects.get(pdfId=pdf_id) 
                 patient_id = pdf_instance.patient 
                 pdf_title = pdf_instance.title  
@@ -225,32 +219,37 @@ class ProcessPdf(APIView):
                     readTable = tables[index]
                     tableAppend = [tableAppend, readTable]
 
-                cleaned_data = cleanJsonTable(tableAppend)
+                cleanedData = cleanJsonTable(tableAppend)
 
-                def get_data_and_move_higher(arr):
+                def restructureArray(arr):
                     for item in arr:
                         if isinstance(item, dict) and "data" in item:
-                            data_contents = item["data"]
-                            extract_list = {"data": data_contents}
-                            tempList.append(extract_list)
+                            dataContents = item["data"]
+                            extractList = {"data": dataContents}
+                            tempList.append(extractList)
 
                         if isinstance(item, list):
-                            get_data_and_move_higher(item)
+                            restructureArray(item)
 
-                get_data_and_move_higher(cleaned_data)
+                restructureArray(cleanedData)
 
                 for item in tempList:
-                    data_contents = item["data"]
-                    if data_contents not in uniqueDataList:
-                        uniqueDataList.append(data_contents)
+                    dataContents = item["data"]
+                    if dataContents not in uniqueDataList:
+                        uniqueDataList.append(dataContents)
 
-                result_list = [
-                    {"data": data_contents} for data_contents in uniqueDataList
+                resultList = [
+                    {"data": dataContents} for dataContents in uniqueDataList
                 ]
-                for item in result_list:
-                    newLista.append(item)
+                
+                for item in resultList:
+                    newList.append(item)
 
-                for item in newLista:
+
+                print('\n\n')
+                print(newList)
+
+                for item in newList:
                     for text_data in item["data"][3]:
                         if text_data["text"] == "Collected on:":
                             str_collected_on = item["data"][3][1]["text"]
@@ -265,7 +264,7 @@ class ProcessPdf(APIView):
                 ).strftime("%Y-%m-%d") 
 
                 jsonLabResult = JsonLabResult(
-                    jsonTables=newLista,
+                    jsonTables=newList,
                     labresultTitles=labresultTitles,
                     collectedOn=collected_on,
                     labresult=pdf_instance,
@@ -273,9 +272,7 @@ class ProcessPdf(APIView):
                     investigation=str_investigation,
                     patient=patient_id,
                 )
-                jsonLabResult.save()
-                pdf_contents.append(newLista)
-                json_data = json.dumps(pdf_contents)
+                jsonLabResult.save() 
                 messages.success(request, 'Scanned Laboratory Result Successfully!')
                 messages.info(request, 'Check results on the SAMS application.')
             return HttpResponseRedirect("../../admin") 
