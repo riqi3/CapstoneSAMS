@@ -123,7 +123,11 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('CPOE FORM'),
+        automaticallyImplyLeading: false,
+        title: Text(
+          'Computerized Physician Order Entry',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
       ),
       body: ListView(
         children: <Widget>[
