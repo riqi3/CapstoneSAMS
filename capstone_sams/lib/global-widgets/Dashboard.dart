@@ -57,11 +57,10 @@ class _DashboardState extends State<Dashboard> {
               var success = await context.read<AccountProvider>().logout();
 
               if (success) {
-                Navigator.pushReplacement(
+                Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => LoginScreen(),
-                  ),
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                  (route) => false,
                 );
               }
             },

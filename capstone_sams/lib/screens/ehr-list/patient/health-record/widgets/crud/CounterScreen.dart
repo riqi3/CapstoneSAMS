@@ -51,9 +51,9 @@ class _CounterScreenState extends State<CounterScreen> {
   late String token;
 
   @override
-  void initState() {
+  void initState() {  
     super.initState();
-    token = context.read<AccountProvider>().token!;
+    token = context.read<AccountProvider>().token!; 
     _counter = widget.prescription.medicines![widget.index]['quantity'] as int;
     name = widget.prescription.medicines![widget.index]['drugName'];
     drugId = widget.prescription.medicines![widget.index]['drugId'];
