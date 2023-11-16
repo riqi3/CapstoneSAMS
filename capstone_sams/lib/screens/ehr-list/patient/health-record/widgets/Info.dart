@@ -333,11 +333,12 @@ class _InfoState extends State<Info> {
             onTap: () {
               print('${prescription.presNum} manage');
 
-              if (prescription.medicines?.length == 1) {
-                prescriptionCounter(context, prescription, index);
-              } else {
-                manageMedicineQuantity(context, prescription);
-              }
+              // if (prescription.medicines?.length == 1) {
+              //   prescriptionCounter(context, prescription, index);
+              // } else {
+              //   manageMedicineQuantity(context, prescription);
+              // }
+              manageMedicineQuantity(context, prescription);
             },
           ),
         ),
@@ -358,6 +359,7 @@ class _InfoState extends State<Info> {
             prescription.medicines!.length,
             (medicineIndex) {
               final medicine = prescription.medicines![medicineIndex];
+              print('aa${medicine}');
 
               return Column(
                 children: [

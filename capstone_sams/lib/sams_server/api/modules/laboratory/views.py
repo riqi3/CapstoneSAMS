@@ -129,6 +129,8 @@ class ProcessPdf(APIView):
 
                 cleaned_data = cleanJsonTable(tableAppend)
 
+                print(cleaned_data)
+
                 def get_data_and_move_higher(arr):
                     for item in arr:
                         if isinstance(item, dict) and "data" in item:
@@ -140,6 +142,8 @@ class ProcessPdf(APIView):
                             get_data_and_move_higher(item)
 
                 get_data_and_move_higher(cleaned_data)
+
+                print(get_data_and_move_higher)
 
                 for item in tempList:
                     data_contents = item["data"]
@@ -178,10 +182,11 @@ class ProcessPdf(APIView):
                     patient=patient_id,
                 )
                 jsonLabResult.save()
-                pdf_contents.append(jsonLabResult)
-                json_data = json.dumps(pdf_contents) 
-            # return HttpResponseRedirect(reverse("admin"))
-            return JsonResponse({'success': True})
+                pdf_contents.append(newLista)
+                json_data = json.dumps(pdf_contents)
+                messages.success(request, 'Scanned Laboratory Result Successfully!')
+                messages.info(request, 'Check results on the SAMS application.')
+            return HttpResponseRedirect("../../../admin")
         else: 
             pdf_list = LabResult.objects.select_related('patient').filter(patient_id=patient)
             return render(
@@ -269,9 +274,11 @@ class ProcessPdf(APIView):
                     patient=patient_id,
                 )
                 jsonLabResult.save()
-                pdf_contents.append(jsonLabResult)
-                json_data = json.dumps(pdf_contents)  
-            return HttpResponseRedirect('/admin') 
+                pdf_contents.append(newLista)
+                json_data = json.dumps(pdf_contents)
+                messages.success(request, 'Scanned Laboratory Result Successfully!')
+                messages.info(request, 'Check results on the SAMS application.')
+            return HttpResponseRedirect("../../admin") 
         else: 
             pdf_list = LabResult.objects.all() 
             return render(
