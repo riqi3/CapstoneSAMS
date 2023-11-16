@@ -454,7 +454,12 @@ class _InfoState extends State<Info> {
               ),
             ),
             onTap: () {
-              deletePrescriptionDetails(context, prescription);
+              // deletePrescriptionDetails(context, prescription);
+              if (prescription.medicines?.length == 1) {
+                deletePrescription(context, prescription);
+              } else {
+                deletePrescriptionDetails(context, prescription);
+              }
             },
           ),
         ),
@@ -614,14 +619,9 @@ class _InfoState extends State<Info> {
                   children: List.generate(
                     prescription.medicines!.length,
                     (medicineIndex) {
-                      // String? medIndex = medicineIndex.toString();
                       final medicine = prescription.medicines![medicineIndex];
                       return InkWell(
                         onTap: () {
-                          print(
-                              '${medicine['drugId']} ${medicine["drugName"]} ${medicineIndex}');
-
-                          // deletePrescription(context, prescription);
                           deleteMedicine(
                               context, prescription, medicine['drugId']);
                         },
