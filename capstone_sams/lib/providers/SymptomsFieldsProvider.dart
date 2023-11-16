@@ -22,9 +22,19 @@ class SymptomFieldsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addSymptom(String symptom) {
-    _symptoms.add(symptom);
-    notifyListeners();
+  void addSymptom(String symptom, BuildContext context) {
+    if (!_symptoms.contains(symptom)) {
+      _symptoms.add(symptom);
+      notifyListeners();
+    } else {
+      // Show an error message as a snackbar
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Symptom "$symptom" is already added.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
 
   void removeSymptom(String symptom) {
@@ -51,7 +61,7 @@ class SymptomFieldsProvider extends ChangeNotifier {
     Future.delayed(Duration.zero, () {
       symptoms.clear();
       autocompleteFields.clear();
-      notifyListeners(); 
+      notifyListeners();
     });
   }
 }
