@@ -48,14 +48,19 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
       final success = await medicineProvider.saveToPrescription(
           accountID, patientID, finalPrediction, token);
       if (success) {
-        Navigator.pushReplacement(
+        int routesCount = 0;
+        Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
-            builder: (context) => PatientTabsScreen(
-              patient: patient,
-              index: widget.index,
-            ),
-          ),
+              builder: (context) => PatientTabsScreen(
+                  patient: widget.patient, index: widget.index)),
+          (Route<dynamic> route) {
+            if (routesCount < 2) {
+              routesCount++;
+              return false;
+            }
+            return true;
+          },
         );
         const snackBar = SnackBar(
           backgroundColor: Pallete.successColor,
@@ -118,7 +123,11 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Analyze Page'),
+        automaticallyImplyLeading: false,
+        title: Text(
+          'Computerized Physician Order Entry',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
       ),
       body: ListView(
         children: <Widget>[

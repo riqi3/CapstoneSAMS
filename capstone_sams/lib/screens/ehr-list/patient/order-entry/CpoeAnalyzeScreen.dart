@@ -1,5 +1,7 @@
 import 'package:capstone_sams/models/SymptomsModel.dart';
+import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/SymptomsFieldsProvider.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/info.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -32,10 +34,11 @@ class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
   void _analyzeSymptoms() async {
     var symptomFieldsProvider =
         Provider.of<SymptomFieldsProvider>(context, listen: false);
+    var accountProvider = Provider.of<AccountProvider>(context, listen: false);
     List<String> symptoms = symptomFieldsProvider.symptoms;
 
     try {
-      var requestBody = {'symptoms': symptoms};
+      var requestBody = {'symptoms': symptoms, 'accountID': accountProvider.id};
 
       var response = await http.post(
         Uri.parse('${Env.prefix}/cdss/create_symptom_record/'),
@@ -105,12 +108,17 @@ class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                    'Symptoms',
-                    style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Pallete.mainColor),
+                  Row(
+                    children: [
+                      MagnifyIconWidget(),
+                      Text(
+                        'Symptoms',
+                        style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Pallete.mainColor),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 10),
                   ListView.builder(
@@ -142,6 +150,11 @@ class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
                                           child: Autocomplete<String>(
                                             optionsBuilder: (TextEditingValue
                                                 textEditingValue) {
+                                              var symptomFieldsProvider =
+                                                  Provider.of<
+                                                          SymptomFieldsProvider>(
+                                                      context,
+                                                      listen: false);
                                               if (textEditingValue.text == '') {
                                                 return const Iterable<
                                                     String>.empty();
@@ -149,13 +162,16 @@ class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
                                               return listItems
                                                   .where((String item) {
                                                 return item.contains(
-                                                    textEditingValue.text
-                                                        .toLowerCase());
+                                                        textEditingValue.text
+                                                            .toLowerCase()) &&
+                                                    !symptomFieldsProvider
+                                                        .symptoms
+                                                        .contains(item);
                                               });
                                             },
                                             onSelected: (String selectedItem) {
-                                              symptomFieldsProvider
-                                                  .addSymptom(selectedItem);
+                                              symptomFieldsProvider.addSymptom(
+                                                  selectedItem, context);
                                             },
                                             fieldViewBuilder: (BuildContext
                                                     context,
@@ -258,7 +274,7 @@ class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 20),
                 ],
               ),
             ],

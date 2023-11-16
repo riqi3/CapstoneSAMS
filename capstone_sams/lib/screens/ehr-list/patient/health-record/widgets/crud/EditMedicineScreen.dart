@@ -97,15 +97,20 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
             ),
             widget.patient.patientId,
             context.read<AccountProvider>().token!);
-
-        Navigator.pushReplacement(
+            
+        int routesCount = 0;
+        Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
-            builder: (context) => PatientTabsScreen(
-              patient: widget.patient,
-              index: widget.index,
-            ),
-          ),
+              builder: (context) => PatientTabsScreen(
+                  patient: widget.patient, index: widget.index)),
+          (Route<dynamic> route) {
+            if (routesCount < 5) {
+              routesCount++;
+              return false;
+            }
+            return true;
+          },
         );
 
         const snackBar = SnackBar(
@@ -117,7 +122,6 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
-      // }
     }
   }
 

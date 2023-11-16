@@ -411,7 +411,9 @@ class PatientAdmin(admin.ModelAdmin):
 class LabResultAdminForm(forms.ModelForm):
     class Meta:
         model = LabResult
-        fields = "__all__"
+        fields = (
+            'title',"pdf", "patient",
+        )
 
 
 class LabResultAdmin(admin.ModelAdmin):
@@ -452,6 +454,9 @@ class DataLogsAdmin(admin.ModelAdmin):
     list_display = ("logNum", "event", "date", "type", "account")
     list_filter = ("event", "date", "account", "type")
     search_fields = ("event", "date", "account")
+
+    def has_add_permission(self, request, obj=None):
+        return False
 
 
 '''
@@ -539,6 +544,8 @@ class PrescriptionAdmin(admin.ModelAdmin):
     list_filter = ("account", "patient")
     search_fields = ("presNum",)
     autocomplete_fields = ["account", "patient"]
+    def has_add_permission(self, request, obj=None):
+        return False
 
 
 class HealthSymptomAdminForm(forms.ModelForm):
@@ -865,6 +872,9 @@ class HealthSymptomAdmin(admin.ModelAdmin):
         return HttpResponseRedirect("../")
 
     retrain_model.short_description = "Retrain Model"
+
+    def has_add_permission(self, request, obj=None):
+        return False
 
 admin.site.register(Account, UserAdmin)
 admin.site.register(Patient, PatientAdmin)

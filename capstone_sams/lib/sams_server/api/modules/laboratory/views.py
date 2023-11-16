@@ -109,21 +109,13 @@ class ProcessPdf(APIView):
                 patient_id = pdf_instance.patient 
                 pdf_title = pdf_instance.title
                 str_collected_on = None
-                str_investigation = None
-
+                str_investigation = None 
                 
                 tables = read_pdf(
                     pdf_instance.pdf.path, pages="all", output_format="json"
                 )
-                reader = PdfReader(pdf_instance.pdf.path)
-
-                """tables[index] retrieves the table according by index.
-                in this case the format of the labresult has the following
-                tables: 1.) tables[0] contains the personal information. 
-                2.) tables[1] contains the haematology of the blood
-                3.) tables[3] contains the biochemistry. theese tables are 
-                then stored in their respective rows
-                """
+                
+                reader = PdfReader(pdf_instance.pdf.path) 
 
                 for page in reader.pages:
                     text = page.extract_text()
@@ -137,6 +129,8 @@ class ProcessPdf(APIView):
 
                 cleaned_data = cleanJsonTable(tableAppend)
 
+                print(cleaned_data)
+
                 def get_data_and_move_higher(arr):
                     for item in arr:
                         if isinstance(item, dict) and "data" in item:
@@ -148,6 +142,8 @@ class ProcessPdf(APIView):
                             get_data_and_move_higher(item)
 
                 get_data_and_move_higher(cleaned_data)
+
+                print(get_data_and_move_higher)
 
                 for item in tempList:
                     data_contents = item["data"]
@@ -186,10 +182,11 @@ class ProcessPdf(APIView):
                     patient=patient_id,
                 )
                 jsonLabResult.save()
-                pdf_contents.append(jsonLabResult)
-                json_data = json.dumps(pdf_contents) 
-            # return HttpResponseRedirect(reverse("admin"))
-            return JsonResponse({'success': True})
+                pdf_contents.append(newLista)
+                json_data = json.dumps(pdf_contents)
+                messages.success(request, 'Scanned Laboratory Result Successfully!')
+                messages.info(request, 'Check results on the SAMS application.')
+            return HttpResponseRedirect("../../../admin")
         else: 
             pdf_list = LabResult.objects.select_related('patient').filter(patient_id=patient)
             return render(
@@ -277,9 +274,11 @@ class ProcessPdf(APIView):
                     patient=patient_id,
                 )
                 jsonLabResult.save()
-                pdf_contents.append(jsonLabResult)
-                json_data = json.dumps(pdf_contents)  
-            return HttpResponseRedirect('/admin') 
+                pdf_contents.append(newLista)
+                json_data = json.dumps(pdf_contents)
+                messages.success(request, 'Scanned Laboratory Result Successfully!')
+                messages.info(request, 'Check results on the SAMS application.')
+            return HttpResponseRedirect("../../admin") 
         else: 
             pdf_list = LabResult.objects.all() 
             return render(
@@ -294,13 +293,13 @@ class ProcessPdf(APIView):
         except LabResult.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'PDF not found'})
          
-    def upload_pdf1(request):
+    def upload_pdf(request):
         if request.method == "POST":
             form = LabResultForm(request.POST, request.FILES)
             if form.is_valid():
                 form.save()
-                a = form.save(commit=False)
-                patientID = a.patient.patientID  
+                saveForm = form.save(commit=False)
+                patientID = saveForm.patient.patientID  
                 
             return HttpResponseRedirect(
                 reverse("select_pdf", kwargs={"patient": patientID})

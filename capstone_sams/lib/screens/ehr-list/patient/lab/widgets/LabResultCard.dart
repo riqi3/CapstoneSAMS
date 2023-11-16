@@ -5,13 +5,17 @@ import '../../../../../constants/theme/sizing.dart';
 
 class LabResultCard extends StatelessWidget {
   final Labresult labresult;
-  final int a;
-  LabResultCard({required this.labresult, required this.a});
+  final String labresultTitles;
+  final int index;
+  LabResultCard(
+      {required this.labresult,
+      required this.index,
+      required this.labresultTitles});
 
   @override
   Widget build(BuildContext context) {
     final titles = ["TEST", '', "VALUE", "UNIT", "REFERENCE"];
-    final array = labresult.jsonTables![a];
+    final array = labresult.jsonTables![index];
     final matrix = array['data'];
 
     return Container(
@@ -32,7 +36,8 @@ class LabResultCard extends StatelessWidget {
             width: MediaQuery.of(context).size.width,
             height: Sizing.cardContainerHeight,
             child: Text(
-              labresult.title,
+              // labresult.title,
+              labresultTitles,
               style: TextStyle(
                   color: Pallete.whiteColor,
                   fontSize: Sizing.header3,
@@ -49,26 +54,8 @@ class LabResultCard extends StatelessWidget {
                 left: Sizing.sectionSymmPadding,
                 right: Sizing.sectionSymmPadding),
             width: MediaQuery.of(context).size.width,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Investigations: ',
-                  style: TextStyle(
-                      color: Pallete.textColor,
-                      fontSize: Sizing.header6,
-                      fontWeight: FontWeight.w600),
-                ),
-                Flexible(
-                  child: Text(
-                    labresult.investigation,
-                    style: TextStyle(
-                        color: Pallete.textColor,
-                        fontSize: Sizing.header6,
-                        fontWeight: FontWeight.normal),
-                  ),
-                ),
-              ],
+            child: Text(
+              ('Investigations:\n${labresult.investigation}'),
             ),
           ),
           Expanded(

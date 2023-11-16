@@ -102,15 +102,20 @@ class _CounterScreenState extends State<CounterScreen> {
         widget.patient.patientId,
         token,
       );
-
-      Navigator.pushReplacement(
+      
+      int routesCount = 0;
+      Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (context) => PatientTabsScreen(
-            patient: widget.patient,
-            index: widget.index,
-          ),
-        ),
+            builder: (context) => PatientTabsScreen(
+                patient: widget.patient, index: widget.index)),
+        (Route<dynamic> route) {
+          if (routesCount < 5) {
+            routesCount++;
+            return false;
+          }
+          return true;
+        },
       );
 
       const snackBar = SnackBar(
@@ -315,10 +320,7 @@ class _CounterScreenState extends State<CounterScreen> {
                 child: Container(
                   width: 100,
                   height: 100,
-                  // color: Colors.red,
                   child: Column(
-                    // mainAxisAlignment: MainAxisAlignment.center,
-                    // crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
                         'Quantity',
@@ -418,51 +420,4 @@ class _CounterScreenState extends State<CounterScreen> {
       ),
     );
   }
-
-  // ElevatedButton Decrement(void _decrementCounter()) {
-  //   return ElevatedButton(
-  //     onPressed: () {
-  //       if (_counter == 1) {
-  //         print('below');
-  //         setState(() => _quantityState = true);
-  //         // if (_counter > 1) {
-  //         //   setState(() => _quantityState = false);
-  //         // }
-  //       } else {
-  //         _decrementCounter();
-  //       }
-  //     },
-  //     child: const FaIcon(FontAwesomeIcons.minus),
-  //     style: ElevatedButton.styleFrom(
-  //       primary: Pallete.mainColor,
-  //       elevation: 3,
-  //       shape: RoundedRectangleBorder(
-  //         borderRadius: BorderRadius.circular(100.0),
-  //       ),
-  //       minimumSize: Size(50, 50),
-  //     ),
-  //   );
-  // }
-
-  // ElevatedButton Increment(void _incrementCounter()) {
-  //   return ElevatedButton(
-  //     onPressed: () {
-  //       if (_counter >= _quantity) {
-  //         print('over');
-  //         setState(() => _quantityState = true);
-  //       } else {
-  //         _incrementCounter();
-  //       }
-  //     },
-  //     child: const FaIcon(FontAwesomeIcons.plus),
-  //     style: ElevatedButton.styleFrom(
-  //       primary: Pallete.mainColor,
-  //       elevation: 3,
-  //       shape: RoundedRectangleBorder(
-  //         borderRadius: BorderRadius.circular(100.0),
-  //       ),
-  //       minimumSize: Size(50, 50),
-  //     ),
-  //   );
-  // }
 }

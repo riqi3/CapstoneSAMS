@@ -118,32 +118,38 @@ class _InfoState extends State<Info> {
                       ),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: prescription.medicines!.map((medicine) {
-                          return Column(
+                        children: [
+                          Text(
+                            'Disease: ${prescription.disease}',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Disease: ${prescription.disease}',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              if (medicine['quantity'] == 0)
-                                Text(
-                                  'Medicine: ${medicine["drugName"]}',
-                                  style: TextStyle(
-                                    color: Pallete.greyColor,
-                                    decoration: TextDecoration.lineThrough,
-                                    decorationThickness: 1.5,
-                                  ),
-                                ),
-                              if (medicine['quantity'] > 0)
-                                Text(
-                                  'Medicine: ${medicine["drugName"]}',
-                                  style: TextStyle(fontWeight: FontWeight.w500),
-                                ),
-                              Text('Quantity: ${medicine['quantity']}'),
-                            ],
-                          );
-                        }).toList(),
+                            children: prescription.medicines!.map((medicine) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (medicine['quantity'] == 0)
+                                    Text(
+                                      'Medicine: ${medicine["drugName"]}',
+                                      style: TextStyle(
+                                        color: Pallete.greyColor,
+                                        decoration: TextDecoration.lineThrough,
+                                        decorationThickness: 1.5,
+                                      ),
+                                    ),
+                                  if (medicine['quantity'] > 0)
+                                    Text(
+                                      'Medicine: ${medicine["drugName"]}',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  Text('Quantity: ${medicine['quantity']}'),
+                                ],
+                              );
+                            }).toList(),
+                          ),
+                        ],
                       ),
                       trailing: popupActionWidget(
                           index, prescriptionList, prescription),
@@ -185,13 +191,7 @@ class _InfoState extends State<Info> {
                 ),
               ),
               onTap: () {
-                print('${prescription.presNum} details');
-
-                if (prescription.medicines?.length == 0) {
-                  detailsPrescription(context, prescription, index);
-                } else {
-                  detailsPrescriptionDetails(context, prescription);
-                }
+                detailsPrescriptionDetails(context, prescription);
               },
             ),
           ),
@@ -210,7 +210,6 @@ class _InfoState extends State<Info> {
     final provider = Provider.of<PrescriptionProvider>(context, listen: false);
     provider.removePrescription(prescription, widget.patient.patientId,
         context.read<AccountProvider>().token!);
-    // Navigator.of(context).pop();
     int? index = int.tryParse(widget.index);
 
     Navigator.push(
@@ -325,13 +324,7 @@ class _InfoState extends State<Info> {
               ),
             ),
             onTap: () {
-              print('${prescription.presNum} manage');
-
-              if (prescription.medicines?.length == 1) {
-                prescriptionCounter(context, prescription, index);
-              } else {
-                manageMedicineQuantity(context, prescription);
-              }
+              manageMedicineQuantity(context, prescription);
             },
           ),
         ),
@@ -352,6 +345,7 @@ class _InfoState extends State<Info> {
             prescription.medicines!.length,
             (medicineIndex) {
               final medicine = prescription.medicines![medicineIndex];
+              print('aa${medicine}');
 
               return Column(
                 children: [
@@ -424,13 +418,7 @@ class _InfoState extends State<Info> {
               ),
             ),
             onTap: () {
-              print('${prescription.presNum} details');
-
-              if (prescription.medicines?.length == 0) {
-                detailsPrescription(context, prescription, index);
-              } else {
-                detailsPrescriptionDetails(context, prescription);
-              }
+              detailsPrescriptionDetails(context, prescription);
             },
           ),
         ),
@@ -448,14 +436,7 @@ class _InfoState extends State<Info> {
               ),
             ),
             onTap: () {
-              print('${prescription.presNum} edit');
-
-              if (prescription.medicines?.length == 0) {
-                editPrescription(
-                    context, prescription, index, prescription.presNum);
-              } else {
-                editPrescriptionDetails(context, prescription);
-              }
+              editPrescriptionDetails(context, prescription);
             },
           ),
         ),
@@ -473,14 +454,11 @@ class _InfoState extends State<Info> {
               ),
             ),
             onTap: () {
-              print('${prescription.presNum} delete');
-
+              // deletePrescriptionDetails(context, prescription);
               if (prescription.medicines?.length == 1) {
                 deletePrescription(context, prescription);
               } else {
                 deletePrescriptionDetails(context, prescription);
-                // editPrescriptionDetails(context, prescription);
-                // deleteMedicine(context, prescription, widget.medicine.drugId);
               }
             },
           ),
@@ -641,14 +619,9 @@ class _InfoState extends State<Info> {
                   children: List.generate(
                     prescription.medicines!.length,
                     (medicineIndex) {
-                      // String? medIndex = medicineIndex.toString();
                       final medicine = prescription.medicines![medicineIndex];
                       return InkWell(
                         onTap: () {
-                          print(
-                              '${medicine['drugId']} ${medicine["drugName"]} ${medicineIndex}');
-
-                          // deletePrescription(context, prescription);
                           deleteMedicine(
                               context, prescription, medicine['drugId']);
                         },
