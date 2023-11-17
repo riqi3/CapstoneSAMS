@@ -42,7 +42,9 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
     var patient = await context
         .read<PatientProvider>()
         .fetchPatient(widget.index.toString(), token);
-    if (patient != null) {
+    final medicineProvider = context.read<MedicineProvider>();
+    var medicines = medicineProvider.medicines;
+    if (patient != null && medicines.isNotEmpty) {
       final medicineProvider = context.read<MedicineProvider>();
       final patientID = patient.patientId;
       final success = await medicineProvider.saveToPrescription(
@@ -72,8 +74,11 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
     } else {
+      setState(() {
+        _isLoading = false;
+      });
       const snackBar = SnackBar(
-        backgroundColor: Pallete.successColor,
+        backgroundColor: Pallete.dangerColor,
         content: Text(
           'Failed to add prescription',
           style: TextStyle(fontWeight: FontWeight.w700),
