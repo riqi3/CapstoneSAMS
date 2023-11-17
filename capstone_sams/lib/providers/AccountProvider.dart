@@ -33,7 +33,7 @@ class AccountProvider extends ChangeNotifier {
         },
       );
       await Future.delayed(Duration(milliseconds: 3000));
-      if (response.statusCode == 200) { 
+      if (response.statusCode == 200) {
         // The user was authenticated, so store the account data in the provider
         final data = jsonDecode(response.body);
         final account = Account.fromJson(data);
