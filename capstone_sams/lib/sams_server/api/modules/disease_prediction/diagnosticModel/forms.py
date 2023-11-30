@@ -1,4 +1,4 @@
 from django import forms
 
-class CsvImportDiagnosticFieldForm(forms.Form):
+class CsvImportDiagnosticFieldsForm(forms.Form):
     csv_upload = forms.FileField()
