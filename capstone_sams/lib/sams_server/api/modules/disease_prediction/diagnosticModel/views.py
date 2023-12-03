@@ -43,6 +43,10 @@ def train_model(request):
         for col in label_columns:
             df[col] = LE.fit_transform(df[col])
 
+        # Frequency encoding
+        df['Disease_freq'] = df['Disease'].map(df['Disease'].value_counts())
+        df = df.drop(columns='Disease')
+
         # Splitting the dataset
         X = df.drop(columns='Outcome Variable')
         y = df['Outcome Variable']
