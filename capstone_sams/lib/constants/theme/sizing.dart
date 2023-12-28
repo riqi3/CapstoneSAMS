@@ -10,6 +10,7 @@ class Sizing {
   static const double header4 = 20.0;
   static const double header5 = 18.0;
   static const double header6 = 14.0;
+  static const double formTitle = 16.0;
   static const double iconAppBarSize = 20.0;
   static const double sectionIconSize = 25.0;
   static const double sectionSymmPadding = 20.0;

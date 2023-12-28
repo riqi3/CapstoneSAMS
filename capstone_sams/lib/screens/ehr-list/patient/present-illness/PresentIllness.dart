@@ -1,7 +1,9 @@
 import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/global-widgets/TitleAppBar.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/present-illness/widgets/MultiSelect.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class PresentIllnessFormScreen extends StatefulWidget {
   final String? course;
@@ -23,6 +25,9 @@ class _PresentIllnessFormScreenState extends State<PresentIllnessFormScreen> {
   final _genInfoFormKey = GlobalKey<FormState>();
   final _medInfoFormKey = GlobalKey<FormState>();
   final _emergencyInfoFormKey = GlobalKey<FormState>();
+  List<String> _selectedAllergy = [];
+  List<String> _selectedFamHistory = [];
+  List<String> _selectedIllnesses = [];
   late bool _autoValidate = false;
   DateTime? _birthDate;
   List<String> statusList = [
@@ -32,23 +37,82 @@ class _PresentIllnessFormScreenState extends State<PresentIllnessFormScreen> {
     'Separated',
     'Widowed'
   ];
-  List<String> allergyList = ['N/A', 'Food', 'Medicine', 'Other'];
-  List<String> familyHistoryList = ['N/A', 'Diabetes', 'Other'];
-  List<String> illnessesList = [
-    'N/A',
-    'Asthma',
-    'Hypertension',
-    'Cancer',
-    'Thyroid problem',
-    'Eye problem',
-    'Diabetes mellitus',
-    'Other'
-  ];
+
+  void _selectAllergy() async {
+    List<String> allergyList = ['N/A', 'Food', 'Medicine', 'Other'];
+
+    final List<String>? results = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return MultiSelect(title: 'Allergy', items: allergyList);
+      },
+    );
+
+    if (results != null) {
+      setState(() {
+        _selectedAllergy = results;
+      });
+    }
+  }
+
+  void _selectFamHistory() async {
+    List<String> familyHistoryList = [
+      'N/A',
+      'Asthma',
+      'Hypertension',
+      'Cancer',
+      'Thyroid problem',
+      'Eye problem',
+      'Diabetes mellitus',
+      'Other'
+    ];
+
+    final List<String>? results = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return MultiSelect(
+            title: 'Family History Illnesses', items: familyHistoryList);
+      },
+    );
+
+    if (results != null) {
+      setState(() {
+        _selectedFamHistory = results;
+      });
+    }
+  }
+
+  void _selectIllnesses() async {
+    List<String> illnessesList = [
+      'N/A',
+      'Asthma',
+      'Hypertension',
+      'Cancer',
+      'Thyroid problem',
+      'Eye problem',
+      'Diabetes mellitus',
+      'Other'
+    ];
+
+    final List<String>? results = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return MultiSelect(title: 'Illnesses', items: illnessesList);
+      },
+    );
+
+    if (results != null) {
+      setState(() {
+        _selectedIllnesses = results;
+      });
+    }
+  }
+
   late String statustValue = statusList.first;
-  late String allergyValue = allergyList.first;
-  late String familyValue = familyHistoryList.first;
-  late String illnessesValue = illnessesList.first;
+  // late String allergyValue = allergyList.first;
+  // late String familyValue = familyHistoryList.first;
   String selectedGender = '';
+
   void _onSubmit() async {}
 
   @override
@@ -375,7 +439,7 @@ class _PresentIllnessFormScreenState extends State<PresentIllnessFormScreen> {
                           Flexible(
                             child: TextFormField(
                               decoration: InputDecoration(
-                                labelText: 'Height',
+                                labelText: 'Height*',
                                 border: OutlineInputBorder(
                                   borderSide: BorderSide(
                                     color: Pallete.primaryColor,
@@ -391,7 +455,7 @@ class _PresentIllnessFormScreenState extends State<PresentIllnessFormScreen> {
                           Flexible(
                             child: TextFormField(
                               decoration: InputDecoration(
-                                labelText: 'Weight',
+                                labelText: 'Weight*',
                                 border: OutlineInputBorder(
                                   borderSide: BorderSide(
                                     color: Pallete.primaryColor,
@@ -411,7 +475,7 @@ class _PresentIllnessFormScreenState extends State<PresentIllnessFormScreen> {
                           Flexible(
                             child: TextFormField(
                               decoration: InputDecoration(
-                                labelText: 'Active Email*',
+                                labelText: 'Active Email',
                                 border: OutlineInputBorder(
                                   borderSide: BorderSide(
                                     color: Pallete.primaryColor,
@@ -467,28 +531,36 @@ class _PresentIllnessFormScreenState extends State<PresentIllnessFormScreen> {
                       Text(
                         'Allergy Type*',
                         style: TextStyle(
+                          fontSize: Sizing.formTitle,
                           color: Pallete.greyColor,
                         ),
                       ),
                       Flexible(
-                        child: DropdownMenu<String>(
-                          hintText: 'Allergy Type*',
-                          onSelected: (String? value) {
-                            setState(() {
-                              allergyValue = value!;
-                            });
-                          },
-                          dropdownMenuEntries: allergyList
-                              .map<DropdownMenuEntry<String>>((String value) {
-                            return DropdownMenuEntry<String>(
-                              value: value,
-                              label: value,
-                            );
-                          }).toList(),
+                        child: ElevatedButton.icon(
+                          icon: FaIcon(FontAwesomeIcons.circleChevronDown),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Pallete.mainColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(Sizing.borderRadius),
+                            ),
+                          ),
+                          onPressed: _selectAllergy,
+                          label: Text('Select Allergy'),
                         ),
                       ),
-                      SizedBox(height: Sizing.formSpacing),
-                      if (allergyValue == 'Other')
+                      Wrap(
+                        children: _selectedAllergy.map((e) {
+                          return Padding(
+                            padding:
+                                const EdgeInsets.only(right: Sizing.spacing),
+                            child: Chip(
+                              label: Text(e),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                      if (_selectedAllergy.contains('Other'))
                         Flexible(
                           child: TextFormField(
                             decoration: InputDecoration(
@@ -509,28 +581,36 @@ class _PresentIllnessFormScreenState extends State<PresentIllnessFormScreen> {
                       Text(
                         'Family History*',
                         style: TextStyle(
+                          fontSize: Sizing.formTitle,
                           color: Pallete.greyColor,
                         ),
                       ),
                       Flexible(
-                        child: DropdownMenu<String>(
-                          hintText: 'Family History*',
-                          onSelected: (String? value) {
-                            setState(() {
-                              familyValue = value!;
-                            });
-                          },
-                          dropdownMenuEntries: familyHistoryList
-                              .map<DropdownMenuEntry<String>>((String value) {
-                            return DropdownMenuEntry<String>(
-                              value: value,
-                              label: value,
-                            );
-                          }).toList(),
+                        child: ElevatedButton.icon(
+                          icon: FaIcon(FontAwesomeIcons.circleChevronDown),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Pallete.mainColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(Sizing.borderRadius),
+                            ),
+                          ),
+                          onPressed: _selectFamHistory,
+                          label: Text('Select Family History Illnesses'),
                         ),
                       ),
-                      SizedBox(height: Sizing.formSpacing),
-                      if (familyValue == 'Other')
+                      Wrap(
+                        children: _selectedFamHistory.map((e) {
+                          return Padding(
+                            padding:
+                                const EdgeInsets.only(right: Sizing.spacing),
+                            child: Chip(
+                              label: Text(e),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                      if (_selectedFamHistory.contains('Other'))
                         Flexible(
                           child: TextFormField(
                             decoration: InputDecoration(
@@ -551,28 +631,36 @@ class _PresentIllnessFormScreenState extends State<PresentIllnessFormScreen> {
                       Text(
                         'Illnesses*',
                         style: TextStyle(
+                          fontSize: Sizing.formTitle,
                           color: Pallete.greyColor,
                         ),
                       ),
                       Flexible(
-                        child: DropdownMenu<String>(
-                          hintText: 'Illness*',
-                          onSelected: (String? value) {
-                            setState(() {
-                              illnessesValue = value!;
-                            });
-                          },
-                          dropdownMenuEntries: illnessesList
-                              .map<DropdownMenuEntry<String>>((String value) {
-                            return DropdownMenuEntry<String>(
-                              value: value,
-                              label: value,
-                            );
-                          }).toList(),
+                        child: ElevatedButton.icon(
+                          icon: FaIcon(FontAwesomeIcons.circleChevronDown),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Pallete.mainColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(Sizing.borderRadius),
+                            ),
+                          ),
+                          onPressed: _selectIllnesses,
+                          label: Text('Select Illnesses'),
                         ),
                       ),
-                      SizedBox(height: Sizing.formSpacing),
-                      if (illnessesValue == 'Other')
+                      Wrap(
+                        children: _selectedIllnesses.map((e) {
+                          return Padding(
+                            padding:
+                                const EdgeInsets.only(right: Sizing.spacing),
+                            child: Chip(
+                              label: Text(e),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                      if (_selectedIllnesses.contains('Other'))
                         Flexible(
                           child: TextFormField(
                             decoration: InputDecoration(
