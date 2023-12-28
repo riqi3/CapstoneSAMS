@@ -18,4 +18,5 @@ class Sizing {
   static const double borderRadius = 20;
   static const double appbarHeight = 110;
   static const double cardContainerHeight = 65;
+  static const double formSpacing = 10;
 }

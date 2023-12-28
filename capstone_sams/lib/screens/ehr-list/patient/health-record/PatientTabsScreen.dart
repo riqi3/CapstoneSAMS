@@ -1,5 +1,9 @@
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/diagnosis/Diagnosis.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/past-med-history/PastMedicalHistory.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/present-illness/PresentIllness.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/treatment/Treatment.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../constants/theme/sizing.dart';
@@ -31,7 +35,7 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
     super.initState();
     final accountProvider =
         Provider.of<AccountProvider>(context, listen: false);
-    int tabCount = accountProvider.role == 'physician' ? 3 : 2;
+    int tabCount = accountProvider.role == 'physician' ? 5 : 1;
     tabController = TabController(length: tabCount, vsync: this);
   }
 
@@ -58,9 +62,14 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
           HealthRecordsScreen(
             patient: widget.patient,
           ),
-          LaboratoriesScreen(index: widget.index),
-          if (accountProvider.role == 'physician')
-            CpoeAnalyzeScreen(patient: widget.patient, index: widget.index),
+          if (accountProvider.role == 'physician') Treatment(),
+          // PresentIllnessFormScreen(),
+          PastMedHistory(),
+          Diagnosis(),
+          Treatment(),
+          // LaboratoriesScreen(index: widget.index),
+          // if (accountProvider.role == 'physician')
+          //   CpoeAnalyzeScreen(patient: widget.patient, index: widget.index),
         ],
       ),
     );

@@ -70,6 +70,7 @@ class BottomPatientTabs extends StatelessWidget {
         color: Pallete.mainColor,
         child: TabBar(
           controller: tabController,
+          isScrollable: true,
           labelPadding: EdgeInsets.zero,
           indicatorPadding: EdgeInsets.zero,
           indicatorWeight: 2.0,
@@ -89,25 +90,7 @@ class BottomPatientTabs extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Health Record',
-                      style: TextStyle(fontSize: Sizing.header6),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width / 2 - 10,
-              child: Tab(
-                child: Column(
-                  children: [
-                    Align(
-                        alignment: Alignment.center,
-                        child: FaIcon(
-                          FontAwesomeIcons.flaskVial,
-                        )),
-                    Text(
-                      'Laboratory',
+                      'Patient Info',
                       style: TextStyle(fontSize: Sizing.header6),
                     ),
                   ],
@@ -123,17 +106,74 @@ class BottomPatientTabs extends StatelessWidget {
                       Align(
                         alignment: Alignment.center,
                         child: FaIcon(
-                          FontAwesomeIcons.prescription,
+                          FontAwesomeIcons.headSideCough,
                         ),
                       ),
                       Text(
-                        'Order Entry',
+                        'Present Illness',
                         style: TextStyle(fontSize: Sizing.header6),
                       ),
                     ],
                   ),
                 ),
               ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width / 2 - 10,
+              child: Tab(
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: FaIcon(
+                        FontAwesomeIcons.solidClipboard,
+                      ),
+                    ),
+                    Text(
+                      'Past Medical History',
+                      style: TextStyle(fontSize: Sizing.header6),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width / 2 - 10,
+              child: Tab(
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: FaIcon(
+                        FontAwesomeIcons.commentMedical,
+                      ),
+                    ),
+                    Text(
+                      'Diagnosis',
+                      style: TextStyle(fontSize: Sizing.header6),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width / 2 - 10,
+              child: Tab(
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: FaIcon(
+                        FontAwesomeIcons.pills,
+                      ),
+                    ),
+                    Text(
+                      'Treatment',
+                      style: TextStyle(fontSize: Sizing.header6),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),

@@ -1,6 +1,8 @@
+import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/CourseDialog.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/MedicationOrderSection.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/PatientInfoCard.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../constants/theme/sizing.dart';
 import '../../../../models/PatientModel.dart';
 
@@ -39,12 +41,19 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen> {
             PatientInfoCard(
               patient: widget.patient,
             ),
-            MedicationOrderSection(
-              patient: widget.patient,
-            ),
+            // MedicationOrderSection(
+            //   patient: widget.patient,
+            // ),
           ],
         ),
       ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () => showDialog(
+      //     context: context,
+      //     builder: (ctx) => CourseDialog(),
+      //   ),
+      //   child: FaIcon(FontAwesomeIcons.pencil),
+      // ),
     );
   }
 }
