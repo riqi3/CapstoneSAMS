@@ -113,11 +113,17 @@ class PatientView(viewsets.ModelViewSet):
             patient_id = patient_data['patientID']
             patient = Patient.objects.get(pk=patient_id)
             patient.firstName = patient_data['firstName']
-            patient.middleName = patient_data['middleName']
+            patient.middleInitial = patient_data['middleInitial']
             patient.lastName = patient_data['lastName']
             patient.age = patient_data['age']
             patient.gender = patient_data['gender']
             patient.birthDate = patient_data['birthDate']
+            patient.course=patient_data['course']
+            patient.yrLevel=patient_data['yrLevel']
+            patient.studNumber=patient_data['studNumber']
+            patient.address=patient_data['address']
+            patient.height=patient_data['height']
+            patient.weight=patient_data['weight']
             patient.phone = patient_data['phone']
             patient.email = patient_data['email']
             patient.save()
