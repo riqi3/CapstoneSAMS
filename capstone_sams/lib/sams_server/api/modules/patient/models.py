@@ -54,7 +54,7 @@ class Health_Record(models.Model):
     #Health Record Attributes
     recordNum = models.AutoField(primary_key = True)
     symptoms = models.JSONField(blank = True, default=None)
-    ilnesses = models.JSONField(blank = True, default=None)
+    illnesses = models.JSONField(blank = True, default=None)
     allergies = models.JSONField(blank = True, default=None)
     familyHistory = models.JSONField(blank = True, default=None)
     patient = models.ForeignKey(Patient, on_delete = models.CASCADE)

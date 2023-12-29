@@ -139,7 +139,6 @@ class PatientView(viewsets.ModelViewSet):
             return Response({"message": "Patient does not exist."}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"message": "Failed to update patient.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
 '''
 This view represent all the functions necessary to conduct
 operations related to Health_Record objects.
@@ -155,6 +154,21 @@ class HealthRecordView(viewsets.ViewSet):
         try:
             patient = Patient.objects.get(pk=patientID)
             record = Health_Record.objects.get(patient=patient)
+            serializer = HealthRecordSerializer(record)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Health_Record.DoesNotExist:
+            return Response({"message": "Health Record does not exist."}, status=status.HTTP_404_NOT_FOUND)
+    
+    @api_view(['PUT'])
+    def update_health_record(request, patientID):
+        try:
+            patient = Patient.objects.get(pk=patientID)
+            record = Health_Record.objects.get(patient=patient)
+            record_data = json.loads(request.body)
+            record.symptoms = record_data['symptoms']
+            record.illnesses = record_data['illneses']
+            record.allergies = record_data['allergies']
+            record.familyHistory = record_data['familyHistory']
             serializer = HealthRecordSerializer(record)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Health_Record.DoesNotExist:
