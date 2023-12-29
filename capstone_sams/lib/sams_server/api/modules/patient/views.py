@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 import json
 from rest_framework import status
 from api.modules.user.models import Account, Data_Log
-from api.modules.patient.models import Patient, Health_Record
+from api.modules.patient.models import Patient, Health_Record, Contact_Person
 from api.modules.patient.serializers import PatientSerializer, HealthRecordSerializer
 
 '''
@@ -32,19 +32,33 @@ class PatientView(viewsets.ModelViewSet):
             patient = Patient.objects.create(
                 patientID=patient_data['patientID'],
                 firstName=patient_data['firstName'],
-                middleName=patient_data['middleName'],
+                middleInitial=patient_data['middleInitial'],
                 lastName=patient_data['lastName'],
                 age=patient_data['age'],
                 gender=patient_data['gender'],
                 birthDate=patient_data['birthDate'],
+                course=patient_data['course'],
+                yrLevel=patient_data['yrLevel'],
+                studNumber=patient_data['studNumber'],
+                address=patient_data['address'],
+                height=patient_data['height'],
+                weight=patient_data['weight'],
                 registration=patient_data['registration'],
                 phone=patient_data['phone'],
                 email=patient_data['email']
             )
             patient_instance = get_object_or_404(Patient, pk=patient_data['patientID'])
             record = Health_Record.objects.create(
-                symptoms = {"symptoms": "None"},
-                diseases = {"diseases": "None"},
+                symptoms = patient_data['symptoms'],
+                illneses = patient_data['illneses'],
+                allergies = patient_data['allergies'],
+                familyHistory = patient_data['familyHistory'],
+                patient = patient_instance
+            )
+            contact = Contact_Person.objects.create(
+                fullName = patient_data['fullName'],
+                contactNum = patient_data['contactNum'],
+                contactAddress = patient_data['contactAddress'],
                 patient = patient_instance
             )
             data = json.loads(request.body)
