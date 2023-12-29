@@ -169,7 +169,27 @@ class HealthRecordView(viewsets.ViewSet):
             record.illnesses = record_data['illneses']
             record.allergies = record_data['allergies']
             record.familyHistory = record_data['familyHistory']
-            serializer = HealthRecordSerializer(record)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            record.save()
+            return Response({"message": "Health Record updated successfully."}, status=status.HTTP_200_OK)
         except Health_Record.DoesNotExist:
             return Response({"message": "Health Record does not exist."}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"message": "Failed to update health record.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+class ContactPersonView(viewsets.ViewSet):
+    @api_view(['PUT'])
+    def update_contact_person(request, patientID):
+        try:
+            patient = Patient.objects.get(pk=patientID)
+            contact = Contact_Person.objects.get(patient=patient)
+            contact_data = json.loads(request.body)
+            contact.fullName = contact_data['fullName']
+            contact.contactNum = contact_data['contactNum']
+            contact.contactAddress = contact_data['contactAddress']
+            contact.save()
+            return Response({"message": "Contact updated successfully."}, status=status.HTTP_200_OK)
+        except Contact_Person.DoesNotExist:
+            return Response({"message": "Contact does not exist."}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"message": "Failed to update contact.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        

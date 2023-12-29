@@ -38,7 +38,7 @@ class Patient(models.Model):
         verbose_name = "Patient Record"
         verbose_name_plural = "Patient Record"
 
-class Contact_Person:
+class Contact_Person(models.Model):
     contactId = models.AutoField(primary_key = True)
     fullName = models.CharField(max_length=100, blank = False)
     contactNum = models.CharField(max_length=50, blank = False)
