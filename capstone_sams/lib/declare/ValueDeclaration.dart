@@ -97,26 +97,7 @@ class BottomPatientTabs extends StatelessWidget {
                 ),
               ),
             ),
-            if (accountProvider.role == 'physician')
-              SizedBox(
-                width: MediaQuery.of(context).size.width / 2 - 10,
-                child: Tab(
-                  child: Column(
-                    children: [
-                      Align(
-                        alignment: Alignment.center,
-                        child: FaIcon(
-                          FontAwesomeIcons.headSideCough,
-                        ),
-                      ),
-                      Text(
-                        'Present Illness',
-                        style: TextStyle(fontSize: Sizing.header6),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+            // if (accountProvider.role == 'physician')
             SizedBox(
               width: MediaQuery.of(context).size.width / 2 - 10,
               child: Tab(
@@ -125,55 +106,74 @@ class BottomPatientTabs extends StatelessWidget {
                     Align(
                       alignment: Alignment.center,
                       child: FaIcon(
-                        FontAwesomeIcons.solidClipboard,
+                        FontAwesomeIcons.stethoscope,
                       ),
                     ),
                     Text(
-                      'Past Medical History',
+                      'Diagnosis History',
                       style: TextStyle(fontSize: Sizing.header6),
                     ),
                   ],
                 ),
               ),
             ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width / 2 - 10,
-              child: Tab(
-                child: Column(
-                  children: [
-                    Align(
-                      alignment: Alignment.center,
-                      child: FaIcon(
-                        FontAwesomeIcons.commentMedical,
-                      ),
-                    ),
-                    Text(
-                      'Diagnosis',
-                      style: TextStyle(fontSize: Sizing.header6),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width / 2 - 10,
-              child: Tab(
-                child: Column(
-                  children: [
-                    Align(
-                      alignment: Alignment.center,
-                      child: FaIcon(
-                        FontAwesomeIcons.pills,
-                      ),
-                    ),
-                    Text(
-                      'Treatment',
-                      style: TextStyle(fontSize: Sizing.header6),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            // SizedBox(
+            //   width: MediaQuery.of(context).size.width / 2 - 10,
+            //   child: Tab(
+            //     child: Column(
+            //       children: [
+            //         Align(
+            //           alignment: Alignment.center,
+            //           child: FaIcon(
+            //             FontAwesomeIcons.solidClipboard,
+            //           ),
+            //         ),
+            //         Text(
+            //           'Past Medical History',
+            //           style: TextStyle(fontSize: Sizing.header6),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
+            // SizedBox(
+            //   width: MediaQuery.of(context).size.width / 2 - 10,
+            //   child: Tab(
+            //     child: Column(
+            //       children: [
+            //         Align(
+            //           alignment: Alignment.center,
+            //           child: FaIcon(
+            //             FontAwesomeIcons.commentMedical,
+            //           ),
+            //         ),
+            //         Text(
+            //           'Diagnosis',
+            //           style: TextStyle(fontSize: Sizing.header6),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
+            // SizedBox(
+            //   width: MediaQuery.of(context).size.width / 2 - 10,
+            //   child: Tab(
+            //     child: Column(
+            //       children: [
+            //         Align(
+            //           alignment: Alignment.center,
+            //           child: FaIcon(
+            //             FontAwesomeIcons.pills,
+            //           ),
+            //         ),
+            //         Text(
+            //           'Treatment',
+            //           style: TextStyle(fontSize: Sizing.header6),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),
