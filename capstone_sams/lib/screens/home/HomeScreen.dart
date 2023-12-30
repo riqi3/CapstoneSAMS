@@ -4,8 +4,10 @@ import 'package:capstone_sams/models/MedicalNotesModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/MedicalNotesProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/EhrListScreen.dart';
+import 'package:capstone_sams/screens/home/widgets/CourseDialog.dart';
 import 'package:capstone_sams/screens/home/widgets/EhrSection.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import '../../constants/theme/sizing.dart';
 import '../medical_notes/MedicalNotesScreen.dart';
@@ -73,6 +75,13 @@ class _HomeScreenState extends State<HomeScreen> {
               }
             },
           ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => showDialog(
+            context: context,
+            builder: (ctx) => CourseDialog(),
+          ),
+          child: FaIcon(FontAwesomeIcons.pencil),
         ),
       ),
     );

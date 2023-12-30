@@ -1,5 +1,5 @@
 import 'package:capstone_sams/constants/theme/sizing.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/present-illness/PresentIllness.dart';
+import 'package:capstone_sams/screens/home/present-illness/PresentIllness.dart';
 import 'package:flutter/material.dart';
 
 class CourseDialog extends StatelessWidget {
@@ -29,23 +29,34 @@ class CourseDialog extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Student Course',
-                          style: TextStyle(
-                            fontSize: Sizing.header5,
-                            fontWeight: FontWeight.bold,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Add New Patient',
+                              style: TextStyle(
+                                fontSize: Sizing.header5,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                        IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                      ],
                     ),
-                    IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () => Navigator.pop(context),
+                    Text(
+                      'Student Course',
+                      style: TextStyle(
+                        fontSize: Sizing.header6,
+                      ),
                     ),
                   ],
                 ),

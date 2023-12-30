@@ -1,4 +1,4 @@
-import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/CourseDialog.dart';
+import 'package:capstone_sams/screens/home/widgets/CourseDialog.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/MedicationOrderSection.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/PatientInfoCard.dart';
 import 'package:flutter/material.dart';
@@ -38,12 +38,12 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen> {
         physics: BouncingScrollPhysics(),
         child: Column(
           children: [
+            MedicationOrderSection(
+              patient: widget.patient,
+            ),
             PatientInfoCard(
               patient: widget.patient,
             ),
-            // MedicationOrderSection(
-            //   patient: widget.patient,
-            // ),
           ],
         ),
       ),

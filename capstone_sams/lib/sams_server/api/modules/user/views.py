@@ -86,6 +86,20 @@ class LogInView(viewsets.ModelViewSet):
 This view represent all the function necessary to fetch
 an Account object by its id.
 '''
+
+class AccountsView(viewsets.ModelViewSet):
+    @api_view(['GET'])
+    def fetch_physicians(request, accountRole):
+        try:
+            queryset = Account.objects.filter(accountRole = accountRole)
+            serializer = AccountSerializer(queryset, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(
+                {"message": "Failed to fetch physicians.", "error": str(e)},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
 class AccountView(viewsets.ModelViewSet):
     @api_view(['GET'])
     def fetch_user_by_id(request, accountID):
