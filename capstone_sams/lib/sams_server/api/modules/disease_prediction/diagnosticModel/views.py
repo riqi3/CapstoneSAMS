@@ -103,7 +103,6 @@ class TrainModelView(APIView):
             return Response({"message": str(e)}, status=400)
         
 def create_diagnostic_record(request):
-    try:
         # Load the model and encoder
         pickle_folder = 'api/modules/disease_prediction/diagnosticModel'
         RNF = pickle.load(open(os.path.join(pickle_folder, 'final_rf_model.pkl'), 'rb'))
@@ -122,6 +121,12 @@ def create_diagnostic_record(request):
                 'Cholesterol Level': request.POST.get('cholesterol_level'),
             }
 
+            # Check for missing or empty fields
+            required_fields = ['Fever', 'Cough', 'Fatigue', 'Difficulty Breathing', 'Age', 'Gender', 'Blood Pressure', 'Cholesterol Level']
+            for field in required_fields:
+                if not user_input[field]:
+                    return JsonResponse({'error_message': f"Missing or empty value for {field}"}, status=400)
+                
             # Encode user input
             encoded_input = {}
             for col in user_input:
@@ -129,13 +134,16 @@ def create_diagnostic_record(request):
 
             # Create a DataFrame with the user input
             user_df = pd.DataFrame(encoded_input, index=[0])
+            
+            # Make predictions with probabilities
+            prediction_proba = RNF.predict_proba(user_df)
 
-            # Make predictions
-            prediction = RNF.predict(user_df)
+            # Get the predicted class label
+            predicted_class = RNF.classes_[prediction_proba.argmax()]
 
             # Save the diagnostic record to the database
             diagnostic_record = DiagnosticFields(
-                disease=prediction[0], 
+                disease=predicted_class, 
                 fever=user_input['Fever'],
                 cough=user_input['Cough'],
                 fatigue=user_input['Fatigue'],
@@ -144,16 +152,10 @@ def create_diagnostic_record(request):
                 gender=user_input['Gender'],
                 blood_pressure=user_input['Blood Pressure'],
                 cholesterol_level=user_input['Cholesterol Level'],
-                outcome_variable=prediction[0]  # Assuming prediction is either 'Positive' or 'Negative'
             )
             diagnostic_record.save()
 
-            return render(request, 'prediction_result.html', {'prediction': prediction[0]})
-        
-        # Handle GET requests (render the form)
-        return render(request, 'input_form.html')
-    except Exception as e:
-        return render(request, 'error.html', {'error_message': str(e)})
+            return JsonResponse({'prediction': predicted_class, 'confidence': max(prediction_proba[0])})
 
         
 def get_latest_record_id(request):
