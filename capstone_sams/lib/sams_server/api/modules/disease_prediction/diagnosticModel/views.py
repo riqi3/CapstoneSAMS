@@ -7,9 +7,10 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework.response import Response
 from .models import DiagnosticFields
+from rest_framework.decorators import api_view
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import cross_val_score
 from hyperopt import fmin, Trials, tpe, hp, STATUS_OK #need to pip install hyperopt
@@ -36,51 +37,37 @@ def train_model(request):
             raise ValueError("No uploaded dataset")
 
         df = pd.DataFrame(diagnosis_data)
+        df = df[df.groupby('disease')['disease'].transform('size') >= 10]
 
         # Data preprocessing
-        label_columns = ['Fever', 'Cough', 'Fatigue', 'Difficulty Breathing', 'Gender', 'Blood Pressure', 'Cholesterol Level', 'Outcome Variable']
+        label_columns = ['fever', 'cough', 'fatigue', 'difficulty_breathing', 'gender', 'blood_pressure', 'cholesterol_level', 'outcome_variable', 'disease']
         LE = LabelEncoder()
         for col in label_columns:
             df[col] = LE.fit_transform(df[col])
 
-        # Frequency encoding
-        df['Disease_freq'] = df['Disease'].map(df['Disease'].value_counts())
-        df = df.drop(columns='Disease')
 
-        # Splitting the dataset
-        X = df.drop(columns='Outcome Variable')
-        y = df['Outcome Variable']
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+        # Split the data
+        X = df.drop(['disease'], axis=1).values
+        y = df['disease'].values
+        X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.4, shuffle=True, stratify=y, random_state=30)
+        X_val, X_test, y_val, y_test = train_test_split(X_val, y_val, test_size=0.5, shuffle=True, stratify=y_val, random_state=30)
 
-        # Model training with hyperparameter optimization
-        def Bayesian(Space):
-            RNF = RandomForestClassifier(n_estimators=int(Space['n_estimators']), criterion=Space['criterion'],
-                                        max_depth=int(Space['max_depth']), max_features=Space['max_features'])
-            return {'loss': -cross_val_score(RNF, X_train, y_train, cv=5).mean(), 'status': STATUS_OK}
 
-        Space = {
-            'n_estimators': hp.quniform('n_estimators', 50, 500, 50),
-            'criterion': hp.choice('criterion', ['gini', 'entropy', 'log_loss']),
-            'max_depth': hp.quniform('max_depth', 1, 10, 1),
-            'max_features': hp.choice('max_features', ['sqrt', 'log2', None])
+        # Build and train the RandomForest model
+        param_grid_rf = {
+            'n_estimators': [50, 100, 200],
+            'criterion': ['gini', 'entropy'],
+            'max_depth': [None, 10, 20],
+            'min_samples_split': [2, 5, 10],
+            'min_samples_leaf': [1, 2, 4]
         }
 
-        # Lists for mapping choices
-        criterion_choices = ['gini', 'entropy', 'log_loss']
-        max_features_choices = ['sqrt', 'log2', None]
+        rf = RandomForestClassifier(class_weight='balanced', random_state=30)
+        grid_search_rf = GridSearchCV(rf, param_grid_rf, cv=5)
+        grid_search_rf.fit(X_train, y_train)
 
-        # Running hyperparameter optimization
-        trials = Trials()
-        Best = fmin(fn=Bayesian, space=Space, algo=tpe.suggest, max_evals=200, trials=trials)
-
-        # Correcting the criterion and max_features parameters
-        Best['criterion'] = criterion_choices[Best['criterion']]
-        Best['max_features'] = max_features_choices[Best['max_features']]
-
-        # Creating and fitting the model
-        RNF = RandomForestClassifier(n_estimators=int(Best['n_estimators']), criterion=Best['criterion'],
-                                    max_depth=int(Best['max_depth']), max_features=Best['max_features'])
-        RNF.fit(X_train, y_train)
+        # Get the best RandomForest model
+        RNF = grid_search_rf.best_estimator_
 
         # Save the model and encoder using pickle
         os.makedirs(pickle_folder, exist_ok=True)
@@ -91,10 +78,11 @@ def train_model(request):
         # Save the encoder
         pickle.dump(LE, open(os.path.join(pickle_folder, 'encoder.pkl'), 'wb'))
 
-        # Predicting and calculating accuracy
+        # Predicting and calculating accuracy on training data
         train_predictions = RNF.predict(X_train)
         train_accuracy = accuracy_score(y_train, train_predictions)
 
+        # Predicting and calculating accuracy on testing data
         test_predictions = RNF.predict(X_test)
         test_accuracy = accuracy_score(y_test, test_predictions)
 
@@ -113,3 +101,78 @@ class TrainModelView(APIView):
             return Response({"message": message}, status=200)
         except ValueError as e:
             return Response({"message": str(e)}, status=400)
+        
+def create_diagnostic_record(request):
+    try:
+        # Load the model and encoder
+        pickle_folder = 'api/modules/disease_prediction/diagnosticModel'
+        RNF = pickle.load(open(os.path.join(pickle_folder, 'final_rf_model.pkl'), 'rb'))
+        LE = pickle.load(open(os.path.join(pickle_folder, 'encoder.pkl'), 'rb'))
+
+        if request.method == 'POST':
+            # Get user input from the form
+            user_input = {
+                'Fever': request.POST.get('fever'),
+                'Cough': request.POST.get('cough'),
+                'Fatigue': request.POST.get('fatigue'),
+                'Difficulty Breathing': request.POST.get('difficulty_breathing'),
+                'Age': int(request.POST.get('age')),
+                'Gender': request.POST.get('gender'),
+                'Blood Pressure': request.POST.get('blood_pressure'),
+                'Cholesterol Level': request.POST.get('cholesterol_level'),
+            }
+
+            # Encode user input
+            encoded_input = {}
+            for col in user_input:
+                encoded_input[col] = LE.transform([user_input[col]])[0]
+
+            # Create a DataFrame with the user input
+            user_df = pd.DataFrame(encoded_input, index=[0])
+
+            # Make predictions
+            prediction = RNF.predict(user_df)
+
+            # Save the diagnostic record to the database
+            diagnostic_record = DiagnosticFields(
+                disease=prediction[0], 
+                fever=user_input['Fever'],
+                cough=user_input['Cough'],
+                fatigue=user_input['Fatigue'],
+                difficulty_breathing=user_input['Difficulty Breathing'],
+                age=user_input['Age'],
+                gender=user_input['Gender'],
+                blood_pressure=user_input['Blood Pressure'],
+                cholesterol_level=user_input['Cholesterol Level'],
+                outcome_variable=prediction[0]  # Assuming prediction is either 'Positive' or 'Negative'
+            )
+            diagnostic_record.save()
+
+            return render(request, 'prediction_result.html', {'prediction': prediction[0]})
+        
+        # Handle GET requests (render the form)
+        return render(request, 'input_form.html')
+    except Exception as e:
+        return render(request, 'error.html', {'error_message': str(e)})
+
+        
+def get_latest_record_id(request):
+    try:
+        latest_record = DiagnosticFields.objects.latest('id')
+        latest_record_id = latest_record.id
+        return JsonResponse({'latest_record_id': latest_record_id})
+    except DiagnosticFields.DoesNotExist:
+        return JsonResponse({'error': 'No records found'}, status=404)
+    
+@api_view(['DELETE'])
+def delete_symptom_record(request, record_id):
+    try:
+        health_symptom = DiagnosticFields.objects.get(pk=record_id)
+        health_symptom.delete()
+        return JsonResponse({}, status=204)
+    except DiagnosticFields.DoesNotExist:
+        return JsonResponse(
+            {'error': 'Diagnostic record not found'},
+            status=404
+        )
+
