@@ -2,36 +2,40 @@ import 'package:capstone_sams/constants/Env.dart';
 import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/global-widgets/TitleAppBar.dart';
+import 'package:capstone_sams/global-widgets/text-fields/Textfields.dart';
 import 'package:capstone_sams/models/AccountModel.dart';
-import 'package:capstone_sams/models/MedicineModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/EhrListScreen.dart';
-import 'package:capstone_sams/screens/home/present-illness/widgets/MultiSelect.dart';
+import 'package:capstone_sams/global-widgets/dropdown/MultiSelect.dart';
 import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-class PresentIllnessFormScreen extends StatefulWidget {
+class IndividualRecordForm extends StatefulWidget {
   final String? course;
-  const PresentIllnessFormScreen({
+  const IndividualRecordForm({
     super.key,
     this.course,
   });
 
   @override
-  State<PresentIllnessFormScreen> createState() =>
-      _PresentIllnessFormScreenState();
+  State<IndividualRecordForm> createState() => _IndividualRecordFormState();
 }
 
-class _PresentIllnessFormScreenState extends State<PresentIllnessFormScreen> {
+class _IndividualRecordFormState extends State<IndividualRecordForm> {
   var _isLoading = false;
+  bool _isChecked1 = false;
+  bool _isChecked2 = false;
   final _genInfoFormKey = GlobalKey<FormState>();
   final _medInfoFormKey = GlobalKey<FormState>();
   final _emergencyInfoFormKey = GlobalKey<FormState>();
+  TextEditingController firstAddress = TextEditingController();
+  TextEditingController secondAddress = TextEditingController();
   List<String> _selectedAllergy = [];
   List<String> _selectedFamHistory = [];
+  List<String> _selectedPastDisease = [];
   List<String> _selectedIllnesses = [];
   late bool _autoValidate = false;
   DateTime? _birthDate;
@@ -85,6 +89,32 @@ class _PresentIllnessFormScreenState extends State<PresentIllnessFormScreen> {
     if (results != null) {
       setState(() {
         _selectedFamHistory = results;
+      });
+    }
+  }
+
+  void _selectPastDisease() async {
+    List<String> pastDisease = [
+      'N/A',
+      'Asthma',
+      'Hypertension',
+      'Cancer',
+      'Thyroid problem',
+      'Eye problem',
+      'Diabetes mellitus',
+      'Other'
+    ];
+
+    final List<String>? results = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return MultiSelect(title: 'Past Disease', items: pastDisease);
+      },
+    );
+
+    if (results != null) {
+      setState(() {
+        _selectedPastDisease = results;
       });
     }
   }
@@ -169,6 +199,7 @@ class _PresentIllnessFormScreenState extends State<PresentIllnessFormScreen> {
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(
@@ -194,55 +225,31 @@ class _PresentIllnessFormScreenState extends State<PresentIllnessFormScreen> {
                           Row(
                             children: [
                               Flexible(
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    labelText: 'Surname*',
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Pallete.primaryColor,
-                                      ),
-                                    ),
-                                    filled: true,
-                                    fillColor: Pallete.palegrayColor,
-                                  ),
-                                  keyboardType: TextInputType.name,
+                                child: FormTextField(
+                                  labeltext: 'Surname*',
+                                  validator: 'Enter their surname!',
+                                  type: TextInputType.name,
                                 ),
                               ),
                               SizedBox(width: Sizing.formSpacing),
                               Flexible(
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    labelText: 'Firstname*',
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Pallete.primaryColor,
-                                      ),
-                                    ),
-                                    filled: true,
-                                    fillColor: Pallete.palegrayColor,
-                                  ),
-                                  keyboardType: TextInputType.name,
+                                child: FormTextField(
+                                  labeltext: 'First Name*',
+                                  validator: 'Enter their first name!',
+                                  type: TextInputType.name,
                                 ),
                               ),
                               SizedBox(width: Sizing.formSpacing),
                               Container(
                                 constraints: BoxConstraints(
-                                  maxWidth: 60.0, // Set the minimum width here
+                                  maxWidth: 60.0,
                                 ),
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    labelText: 'M.I.*',
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Pallete.primaryColor,
-                                      ),
-                                    ),
-                                    counterText: '',
-                                    filled: true,
-                                    fillColor: Pallete.palegrayColor,
-                                  ),
-                                  maxLength: 1,
-                                  keyboardType: TextInputType.name,
+                                child: FormTextField(
+                                  labeltext: 'M.I.*',
+                                  validator: 'Enter their middle initial!',
+                                  type: TextInputType.name,
+                                  countertext: '',
+                                  maxlength: 1,
                                 ),
                               ),
                             ],
@@ -251,18 +258,10 @@ class _PresentIllnessFormScreenState extends State<PresentIllnessFormScreen> {
                           Row(
                             children: <Widget>[
                               Flexible(
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    labelText: 'Age*',
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Pallete.primaryColor,
-                                      ),
-                                    ),
-                                    filled: true,
-                                    fillColor: Pallete.palegrayColor,
-                                  ),
-                                  keyboardType: TextInputType.number,
+                                child: FormTextField(
+                                  labeltext: 'Age*',
+                                  validator: 'Enter their age!',
+                                  type: TextInputType.number,
                                 ),
                               ),
                               Flexible(
@@ -361,8 +360,8 @@ class _PresentIllnessFormScreenState extends State<PresentIllnessFormScreen> {
                               onTap: () {
                                 showDatePicker(
                                   context: context,
-                                  initialDate: DateTime(1980),
-                                  firstDate: DateTime(1980),
+                                  initialDate: DateTime(2000),
+                                  firstDate: DateTime(1930),
                                   lastDate:
                                       DateTime.now().add(Duration(days: 365)),
                                 ).then((selectedDate) {
@@ -389,7 +388,7 @@ class _PresentIllnessFormScreenState extends State<PresentIllnessFormScreen> {
                               Flexible(
                                 child: TextFormField(
                                   decoration: InputDecoration(
-                                    labelText: 'Course',
+                                    labelText: 'Course*',
                                     border: OutlineInputBorder(
                                       borderSide: BorderSide(
                                         color: Pallete.primaryColor,
@@ -405,124 +404,86 @@ class _PresentIllnessFormScreenState extends State<PresentIllnessFormScreen> {
                               ),
                               SizedBox(width: Sizing.formSpacing),
                               Flexible(
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    labelText: 'Year*',
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Pallete.primaryColor,
-                                      ),
-                                    ),
-                                    filled: true,
-                                    fillColor: Pallete.palegrayColor,
-                                  ),
-                                  keyboardType: TextInputType.number,
+                                child: FormTextField(
+                                  labeltext: 'Year*',
+                                  validator: 'Enter the student year!',
+                                  type: TextInputType.number,
                                 ),
                               ),
                             ],
                           ),
                           SizedBox(height: Sizing.formSpacing),
                           Flexible(
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'Student Number*',
-                                border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Pallete.primaryColor,
-                                  ),
-                                ),
-                                filled: true,
-                                fillColor: Pallete.palegrayColor,
-                              ),
-                              keyboardType: TextInputType.number,
+                            child: FormTextField(
+                              labeltext: 'Student Number*',
+                              validator: 'Enter their student number I.D.!',
+                              type: TextInputType.number,
                             ),
                           ),
                           SizedBox(height: Sizing.formSpacing),
                           Flexible(
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                alignLabelWithHint: true,
-                                labelText: 'Current Address*',
-                                border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Pallete.primaryColor,
-                                  ),
-                                ),
-                                filled: true,
-                                fillColor: Pallete.palegrayColor,
-                              ),
-                              maxLines: 4,
-                              keyboardType: TextInputType.streetAddress,
-                            ),
+                            child: AddressFormField(
+                                'Current Address*', firstAddress),
                           ),
                           SizedBox(height: Sizing.formSpacing),
                           Row(
                             children: <Widget>[
                               Flexible(
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    labelText: 'Height*',
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Pallete.primaryColor,
-                                      ),
-                                    ),
-                                    filled: true,
-                                    fillColor: Pallete.palegrayColor,
-                                  ),
-                                  keyboardType: TextInputType.number,
+                                child: FormTextField(
+                                  labeltext: 'Height*',
+                                  validator: 'Enter their height!',
+                                  type: TextInputType.number,
                                 ),
                               ),
                               SizedBox(width: Sizing.formSpacing),
                               Flexible(
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    labelText: 'Weight*',
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Pallete.primaryColor,
-                                      ),
-                                    ),
-                                    filled: true,
-                                    fillColor: Pallete.palegrayColor,
-                                  ),
-                                  keyboardType: TextInputType.number,
+                                child: FormTextField(
+                                  labeltext: 'Weight*',
+                                  validator: 'Enter their weight!',
+                                  type: TextInputType.number,
                                 ),
                               ),
                             ],
                           ),
                           SizedBox(height: Sizing.formSpacing),
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Flexible(
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    labelText: 'Active Email',
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Pallete.primaryColor,
-                                      ),
+                                child: Column(
+                                  children: [
+                                    FormTextField(
+                                      labeltext: 'Active Email',
+                                      validator: 'Enter their email!',
+                                      type: TextInputType.emailAddress,
                                     ),
-                                    filled: true,
-                                    fillColor: Pallete.palegrayColor,
-                                  ),
-                                  keyboardType: TextInputType.emailAddress,
+                                    Row(
+                                      children: [
+                                        Checkbox(
+                                          value: _isChecked1,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _isChecked1 = value!;
+                                            });
+                                          },
+                                        ),
+                                        Flexible(
+                                          child: Text(
+                                            'Require email',
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
                               SizedBox(width: Sizing.formSpacing),
                               Flexible(
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    labelText: 'Contact Number*',
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Pallete.primaryColor,
-                                      ),
-                                    ),
-                                    filled: true,
-                                    fillColor: Pallete.palegrayColor,
-                                  ),
-                                  keyboardType: TextInputType.phone,
+                                child: FormTextField(
+                                  labeltext: 'Contact Number*',
+                                  validator: 'Enter their contact number!',
+                                  type: TextInputType.phone,
                                 ),
                               ),
                             ],
@@ -584,23 +545,42 @@ class _PresentIllnessFormScreenState extends State<PresentIllnessFormScreen> {
                           );
                         }).toList(),
                       ),
-                      if (_selectedAllergy.contains('Other'))
-                        Flexible(
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'Other',
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Pallete.primaryColor,
-                                ),
-                              ),
-                              filled: true,
-                              fillColor: Pallete.palegrayColor,
-                            ),
-                            maxLines: 2,
-                            keyboardType: TextInputType.multiline,
-                          ),
+                      if (_selectedAllergy.contains('Other')) otherTextField(),
+                      SizedBox(height: Sizing.formSpacing),
+                      Text(
+                        'Past Disease*',
+                        style: TextStyle(
+                          fontSize: Sizing.formTitle,
+                          color: Pallete.greyColor,
                         ),
+                      ),
+                      Flexible(
+                        child: ElevatedButton.icon(
+                          icon: FaIcon(FontAwesomeIcons.circleChevronDown),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Pallete.mainColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(Sizing.borderRadius),
+                            ),
+                          ),
+                          onPressed: _selectPastDisease,
+                          label: Text('Select Past Disease'),
+                        ),
+                      ),
+                      Wrap(
+                        children: _selectedPastDisease.map((e) {
+                          return Padding(
+                            padding:
+                                const EdgeInsets.only(right: Sizing.spacing),
+                            child: Chip(
+                              label: Text(e),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                      if (_selectedPastDisease.contains('Other'))
+                        otherTextField(),
                       SizedBox(height: Sizing.formSpacing),
                       Text(
                         'Family History*',
@@ -635,22 +615,7 @@ class _PresentIllnessFormScreenState extends State<PresentIllnessFormScreen> {
                         }).toList(),
                       ),
                       if (_selectedFamHistory.contains('Other'))
-                        Flexible(
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'Other',
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Pallete.primaryColor,
-                                ),
-                              ),
-                              filled: true,
-                              fillColor: Pallete.palegrayColor,
-                            ),
-                            maxLines: 2,
-                            keyboardType: TextInputType.multiline,
-                          ),
-                        ),
+                        otherTextField(),
                       SizedBox(height: Sizing.formSpacing),
                       Text(
                         'Illnesses*',
@@ -685,22 +650,33 @@ class _PresentIllnessFormScreenState extends State<PresentIllnessFormScreen> {
                         }).toList(),
                       ),
                       if (_selectedIllnesses.contains('Other'))
-                        Flexible(
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'Other',
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Pallete.primaryColor,
-                                ),
-                              ),
-                              filled: true,
-                              fillColor: Pallete.palegrayColor,
-                            ),
-                            maxLines: 2,
-                            keyboardType: TextInputType.multiline,
-                          ),
+                        otherTextField(),
+                      SizedBox(height: Sizing.formSpacing),
+                      Flexible(
+                        child: FormTextField(
+                          labeltext: 'LMP (Last Menstrual Period)',
+                          validator: 'Enter their LMP!',
+                          type: TextInputType.name,
                         ),
+                      ),
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: _isChecked2,
+                            onChanged: (value) {
+                              setState(() {
+                                _isChecked2 = value!;
+                              });
+                            },
+                          ),
+                          Flexible(
+                            child: Text(
+                              'Require LMP',
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -725,53 +701,41 @@ class _PresentIllnessFormScreenState extends State<PresentIllnessFormScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Flexible(
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            labelText: 'Full name*',
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Pallete.primaryColor,
-                              ),
-                            ),
-                            filled: true,
-                            fillColor: Pallete.palegrayColor,
-                          ),
-                          keyboardType: TextInputType.name,
+                        child: FormTextField(
+                          labeltext: 'Full Name*',
+                          validator: 'Enter their full name!',
+                          type: TextInputType.name,
                         ),
                       ),
                       SizedBox(height: Sizing.formSpacing),
                       Flexible(
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            labelText: 'Contact Number*',
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Pallete.primaryColor,
-                              ),
-                            ),
-                            filled: true,
-                            fillColor: Pallete.palegrayColor,
-                          ),
-                          keyboardType: TextInputType.phone,
+                        child: FormTextField(
+                          labeltext: 'Contact Number*',
+                          validator: 'Enter their contact number!',
+                          type: TextInputType.phone,
                         ),
                       ),
                       SizedBox(height: Sizing.formSpacing),
                       Flexible(
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            alignLabelWithHint: true,
-                            labelText: 'Current Address*',
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Pallete.primaryColor,
-                              ),
-                            ),
-                            filled: true,
-                            fillColor: Pallete.palegrayColor,
+                        child:
+                            AddressFormField('Current Address*', secondAddress),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Pallete.mainColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(Sizing.borderRadius),
                           ),
-                          maxLines: 4,
-                          keyboardType: TextInputType.streetAddress,
                         ),
+                        onPressed: () {
+                          // Check if the first text field has data
+                          if (firstAddress.text.isNotEmpty) {
+                            // Copy the data to the second text field
+                            secondAddress.text = firstAddress.text;
+                          }
+                        },
+                        child: const Text('Copy Address Above'),
                       ),
                     ],
                   ),
@@ -857,6 +821,51 @@ class _PresentIllnessFormScreenState extends State<PresentIllnessFormScreen> {
               ],
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  TextFormField AddressFormField(
+      String labeltext, TextEditingController controller) {
+    return TextFormField(
+      decoration: InputDecoration(
+        alignLabelWithHint: true,
+        labelText: labeltext,
+        border: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Pallete.primaryColor,
+          ),
+        ),
+        filled: true,
+        fillColor: Pallete.palegrayColor,
+      ),
+      controller: controller,
+      maxLines: 4,
+      keyboardType: TextInputType.streetAddress,
+    );
+  }
+
+  Flexible otherTextField() {
+    return Flexible(
+      child: Column(
+        children: [
+          TextFormField(
+            decoration: InputDecoration(
+              alignLabelWithHint: true,
+              labelText: 'Other',
+              border: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Pallete.primaryColor,
+                ),
+              ),
+              filled: true,
+              fillColor: Pallete.palegrayColor,
+            ),
+            maxLines: 2,
+            keyboardType: TextInputType.multiline,
+          ),
+          SizedBox(height: Sizing.formSpacing),
         ],
       ),
     );

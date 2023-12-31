@@ -5,7 +5,7 @@ import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/diagnosis/Diagnosis.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/screens/DiagnosisHistoryScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/past-med-history/PastMedicalHistory.dart';
-import 'package:capstone_sams/screens/home/present-illness/PresentIllness.dart';
+import 'package:capstone_sams/global-widgets/forms/IndividualRecordForm.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/treatment/Treatment.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

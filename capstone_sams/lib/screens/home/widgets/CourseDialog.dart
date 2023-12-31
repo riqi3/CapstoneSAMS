@@ -1,5 +1,5 @@
 import 'package:capstone_sams/constants/theme/sizing.dart';
-import 'package:capstone_sams/screens/home/present-illness/PresentIllness.dart';
+import 'package:capstone_sams/global-widgets/forms/IndividualRecordForm.dart';
 import 'package:flutter/material.dart';
 
 class CourseDialog extends StatelessWidget {
@@ -71,7 +71,7 @@ class CourseDialog extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => PresentIllnessFormScreen(
+                              builder: (context) => IndividualRecordForm(
                                 course: courses[index],
                               ),
                             ),
