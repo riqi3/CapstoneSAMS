@@ -1,10 +1,8 @@
 import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
-import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
 
 class DiagnosisCard extends StatefulWidget {
   const DiagnosisCard({super.key});
@@ -38,8 +36,9 @@ class _DiagnosisCardState extends State<DiagnosisCard> {
               width: MediaQuery.of(context).size.width,
               height: Sizing.cardContainerHeight,
               child: Text(
-                'Diagnosis',
+                "Dr. Doe's Diagnosis",
                 style: TextStyle(
+                    height: 1,
                     color: Pallete.whiteColor,
                     fontSize: Sizing.header3,
                     fontWeight: FontWeight.w600),
@@ -61,15 +60,15 @@ class _DiagnosisCardState extends State<DiagnosisCard> {
                   bottom: Sizing.sectionSymmPadding,
                 ),
                 child: Container(
-                  // height: 50,
                   child: ListView.builder(
                     physics: BouncingScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: 4,
                     itemBuilder: (BuildContext context, int index) {
                       return Card(
-                        margin: EdgeInsets.all(
-                          Sizing.sectionSymmPadding,
+                        margin: EdgeInsets.symmetric(
+                          vertical: Sizing.sectionSymmPadding / 2,
+                          horizontal: Sizing.sectionSymmPadding,
                         ),
                         child: ListTile(
                           title: Row(
@@ -124,6 +123,38 @@ class _DiagnosisCardState extends State<DiagnosisCard> {
               style: TextStyle(
                 fontWeight: FontWeight.w700,
                 color: Pallete.infoColor,
+              ),
+            ),
+            onTap: () {},
+          ),
+        ),
+        PopupMenuItem(
+          child: ListTile(
+            leading: FaIcon(
+              FontAwesomeIcons.pen,
+              color: Pallete.successColor,
+            ),
+            title: Text(
+              'Edit',
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                color: Pallete.successColor,
+              ),
+            ),
+            onTap: () {},
+          ),
+        ),
+        PopupMenuItem(
+          child: ListTile(
+            leading: FaIcon(
+              FontAwesomeIcons.trash,
+              color: Pallete.dangerColor,
+            ),
+            title: Text(
+              'Delete',
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                color: Pallete.dangerColor,
               ),
             ),
             onTap: () {},

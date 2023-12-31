@@ -728,10 +728,8 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                                 BorderRadius.circular(Sizing.borderRadius),
                           ),
                         ),
-                        onPressed: () {
-                          // Check if the first text field has data
-                          if (firstAddress.text.isNotEmpty) {
-                            // Copy the data to the second text field
+                        onPressed: () { 
+                          if (firstAddress.text.isNotEmpty) { 
                             secondAddress.text = firstAddress.text;
                           }
                         },
@@ -770,7 +768,10 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                       }),
                     );
                     var models = List<Account>.from(
-                        response.data.map((json) => Account.fromJson(json)));
+                      response.data.map(
+                        (json) => Account.fromJson(json),
+                      ),
+                    );
 
                     return models;
                   },

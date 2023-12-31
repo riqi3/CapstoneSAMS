@@ -1,3 +1,4 @@
+import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/AssignDoctorCard.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/PatientInfoCard.dart';
 import 'package:flutter/material.dart';
 import '../../../../../constants/theme/sizing.dart';
@@ -34,11 +35,8 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen> {
         scrollDirection: Axis.vertical,
         physics: BouncingScrollPhysics(),
         child: Column(
-          children: [
-            // DiagnosisSection(),
-            // MedicationOrderSection(
-            //   patient: widget.patient,
-            // ),
+          children: [ 
+            AssignDoctorCard(),
             PatientInfoCard(
               patient: widget.patient,
             ),
