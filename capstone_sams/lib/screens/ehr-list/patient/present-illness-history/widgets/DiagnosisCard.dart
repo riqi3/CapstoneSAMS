@@ -36,7 +36,7 @@ class _DiagnosisCardState extends State<DiagnosisCard> {
               width: MediaQuery.of(context).size.width,
               height: Sizing.cardContainerHeight,
               child: Text(
-                "Dr. Doe's Diagnosis",
+                "Dr. Doe's Diagnoses",
                 style: TextStyle(
                     height: 1,
                     color: Pallete.whiteColor,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../constants/theme/pallete.dart';
+import '../constants/theme/pallete.dart';
 
 //home app bar
 class HomeAppBar extends StatelessWidget {
@@ -27,7 +27,7 @@ class HomeAppBar extends StatelessWidget {
             // backgroundImage: NetworkImage(profile),
             backgroundColor: Colors.transparent,
           ),
-        ), 
+        ),
       ),
     );
   }

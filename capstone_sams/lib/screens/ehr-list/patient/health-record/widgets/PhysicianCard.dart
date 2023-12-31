@@ -6,7 +6,7 @@ import 'package:capstone_sams/models/PatientModel.dart';
 
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/PrescriptionProvider.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/Info.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/crud/medicine/Info.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';

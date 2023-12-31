@@ -2,16 +2,16 @@ import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/global-widgets/SearchAppBar.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/diagnosis/Diagnosis.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/health-record/screens/DiagnosisHistoryScreen.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/present-illness-history/Diagnosis.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/present-illness-history/HistoryPresentIllnessScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/past-med-history/PastMedicalHistory.dart';
-import 'package:capstone_sams/global-widgets/forms/IndividualRecordForm.dart';
+import 'package:capstone_sams/screens/home/forms/IndividualRecordForm.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/treatment/Treatment.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../constants/theme/sizing.dart';
-import '../../../../models/PatientModel.dart';
-import 'screens/HealthRecordScreen.dart';
+import '../../../constants/theme/sizing.dart';
+import '../../../models/PatientModel.dart';
+import 'health-record/HealthRecordScreen.dart';
 
 class PatientTabsScreen extends StatefulWidget {
   final Patient patient;
@@ -37,7 +37,7 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
     // final accountProvider =
     //     Provider.of<AccountProvider>(context, listen: false);
     // int tabCount = accountProvider.role == 'physician' ? 5 : 1;
-    tabController = TabController(length: 2, vsync: this);
+    tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -62,7 +62,8 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
           HealthRecordsScreen(
             patient: widget.patient,
           ),
-          DiagnosisHistoryScreen(
+          PastMedHistory(),
+          HistoryPresentIllness(
             patient: widget.patient,
           ),
         ],

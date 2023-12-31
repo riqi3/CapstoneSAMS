@@ -2,6 +2,7 @@ import 'package:capstone_sams/constants/Env.dart';
 import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/global-widgets/TitleAppBar.dart';
+import 'package:capstone_sams/global-widgets/buttons/CancelButton.dart';
 import 'package:capstone_sams/global-widgets/text-fields/Textfields.dart';
 import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
@@ -652,31 +653,33 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                       if (_selectedIllnesses.contains('Other'))
                         otherTextField(),
                       SizedBox(height: Sizing.formSpacing),
-                      Flexible(
-                        child: FormTextField(
-                          labeltext: 'LMP (Last Menstrual Period)',
-                          validator: 'Enter their LMP!',
-                          type: TextInputType.name,
+                      if (selectedGender.contains('female'))
+                        Flexible(
+                          child: FormTextField(
+                            labeltext: 'LMP (Last Menstrual Period)',
+                            validator: 'Enter their LMP!',
+                            type: TextInputType.name,
+                          ),
                         ),
-                      ),
-                      Row(
-                        children: [
-                          Checkbox(
-                            value: _isChecked2,
-                            onChanged: (value) {
-                              setState(() {
-                                _isChecked2 = value!;
-                              });
-                            },
-                          ),
-                          Flexible(
-                            child: Text(
-                              'Require LMP',
-                              overflow: TextOverflow.ellipsis,
+                      if (selectedGender.contains('female'))
+                        Row(
+                          children: [
+                            Checkbox(
+                              value: _isChecked2,
+                              onChanged: (value) {
+                                setState(() {
+                                  _isChecked2 = value!;
+                                });
+                              },
                             ),
-                          ),
-                        ],
-                      ),
+                            Flexible(
+                              child: Text(
+                                'Require LMP',
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
                     ],
                   ),
                 ),
@@ -717,8 +720,10 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                       ),
                       SizedBox(height: Sizing.formSpacing),
                       Flexible(
-                        child:
-                            AddressFormField('Current Address*', secondAddress),
+                        child: AddressFormField(
+                          'Current Address*',
+                          secondAddress,
+                        ),
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -728,8 +733,8 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                                 BorderRadius.circular(Sizing.borderRadius),
                           ),
                         ),
-                        onPressed: () { 
-                          if (firstAddress.text.isNotEmpty) { 
+                        onPressed: () {
+                          if (firstAddress.text.isNotEmpty) {
                             secondAddress.text = firstAddress.text;
                           }
                         },
@@ -790,6 +795,8 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      Expanded(child: CancelButton()),
+                      SizedBox(width: Sizing.formSpacing),
                       Expanded(
                         child: ElevatedButton.icon(
                           onPressed: _isLoading ? null : _onSubmit,

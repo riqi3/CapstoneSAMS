@@ -1,23 +1,24 @@
 import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/DiagnosisCard.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/present-illness-history/forms/PresentMedHistoryForm.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/present-illness-history/widgets/DiagnosisCard.dart';
 import 'package:capstone_sams/screens/home/widgets/CourseDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class DiagnosisHistoryScreen extends StatefulWidget {
+class HistoryPresentIllness extends StatefulWidget {
   final Patient patient;
 
-  const DiagnosisHistoryScreen({
+  const HistoryPresentIllness({
     super.key,
     required this.patient,
   });
 
   @override
-  State<DiagnosisHistoryScreen> createState() => _DiagnosisHistoryScreenState();
+  State<HistoryPresentIllness> createState() => _HistoryPresentIllnessState();
 }
 
-class _DiagnosisHistoryScreenState extends State<DiagnosisHistoryScreen> {
+class _HistoryPresentIllnessState extends State<HistoryPresentIllness> {
   ScrollController _controller = ScrollController();
 
   @override
@@ -39,28 +40,11 @@ class _DiagnosisHistoryScreenState extends State<DiagnosisHistoryScreen> {
         scrollDirection: Axis.vertical,
         physics: BouncingScrollPhysics(),
         child: DiagnosisCard(),
-
-        //     Container(
-        //   height: 300,
-        //   child: ListView.builder(
-        //     shrinkWrap: true,
-        //     itemCount: entries.length,
-        //     itemBuilder: (BuildContext context, int index) {
-        //       return Container(
-        //         height: 50,
-        //         color: Colors.amber[colorCodes[index]],
-        //         child: Center(
-        //           child: Text('Entry ${entries[index]}'),
-        //         ),
-        //       );
-        //     },
-        //   ),
-        // ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => showDialog(
           context: context,
-          builder: (ctx) => CourseDialog(),
+          builder: (ctx) => PresentMedHistoryForm(),
         ),
         child: FaIcon(FontAwesomeIcons.pencil),
       ),

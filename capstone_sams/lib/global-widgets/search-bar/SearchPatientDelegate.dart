@@ -7,7 +7,7 @@ import '../../models/PatientModel.dart';
 
 import '../../providers/AccountProvider.dart';
 import '../../providers/PatientProvider.dart';
-import '../../screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
+import '../../screens/ehr-list/patient/PatientTabsScreen.dart';
 
 class SearchPatientDelegate extends SearchDelegate {
   PatientProvider _patientList = PatientProvider();

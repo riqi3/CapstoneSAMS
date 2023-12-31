@@ -8,7 +8,7 @@ import '../constants/theme/pallete.dart';
 import '../constants/theme/sizing.dart';
 import '../global-widgets/TitleAppBar.dart';
 
-import '../screens/home/widgets/HomeAppBar.dart';
+import '../global-widgets/HomeAppBar.dart';
 
 class ValueDashboard extends StatelessWidget {
   const ValueDashboard({super.key});
@@ -63,7 +63,7 @@ class BottomPatientTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final accountProvider = Provider.of<AccountProvider>(context);
+    // final accountProvider = Provider.of<AccountProvider>(context);
     return PreferredSize(
       preferredSize: Size.fromHeight(48),
       child: Container(
@@ -106,36 +106,37 @@ class BottomPatientTabs extends StatelessWidget {
                     Align(
                       alignment: Alignment.center,
                       child: FaIcon(
-                        FontAwesomeIcons.stethoscope,
+                        FontAwesomeIcons.solidClipboard,
                       ),
                     ),
                     Text(
-                      'Diagnosis History',
+                      'Past Medical History',
                       style: TextStyle(fontSize: Sizing.header6),
                     ),
                   ],
                 ),
               ),
             ),
-            // SizedBox(
-            //   width: MediaQuery.of(context).size.width / 2 - 10,
-            //   child: Tab(
-            //     child: Column(
-            //       children: [
-            //         Align(
-            //           alignment: Alignment.center,
-            //           child: FaIcon(
-            //             FontAwesomeIcons.solidClipboard,
-            //           ),
-            //         ),
-            //         Text(
-            //           'Past Medical History',
-            //           style: TextStyle(fontSize: Sizing.header6),
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width / 2 - 10,
+              child: Tab(
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: FaIcon(
+                        FontAwesomeIcons.headSideCough,
+                      ),
+                    ),
+                    Text(
+                      'Present Illness History',
+                      style: TextStyle(fontSize: Sizing.header6),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
             // SizedBox(
             //   width: MediaQuery.of(context).size.width / 2 - 10,
             //   child: Tab(
