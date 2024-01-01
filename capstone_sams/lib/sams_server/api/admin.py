@@ -20,7 +20,7 @@ from api.modules.patient.form import CsvImportPatientForm
 from api.modules.cpoe.form import CsvImportMedicineForm
 from api.modules.laboratory.form import PdfImportLabResultForm
 from api.modules.user.models import Account, Data_Log
-from api.modules.patient.models import Patient, Health_Record
+from api.modules.patient.models import Patient, Health_Record,Contact_Person
 from api.modules.cpoe.models import Medicine, Prescription
 from api.modules.laboratory.models import LabResult
 
@@ -330,35 +330,67 @@ class UserAdmin(BaseUserAdmin):
 This represent the forms that will be shown to the admin when creating a new patient
 and updating existing patients.
 '''
-class PatientAdminForm(forms.ModelForm):
-    class Meta:
-        model = Patient
-        fields = (
-            "patientID",
-            "firstName",
-            "middleInitial",
-            "lastName",
-            "age",
-            "gender",
-            "birthDate",
-            'department',
-            'course',
-            'yrLevel',
-            'studNumber',
-            'address',
-            'height',
-            'weight',
-            "registration",
-            "phone",
-            "email",
-            'assignedPhysician',
-        )
+# class PatientAdminForm(forms.ModelForm):
+#     class Meta:
+#         model = Patient
+#         fields = (
+#             # "patientID",
+#             "firstName",
+#             "middleInitial",
+#             "lastName",
+#             "age",
+#             "gender",
+#             "birthDate",
+#             'department',
+#             'course',
+#             'yrLevel',
+#             'studNumber',
+#             'address',
+#             'height',
+#             'weight',
+#             "registration",
+#             "phone",
+#             "email", 
+#             'assignedPhysician',
+#         )
+
+# class HealthRecordAdminForm(forms.ModelForm):
+#     class Meta:
+#         model = Health_Record
+#         fields = (  
+#             'illnesses',
+#             'allergies',
+#             'pastDisease',
+#             'familyHistory',
+#             'lastMensPeriod', 
+#         )
+
+# class ContactAdminForm(forms.ModelForm):
+#     class Meta:
+#         model = Contact_Person
+#         fields = (  
+#             'fullName',
+#             'contactNum',
+#             'contactAddress',
+#         )
+
+# class PatientInline(admin.TabularInline):
+#     model = Patient
+
+class HealthRecordInline(admin.StackedInline):
+    model = Health_Record
+    extra = 1
+
+class ContactInline(admin.StackedInline):
+    model = Contact_Person
+    extra = 1
 
 '''
 This represent the table that will be shown to the admin looking at the currently stored patients.
 '''
-class PatientAdmin(admin.ModelAdmin):
-    form = PatientAdminForm
+class PatientAdmin(admin.ModelAdmin): 
+    # form = PatientAdminForm, HealthRecordAdminForm, ContactAdminForm
+    inlines = [HealthRecordInline, ContactInline]
     list_display = (
         "patientID",
         "firstName",
@@ -376,17 +408,19 @@ class PatientAdmin(admin.ModelAdmin):
         'weight',
         "registration",
         "phone",
-        "email",
+        "email", 
         'assignedPhysician',
     )
-    list_filter = ("patientID", "gender", "registration",'department')
+    list_filter = ("patientID", "gender", "registration",'department','assignedPhysician')
     search_fields = (
         "patientID",
         "firstName",
-        "middleName",
+        "middleInitial",
         "lastName",
         "birthDate",
+        'department',
         "email",
+        'assignedPhysician',
     )
 
     def get_urls(self):

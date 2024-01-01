@@ -37,6 +37,7 @@ class PatientView(viewsets.ModelViewSet):
                 age=patient_data['age'],
                 gender=patient_data['gender'],
                 birthDate=patient_data['birthDate'],
+                department=patient_data['department'],
                 course=patient_data['course'],
                 yrLevel=patient_data['yrLevel'],
                 studNumber=patient_data['studNumber'],
@@ -45,14 +46,18 @@ class PatientView(viewsets.ModelViewSet):
                 weight=patient_data['weight'],
                 registration=patient_data['registration'],
                 phone=patient_data['phone'],
-                email=patient_data['email']
+                email=patient_data['email'],
+                assignedPhysician=patient_data['assignedPhysician']
             )
             patient_instance = get_object_or_404(Patient, pk=patient_data['patientID'])
             record = Health_Record.objects.create(
                 symptoms = patient_data['symptoms'],
-                illneses = patient_data['illneses'],
+                diseases = patient_data['symptoms'],
+                illnesses = patient_data['illnesses'],
+                pastDiseases = patient_data['pastDiseases'],
                 allergies = patient_data['allergies'],
                 familyHistory = patient_data['familyHistory'],
+                lastMensPeriod = patient_data['lastMensPeriod'],
                 patient = patient_instance
             )
             contact = Contact_Person.objects.create(
@@ -168,7 +173,8 @@ class HealthRecordView(viewsets.ViewSet):
             record = Health_Record.objects.get(patient=patient)
             record_data = json.loads(request.body)
             record.symptoms = record_data['symptoms']
-            record.illnesses = record_data['illneses']
+            record.diseases = record_data['symptoms']
+            record.illnesses = record_data['illnesses']
             record.allergies = record_data['allergies']
             record.pastDisease = record_data['pastDisease']
             record.familyHistory = record_data['familyHistory']

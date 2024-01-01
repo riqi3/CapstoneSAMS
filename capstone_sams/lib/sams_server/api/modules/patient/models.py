@@ -12,7 +12,7 @@ class Patient(models.Model):
     }
 
     #Patient Indentification
-    patientID = models.CharField(max_length=100, primary_key=True)
+    patientID = models.AutoField(primary_key = True)
     firstName = models.CharField(max_length=100, blank = False)
     middleInitial = models.CharField(max_length=1, blank = True)
     lastName = models.CharField(max_length=100, blank = False)
@@ -41,11 +41,12 @@ class Patient(models.Model):
         verbose_name_plural = "Patient Record"
 
 class Contact_Person(models.Model):
+    patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
     contactId = models.AutoField(primary_key = True)
     fullName = models.CharField(max_length=100, blank = False)
     contactNum = models.CharField(max_length=50, blank = False)
     contactAddress = models.CharField(blank= False)
-    patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
+    
 
 '''
 This model represent the health records
@@ -54,14 +55,16 @@ record is connected to only one patient.
 '''
 class Health_Record(models.Model):
     #Health Record Attributes
+    patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
     recordNum = models.AutoField(primary_key = True)
     symptoms = models.JSONField(blank = True, default=None)
+    diseases = models.JSONField(blank = True, default=None)
     illnesses = models.JSONField(blank = True, default=None)
     allergies = models.JSONField(blank = True, default=None)
     pastDisease = models.JSONField(blank = True, default=None)
     familyHistory = models.JSONField(blank = True, default=None)
     lastMensPeriod = models.CharField(max_length=100, blank = True, default=None)
-    patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
+    
 
     class Meta:
         verbose_name = "Health Record"
