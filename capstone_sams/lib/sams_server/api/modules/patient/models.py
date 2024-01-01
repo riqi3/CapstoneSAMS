@@ -34,7 +34,7 @@ class Patient(models.Model):
 
     
     def __str__(self):
-        return f"{self.patientID} - {self.firstName} {self.middleName} {self.lastName}"
+        return f"{self.patientID} - {self.firstName} {self.middleInitial} {self.lastName}"
     
     class Meta:
         verbose_name = "Patient Record"
@@ -57,12 +57,12 @@ class Health_Record(models.Model):
     #Health Record Attributes
     patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
     recordNum = models.AutoField(primary_key = True)
-    symptoms = models.JSONField(blank = True, default=None)
-    diseases = models.JSONField(blank = True, default=None)
-    illnesses = models.JSONField(blank = True, default=None)
-    allergies = models.JSONField(blank = True, default=None)
-    pastDisease = models.JSONField(blank = True, default=None)
-    familyHistory = models.JSONField(blank = True, default=None)
+    symptoms = models.JSONField(blank = True, default=None, null=True)
+    diseases = models.JSONField(blank = True, default=None, null=True)
+    illnesses = models.JSONField(blank = True, default=None, null=True)
+    allergies = models.JSONField(blank = True, default=None, null=True)
+    pastDisease = models.JSONField(blank = True, default=None, null=True)
+    familyHistory = models.JSONField(blank = True, default=None, null=True)
     lastMensPeriod = models.CharField(max_length=100, blank = True, default=None)
     
 
