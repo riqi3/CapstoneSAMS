@@ -109,15 +109,15 @@ def create_data_log_for_deletion(sender, instance, using, **kwargs):
 This is a signal that will create a data log if an admin user deletes
 any data.
 '''
-@receiver(post_save, sender=Patient)
-def create_health_record(sender, instance, created, **kwargs):
-    if created:
-        health_record = Health_Record.objects.create(
-            symptoms={"symptoms": "None"},
-            diseases={"diseases": "None"},
-            patient=instance,
-        )
-        admin_account = instance.user
+# @receiver(post_save, sender=Patient)
+# def create_health_record(sender, instance, created, **kwargs):
+#     if created:
+#         health_record = Health_Record.objects.create(
+#             symptoms={"symptoms": "None"},
+#             diseases={"diseases": "None"},
+#             patient=instance,
+#         )
+#         admin_account = instance.user
 
 
 COMMON_PASSWORDS = ["password", "12345678", "qwerty", "abc123"]
