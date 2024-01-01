@@ -52,7 +52,7 @@ class PatientView(viewsets.ModelViewSet):
             patient_instance = get_object_or_404(Patient, pk=patient_data['patientID'])
             record = Health_Record.objects.create(
                 symptoms = patient_data['symptoms'],
-                diseases = patient_data['symptoms'],
+                diseases = patient_data['diseases'],
                 illnesses = patient_data['illnesses'],
                 pastDiseases = patient_data['pastDiseases'],
                 allergies = patient_data['allergies'],
