@@ -1,8 +1,8 @@
 import 'package:capstone_sams/models/PatientModel.dart'; 
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/PhysicianCard.dart';
 import 'package:flutter/material.dart';  
-import '../../../../../constants/theme/pallete.dart';
-import '../../../../../constants/theme/sizing.dart';
+import '../../../../../../../constants/theme/pallete.dart';
+import '../../../../../../../constants/theme/sizing.dart';
 
 class MedicationOrderSection extends StatefulWidget {
   final Patient patient; 
