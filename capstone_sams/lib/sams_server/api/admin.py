@@ -26,6 +26,8 @@ from api.modules.laboratory.models import LabResult
 
 from api.modules.disease_prediction.cdssModel.models import HealthSymptom
 from api.modules.disease_prediction.cdssModel.views import train_disease_prediction_model
+from api.modules.disease_prediction.diagnosticModel.models import DiagnosticFields
+from api.modules.disease_prediction.diagnosticModel.forms import CsvImportDiagnosticFieldsForm
 
 '''
 This is a signal that will create a data log if a user logs in.
@@ -880,6 +882,74 @@ class HealthSymptomAdmin(admin.ModelAdmin):
     def has_add_permission(self, request, obj=None):
         return False
 
+class DiagnosticFieldsAdminForm(forms.ModelForm):
+    class Meta:
+        model = DiagnosticFields
+        fields = "__all__"
+class DiagnosticFieldsAdmin(admin.ModelAdmin):
+    form = DiagnosticFieldsAdminForm
+    list_display = [
+    "disease", 
+    "fever", 
+    "cough", 
+    "fatigue", 
+    "difficulty_breathing", 
+    "age", 
+    "gender", 
+    "blood_pressure", 
+    "cholesterol_level", 
+    "outcome_variable", 
+    ]
+
+    list_filter = ["disease"]  
+    search_fields = ["disease"] 
+
+    ordering = ('-id',)
+
+    def get_urls(self):
+        urls = super().get_urls()
+        new_urls = [
+            # path("retrain_model/", self.retrain_model, name="admin_retrain_model"),
+            path("upload-csv/", self.upload_csv, name="upload-csv"),
+        ]
+        return new_urls + urls 
+    
+    def upload_csv(self, request):
+        if request.method == "POST":
+            csv_file = request.FILES["csv_upload"]
+            if not csv_file.name.endswith(".csv"):
+                messages.warning(request, "The wrong file type was uploaded")
+                return HttpResponseRedirect(request.path_info)
+            file_data = csv_file.read().decode("utf-8")
+            csv_data = file_data.split("\n")
+            for x in csv_data[1:]:
+                if not x.strip():
+                    continue
+                fields = x.split(",")
+                try:
+                    created = DiagnosticFields.objects.update_or_create(
+                        disease=fields[0], 
+                        fever=fields[1], 
+                        cough=fields[2], 
+                        fatigue=fields[3], 
+                        difficulty_breathing=fields[4], 
+                        age=fields[5], 
+                        gender=fields[6], 
+                        blood_pressure=fields[7], 
+                        cholesterol_level=fields[8], 
+                        outcome_variable=fields[9], 
+                    )
+                except IndexError:
+                    continue
+            url = reverse("admin:index")
+            return HttpResponseRedirect(url)
+        form = CsvImportDiagnosticFieldsForm()
+        data = {"form": form}
+        return render(request, "admin/csv_upload.html", data)
+
+    def has_add_permission(self, request, obj=None):
+        return False
+    
 admin.site.register(Account, UserAdmin)
 admin.site.register(Patient, PatientAdmin)
 admin.site.register(Data_Log, DataLogsAdmin)
@@ -888,6 +958,7 @@ admin.site.register(Health_Record, HealthRecordAdmin)
 admin.site.register(Prescription, PrescriptionAdmin)
 admin.site.register(LabResult, LabResultAdmin)
 admin.site.register(HealthSymptom, HealthSymptomAdmin)
+admin.site.register(DiagnosticFields, DiagnosticFieldsAdmin)
 admin.site.unregister(Group)
 
 post_save.connect(create_data_log_instance, sender=LogEntry)
