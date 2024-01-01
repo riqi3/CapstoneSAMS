@@ -3,29 +3,29 @@ import 'package:http/http.dart' as http;
 import '../constants/Env.dart';
 
 class Account {
-  final String accountID;
-  final String username;
+  final String? accountID;
+  final String? username;
   String? profile_photo;
   final String? password;
-  final String firstName;
-  final String lastName;
-  final String accountRole;
+  final String? firstName;
+  final String? lastName;
+  String? accountRole;
   String? token;
-  final bool isActive;
-  final bool isStaff;
+  final bool? isActive;
+  final bool? isStaff;
   final bool isSuperuser;
 
   Account({
-    required this.accountID,
-    required this.username,
-    required this.profile_photo,
-    required this.password,
-    required this.firstName,
-    required this.lastName,
-    required this.accountRole,
+    this.accountID,
+    this.username,
+    this.profile_photo,
+    this.password,
+    this.firstName,
+    this.lastName,
+    this.accountRole,
     this.token,
-    required this.isActive,
-    required this.isStaff,
+    this.isActive,
+    this.isStaff,
     required this.isSuperuser,
   });
 

@@ -32,7 +32,7 @@ class TodosProvider extends ChangeNotifier {
         ),
         headers: headers,
       );
-      await Future.delayed(Duration(milliseconds: 3000));
+      // await Future.delayed(Duration(milliseconds: 3000));
       if (response.statusCode == 200) {
         final items = json.decode(response.body).cast<Map<String, dynamic>>();
         List<Todo> list =
@@ -62,7 +62,7 @@ class TodosProvider extends ChangeNotifier {
         headers: headers,
         body: jsonEncode(todo.toJson()),
       );
-      await Future.delayed(Duration(milliseconds: 3000));
+      // await Future.delayed(Duration(milliseconds: 3000));
       if (response.statusCode == 201) {
         fetchTodos(accountID, token);
         notifyListeners();
@@ -87,7 +87,7 @@ class TodosProvider extends ChangeNotifier {
           ),
           headers: headers,
           body: jsonEncode(todo.toJson()));
-      await Future.delayed(Duration(milliseconds: 3000));
+      // await Future.delayed(Duration(milliseconds: 3000));
 
       if (response.statusCode == 204) {
         fetchTodos(accountID, token);
@@ -116,7 +116,7 @@ class TodosProvider extends ChangeNotifier {
         headers: headers,
         body: body,
       );
-      await Future.delayed(Duration(milliseconds: 3000));
+      // await Future.delayed(Duration(milliseconds: 3000));
 
       if (response.statusCode == 204) {
         todo.isDone = !todo.isDone;
@@ -141,7 +141,7 @@ class TodosProvider extends ChangeNotifier {
         headers: headers,
         body: body,
       );
-      await Future.delayed(Duration(milliseconds: 3000));
+      // await Future.delayed(Duration(milliseconds: 3000));
       if (response.statusCode == 204) {
         fetchTodos(todo.account, token);
       } else {
@@ -150,5 +150,10 @@ class TodosProvider extends ChangeNotifier {
     } on Exception catch (e) {
       print('Failed to delete todo. Error: $e');
     }
+  }
+
+  void setEmpty() {
+    _todos = [];
+    notifyListeners();
   }
 }

@@ -110,3 +110,50 @@ class _PasswordTextfieldState extends State<PasswordTextfield> {
     );
   }
 }
+
+class FormTextField extends StatefulWidget {
+  final String labeltext;
+  final String? validator;
+  final TextEditingController? controller;
+  final TextInputType type;
+  final int? maxlength;
+  final int? maxlines;
+  final String? countertext;
+
+  const FormTextField({
+    super.key,
+    required this.labeltext,
+    required this.type,
+    this.controller,
+    this.validator,
+    this.countertext,
+    this.maxlength,
+    this.maxlines,
+  });
+
+  @override
+  State<FormTextField> createState() => _FormTextFieldState();
+}
+
+class _FormTextFieldState extends State<FormTextField> {
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: '${widget.labeltext}',
+        border: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Pallete.primaryColor,
+          ),
+        ),
+        counterText: widget.countertext,
+        filled: true,
+        fillColor: Pallete.palegrayColor,
+      ),
+      validator: (value) => value == '' ? widget.validator : null,
+      keyboardType: widget.type,
+      maxLength: widget.maxlength,
+      maxLines: widget.maxlines,
+    );
+  }
+}

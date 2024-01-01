@@ -1,4 +1,4 @@
-import 'package:capstone_sams/screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/PatientTabsScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../constants/theme/pallete.dart';

@@ -1,5 +1,6 @@
 import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
+import 'package:capstone_sams/providers/MedicalNotesProvider.dart';
 import 'package:capstone_sams/screens/authentication/LoginScreen.dart';
 import 'package:capstone_sams/screens/home/HomeScreen.dart';
 
@@ -57,6 +58,7 @@ class _DashboardState extends State<Dashboard> {
               var success = await context.read<AccountProvider>().logout();
 
               if (success) {
+                context.read<TodosProvider>().setEmpty();
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (context) => LoginScreen()),

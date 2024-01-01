@@ -6,10 +6,10 @@ import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/PrescriptionProvider.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/crud/CounterScreen.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/crud/DetailsMedicineScreen.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/crud/EditMedicineScreen.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/PatientTabsScreen.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/crud/medicine/CounterScreen.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/crud/medicine/DetailsMedicineScreen.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/crud/medicine/EditMedicineScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -210,16 +210,20 @@ class _InfoState extends State<Info> {
     final provider = Provider.of<PrescriptionProvider>(context, listen: false);
     provider.removePrescription(prescription, widget.patient.patientId,
         context.read<AccountProvider>().token!);
-    int? index = int.tryParse(widget.index);
-
-    Navigator.push(
+    int index = 1;
+    int routesCount = 0;
+    Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
-        builder: (context) => PatientTabsScreen(
-          patient: widget.patient,
-          index: index!,
-        ),
-      ),
+          builder: (context) =>
+              PatientTabsScreen(patient: widget.patient, index: index)),
+      (Route<dynamic> route) {
+        if (routesCount < 3) {
+          routesCount++;
+          return false;
+        }
+        return true;
+      },
     );
 
     const snackBar = SnackBar(

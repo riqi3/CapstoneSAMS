@@ -35,8 +35,7 @@ class LabResultCard extends StatelessWidget {
                 EdgeInsets.symmetric(horizontal: Sizing.sectionSymmPadding),
             width: MediaQuery.of(context).size.width,
             height: Sizing.cardContainerHeight,
-            child: Text(
-              // labresult.title,
+            child: Text( 
               labresultTitles,
               style: TextStyle(
                   color: Pallete.whiteColor,

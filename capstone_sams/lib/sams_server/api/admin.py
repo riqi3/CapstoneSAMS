@@ -26,6 +26,8 @@ from api.modules.laboratory.models import LabResult
 
 from api.modules.disease_prediction.cdssModel.models import HealthSymptom
 from api.modules.disease_prediction.cdssModel.views import train_disease_prediction_model
+from api.modules.disease_prediction.diagnosticModel.models import DiagnosticFields
+from api.modules.disease_prediction.diagnosticModel.forms import CsvImportDiagnosticFieldsForm
 
 '''
 This is a signal that will create a data log if a user logs in.
@@ -292,8 +294,7 @@ class UserAdmin(BaseUserAdmin):
                     "is_staff",
                     "is_superuser",
                     "password1",
-                    "password2",
-                    "profile_photo",
+                    "password2", 
                 ),
             },
         ),
@@ -711,142 +712,147 @@ class HealthSymptomAdmin(admin.ModelAdmin):
             file_data = csv_file.read().decode("utf-8")
             csv_data = file_data.split("\n")
             for x in csv_data[1:]:
+                if not x.strip():
+                    continue
                 fields = x.split(",")
-                created = HealthSymptom.objects.update_or_create(
-                    itching=fields[0],
-                    skin_rash=fields[1],
-                    nodal_skin_eruptions=fields[2],
-                    continuous_sneezing=fields[3],
-                    shivering=fields[4],
-                    chills=fields[5],
-                    joint_pain=fields[6],
-                    stomach_pain=fields[7],
-                    acidity=fields[8],
-                    ulcers_on_tongue=fields[9],
-                    muscle_wasting=fields[10],
-                    vomiting=fields[11],
-                    burning_micturition=fields[12],
-                    spotting_urination=fields[13],
-                    fatigue=fields[14],
-                    weight_gain=fields[15],
-                    anxiety=fields[16],
-                    cold_hands_and_feets=fields[17],
-                    mood_swings=fields[18],
-                    weight_loss=fields[19],
-                    restlessness=fields[20],
-                    lethargy=fields[21],
-                    patches_in_throat=fields[22],
-                    irregular_sugar_level=fields[23],
-                    cough=fields[24],
-                    high_fever=fields[25],
-                    sunken_eyes=fields[26],
-                    breathlessness=fields[27],
-                    sweating=fields[28],
-                    dehydration=fields[29],
-                    indigestion=fields[30],
-                    headache=fields[31],
-                    yellowish_skin=fields[32],
-                    dark_urine=fields[33],
-                    nausea=fields[34],
-                    loss_of_appetite=fields[35],
-                    pain_behind_the_eyes=fields[36],
-                    back_pain=fields[37],
-                    constipation=fields[38],
-                    abdominal_pain=fields[39],
-                    diarrhoea=fields[40],
-                    mild_fever=fields[41],
-                    yellow_urine=fields[42],
-                    yellowing_of_eyes=fields[43],
-                    acute_liver_failure=fields[44],
-                    fluid_overload=fields[45],
-                    swelling_of_stomach=fields[46],
-                    swelled_lymph_nodes=fields[47],
-                    malaise=fields[48],
-                    blurred_and_distorted_vision=fields[49],
-                    phlegm=fields[50],
-                    throat_irritation=fields[51],
-                    redness_of_eyes=fields[52],
-                    sinus_pressure=fields[53],
-                    runny_nose=fields[54],
-                    congestion=fields[55],
-                    chest_pain=fields[56],
-                    weakness_in_limbs=fields[57],
-                    fast_heart_rate=fields[58],
-                    pain_during_bowel_movements=fields[59],
-                    pain_in_anal_region=fields[60],
-                    bloody_stool=fields[61],
-                    irritation_in_anus=fields[62],
-                    neck_pain=fields[63],
-                    dizziness=fields[64],
-                    cramps=fields[65],
-                    bruising=fields[66],
-                    obesity=fields[67],
-                    swollen_legs=fields[68],
-                    swollen_blood_vessels=fields[69],
-                    puffy_face_and_eyes=fields[70],
-                    enlarged_thyroid=fields[71],
-                    brittle_nails=fields[72],
-                    swollen_extremities=fields[73],
-                    excessive_hunger=fields[74],
-                    extra_marital_contacts=fields[75],
-                    drying_and_tingling_lips=fields[76],
-                    slurred_speech=fields[77],
-                    knee_pain=fields[78],
-                    hip_joint_pain=fields[79],
-                    muscle_weakness=fields[80],
-                    stiff_neck=fields[81],
-                    swelling_joints=fields[82],
-                    movement_stiffness=fields[83],
-                    spinning_movements=fields[84],
-                    loss_of_balance=fields[85],
-                    unsteadiness=fields[86],
-                    weakness_of_one_body_side=fields[87],
-                    loss_of_smell=fields[88],
-                    bladder_discomfort=fields[89],
-                    foul_smell_of_urine=fields[90],
-                    continuous_feel_of_urine=fields[91],
-                    passage_of_gases=fields[92],
-                    internal_itching=fields[93],
-                    toxic_look_typhos=fields[94],
-                    depression=fields[95],
-                    irritability=fields[96],
-                    muscle_pain=fields[97],
-                    altered_sensorium=fields[98],
-                    red_spots_over_body=fields[99],
-                    belly_pain=fields[100],
-                    abnormal_menstruation=fields[101],
-                    dischromic_patches=fields[102],
-                    watering_from_eyes=fields[103],
-                    increased_appetite=fields[104],
-                    polyuria=fields[105],
-                    family_history=fields[106],
-                    mucoid_sputum=fields[107],
-                    rusty_sputum=fields[108],
-                    lack_of_concentration=fields[109],
-                    visual_disturbances=fields[110],
-                    receiving_blood_transfusion=fields[111],
-                    receiving_unsterile_injections=fields[112],
-                    coma=fields[113],
-                    stomach_bleeding=fields[114],
-                    distention_of_abdomen=fields[115],
-                    history_of_alcohol_consumption=fields[116],
-                    fluid_overload_2=fields[117],
-                    blood_in_sputum=fields[118],
-                    prominent_veins_on_calf=fields[119],
-                    palpitations=fields[120],
-                    painful_walking=fields[121],
-                    pus_filled_pimples=fields[122],
-                    blackheads=fields[123],
-                    scurrying=fields[124],
-                    skin_peeling=fields[125],
-                    silver_like_dusting=fields[126],
-                    small_dents_in_nails=fields[127],
-                    inflammatory_nails=fields[128],
-                    blister=fields[129],
-                    red_sore_around_nose=fields[130],
-                    yellow_crust_ooze=fields[131],
-                    prognosis=fields[132]
-                )
+                try:
+                    created = HealthSymptom.objects.update_or_create(
+                        itching=fields[0],
+                        skin_rash=fields[1],
+                        nodal_skin_eruptions=fields[2],
+                        continuous_sneezing=fields[3],
+                        shivering=fields[4],
+                        chills=fields[5],
+                        joint_pain=fields[6],
+                        stomach_pain=fields[7],
+                        acidity=fields[8],
+                        ulcers_on_tongue=fields[9],
+                        muscle_wasting=fields[10],
+                        vomiting=fields[11],
+                        burning_micturition=fields[12],
+                        spotting_urination=fields[13],
+                        fatigue=fields[14],
+                        weight_gain=fields[15],
+                        anxiety=fields[16],
+                        cold_hands_and_feets=fields[17],
+                        mood_swings=fields[18],
+                        weight_loss=fields[19],
+                        restlessness=fields[20],
+                        lethargy=fields[21],
+                        patches_in_throat=fields[22],
+                        irregular_sugar_level=fields[23],
+                        cough=fields[24],
+                        high_fever=fields[25],
+                        sunken_eyes=fields[26],
+                        breathlessness=fields[27],
+                        sweating=fields[28],
+                        dehydration=fields[29],
+                        indigestion=fields[30],
+                        headache=fields[31],
+                        yellowish_skin=fields[32],
+                        dark_urine=fields[33],
+                        nausea=fields[34],
+                        loss_of_appetite=fields[35],
+                        pain_behind_the_eyes=fields[36],
+                        back_pain=fields[37],
+                        constipation=fields[38],
+                        abdominal_pain=fields[39],
+                        diarrhoea=fields[40],
+                        mild_fever=fields[41],
+                        yellow_urine=fields[42],
+                        yellowing_of_eyes=fields[43],
+                        acute_liver_failure=fields[44],
+                        fluid_overload=fields[45],
+                        swelling_of_stomach=fields[46],
+                        swelled_lymph_nodes=fields[47],
+                        malaise=fields[48],
+                        blurred_and_distorted_vision=fields[49],
+                        phlegm=fields[50],
+                        throat_irritation=fields[51],
+                        redness_of_eyes=fields[52],
+                        sinus_pressure=fields[53],
+                        runny_nose=fields[54],
+                        congestion=fields[55],
+                        chest_pain=fields[56],
+                        weakness_in_limbs=fields[57],
+                        fast_heart_rate=fields[58],
+                        pain_during_bowel_movements=fields[59],
+                        pain_in_anal_region=fields[60],
+                        bloody_stool=fields[61],
+                        irritation_in_anus=fields[62],
+                        neck_pain=fields[63],
+                        dizziness=fields[64],
+                        cramps=fields[65],
+                        bruising=fields[66],
+                        obesity=fields[67],
+                        swollen_legs=fields[68],
+                        swollen_blood_vessels=fields[69],
+                        puffy_face_and_eyes=fields[70],
+                        enlarged_thyroid=fields[71],
+                        brittle_nails=fields[72],
+                        swollen_extremities=fields[73],
+                        excessive_hunger=fields[74],
+                        extra_marital_contacts=fields[75],
+                        drying_and_tingling_lips=fields[76],
+                        slurred_speech=fields[77],
+                        knee_pain=fields[78],
+                        hip_joint_pain=fields[79],
+                        muscle_weakness=fields[80],
+                        stiff_neck=fields[81],
+                        swelling_joints=fields[82],
+                        movement_stiffness=fields[83],
+                        spinning_movements=fields[84],
+                        loss_of_balance=fields[85],
+                        unsteadiness=fields[86],
+                        weakness_of_one_body_side=fields[87],
+                        loss_of_smell=fields[88],
+                        bladder_discomfort=fields[89],
+                        foul_smell_of_urine=fields[90],
+                        continuous_feel_of_urine=fields[91],
+                        passage_of_gases=fields[92],
+                        internal_itching=fields[93],
+                        toxic_look_typhos=fields[94],
+                        depression=fields[95],
+                        irritability=fields[96],
+                        muscle_pain=fields[97],
+                        altered_sensorium=fields[98],
+                        red_spots_over_body=fields[99],
+                        belly_pain=fields[100],
+                        abnormal_menstruation=fields[101],
+                        dischromic_patches=fields[102],
+                        watering_from_eyes=fields[103],
+                        increased_appetite=fields[104],
+                        polyuria=fields[105],
+                        family_history=fields[106],
+                        mucoid_sputum=fields[107],
+                        rusty_sputum=fields[108],
+                        lack_of_concentration=fields[109],
+                        visual_disturbances=fields[110],
+                        receiving_blood_transfusion=fields[111],
+                        receiving_unsterile_injections=fields[112],
+                        coma=fields[113],
+                        stomach_bleeding=fields[114],
+                        distention_of_abdomen=fields[115],
+                        history_of_alcohol_consumption=fields[116],
+                        fluid_overload_2=fields[117],
+                        blood_in_sputum=fields[118],
+                        prominent_veins_on_calf=fields[119],
+                        palpitations=fields[120],
+                        painful_walking=fields[121],
+                        pus_filled_pimples=fields[122],
+                        blackheads=fields[123],
+                        scurrying=fields[124],
+                        skin_peeling=fields[125],
+                        silver_like_dusting=fields[126],
+                        small_dents_in_nails=fields[127],
+                        inflammatory_nails=fields[128],
+                        blister=fields[129],
+                        red_sore_around_nose=fields[130],
+                        yellow_crust_ooze=fields[131],
+                        prognosis=fields[132]
+                    )
+                except IndexError:
+                    continue
             url = reverse("admin:index")
             return HttpResponseRedirect(url)
         form = CsvImportHealthSymptomForm()
@@ -876,6 +882,74 @@ class HealthSymptomAdmin(admin.ModelAdmin):
     def has_add_permission(self, request, obj=None):
         return False
 
+class DiagnosticFieldsAdminForm(forms.ModelForm):
+    class Meta:
+        model = DiagnosticFields
+        fields = "__all__"
+class DiagnosticFieldsAdmin(admin.ModelAdmin):
+    form = DiagnosticFieldsAdminForm
+    list_display = [
+    "disease", 
+    "fever", 
+    "cough", 
+    "fatigue", 
+    "difficulty_breathing", 
+    "age", 
+    "gender", 
+    "blood_pressure", 
+    "cholesterol_level", 
+    "outcome_variable", 
+    ]
+
+    list_filter = ["disease"]  
+    search_fields = ["disease"] 
+
+    ordering = ('-id',)
+
+    def get_urls(self):
+        urls = super().get_urls()
+        new_urls = [
+            # path("retrain_model/", self.retrain_model, name="admin_retrain_model"),
+            path("upload-csv/", self.upload_csv, name="upload-csv"),
+        ]
+        return new_urls + urls 
+    
+    def upload_csv(self, request):
+        if request.method == "POST":
+            csv_file = request.FILES["csv_upload"]
+            if not csv_file.name.endswith(".csv"):
+                messages.warning(request, "The wrong file type was uploaded")
+                return HttpResponseRedirect(request.path_info)
+            file_data = csv_file.read().decode("utf-8")
+            csv_data = file_data.split("\n")
+            for x in csv_data[1:]:
+                if not x.strip():
+                    continue
+                fields = x.split(",")
+                try:
+                    created = DiagnosticFields.objects.update_or_create(
+                        disease=fields[0], 
+                        fever=fields[1], 
+                        cough=fields[2], 
+                        fatigue=fields[3], 
+                        difficulty_breathing=fields[4], 
+                        age=fields[5], 
+                        gender=fields[6], 
+                        blood_pressure=fields[7], 
+                        cholesterol_level=fields[8], 
+                        outcome_variable=fields[9], 
+                    )
+                except IndexError:
+                    continue
+            url = reverse("admin:index")
+            return HttpResponseRedirect(url)
+        form = CsvImportDiagnosticFieldsForm()
+        data = {"form": form}
+        return render(request, "admin/csv_upload.html", data)
+
+    def has_add_permission(self, request, obj=None):
+        return False
+    
 admin.site.register(Account, UserAdmin)
 admin.site.register(Patient, PatientAdmin)
 admin.site.register(Data_Log, DataLogsAdmin)
@@ -884,6 +958,7 @@ admin.site.register(Health_Record, HealthRecordAdmin)
 admin.site.register(Prescription, PrescriptionAdmin)
 admin.site.register(LabResult, LabResultAdmin)
 admin.site.register(HealthSymptom, HealthSymptomAdmin)
+admin.site.register(DiagnosticFields, DiagnosticFieldsAdmin)
 admin.site.unregister(Group)
 
 post_save.connect(create_data_log_instance, sender=LogEntry)

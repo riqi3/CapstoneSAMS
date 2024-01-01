@@ -3,7 +3,6 @@ import 'package:capstone_sams/constants/Dimensions.dart';
 import 'package:capstone_sams/constants/Strings.dart';
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/global-widgets/SearchAppBar.dart';
-import 'package:capstone_sams/global-widgets/TitleAppBar.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/widgets/PatientCard.dart';
@@ -111,6 +110,13 @@ class _EhrListScreenState extends State<EhrListScreen> {
           },
         ),
       ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () => showDialog(
+      //     context: context,
+      //     builder: (ctx) => CourseDialog(),
+      //   ),
+      //   child: FaIcon(FontAwesomeIcons.pencil),
+      // ),
       bottomNavigationBar: Padding(
         padding: EdgeInsets.symmetric(vertical: Sizing.spacing),
         child: Row(

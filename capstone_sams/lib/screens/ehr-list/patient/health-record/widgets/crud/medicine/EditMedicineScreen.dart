@@ -1,19 +1,18 @@
+import 'package:capstone_sams/constants/Env.dart';
+import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/models/MedicineModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/PrescriptionProvider.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/PatientTabsScreen.dart';
 
 import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../../../../../constants/Env.dart';
-import '../../../../../../constants/theme/pallete.dart';
-
+ 
 class EditMedicineScreen extends StatefulWidget {
   final Medicine medicine;
   final Prescription? prescription;
@@ -127,7 +126,6 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('medicine index ${widget.index}');
     return Scaffold(
       appBar: AppBar(
         title: Text('Edit Medication Order'),

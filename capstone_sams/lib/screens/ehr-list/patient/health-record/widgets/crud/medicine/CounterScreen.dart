@@ -8,7 +8,7 @@ import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/PrescriptionProvider.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/PatientTabsScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -70,9 +70,8 @@ class _CounterScreenState extends State<CounterScreen> {
   void savePrescription() {
     updateQuantity = _counter;
     final selectedMedicineIndex = widget.index;
-    List<dynamic> updatedMedicines = List.from(medicines!);
-
-    print('get amount ${updateQuantity}');
+    List<dynamic> updatedMedicines = List.from(medicines!); 
+    
     if (selectedMedicineIndex >= 0 &&
         selectedMedicineIndex < medicines!.length) {
       Medicine modifiedMedicine = Medicine(
@@ -86,7 +85,6 @@ class _CounterScreenState extends State<CounterScreen> {
       );
 
       updatedMedicines[selectedMedicineIndex] = modifiedMedicine;
-      print('list ${updatedMedicines}');
 
       final provider =
           Provider.of<PrescriptionProvider>(context, listen: false);
@@ -102,13 +100,14 @@ class _CounterScreenState extends State<CounterScreen> {
         widget.patient.patientId,
         token,
       );
-      
+
       int routesCount = 0;
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-            builder: (context) => PatientTabsScreen(
-                patient: widget.patient, index: widget.index)),
+          builder: (context) =>
+              PatientTabsScreen(patient: widget.patient, index: widget.index),
+        ),
         (Route<dynamic> route) {
           if (routesCount < 5) {
             routesCount++;

@@ -7,7 +7,7 @@ import '../../models/PatientModel.dart';
 
 import '../../providers/AccountProvider.dart';
 import '../../providers/PatientProvider.dart';
-import '../../screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
+import '../../screens/ehr-list/patient/PatientTabsScreen.dart';
 
 class SearchPatientDelegate extends SearchDelegate {
   PatientProvider _patientList = PatientProvider();
@@ -53,13 +53,14 @@ class SearchPatientDelegate extends SearchDelegate {
           itemCount: patient?.length,
           itemBuilder: (context, index) {
             final patient1 = snapshot.data![index];
+            final labresult = int.parse(patient1.patientId); 
             return GestureDetector(
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        PatientTabsScreen(patient: patient1, index: index),
+                        PatientTabsScreen(patient: patient1, index: labresult),
                   ),
                 );
               },
