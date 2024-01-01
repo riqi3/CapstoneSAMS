@@ -1,5 +1,5 @@
 from django.db import models
- 
+from api.modules.user.models import Account
 '''
 This model represent the patients
 inputted and stored into the system.
@@ -19,6 +19,7 @@ class Patient(models.Model):
     age = models.IntegerField(blank= False)
     gender = models.CharField(choices = GENDER_OPTIONS)
     birthDate = models.DateField(blank = False)
+    department = models.CharField(max_length=100, blank = False)
     course = models.CharField(max_length=100, blank = False)
     yrLevel = models.IntegerField(blank = False)
     studNumber = models.CharField(max_length=100, blank = False)
@@ -29,6 +30,7 @@ class Patient(models.Model):
     phone = models.CharField(max_length = 20, blank = True)
     email = models.CharField(max_length = 50, blank = True)
     user = models.CharField(null = True, blank = True)
+    assignedPhysician = models.ForeignKey(Account, on_delete = models.CASCADE)
 
     
     def __str__(self):
@@ -56,7 +58,9 @@ class Health_Record(models.Model):
     symptoms = models.JSONField(blank = True, default=None)
     illnesses = models.JSONField(blank = True, default=None)
     allergies = models.JSONField(blank = True, default=None)
+    pastDisease = models.JSONField(blank = True, default=None)
     familyHistory = models.JSONField(blank = True, default=None)
+    lastMensPeriod = models.CharField(max_length=100, blank = True, default=None)
     patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
 
     class Meta:

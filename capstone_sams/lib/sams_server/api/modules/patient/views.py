@@ -118,6 +118,7 @@ class PatientView(viewsets.ModelViewSet):
             patient.age = patient_data['age']
             patient.gender = patient_data['gender']
             patient.birthDate = patient_data['birthDate']
+            patient.department = patient_data['department']
             patient.course=patient_data['course']
             patient.yrLevel=patient_data['yrLevel']
             patient.studNumber=patient_data['studNumber']
@@ -126,6 +127,7 @@ class PatientView(viewsets.ModelViewSet):
             patient.weight=patient_data['weight']
             patient.phone = patient_data['phone']
             patient.email = patient_data['email']
+            patient.assignedPhysician = patient_data['assignedPhysician']
             patient.save()
             accountID = patient_data['account']
             account = get_object_or_404(Account, pk=accountID)
@@ -168,7 +170,9 @@ class HealthRecordView(viewsets.ViewSet):
             record.symptoms = record_data['symptoms']
             record.illnesses = record_data['illneses']
             record.allergies = record_data['allergies']
+            record.pastDisease = record_data['pastDisease']
             record.familyHistory = record_data['familyHistory']
+            record.lastMensPeriod = record_data['lastMensPeriod']
             record.save()
             return Response({"message": "Health Record updated successfully."}, status=status.HTTP_200_OK)
         except Health_Record.DoesNotExist:

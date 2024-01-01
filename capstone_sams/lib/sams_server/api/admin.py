@@ -336,14 +336,22 @@ class PatientAdminForm(forms.ModelForm):
         fields = (
             "patientID",
             "firstName",
-            "middleName",
+            "middleInitial",
             "lastName",
             "age",
             "gender",
             "birthDate",
+            'department',
+            'course',
+            'yrLevel',
+            'studNumber',
+            'address',
+            'height',
+            'weight',
             "registration",
             "phone",
             "email",
+            'assignedPhysician',
         )
 
 '''
@@ -354,16 +362,24 @@ class PatientAdmin(admin.ModelAdmin):
     list_display = (
         "patientID",
         "firstName",
-        "middleName",
+        "middleInitial",
         "lastName",
         "age",
         "gender",
         "birthDate",
+        'department',
+        'course',
+        'yrLevel',
+        'studNumber',
+        'address',
+        'height',
+        'weight',
         "registration",
         "phone",
         "email",
+        'assignedPhysician',
     )
-    list_filter = ("patientID", "gender", "registration")
+    list_filter = ("patientID", "gender", "registration",'department')
     search_fields = (
         "patientID",
         "firstName",
