@@ -88,28 +88,36 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
                           steps: getSteps(),
                           controlsBuilder:
                               (BuildContext context, ControlsDetails details) {
+                            final isLastStep =
+                                currentStep == getSteps().length - 1;
                             return Row(
                               children: <Widget>[
-                                ElevatedButton(
-                                  child: Text('Cancel'),
-                                  onPressed: details.onStepCancel,
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Pallete.greyColor,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          Sizing.borderRadius),
+                                if (currentStep != 0)
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      child: Text('Cancel'),
+                                      onPressed: details.onStepCancel,
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Pallete.greyColor,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                              Sizing.borderRadius),
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
                                 SizedBox(width: Sizing.formSpacing),
-                                ElevatedButton(
-                                  child: Text('Next'),
-                                  onPressed: details.onStepContinue,
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Pallete.mainColor,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          Sizing.borderRadius),
+                                Expanded(
+                                  child: ElevatedButton(
+                                    child:
+                                        Text(isLastStep ? 'Confirm' : 'Next'),
+                                    onPressed: details.onStepContinue,
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Pallete.mainColor,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            Sizing.borderRadius),
+                                      ),
                                     ),
                                   ),
                                 ),
