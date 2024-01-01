@@ -1,6 +1,6 @@
 import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/providers/PatientProvider.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/health-record/PatientTabsScreen.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/PatientTabsScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/api/api_service.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/AddMedicineDialog.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/MedicineCard.dart';

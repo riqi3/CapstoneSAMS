@@ -8,7 +8,7 @@ import '../constants/theme/pallete.dart';
 import '../constants/theme/sizing.dart';
 import '../global-widgets/TitleAppBar.dart';
 
-import '../screens/home/widgets/HomeAppBar.dart';
+import '../global-widgets/HomeAppBar.dart';
 
 class ValueDashboard extends StatelessWidget {
   const ValueDashboard({super.key});
@@ -63,13 +63,14 @@ class BottomPatientTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final accountProvider = Provider.of<AccountProvider>(context);
+    // final accountProvider = Provider.of<AccountProvider>(context);
     return PreferredSize(
       preferredSize: Size.fromHeight(48),
       child: Container(
         color: Pallete.mainColor,
         child: TabBar(
           controller: tabController,
+          isScrollable: true,
           labelPadding: EdgeInsets.zero,
           indicatorPadding: EdgeInsets.zero,
           indicatorWeight: 2.0,
@@ -89,7 +90,27 @@ class BottomPatientTabs extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Health Record',
+                      'Patient Info',
+                      style: TextStyle(fontSize: Sizing.header6),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            // if (accountProvider.role == 'physician')
+            SizedBox(
+              width: MediaQuery.of(context).size.width / 2 - 10,
+              child: Tab(
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: FaIcon(
+                        FontAwesomeIcons.solidClipboard,
+                      ),
+                    ),
+                    Text(
+                      'Past Medical History',
                       style: TextStyle(fontSize: Sizing.header6),
                     ),
                   ],
@@ -102,38 +123,58 @@ class BottomPatientTabs extends StatelessWidget {
                 child: Column(
                   children: [
                     Align(
-                        alignment: Alignment.center,
-                        child: FaIcon(
-                          FontAwesomeIcons.flaskVial,
-                        )),
+                      alignment: Alignment.center,
+                      child: FaIcon(
+                        FontAwesomeIcons.headSideCough,
+                      ),
+                    ),
                     Text(
-                      'Laboratory',
+                      'Present Illness History',
                       style: TextStyle(fontSize: Sizing.header6),
                     ),
                   ],
                 ),
               ),
             ),
-            if (accountProvider.role == 'physician')
-              SizedBox(
-                width: MediaQuery.of(context).size.width / 2 - 10,
-                child: Tab(
-                  child: Column(
-                    children: [
-                      Align(
-                        alignment: Alignment.center,
-                        child: FaIcon(
-                          FontAwesomeIcons.prescription,
-                        ),
-                      ),
-                      Text(
-                        'Order Entry',
-                        style: TextStyle(fontSize: Sizing.header6),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+
+            // SizedBox(
+            //   width: MediaQuery.of(context).size.width / 2 - 10,
+            //   child: Tab(
+            //     child: Column(
+            //       children: [
+            //         Align(
+            //           alignment: Alignment.center,
+            //           child: FaIcon(
+            //             FontAwesomeIcons.commentMedical,
+            //           ),
+            //         ),
+            //         Text(
+            //           'Diagnosis',
+            //           style: TextStyle(fontSize: Sizing.header6),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
+            // SizedBox(
+            //   width: MediaQuery.of(context).size.width / 2 - 10,
+            //   child: Tab(
+            //     child: Column(
+            //       children: [
+            //         Align(
+            //           alignment: Alignment.center,
+            //           child: FaIcon(
+            //             FontAwesomeIcons.pills,
+            //           ),
+            //         ),
+            //         Text(
+            //           'Treatment',
+            //           style: TextStyle(fontSize: Sizing.header6),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),
