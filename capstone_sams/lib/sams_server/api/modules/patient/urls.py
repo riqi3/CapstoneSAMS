@@ -8,5 +8,6 @@ urlpatterns = [
     path('patients/update/', PatientView.update_patient, name='update_patients'), #API Endpoint for patient data update
     path('patients/history/<str:patientID>', HealthRecordView.fetch_record_by_id, name='patient_record'), #API Endpoint for health record retrieval
     path('patients/history/update/<str:patientID>', HealthRecordView.update_health_record, name='update_patient_record'),
+    path('patients/contact/<str:patientID>', HealthRecordView.fetch_contact_by_id, name='fetch_contact_by_id'),
     path('patients/contact/update/<str:patientID>', ContactPersonView.update_contact_person, name='update_contact_person')
 ]

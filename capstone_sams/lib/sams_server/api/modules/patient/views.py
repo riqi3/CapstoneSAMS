@@ -9,7 +9,7 @@ import json
 from rest_framework import status
 from api.modules.user.models import Account, Data_Log
 from api.modules.patient.models import Patient, Health_Record, Contact_Person
-from api.modules.patient.serializers import PatientSerializer, HealthRecordSerializer
+from api.modules.patient.serializers import PatientSerializer, HealthRecordSerializer, ContactPersonSerializer
 
 '''
 This view represent all the functions necessary to conduct
@@ -83,7 +83,7 @@ class PatientView(viewsets.ModelViewSet):
     Certain to exception handlers were coded to ensure continued operations.
     '''
     @api_view(['GET'])
-    @permission_classes([IsAuthenticated])
+    # @permission_classes([IsAuthenticated])
     def fetch_patients(request):
         try:
             queryset = Patient.objects.all()
@@ -97,7 +97,7 @@ class PatientView(viewsets.ModelViewSet):
     Certain to exception handlers were coded to ensure continued operations.
     '''
     @api_view(['GET'])
-    @permission_classes([IsAuthenticated])
+    # @permission_classes([IsAuthenticated])
     def fetch_patient_by_id(request, patientID):
         try:
             queryset = Patient.objects.filter(pk=patientID)
@@ -166,6 +166,17 @@ class HealthRecordView(viewsets.ViewSet):
         except Health_Record.DoesNotExist:
             return Response({"message": "Health Record does not exist."}, status=status.HTTP_404_NOT_FOUND)
     
+    @api_view(['GET'])
+    def fetch_contact_by_id(request, patientID):
+        try:
+            patient = Patient.objects.get(pk=patientID)
+            contact = Contact_Person.objects.get(patient=patient)
+            serializer = ContactPersonSerializer(contact)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Health_Record.DoesNotExist:
+            return Response({"message": "Health Record does not exist."}, status=status.HTTP_404_NOT_FOUND)
+    
+
     @api_view(['PUT'])
     def update_health_record(request, patientID):
         try:

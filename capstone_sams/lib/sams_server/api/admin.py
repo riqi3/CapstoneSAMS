@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib import admin, messages
 from django.contrib.admin.models import LogEntry
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group 
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.auth.signals import user_logged_in, user_logged_out
@@ -376,15 +376,23 @@ and updating existing patients.
 
 # class PatientInline(admin.TabularInline):
 #     model = Patient
+ 
 
 class HealthRecordInline(admin.StackedInline):
-    model = Health_Record
+    model = Health_Record 
     extra = 1
+    def has_add_permission(self, request, obj):
+        if obj is None:
+            return True
+        return False
 
 class ContactInline(admin.StackedInline):
     model = Contact_Person
     extra = 1
-
+    def has_add_permission(self, request, obj):
+        if obj is None:
+            return True
+        return False
 '''
 This represent the table that will be shown to the admin looking at the currently stored patients.
 '''
@@ -558,19 +566,19 @@ class MedicineAdmin(admin.ModelAdmin):
 This represent the forms that will be shown to the admin when creating a new health record
 and updating existing health records.
 '''
-class HealthRecordAdminForm(forms.ModelForm):
-    class Meta:
-        model = Health_Record
-        fields = "__all__"
+# class HealthRecordAdminForm(forms.ModelForm):
+#     class Meta:
+#         model = Health_Record
+#         fields = "__all__"
 
 '''
 This represent the table that will be shown to the admin looking at the currently stored health records.
 '''
-class HealthRecordAdmin(admin.ModelAdmin):
-    form = HealthRecordAdminForm
-    list_display = ("recordNum", "patient")
-    search_fields = ("recordNum",)
-    autocomplete_fields = ["patient"]
+# class HealthRecordAdmin(admin.ModelAdmin):
+#     form = HealthRecordAdminForm
+#     list_display = ("recordNum", "patient")
+#     search_fields = ("recordNum",)
+#     autocomplete_fields = ["patient"]
 
 
 class PrescriptionAdminForm(forms.ModelForm):
@@ -1004,7 +1012,7 @@ admin.site.register(Account, UserAdmin)
 admin.site.register(Patient, PatientAdmin)
 admin.site.register(Data_Log, DataLogsAdmin)
 admin.site.register(Medicine, MedicineAdmin)
-admin.site.register(Health_Record, HealthRecordAdmin)
+# admin.site.register(Health_Record, HealthRecordAdmin)
 admin.site.register(Prescription, PrescriptionAdmin)
 admin.site.register(LabResult, LabResultAdmin)
 admin.site.register(HealthSymptom, HealthSymptomAdmin)
