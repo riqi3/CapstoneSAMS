@@ -1,4 +1,6 @@
+import 'package:capstone_sams/global-widgets/texts/TitleValueText.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../../../../constants/theme/pallete.dart';
 import '../../../../../constants/theme/sizing.dart';
 import '../../../../../models/PatientModel.dart';
@@ -12,27 +14,37 @@ class PatientInfoCard extends StatefulWidget {
 }
 
 class _PatientInfoCardState extends State<PatientInfoCard> {
-  final titles = [
-    'Patient ID',
-    'First Name',
-    'Middle Initial',
-    'Last Name',
-    'Age',
-    'Gender',
-    'Birthdate',
-    'Department',
-    'Course',
-    'Year Level',
-    'Student Number',
-    'Address',
-    'Height',
-    'Weight',
-    'Phone',
-    'Email',
-    'Assigned Physician'
-  ];
+  String course() {
+    String course = '';
+    if (widget.patient.course == 'Nursery') {
+      course = 'Nursery';
+    }
+
+    if (widget.patient.course == 'Kindergarten') {
+      course = 'Kindergarten';
+    }
+
+    if (widget.patient.course == 'Elementary' ||
+        widget.patient.course == 'Junior High School' ||
+        widget.patient.course == 'Senior High School') {
+      course = 'Grade';
+    }
+
+    if (widget.patient.course == 'Tertiary') {
+      course = '${widget.patient.course}';
+    }
+
+    if (widget.patient.course == 'Law School') {
+      course = '${widget.patient.course}';
+    }
+
+    return course;
+  }
+
   @override
   Widget build(BuildContext context) {
+    double columnWidth1 = 185;
+    double columnWidth2 = 100;
     return Container(
       margin: EdgeInsets.symmetric(vertical: Sizing.sectionSymmPadding),
       child: Material(
@@ -63,7 +75,11 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
               ),
             ),
             Container(
-              padding: EdgeInsets.all(Sizing.sectionSymmPadding),
+              padding: EdgeInsets.only(
+                  top: Sizing.sectionSymmPadding / 2,
+                  right: Sizing.sectionSymmPadding,
+                  left: Sizing.sectionSymmPadding,
+                  bottom: Sizing.sectionSymmPadding / 2),
               alignment: Alignment.centerLeft,
               decoration: BoxDecoration(
                 color: Pallete.whiteColor,
@@ -96,24 +112,124 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
-                  child: DataTable(
-                    columns: const <DataColumn>[
-                      DataColumn(label: Text('TITLE')),
-                      DataColumn(label: Text('VALUE')),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        children: [
+                          Text(
+                            '${widget.patient.firstName} ${widget.patient.middleInitial}. ${widget.patient.lastName}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: Sizing.header5,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Table(
+                        columnWidths: <int, TableColumnWidth>{
+                          0: FixedColumnWidth(columnWidth1),
+                          1: FixedColumnWidth(columnWidth1),
+                        },
+                        children: [
+                          TableRow(
+                            children: <Widget>[
+                              Container(
+                                padding:
+                                    EdgeInsets.only(right: Sizing.formSpacing),
+                                child: TitleValueText(
+                                  title: 'Student No# ',
+                                  value: '${widget.patient.studNumber}',
+                                ),
+                              ),
+                              TitleValueText(
+                                title: 'Course/Year: ',
+                                value: '${course()} ${widget.patient.yrLevel}',
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Table(
+                        columnWidths: <int, TableColumnWidth>{
+                          0: FixedColumnWidth(columnWidth1),
+                          1: FixedColumnWidth(columnWidth2),
+                          2: FixedColumnWidth(columnWidth2),
+                        },
+                        children: [
+                          TableRow(
+                            children: <Widget>[
+                              Container(
+                                padding:
+                                    EdgeInsets.only(right: Sizing.formSpacing),
+                                child: TitleValueText(
+                                  title: 'Birthdate: ',
+                                  value:
+                                      '${DateFormat.yMMMd('en_US').format(widget.patient.birthDate)}',
+                                ),
+                              ),
+                              TitleValueText(
+                                title: 'Age: ',
+                                value: '${widget.patient.age}',
+                              ),
+                              TitleValueText(
+                                title: 'Sex: ',
+                                value: '${widget.patient.gender}',
+                              ),
+                            ],
+                          ),
+                          TableRow(
+                            children: <Widget>[
+                              Container(
+                                padding:
+                                    EdgeInsets.only(right: Sizing.formSpacing),
+                                child: TitleValueText(
+                                  title: 'Status: ',
+                                  value: 'UPDATE',
+                                ),
+                              ),
+                              TitleValueText(
+                                title: 'Height: ',
+                                value: '${widget.patient.height}',
+                              ),
+                              TitleValueText(
+                                title: 'Weight: ',
+                                value: '${widget.patient.weight}',
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Table(
+                        columnWidths: <int, TableColumnWidth>{
+                          0: FixedColumnWidth(columnWidth1),
+                          1: FixedColumnWidth(columnWidth2),
+                          2: FixedColumnWidth(columnWidth2),
+                        },
+                        children: [],
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Address: ',
+                                style: TextStyle(fontWeight: FontWeight.w500),
+                              ),
+                              Container(
+                                width: MediaQuery.of(context).size.width / 1.3,
+                                child: Text(
+                                  '${widget.patient.address} sadas sa asdsasssss  ssssssss  sssss  sssaaaaaaaaaassssdasds dadsadsdsasdas  asdds',
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Divider(),
                     ],
-                    rows: List<DataRow>.generate(
-                      widget.patient.toJson().entries.length,
-                      (int index) {
-                        MapEntry entry =
-                            widget.patient.toJson().entries.elementAt(index);
-                        return DataRow(
-                          cells: <DataCell>[
-                            DataCell(Text(titles[index])),
-                            DataCell(Text(entry.value.toString())),
-                          ],
-                        );
-                      },
-                    ),
                   ),
                 ),
               ),

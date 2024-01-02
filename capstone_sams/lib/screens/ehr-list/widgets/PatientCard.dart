@@ -39,59 +39,61 @@ class _PatientCardState extends State<PatientCard> {
         ),
         child: Container(
           padding: EdgeInsets.all(Sizing.padding - 5),
-          child: Wrap(children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Hospital No. ${widget.patient.patientId}',
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: Pallete.mainColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: Sizing.header6,
-                      ),
-                    ),
-                    SizedBox(height: Sizing.spacing),
-                    Text(
-                      "${widget.patient.firstName}  ${widget.patient.middleInitial}. ${widget.patient.lastName}",
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Sizing.header4,
-                        color: Pallete.textColor,
-                      ),
-                    ),
-                    SizedBox(height: Sizing.spacing),
-                    Row(
-                      children: [
-                        Text('Sex: ${widget.patient.gender}'),
-                        SizedBox(width: Sizing.spacing),
-                        Text('Age: ${widget.patient.age}'),
-                        SizedBox(width: Sizing.spacing),
-                        Flexible(
-                          child: Text(
-                            'Birthdate: ${DateFormat.yMMMd('en_US').format(widget.patient.birthDate)}',
-                            overflow: TextOverflow.ellipsis,
-                          ),
+          child: Wrap(
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Hospital No. ${widget.patient.patientId}',
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Pallete.mainColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: Sizing.header6,
                         ),
-                      ],
-                    ),
-                    SizedBox(height: Sizing.spacing),
-                    // Text(
-                    //   'Date of Registration: ${DateFormat.yMMMd('en_US').format(widget.patient.registration)}',
-                    //   style: TextStyle(
-                    //     color: Pallete.mainColor,
-                    //   ),
-                    // ),
-                  ],
-                ),
-              ],
-            ),
-          ]),
+                      ),
+                      SizedBox(height: Sizing.spacing),
+                      Text(
+                        "${widget.patient.firstName}  ${widget.patient.middleInitial}. ${widget.patient.lastName}",
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: Sizing.header4,
+                          color: Pallete.textColor,
+                        ),
+                      ),
+                      SizedBox(height: Sizing.spacing),
+                      Row(
+                        children: [
+                          Text('Sex: ${widget.patient.gender}'),
+                          SizedBox(width: Sizing.spacing),
+                          Text('Age: ${widget.patient.age}'),
+                          SizedBox(width: Sizing.spacing),
+                          Flexible(
+                            child: Text(
+                              'Birthdate: ${DateFormat.yMMMd('en_US').format(widget.patient.birthDate)}',
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: Sizing.spacing),
+                      // Text(
+                      //   'Date of Registration: ${DateFormat.yMMMd('en_US').format(widget.patient.registration)}',
+                      //   style: TextStyle(
+                      //     color: Pallete.mainColor,
+                      //   ),
+                      // ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
