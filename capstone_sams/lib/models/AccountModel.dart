@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import '../constants/Env.dart';
 
 class Account {
-  final String? accountID;
+  final int? accountID;
   final String? username;
   String? profile_photo;
   final String? password;
@@ -29,6 +29,20 @@ class Account {
     required this.isSuperuser,
   });
 
+  Map<String, dynamic> toJson() => {
+        'accountID': accountID,
+        'username': username,
+        'profile_photo': profile_photo,
+        'password': password,
+        'firstName': firstName,
+        'lastName': lastName,
+        'accountRole': accountRole,
+        'token': token,
+        'is_active': isActive,
+        'is_staff': isStaff,
+        'is_superuser': isSuperuser,
+      };
+
   factory Account.fromJson(Map<String, dynamic> json) {
     return Account(
       accountID: json['accountID'],
@@ -44,20 +58,6 @@ class Account {
       isSuperuser: json['is_superuser'],
     );
   }
-
-  Map<String, dynamic> toJson() => {
-        'accountID': accountID,
-        'username': username,
-        'profile_photo': profile_photo,
-        'password': password,
-        'firstName': firstName,
-        'lastName': lastName,
-        'accountRole': accountRole,
-        'token': token,
-        'is_active': isActive,
-        'is_staff': isStaff,
-        'is_superuser': isSuperuser,
-      };
 
   static Future<Account> login(String username, String password) async {
     final url = Uri.parse('${Env.prefix}/login/');

@@ -18,7 +18,7 @@ class TodosProvider extends ChangeNotifier {
     return '${Env.prefix}/$endpoint';
   }
 
-  Future fetchTodos(String accountID, String token) async {
+  Future fetchTodos(int accountID, String token) async {
     _isLoading = true;
 
     final headers = <String, String>{
@@ -50,7 +50,7 @@ class TodosProvider extends ChangeNotifier {
     }
   }
 
-  Future addTodo(Todo todo, String accountID, String token) async {
+  Future addTodo(Todo todo, int accountID, String token) async {
     final headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',
@@ -75,7 +75,7 @@ class TodosProvider extends ChangeNotifier {
     }
   }
 
-  Future updateTodo(Todo todo, String accountID, String token) async {
+  Future updateTodo(Todo todo, int accountID, String token) async {
     final headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',
@@ -101,7 +101,7 @@ class TodosProvider extends ChangeNotifier {
     }
   }
 
-  Future toggleTodoStatus(Todo todo, String accountID, String token) async {
+  Future toggleTodoStatus(Todo todo, int accountID, String token) async {
     final headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',
@@ -129,7 +129,7 @@ class TodosProvider extends ChangeNotifier {
     }
   }
 
-  Future removeTodo(Todo todo, String accountID, String token) async {
+  Future removeTodo(Todo todo, int accountID, String token) async {
     final headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',

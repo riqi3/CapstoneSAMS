@@ -137,7 +137,7 @@ class UserCreationForm(forms.ModelForm):
     class Meta:
         model = Account
         fields = (
-            "accountID",
+            # "accountID",
             "username",
             "firstName",
             "middleName",
@@ -167,14 +167,16 @@ class UserCreationForm(forms.ModelForm):
     
     def save(self, commit=True):
         user = super(UserCreationForm, self).save(commit=False)
-        user.set_password(self.cleaned_data["password1"])
+        user.set_password(self.cleaned_data["password1"]) 
+        user.accountID = Account.objects.latest('accountID').accountID + 1 if Account.objects.exists() else 1
+        print(user.accountID)
         photo = self.photo_generator(user)
         user.profile_photo = os.path.basename(photo)
         if commit:
             user.save()
         return user
 
-    
+     
     def photo_generator(self, user):
         width = 300
         height = 300
@@ -196,7 +198,8 @@ class UserCreationForm(forms.ModelForm):
         draw.text((x, y - bbox[1]), letter, font=font, fill=fontColor)
         save_folder = 'upload-photo'
         os.makedirs(save_folder, exist_ok=True)
-        img_path = os.path.join(save_folder, f'{user.accountID}_{user.firstName}{user.lastName}_profilepic.png')
+        print(user.accountID)
+        img_path = os.path.join(save_folder, f'{user.accountID}_{user.firstName}{user.lastName}_profilepic.png') 
         img.save(img_path)
         return img_path
      
@@ -226,7 +229,7 @@ class UserChangeForm(forms.ModelForm):
     class Meta:
         model = Account
         fields = (
-            "accountID",
+            # "accountID",
             "username",
             "password",
             "firstName",
@@ -236,7 +239,7 @@ class UserChangeForm(forms.ModelForm):
             "is_active",
             "is_staff",
             "is_superuser",
-            "profile_photo",
+            # "profile_photo",
         )
 
     def clean_password(self):
@@ -252,6 +255,7 @@ class UserAdmin(BaseUserAdmin):
     add_form = UserCreationForm 
     actions = ['delete_model']
     list_display = ( 
+        # 'accountID',
         "username",
         "firstName",
         "middleName",
@@ -284,7 +288,7 @@ class UserAdmin(BaseUserAdmin):
             {
                 "classes": ("wide",),
                 "fields": (
-                    "accountID",
+                    # "accountID",
                     "username",
                     "firstName",
                     "middleName",
@@ -301,8 +305,7 @@ class UserAdmin(BaseUserAdmin):
     )
     search_fields = ("username",)
     ordering = ("username",)
-    filter_horizontal = ()
-
+    filter_horizontal = () 
 
     def delete_queryset(self, request, queryset):
          for obj in queryset:
@@ -414,12 +417,12 @@ class PatientAdmin(admin.ModelAdmin):
         'address',
         'height',
         'weight',
-        "registration",
+        # "registration",
         "phone",
         "email", 
         'assignedPhysician',
     )
-    list_filter = ("patientID", "gender", "registration",'department','assignedPhysician')
+    list_filter = ("patientID", "gender", 'department','assignedPhysician')
     search_fields = (
         "patientID",
         "firstName",
@@ -456,7 +459,7 @@ class PatientAdmin(admin.ModelAdmin):
                     age=fields[4],
                     gender=fields[5],
                     birthDate=fields[6],
-                    registration=fields[7],
+                    # registration=fields[7],
                     phone=fields[8],
                     email=fields[9],
                 )

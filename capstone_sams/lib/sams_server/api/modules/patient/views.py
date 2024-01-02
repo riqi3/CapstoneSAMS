@@ -44,7 +44,7 @@ class PatientView(viewsets.ModelViewSet):
                 address=patient_data['address'],
                 height=patient_data['height'],
                 weight=patient_data['weight'],
-                registration=patient_data['registration'],
+                # registration=patient_data['registration'],
                 phone=patient_data['phone'],
                 email=patient_data['email'],
                 assignedPhysician=patient_data['assignedPhysician']

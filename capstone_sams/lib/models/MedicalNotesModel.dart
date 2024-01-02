@@ -2,7 +2,7 @@ class Todo {
   String noteNum;
   String title;
   String content;
-  String account;
+  int account;
   bool isDone;
 
   Todo({
