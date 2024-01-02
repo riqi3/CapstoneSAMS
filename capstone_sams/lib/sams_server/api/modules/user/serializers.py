@@ -12,9 +12,18 @@ This serializer will convert Account objects into jsons.
 class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
-        fields = ['accountID', 'profile_photo', 'username', 'password',
-                  'firstName', 'lastName', 'accountRole', 'token',
-                  'is_active', 'is_staff', 'is_superuser']
+        fields = [
+            'accountID',
+            'profile_photo',
+            'username', 
+            'password',
+            'firstName',
+            'lastName',
+            'accountRole', 
+            'token',
+            'is_active', 
+            'is_staff',
+            'is_superuser',]
         extra_kwargs = {'password': {'write_only': True, 'required': False}}
  
 

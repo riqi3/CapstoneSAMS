@@ -26,10 +26,10 @@ class Patient(models.Model):
     address = models.CharField(blank= False)
     height = models.FloatField(blank = False)
     weight = models.FloatField(blank= False)
-    registration = models.DateField(blank=False)
+    # registration = models.DateField(blank=False)
     phone = models.CharField(max_length = 20, blank = True)
     email = models.CharField(max_length = 50, blank = True)
-    user = models.CharField(null = True, blank = True)
+    # user = models.CharField(null = True, blank = True)
     assignedPhysician = models.ForeignKey(Account, on_delete = models.CASCADE)
 
     

@@ -12,14 +12,22 @@ class PatientProvider extends ChangeNotifier {
   Patient? get patient => _patient;
   String? get id => _patient?.patientId;
   String? get firstName => _patient?.firstName;
-  String? get middleName => _patient?.middleName;
+  String? get middleName => _patient?.middleInitial;
   String? get lastName => _patient?.lastName;
   int? get age => _patient?.age;
   String? get gender => _patient?.gender;
   DateTime? get birthDate => _patient?.birthDate;
-  DateTime? get registrationDate => _patient?.registration;
+  String? get department => _patient?.department;
+  String? get course => _patient?.course;
+  int? get yrLevel => _patient?.yrLevel;
+  String? get studNumber => _patient?.studNumber;
+  String? get address => _patient?.address;
+  double? get height => _patient?.height;
+  double? get weight => _patient?.weight;
+  // DateTime? get registrationDate => _patient?.registration;
   String? get phone => _patient?.phone;
   String? get email => _patient?.email;
+  int? get assignedPhysician => _patient?.assignedPhysician;
   var data = [];
   List<Patient> _patients = [];
 
@@ -91,10 +99,13 @@ class PatientProvider extends ChangeNotifier {
                   element.lastName
                       .toLowerCase()
                       .contains((query.toLowerCase())) ||
-                  element.middleName!
+                  element.middleInitial
                       .toLowerCase()
                       .contains((query.toLowerCase())) ||
                   element.patientId
+                      .toLowerCase()
+                      .contains((query.toLowerCase()))||
+                  element.studNumber
                       .toLowerCase()
                       .contains((query.toLowerCase()));
             },

@@ -24,7 +24,7 @@ class NotesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final username = context.watch<AccountProvider>().username;
+    final username = context.watch<AccountProvider>().username; 
     final totalTodos = context.watch<TodosProvider>().todos.length;
     int numTodos = todosPreview.length;
     return Column(
@@ -153,6 +153,7 @@ class _TodoCardState extends State<TodoCard> {
 
   @override
   Widget build(BuildContext context) {
+    final accountID = context.read<AccountProvider>().id;
     return Card(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
@@ -172,7 +173,7 @@ class _TodoCardState extends State<TodoCard> {
                     final provider =
                         Provider.of<TodosProvider>(context, listen: false);
                     provider.toggleTodoStatus(
-                        widget.todo, 'accountID', widget.token);
+                        widget.todo, accountID!, widget.token);
                   },
                 ),
                 const SizedBox(width: 8),

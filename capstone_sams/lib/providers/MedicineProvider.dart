@@ -68,7 +68,7 @@ class MedicineProvider with ChangeNotifier {
     return _medicines;
   }
 
-  Future<bool> saveToPrescription(String? accountId, String? patientId,
+  Future<bool> saveToPrescription(int? accountId, String? patientId,
       String? finalPrediction, String token) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',

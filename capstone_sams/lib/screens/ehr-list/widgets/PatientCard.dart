@@ -57,7 +57,7 @@ class _PatientCardState extends State<PatientCard> {
                     ),
                     SizedBox(height: Sizing.spacing),
                     Text(
-                      "${widget.patient.firstName}  ${widget.patient.middleName != null ? widget.patient.middleName![0] + '.' : ''} ${widget.patient.middleName == null ? '' + widget.patient.lastName : widget.patient.lastName}",
+                      "${widget.patient.firstName}  ${widget.patient.middleInitial}. ${widget.patient.lastName}",
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -81,12 +81,12 @@ class _PatientCardState extends State<PatientCard> {
                       ],
                     ),
                     SizedBox(height: Sizing.spacing),
-                    Text(
-                      'Date of Registration: ${DateFormat.yMMMd('en_US').format(widget.patient.registration)}',
-                      style: TextStyle(
-                        color: Pallete.mainColor,
-                      ),
-                    ),
+                    // Text(
+                    //   'Date of Registration: ${DateFormat.yMMMd('en_US').format(widget.patient.registration)}',
+                    //   style: TextStyle(
+                    //     color: Pallete.mainColor,
+                    //   ),
+                    // ),
                   ],
                 ),
               ],

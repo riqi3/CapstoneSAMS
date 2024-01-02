@@ -15,14 +15,21 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
   final titles = [
     'Patient ID',
     'First Name',
-    'Middle Name',
+    'Middle Initial',
     'Last Name',
     'Age',
     'Gender',
     'Birthdate',
-    'Registration Date',
+    'Department',
+    'Course',
+    'Year Level',
+    'Student Number',
+    'Address',
+    'Height',
+    'Weight',
     'Phone',
-    'Email'
+    'Email',
+    'Assigned Physician'
   ];
   @override
   Widget build(BuildContext context) {

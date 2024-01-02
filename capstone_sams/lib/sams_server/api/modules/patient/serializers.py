@@ -10,6 +10,7 @@ class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
         fields = [
+            'patientID',
             "firstName",
             "middleInitial",
             "lastName",
@@ -23,7 +24,7 @@ class PatientSerializer(serializers.ModelSerializer):
             'address',
             'height',
             'weight',
-            "registration",
+            # "registration",
             "phone",
             "email", 
             'assignedPhysician',
