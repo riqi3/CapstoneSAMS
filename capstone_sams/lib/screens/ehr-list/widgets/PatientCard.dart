@@ -1,5 +1,6 @@
 import 'package:capstone_sams/global-widgets/separators/DividerWidget.dart';
 import 'package:capstone_sams/global-widgets/texts/TitleValueText.dart';
+import 'package:capstone_sams/models/ContactPersonModel.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/PatientTabsScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -130,13 +131,6 @@ class _PatientCardState extends State<PatientCard> {
                         ],
                       ),
                       DividerWidget(),
-                      // SizedBox(height: Sizing.spacing),
-                      // Text(
-                      //   'Date of Registration: ${DateFormat.yMMMd('en_US').format(widget.patient.registration)}',
-                      //   style: TextStyle(
-                      //     color: Pallete.mainColor,
-                      //   ),
-                      // ),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -149,7 +143,7 @@ class _PatientCardState extends State<PatientCard> {
                           Container(
                             width: MediaQuery.of(context).size.width / 2,
                             child: Text(
-                              'ssssssssss s sss ss sssss s ss s sssssssss s ss wss s',
+                              's ssssssssss s sss ss sssss s ss s sssssssss s ss wss s',
                               style: TextStyle(
                                 height: 1.2,
                               ),
