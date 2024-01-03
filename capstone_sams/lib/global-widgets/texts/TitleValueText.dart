@@ -15,7 +15,9 @@ class TitleValueText extends StatelessWidget {
       children: <Widget>[
         Text(
           title,
-          style: TextStyle(fontWeight: FontWeight.w500),
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+          ),
         ),
         Text(
           value,

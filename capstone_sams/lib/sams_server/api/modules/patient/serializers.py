@@ -1,4 +1,4 @@
-from api.modules.patient.models import Patient, Health_Record, Contact_Person
+from api.modules.patient.models import Patient, Medical_Record, Contact_Person
 from rest_framework import serializers
 
 """
@@ -17,7 +17,7 @@ class PatientSerializer(serializers.ModelSerializer):
             "age",
             "gender",
             "birthDate",
-            'department',
+            # 'department',
             'course',
             'yrLevel',
             'studNumber',
@@ -36,13 +36,13 @@ This serializer will convert Health_Record objects into jsons.
 """
 
 
-class HealthRecordSerializer(serializers.ModelSerializer):
+class MedicalRecordSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Health_Record
+        model = Medical_Record
         fields = [
             'recordNum',
-            'symptoms',
-            'diseases',
+            # 'symptoms',
+            # 'diseases',
             'illnesses',
             'allergies',
             'pastDisease',
@@ -57,7 +57,7 @@ class ContactPersonSerializer(serializers.ModelSerializer):
         fields = [
             'contactId',
             'fullName',
-            'contactNum',
-            'contactAddress', 
+            'phone',
+            'address', 
             'patient',
         ]

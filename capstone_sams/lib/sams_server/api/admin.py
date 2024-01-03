@@ -20,7 +20,7 @@ from api.modules.patient.form import CsvImportPatientForm
 from api.modules.cpoe.form import CsvImportMedicineForm
 from api.modules.laboratory.form import PdfImportLabResultForm
 from api.modules.user.models import Account, Data_Log
-from api.modules.patient.models import Patient, Health_Record,Contact_Person
+from api.modules.patient.models import Patient, Medical_Record,Contact_Person
 from api.modules.cpoe.models import Medicine, Prescription
 from api.modules.laboratory.models import LabResult
 
@@ -381,8 +381,8 @@ and updating existing patients.
 #     model = Patient
  
 
-class HealthRecordInline(admin.StackedInline):
-    model = Health_Record 
+class MedicalRecordInline(admin.StackedInline):
+    model = Medical_Record 
     extra = 1
     def has_add_permission(self, request, obj):
         if obj is None:
@@ -401,7 +401,7 @@ This represent the table that will be shown to the admin looking at the currentl
 '''
 class PatientAdmin(admin.ModelAdmin): 
     # form = PatientAdminForm, HealthRecordAdminForm, ContactAdminForm
-    inlines = [HealthRecordInline, ContactInline]
+    inlines = [MedicalRecordInline, ContactInline]
     list_display = (
         "patientID",
         "firstName",
@@ -410,7 +410,7 @@ class PatientAdmin(admin.ModelAdmin):
         "age",
         "gender",
         "birthDate",
-        'department',
+        # 'department',
         'course',
         'yrLevel',
         'studNumber',
@@ -422,14 +422,14 @@ class PatientAdmin(admin.ModelAdmin):
         "email", 
         'assignedPhysician',
     )
-    list_filter = ("patientID", "gender", 'department','assignedPhysician')
+    list_filter = ("patientID", "gender",'assignedPhysician')
     search_fields = (
         "patientID",
         "firstName",
         "middleInitial",
         "lastName",
         "birthDate",
-        'department',
+        # 'department',
         "email",
         'assignedPhysician',
     )

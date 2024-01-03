@@ -1,7 +1,7 @@
 
 from django.db import models
 from api.modules.user.models import Account
-from api.modules.patient.models import Health_Record, Patient
+from api.modules.patient.models import Medical_Record, Patient, Health_Record
 from api.modules.disease_prediction.cdssModel.models import HealthSymptom
 
 '''
@@ -13,7 +13,7 @@ class Comment(models.Model):
     comNum = models.AutoField(primary_key = True)
     content = models.CharField(max_length = 3000)
     account = models.ForeignKey(Account, on_delete = models.CASCADE)
-    health_record = models.ForeignKey(Health_Record, on_delete = models.CASCADE)
+    health_record = models.ForeignKey(Medical_Record, on_delete = models.CASCADE)
 
 '''
 This model represent the prescriptions that
