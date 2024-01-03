@@ -20,4 +20,10 @@ class Sizing {
   static const double appbarHeight = 110;
   static const double cardContainerHeight = 65;
   static const double formSpacing = 10;
+  static const double columnWidth1 = 100;
+  static const double columnWidth2 = 150;
+  static const double columnWidth3 = 200;
+  static const double columnWidth4 = 250;
+  static const double columnWidth5 = 300;
+  static const double columnWidth6 = 350;
 }

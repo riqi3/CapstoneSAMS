@@ -8,8 +8,8 @@ from rest_framework.permissions import IsAuthenticated
 import json
 from rest_framework import status
 from api.modules.user.models import Account, Data_Log
-from api.modules.patient.models import Patient, Health_Record, Contact_Person
-from api.modules.patient.serializers import PatientSerializer, HealthRecordSerializer, ContactPersonSerializer
+from api.modules.patient.models import Patient, Medical_Record, Contact_Person
+from api.modules.patient.serializers import PatientSerializer, MedicalRecordSerializer, ContactPersonSerializer
 
 '''
 This view represent all the functions necessary to conduct
@@ -37,7 +37,7 @@ class PatientView(viewsets.ModelViewSet):
                 age=patient_data['age'],
                 gender=patient_data['gender'],
                 birthDate=patient_data['birthDate'],
-                department=patient_data['department'],
+                # department=patient_data['department'],
                 course=patient_data['course'],
                 yrLevel=patient_data['yrLevel'],
                 studNumber=patient_data['studNumber'],
@@ -50,9 +50,9 @@ class PatientView(viewsets.ModelViewSet):
                 assignedPhysician=patient_data['assignedPhysician']
             )
             patient_instance = get_object_or_404(Patient, pk=patient_data['patientID'])
-            record = Health_Record.objects.create(
-                symptoms = patient_data['symptoms'],
-                diseases = patient_data['diseases'],
+            record = Medical_Record.objects.create(
+                # symptoms = patient_data['symptoms'],
+                # diseases = patient_data['diseases'],
                 illnesses = patient_data['illnesses'],
                 pastDiseases = patient_data['pastDiseases'],
                 allergies = patient_data['allergies'],
@@ -62,8 +62,8 @@ class PatientView(viewsets.ModelViewSet):
             )
             contact = Contact_Person.objects.create(
                 fullName = patient_data['fullName'],
-                contactNum = patient_data['contactNum'],
-                contactAddress = patient_data['contactAddress'],
+                phone = patient_data['phone'],
+                address = patient_data['address'],
                 patient = patient_instance
             )
             data = json.loads(request.body)
@@ -148,9 +148,9 @@ class PatientView(viewsets.ModelViewSet):
             return Response({"message": "Failed to update patient.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 '''
 This view represent all the functions necessary to conduct
-operations related to Health_Record objects.
+operations related to Medical_Record objects.
 '''
-class HealthRecordView(viewsets.ViewSet):
+class MedicalRecordView(viewsets.ViewSet):
 
     '''
     This view allow the user to fetch a certain patient's record base on the patient's id.
@@ -160,10 +160,10 @@ class HealthRecordView(viewsets.ViewSet):
     def fetch_record_by_id(request, patientID):
         try:
             patient = Patient.objects.get(pk=patientID)
-            record = Health_Record.objects.get(patient=patient)
-            serializer = HealthRecordSerializer(record)
+            record = Medical_Record.objects.get(patient=patient)
+            serializer = MedicalRecordSerializer(record)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        except Health_Record.DoesNotExist:
+        except Medical_Record.DoesNotExist:
             return Response({"message": "Health Record does not exist."}, status=status.HTTP_404_NOT_FOUND)
     
     @api_view(['GET'])
@@ -173,7 +173,7 @@ class HealthRecordView(viewsets.ViewSet):
             contact = Contact_Person.objects.get(patient=patient)
             serializer = ContactPersonSerializer(contact)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        except Health_Record.DoesNotExist:
+        except Medical_Record.DoesNotExist:
             return Response({"message": "Health Record does not exist."}, status=status.HTTP_404_NOT_FOUND)
     
 
@@ -181,7 +181,7 @@ class HealthRecordView(viewsets.ViewSet):
     def update_health_record(request, patientID):
         try:
             patient = Patient.objects.get(pk=patientID)
-            record = Health_Record.objects.get(patient=patient)
+            record = Medical_Record.objects.get(patient=patient)
             record_data = json.loads(request.body)
             record.symptoms = record_data['symptoms']
             record.diseases = record_data['symptoms']
@@ -192,7 +192,7 @@ class HealthRecordView(viewsets.ViewSet):
             record.lastMensPeriod = record_data['lastMensPeriod']
             record.save()
             return Response({"message": "Health Record updated successfully."}, status=status.HTTP_200_OK)
-        except Health_Record.DoesNotExist:
+        except Medical_Record.DoesNotExist:
             return Response({"message": "Health Record does not exist."}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"message": "Failed to update health record.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

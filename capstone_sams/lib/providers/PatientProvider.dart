@@ -17,7 +17,7 @@ class PatientProvider extends ChangeNotifier {
   int? get age => _patient?.age;
   String? get gender => _patient?.gender;
   DateTime? get birthDate => _patient?.birthDate;
-  String? get department => _patient?.department;
+  // String? get department => _patient?.department;
   String? get course => _patient?.course;
   int? get yrLevel => _patient?.yrLevel;
   String? get studNumber => _patient?.studNumber;

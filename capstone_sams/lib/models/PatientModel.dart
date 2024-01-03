@@ -6,7 +6,7 @@ class Patient {
   final int age;
   final String gender;
   final DateTime birthDate;
-  final String department;
+  // final String department;
   final String course;
   final int yrLevel;
   final String studNumber;
@@ -26,7 +26,7 @@ class Patient {
     required this.age,
     required this.gender,
     required this.birthDate,
-    required this.department,
+    // required this.department,
     required this.course,
     required this.yrLevel,
     required this.studNumber,
@@ -48,7 +48,7 @@ class Patient {
       'age': age,
       'gender': gender,
       'birthDate': birthDate.toIso8601String(),
-      'department': department,
+      // 'department': department,
       'course': course,
       'yrLevel': yrLevel,
       'studNumber': studNumber,
@@ -71,7 +71,7 @@ class Patient {
       age: json['age'],
       gender: json['gender'],
       birthDate: DateTime.parse(json['birthDate']),
-      department: json['department'],
+      // department: json['department'],
       course: json['course'],
       yrLevel: json['yrLevel'],
       studNumber: json['studNumber'],
