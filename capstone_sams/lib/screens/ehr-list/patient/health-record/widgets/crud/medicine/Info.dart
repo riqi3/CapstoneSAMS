@@ -71,9 +71,7 @@ class _InfoState extends State<Info> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    print(prescriptions);
-    print('PASS ACCOUNT #${widget.index} TO INFO WIDGET');
+  Widget build(BuildContext context) { 
     return Container(
       height: MediaQuery.of(context).size.height * .70,
       child: FutureBuilder<List<Prescription>>(

@@ -1,4 +1,5 @@
 import 'package:capstone_sams/providers/AccountProvider.dart';
+import 'package:capstone_sams/providers/ContactPersonProvider.dart';
 import 'package:capstone_sams/providers/HealthRecordProvider.dart';
 import 'package:capstone_sams/providers/LabResultProvider.dart';
 import 'package:capstone_sams/providers/MedicineProvider.dart';
@@ -43,6 +44,9 @@ void main() async {
         ),
         ChangeNotifierProvider<HealthRecordProvider>(
           create: (context) => HealthRecordProvider(),
+        ),
+        ChangeNotifierProvider<ContactPersonProvider>(
+          create: (context) => ContactPersonProvider(),
         ),
       ],
       child: const SAMSApp(),
