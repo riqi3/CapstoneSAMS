@@ -1,9 +1,11 @@
 import 'package:capstone_sams/constants/theme/sizing.dart';
-import 'package:capstone_sams/screens/home/forms/IndividualRecordForm.dart';
+import 'package:capstone_sams/screens/ehr-list/forms/IndividualRecordForm.dart';
 import 'package:flutter/material.dart';
 
 class CourseDialog extends StatelessWidget {
-  const CourseDialog({super.key});
+  const CourseDialog({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
