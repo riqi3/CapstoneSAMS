@@ -83,3 +83,10 @@ class Health_Record(models.Model):
     class Meta:
         verbose_name = "Health Record"
         verbose_name_plural = "Health Record"
+
+class Present_Illness(models.Model):
+    illnessNum = models.AutoField(primary_key = True)
+    complaint = models.JSONField(blank = False, default = None, null = False)
+    findings = models.JSONField(blank = False, default = None, null = False)
+    diagnosis = models.JSONField(blank = False, default = None, null = False)
+    patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
