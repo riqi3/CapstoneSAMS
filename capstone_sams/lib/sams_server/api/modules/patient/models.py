@@ -38,7 +38,7 @@ class Patient(models.Model):
     phone = models.CharField(max_length = 11, blank = True)
     email = models.CharField(max_length = 50, blank = True)
     # user = models.CharField(null = True, blank = True)
-    assignedPhysician = models.ForeignKey(Account, on_delete = models.CASCADE)
+    assignedPhysician = models.ForeignKey(Account, null=True, on_delete = models.CASCADE)
 
     
     def __str__(self):
