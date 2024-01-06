@@ -181,10 +181,10 @@ class _EhrListScreenState extends State<EhrListScreen> {
       physics: const BouncingScrollPhysics(),
       itemCount: dataToShow.length,
       itemBuilder: (context, index) {
-        final patient = dataToShow[index]; 
+        final patient = dataToShow[index];
         final labresult = int.parse(patient.patientId);
         return PatientCard(
-          patient: patient, 
+          patient: patient,
           labresult: labresult,
         );
       },
@@ -204,13 +204,11 @@ class _EhrListScreenState extends State<EhrListScreen> {
       physics: const BouncingScrollPhysics(),
       itemCount: dataToShow.length,
       itemBuilder: (context, index) {
-        final patient = dataToShow[index]; 
+        final patient = dataToShow[index];
         final labresult = int.parse(
           patient.patientId,
         );
-        return PatientCard(
-            patient: patient, 
-            labresult: labresult);
+        return PatientCard(patient: patient, labresult: labresult);
       },
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,

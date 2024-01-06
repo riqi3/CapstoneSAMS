@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/PatientModel.dart';
+import '../providers/AccountProvider.dart';
 
 class PatientProvider extends ChangeNotifier {
   Patient? _patient;
@@ -34,14 +35,22 @@ class PatientProvider extends ChangeNotifier {
   List<Patient> get patients => _patients;
 
   Future<List<Patient>> fetchPatients(String token) async {
-    final header = <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization': 'Bearer $token',
-    };
+    String role = AccountProvider().role ?? '';
+    int id = AccountProvider().id ?? 0;
+
     try {
-      final response = await http
-          .get(Uri.parse('${Env.prefix}/patient/patients/'), headers: header);
+      final uri = role == 'doctor'
+          ? Uri.parse('${Env.prefix}/$role/$id/patients/')
+          : Uri.parse('${Env.prefix}/patient/patients/');
+
+      final header = <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      };
+
+      final response = await http.get(uri, headers: header);
       await Future.delayed(Duration(milliseconds: 3000));
+
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         List<Patient> patients = data.map<Patient>((json) {
@@ -52,10 +61,34 @@ class PatientProvider extends ChangeNotifier {
       } else {
         return [];
       }
-    } on Exception catch (e) {
+    } catch (e) {
       return [];
     }
   }
+
+  // Future<List<Patient>> fetchPatients(String token) async {
+  //   final header = <String, String>{
+  //     'Content-Type': 'application/json; charset=UTF-8',
+  //     'Authorization': 'Bearer $token',
+  //   };
+  //   try {
+  //     final response = await http
+  //         .get(Uri.parse('${Env.prefix}/patient/patients/'), headers: header);
+  //     await Future.delayed(Duration(milliseconds: 3000));
+  //     if (response.statusCode == 200) {
+  //       final data = json.decode(response.body);
+  //       List<Patient> patients = data.map<Patient>((json) {
+  //         return Patient.fromJson(json);
+  //       }).toList();
+  //       patients = patients.reversed.toList();
+  //       return patients;
+  //     } else {
+  //       return [];
+  //     }
+  //   } on Exception catch (e) {
+  //     return [];
+  //   }
+  // }
 
   Future<Patient?> fetchPatient(String index, String token) async {
     final header = <String, String>{
@@ -104,7 +137,7 @@ class PatientProvider extends ChangeNotifier {
                       .contains((query.toLowerCase())) ||
                   element.patientId
                       .toLowerCase()
-                      .contains((query.toLowerCase()))||
+                      .contains((query.toLowerCase())) ||
                   element.studNumber
                       .toLowerCase()
                       .contains((query.toLowerCase()));
