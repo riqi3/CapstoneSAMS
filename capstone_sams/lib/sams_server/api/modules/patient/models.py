@@ -89,4 +89,5 @@ class Present_Illness(models.Model):
     complaint = models.JSONField(blank = False, default = None, null = False)
     findings = models.JSONField(blank = False, default = None, null = False)
     diagnosis = models.JSONField(blank = False, default = None, null = False)
+    treatment = models.JSONField(blank = False, default = None, null = False)
     patient = models.ForeignKey(Patient, on_delete = models.CASCADE)

@@ -224,6 +224,7 @@ class PresentIllnessView(viewsets.ViewSet):
                 complaint = illness_data['complaint'],
                 findings = illness_data['findings'],
                 diagnosis = illness_data['diagnois'],
+                treatment = illness_data['treatment'],
                 patient = patient
             )
             return Response({"message": "Complaint created successfully."}, status=status.HTTP_201_CREATED)
@@ -238,6 +239,7 @@ class PresentIllnessView(viewsets.ViewSet):
             present_illness.complaint = illness_data['complain']
             present_illness.findings = illness_data['findings']
             present_illness.diagnosis = illness_data['diagnosis']
+            present_illness.treatment = illness_data['treatment']
             present_illness.save()
             return Response({"message": "Complaint updated successfully."}, status=status.HTTP_200_OK)
         except Present_Illness.DoesNotExist:

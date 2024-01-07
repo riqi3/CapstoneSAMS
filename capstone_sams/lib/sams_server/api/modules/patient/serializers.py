@@ -70,5 +70,6 @@ class PresentIllnessSerializer(serializers.ModelSerializer):
             'complaint',
             'findings',
             'diagnosis',
+            'treatment',
             'patient'
         ]
