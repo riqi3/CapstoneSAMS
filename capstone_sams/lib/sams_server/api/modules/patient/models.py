@@ -86,8 +86,8 @@ class Health_Record(models.Model):
 
 class Present_Illness(models.Model):
     illnessNum = models.AutoField(primary_key = True)
-    complaint = models.JSONField(blank = False, default = None, null = False)
-    findings = models.JSONField(blank = False, default = None, null = False)
-    diagnosis = models.JSONField(blank = False, default = None, null = False)
-    treatment = models.JSONField(blank = False, default = None, null = False)
+    complaint = models.TextField(blank = False, default = None, null = False)
+    findings = models.TextField(blank = False, default = None, null = False)
+    diagnosis = models.TextField(blank = False, default = None, null = False)
+    treatment = models.TextField(blank = False, default = None, null = False)
     patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
