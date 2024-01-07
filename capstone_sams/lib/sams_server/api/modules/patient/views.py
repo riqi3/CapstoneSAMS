@@ -9,7 +9,7 @@ import json
 from rest_framework import status
 from api.modules.user.models import Account, Data_Log
 from api.modules.patient.models import Patient, Medical_Record, Contact_Person, Present_Illness
-from api.modules.patient.serializers import PatientSerializer, MedicalRecordSerializer, ContactPersonSerializer
+from api.modules.patient.serializers import PatientSerializer, MedicalRecordSerializer, ContactPersonSerializer, PresentIllnessSerializer
 
 '''
 This view represent all the functions necessary to conduct
@@ -215,6 +215,24 @@ class ContactPersonView(viewsets.ViewSet):
             return Response({"message": "Failed to update contact.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
 class PresentIllnessView(viewsets.ViewSet):
+    @api_view(['GET'])
+    def fetch_complaints(request):
+        try:
+            complaints = Present_Illness.objects.all()
+            serializer = PresentIllnessSerializer(complaints)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"message": "Failed to fetch complaints. str{e}"}, status=status.HTTP_404_NOT_FOUND)
+
+    @api_view(['GET'])
+    def fetch_complaint_by_id(request, illnessNum):
+        try:
+            complaint = Present_Illness.objects.get(pk=illnessNum)
+            serializer = PresentIllnessSerializer(complaint)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except PresentIllnessSerializer.DoesNotExist:
+            return Response({"message": "Complaint does not exist."}, status=status.HTTP_404_NOT_FOUND)
+    
     @api_view(['POST'])
     def create_complaint(request, patientID):
         try:
