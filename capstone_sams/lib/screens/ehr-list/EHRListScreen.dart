@@ -118,7 +118,9 @@ class _EhrListScreenState extends State<EhrListScreen> {
           context: context,
           builder: (ctx) => CourseDialog(),
         ),
-        child: FaIcon(FontAwesomeIcons.pencil),
+        child: FaIcon(
+          FontAwesomeIcons.pencil,
+        ),
       ),
       bottomNavigationBar: Padding(
         padding: EdgeInsets.symmetric(vertical: Sizing.spacing),
