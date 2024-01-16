@@ -175,7 +175,7 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                                   child: TitleValueText(
                                     title: 'Birthdate: ',
                                     value:
-                                        '${DateFormat.yMMMd('en_US').format(widget.patient.birthDate)}',
+                                        '${DateFormat.yMMMd('en_US').format(widget.patient.birthDate as DateTime)}',
                                   ),
                                 ),
                                 TitleValueText(

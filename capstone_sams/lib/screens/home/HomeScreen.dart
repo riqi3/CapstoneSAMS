@@ -76,13 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => showDialog(
-            context: context,
-            builder: (ctx) => CourseDialog(),
-          ),
-          child: FaIcon(FontAwesomeIcons.pencil),
-        ),
+        
       ),
     );
   }

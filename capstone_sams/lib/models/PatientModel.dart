@@ -1,42 +1,42 @@
 class Patient {
-  final String patientId;
-  final String firstName;
-  final String middleInitial;
-  final String lastName;
-  final int age;
-  final String gender;
-  final DateTime birthDate;
+  String? patientId;
+  String? firstName;
+  String? middleInitial;
+  String? lastName;
+  int? age;
+  String? gender;
+  DateTime? birthDate;
   // final String department;
-  final String course;
-  final int yrLevel;
-  final String studNumber;
-  final String address;
-  final double height;
-  final double weight;
+  String? course;
+  int? yrLevel;
+  String? studNumber;
+  String? address;
+  double? height;
+  double? weight;
   // final DateTime registration;
-  final String phone;
-  final String email;
-  final int assignedPhysician;
+  String? phone;
+  String? email;
+  int? assignedPhysician;
 
   Patient({
-    required this.patientId,
-    required this.firstName,
-    required this.middleInitial,
-    required this.lastName,
-    required this.age,
-    required this.gender,
-    required this.birthDate,
+    this.patientId,
+    this.firstName,
+    this.middleInitial,
+    this.lastName,
+     this.age,
+     this.gender,
+     this.birthDate,
     // required this.department,
-    required this.course,
-    required this.yrLevel,
-    required this.studNumber,
-    required this.address,
-    required this.height,
-    required this.weight,
+     this.course,
+     this.yrLevel,
+     this.studNumber,
+     this.address,
+     this.height,
+     this.weight,
     // required this.registration,
-    required this.phone,
-    required this.email,
-    required this.assignedPhysician,
+     this.phone,
+     this.email,
+     this.assignedPhysician,
   });
 
   Map<String, dynamic> toJson() {
@@ -47,7 +47,7 @@ class Patient {
       'lastName': lastName,
       'age': age,
       'gender': gender,
-      'birthDate': birthDate.toIso8601String(),
+      'birthDate': birthDate!.toIso8601String(),
       // 'department': department,
       'course': course,
       'yrLevel': yrLevel,

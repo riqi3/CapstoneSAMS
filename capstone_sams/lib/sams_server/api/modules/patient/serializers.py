@@ -1,4 +1,4 @@
-from api.modules.patient.models import Patient, Medical_Record, Contact_Person
+from api.modules.patient.models import Patient, Medical_Record, Contact_Person, Present_Illness
 from rest_framework import serializers
 
 """
@@ -60,4 +60,16 @@ class ContactPersonSerializer(serializers.ModelSerializer):
             'phone',
             'address', 
             'patient',
+        ]
+
+class PresentIllnessSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Present_Illness,
+        fields = [
+            'illnessNum',
+            'complaint',
+            'findings',
+            'diagnosis',
+            'treatment',
+            'patient'
         ]

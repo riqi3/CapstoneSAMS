@@ -11,9 +11,11 @@ import '../../../models/PatientModel.dart';
 
 class PatientCard extends StatefulWidget {
   final Patient patient;
+  final Function(String) onSelect;
   final int labresult;
   PatientCard({
     required this.patient,
+    required this.onSelect,
     required this.labresult,
   });
 
@@ -53,6 +55,7 @@ class _PatientCardState extends State<PatientCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        widget.onSelect(widget.patient.patientId as String);
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -116,7 +119,7 @@ class _PatientCardState extends State<PatientCard> {
                           TitleValueText(
                             title: 'Birthdate: ',
                             value:
-                                '${DateFormat.yMMMd('en_US').format(widget.patient.birthDate)}',
+                                '${DateFormat.yMMMd('en_US').format(widget.patient.birthDate  as DateTime)}',
                           ),
                           SizedBox(width: Sizing.textSizeAppBar),
                           TitleValueText(

@@ -22,7 +22,7 @@ class PrescriptionProvider with ChangeNotifier {
     return '${Env.prefix}/$endpoint';
   }
 
-  Future<void> fetchPrescriptions(String patientID, String token) async {
+  Future<void> fetchPrescriptions(String? patientID, String token) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',
@@ -60,7 +60,7 @@ class PrescriptionProvider with ChangeNotifier {
   }
 
   Future updatePrescription(
-      Prescription prescription, String patientID, String token) async {
+      Prescription prescription, String? patientID, String token) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',
@@ -88,7 +88,7 @@ class PrescriptionProvider with ChangeNotifier {
   }
 
   Future updatePrescriptionAmount(
-      Prescription prescription, String patientID, String token) async {
+      Prescription prescription, String? patientID, String token) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',
@@ -115,7 +115,7 @@ class PrescriptionProvider with ChangeNotifier {
   }
 
   Future removePrescription(
-      Prescription prescription, String patientID, String token) async {
+      Prescription prescription, String? patientID, String token) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',
@@ -139,7 +139,7 @@ class PrescriptionProvider with ChangeNotifier {
     }
   }
 
-  Future removeMedicine(Prescription prescription, String patientID,
+  Future removeMedicine(Prescription prescription, String? patientID,
       String? drugId, String token) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',

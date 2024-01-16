@@ -53,7 +53,7 @@ class SearchPatientDelegate extends SearchDelegate {
           itemCount: patient?.length,
           itemBuilder: (context, index) {
             final patient1 = snapshot.data![index];
-            final labresult = int.parse(patient1.patientId);
+            final labresult = int.parse(patient1.patientId as String);
             return GestureDetector(
               onTap: () {
                 Navigator.push(

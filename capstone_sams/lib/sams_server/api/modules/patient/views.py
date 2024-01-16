@@ -8,8 +8,8 @@ from rest_framework.permissions import IsAuthenticated
 import json
 from rest_framework import status
 from api.modules.user.models import Account, Data_Log
-from api.modules.patient.models import Patient, Medical_Record, Contact_Person
-from api.modules.patient.serializers import PatientSerializer, MedicalRecordSerializer, ContactPersonSerializer
+from api.modules.patient.models import Patient, Medical_Record, Contact_Person, Present_Illness
+from api.modules.patient.serializers import PatientSerializer, MedicalRecordSerializer, ContactPersonSerializer, PresentIllnessSerializer
 
 '''
 This view represent all the functions necessary to conduct
@@ -214,3 +214,53 @@ class ContactPersonView(viewsets.ViewSet):
         except Exception as e:
             return Response({"message": "Failed to update contact.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
+class PresentIllnessView(viewsets.ViewSet):
+    @api_view(['GET'])
+    def fetch_complaints(request):
+        try:
+            complaints = Present_Illness.objects.all()
+            serializer = PresentIllnessSerializer(complaints)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"message": "Failed to fetch complaints. str{e}"}, status=status.HTTP_404_NOT_FOUND)
+
+    @api_view(['GET'])
+    def fetch_complaint_by_id(request, illnessNum):
+        try:
+            complaint = Present_Illness.objects.get(pk=illnessNum)
+            serializer = PresentIllnessSerializer(complaint)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except PresentIllnessSerializer.DoesNotExist:
+            return Response({"message": "Complaint does not exist."}, status=status.HTTP_404_NOT_FOUND)
+    
+    @api_view(['POST'])
+    def create_complaint(request, patientID):
+        try:
+            patient = Patient.objects.get(pk=patientID)
+            illness_data = json.loads(request.body)
+            illness = Present_Illness.objects.create(
+                complaint = illness_data['complaint'],
+                findings = illness_data['findings'],
+                diagnosis = illness_data['diagnois'],
+                treatment = illness_data['treatment'],
+                patient = patient
+            )
+            return Response({"message": "Complaint created successfully."}, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({"message": "Failed to create complaint.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+    @api_view(['PUT'])
+    def update_complaint(request, illnessNum):
+        try:
+            present_illness = Present_Illness.objects.get(pk = illnessNum)
+            illness_data = json.loads(request.body)
+            present_illness.complaint = illness_data['complain']
+            present_illness.findings = illness_data['findings']
+            present_illness.diagnosis = illness_data['diagnosis']
+            present_illness.treatment = illness_data['treatment']
+            present_illness.save()
+            return Response({"message": "Complaint updated successfully."}, status=status.HTTP_200_OK)
+        except Present_Illness.DoesNotExist:
+            return Response({"message": "Complaint does not exist."}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"message": "Failed to update complaint.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

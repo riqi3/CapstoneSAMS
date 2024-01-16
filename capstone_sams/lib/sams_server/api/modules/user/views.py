@@ -10,6 +10,9 @@ from django.shortcuts import get_object_or_404
 import json
 from api.modules.user.models import Personal_Note, Account, Data_Log
 from api.modules.user.serializers import PersonalNoteSerializer, AccountSerializer
+from capstone_sams.lib.sams_server.api.modules.patient.models import Patient
+from capstone_sams.lib.sams_server.api.modules.patient.serializers import PatientSerializer
+from rest_framework.decorators import action
 
 '''
 This view represent the ability to generate
@@ -30,7 +33,7 @@ class ObtainTokenView(APIView):
             access_token = str(refresh.access_token)
             refresh_token = str(refresh)
             user.generate_token()
-            return Response({'access_token': access_token, 'refresh_token': refresh_token}, status=status.HTTP_200_OK)
+            return Response({'access_token': access_token, 'refresh_token': refresh_token,'role': user.accountRole}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid credentials'}, status=400)
     
@@ -109,6 +112,44 @@ class AccountView(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"message": "Failed to fetch account.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+'''
+This view will provide the physician with the assigned patients
+'''    
+class PhysicianPatientViewSet(viewsets.ModelViewSet):
+    serializer_class = PatientSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        physician = self.request.user
+        return Patient.objects.filter(assignedPhysician=physician)
+    
+'''
+This view will allow the nurse to changed the assigned physician of a specific patient. 
+'''    
+class NursePatientViewSet(viewsets.ModelViewSet):
+    serializer_class = PatientSerializer
+    permission_classes = [IsAuthenticated]
+
+    @action(detail=True, methods=['post'])
+    def change_physician(self, request, pk=None):
+        patient = self.get_object()
+
+        if request.user.accountRole != 'nurse':
+            return Response({'error': 'Permission denied. Only nurses can change physicians.'}, status=status.HTTP_403_FORBIDDEN)
+
+        new_physician_id = request.data.get('new_physician_id')
+
+        try:
+            new_physician = Account.objects.get(pk=new_physician_id, accountRole='physician')
+        except Account.DoesNotExist:
+            return Response({'error': 'Invalid physician ID'}, status=status.HTTP_400_BAD_REQUEST)
+
+        patient.assignedPhysician = new_physician
+        patient.save()
+
+        serializer = PatientSerializer(patient)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 '''
 This view represent all the functions necessary to conduct
