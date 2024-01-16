@@ -127,19 +127,19 @@ class PatientProvider extends ChangeNotifier {
           _patients = _patients.where(
             (element) {
               return element.firstName
-                      .toLowerCase()
+                      !.toLowerCase()
                       .contains((query.toLowerCase())) ||
                   element.lastName
-                      .toLowerCase()
+                      !.toLowerCase()
                       .contains((query.toLowerCase())) ||
                   element.middleInitial
-                      .toLowerCase()
+                      !.toLowerCase()
                       .contains((query.toLowerCase())) ||
                   element.patientId
-                      .toLowerCase()
-                      .contains((query.toLowerCase())) ||
+                      !.toLowerCase()
+                      .contains((query.toLowerCase()))||
                   element.studNumber
-                      .toLowerCase()
+                      !.toLowerCase()
                       .contains((query.toLowerCase()));
             },
           ).toList();

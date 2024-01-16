@@ -47,7 +47,7 @@ class _InfoState extends State<Info> {
       final provider =
           Provider.of<PrescriptionProvider>(context, listen: false);
       await provider.fetchPrescriptions(
-          widget.patient.patientId, context.read<AccountProvider>().token!);
+          widget.patient.patientId , context.read<AccountProvider>().token!);
       return provider.prescriptions;
     } catch (error, stackTrace) {
       print("Error fetching data: $error");

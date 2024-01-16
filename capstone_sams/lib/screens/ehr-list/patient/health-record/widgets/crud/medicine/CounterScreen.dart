@@ -70,8 +70,8 @@ class _CounterScreenState extends State<CounterScreen> {
   void savePrescription() {
     updateQuantity = _counter;
     final selectedMedicineIndex = widget.index;
-    List<dynamic> updatedMedicines = List.from(medicines!); 
-    
+    List<dynamic> updatedMedicines = List.from(medicines!);
+
     if (selectedMedicineIndex >= 0 &&
         selectedMedicineIndex < medicines!.length) {
       Medicine modifiedMedicine = Medicine(
