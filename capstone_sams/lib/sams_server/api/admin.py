@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib import admin, messages
 from django.contrib.admin.models import LogEntry
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group 
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.auth.signals import user_logged_in, user_logged_out
@@ -20,7 +20,7 @@ from api.modules.patient.form import CsvImportPatientForm
 from api.modules.cpoe.form import CsvImportMedicineForm
 from api.modules.laboratory.form import PdfImportLabResultForm
 from api.modules.user.models import Account, Data_Log
-from api.modules.patient.models import Patient, Health_Record
+from api.modules.patient.models import Patient, Medical_Record,Contact_Person
 from api.modules.cpoe.models import Medicine, Prescription
 from api.modules.laboratory.models import LabResult
 
@@ -109,15 +109,15 @@ def create_data_log_for_deletion(sender, instance, using, **kwargs):
 This is a signal that will create a data log if an admin user deletes
 any data.
 '''
-@receiver(post_save, sender=Patient)
-def create_health_record(sender, instance, created, **kwargs):
-    if created:
-        health_record = Health_Record.objects.create(
-            symptoms={"symptoms": "None"},
-            diseases={"diseases": "None"},
-            patient=instance,
-        )
-        admin_account = instance.user
+# @receiver(post_save, sender=Patient)
+# def create_health_record(sender, instance, created, **kwargs):
+#     if created:
+#         health_record = Health_Record.objects.create(
+#             symptoms={"symptoms": "None"},
+#             diseases={"diseases": "None"},
+#             patient=instance,
+#         )
+#         admin_account = instance.user
 
 
 COMMON_PASSWORDS = ["password", "12345678", "qwerty", "abc123"]
@@ -137,7 +137,7 @@ class UserCreationForm(forms.ModelForm):
     class Meta:
         model = Account
         fields = (
-            "accountID",
+            # "accountID",
             "username",
             "firstName",
             "middleName",
@@ -167,14 +167,16 @@ class UserCreationForm(forms.ModelForm):
     
     def save(self, commit=True):
         user = super(UserCreationForm, self).save(commit=False)
-        user.set_password(self.cleaned_data["password1"])
+        user.set_password(self.cleaned_data["password1"]) 
+        user.accountID = Account.objects.latest('accountID').accountID + 1 if Account.objects.exists() else 1
+        print(user.accountID)
         photo = self.photo_generator(user)
         user.profile_photo = os.path.basename(photo)
         if commit:
             user.save()
         return user
 
-    
+     
     def photo_generator(self, user):
         width = 300
         height = 300
@@ -196,7 +198,8 @@ class UserCreationForm(forms.ModelForm):
         draw.text((x, y - bbox[1]), letter, font=font, fill=fontColor)
         save_folder = 'upload-photo'
         os.makedirs(save_folder, exist_ok=True)
-        img_path = os.path.join(save_folder, f'{user.accountID}_{user.firstName}{user.lastName}_profilepic.png')
+        print(user.accountID)
+        img_path = os.path.join(save_folder, f'{user.accountID}_{user.firstName}{user.lastName}_profilepic.png') 
         img.save(img_path)
         return img_path
      
@@ -226,7 +229,7 @@ class UserChangeForm(forms.ModelForm):
     class Meta:
         model = Account
         fields = (
-            "accountID",
+            # "accountID",
             "username",
             "password",
             "firstName",
@@ -236,7 +239,7 @@ class UserChangeForm(forms.ModelForm):
             "is_active",
             "is_staff",
             "is_superuser",
-            "profile_photo",
+            # "profile_photo",
         )
 
     def clean_password(self):
@@ -252,6 +255,7 @@ class UserAdmin(BaseUserAdmin):
     add_form = UserCreationForm 
     actions = ['delete_model']
     list_display = ( 
+        # 'accountID',
         "username",
         "firstName",
         "middleName",
@@ -284,7 +288,7 @@ class UserAdmin(BaseUserAdmin):
             {
                 "classes": ("wide",),
                 "fields": (
-                    "accountID",
+                    # "accountID",
                     "username",
                     "firstName",
                     "middleName",
@@ -301,8 +305,7 @@ class UserAdmin(BaseUserAdmin):
     )
     search_fields = ("username",)
     ordering = ("username",)
-    filter_horizontal = ()
-
+    filter_horizontal = () 
 
     def delete_queryset(self, request, queryset):
          for obj in queryset:
@@ -330,47 +333,105 @@ class UserAdmin(BaseUserAdmin):
 This represent the forms that will be shown to the admin when creating a new patient
 and updating existing patients.
 '''
-class PatientAdminForm(forms.ModelForm):
-    class Meta:
-        model = Patient
-        fields = (
-            "patientID",
-            "firstName",
-            "middleName",
-            "lastName",
-            "age",
-            "gender",
-            "birthDate",
-            "registration",
-            "phone",
-            "email",
-        )
+# class PatientAdminForm(forms.ModelForm):
+#     class Meta:
+#         model = Patient
+#         fields = (
+#             # "patientID",
+#             "firstName",
+#             "middleInitial",
+#             "lastName",
+#             "age",
+#             "gender",
+#             "birthDate",
+#             'department',
+#             'course',
+#             'yrLevel',
+#             'studNumber',
+#             'address',
+#             'height',
+#             'weight',
+#             "registration",
+#             "phone",
+#             "email", 
+#             'assignedPhysician',
+#         )
 
+# class HealthRecordAdminForm(forms.ModelForm):
+#     class Meta:
+#         model = Health_Record
+#         fields = (  
+#             'illnesses',
+#             'allergies',
+#             'pastDisease',
+#             'familyHistory',
+#             'lastMensPeriod', 
+#         )
+
+# class ContactAdminForm(forms.ModelForm):
+#     class Meta:
+#         model = Contact_Person
+#         fields = (  
+#             'fullName',
+#             'contactNum',
+#             'contactAddress',
+#         )
+
+# class PatientInline(admin.TabularInline):
+#     model = Patient
+ 
+
+class MedicalRecordInline(admin.StackedInline):
+    model = Medical_Record 
+    extra = 1
+    def has_add_permission(self, request, obj):
+        if obj is None:
+            return True
+        return False
+
+class ContactInline(admin.StackedInline):
+    model = Contact_Person
+    extra = 1
+    def has_add_permission(self, request, obj):
+        if obj is None:
+            return True
+        return False
 '''
 This represent the table that will be shown to the admin looking at the currently stored patients.
 '''
-class PatientAdmin(admin.ModelAdmin):
-    form = PatientAdminForm
+class PatientAdmin(admin.ModelAdmin): 
+    # form = PatientAdminForm, HealthRecordAdminForm, ContactAdminForm
+    inlines = [MedicalRecordInline, ContactInline]
     list_display = (
         "patientID",
         "firstName",
-        "middleName",
+        "middleInitial",
         "lastName",
         "age",
         "gender",
         "birthDate",
-        "registration",
+        # 'department',
+        'course',
+        'yrLevel',
+        'studNumber',
+        'address',
+        'height',
+        'weight',
+        # "registration",
         "phone",
-        "email",
+        "email", 
+        'assignedPhysician',
     )
-    list_filter = ("patientID", "gender", "registration")
+    list_filter = ("patientID", "gender",'assignedPhysician')
     search_fields = (
         "patientID",
         "firstName",
-        "middleName",
+        "middleInitial",
         "lastName",
         "birthDate",
+        # 'department',
         "email",
+        'assignedPhysician',
     )
 
     def get_urls(self):
@@ -398,7 +459,7 @@ class PatientAdmin(admin.ModelAdmin):
                     age=fields[4],
                     gender=fields[5],
                     birthDate=fields[6],
-                    registration=fields[7],
+                    # registration=fields[7],
                     phone=fields[8],
                     email=fields[9],
                 )
@@ -508,19 +569,19 @@ class MedicineAdmin(admin.ModelAdmin):
 This represent the forms that will be shown to the admin when creating a new health record
 and updating existing health records.
 '''
-class HealthRecordAdminForm(forms.ModelForm):
-    class Meta:
-        model = Health_Record
-        fields = "__all__"
+# class HealthRecordAdminForm(forms.ModelForm):
+#     class Meta:
+#         model = Health_Record
+#         fields = "__all__"
 
 '''
 This represent the table that will be shown to the admin looking at the currently stored health records.
 '''
-class HealthRecordAdmin(admin.ModelAdmin):
-    form = HealthRecordAdminForm
-    list_display = ("recordNum", "patient")
-    search_fields = ("recordNum",)
-    autocomplete_fields = ["patient"]
+# class HealthRecordAdmin(admin.ModelAdmin):
+#     form = HealthRecordAdminForm
+#     list_display = ("recordNum", "patient")
+#     search_fields = ("recordNum",)
+#     autocomplete_fields = ["patient"]
 
 
 class PrescriptionAdminForm(forms.ModelForm):
@@ -954,7 +1015,7 @@ admin.site.register(Account, UserAdmin)
 admin.site.register(Patient, PatientAdmin)
 admin.site.register(Data_Log, DataLogsAdmin)
 admin.site.register(Medicine, MedicineAdmin)
-admin.site.register(Health_Record, HealthRecordAdmin)
+# admin.site.register(Health_Record, HealthRecordAdmin)
 admin.site.register(Prescription, PrescriptionAdmin)
 admin.site.register(LabResult, LabResultAdmin)
 admin.site.register(HealthSymptom, HealthSymptomAdmin)

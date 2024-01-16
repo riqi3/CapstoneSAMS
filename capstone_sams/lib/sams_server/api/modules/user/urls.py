@@ -1,4 +1,4 @@
-from .views import PersonalNotesView, ObtainTokenView, LogInView, AccountsView
+from .views import NursePatientViewSet, PersonalNotesView, ObtainTokenView, LogInView, AccountsView, PhysicianPatientViewSet
 from django.urls import path
 
 urlpatterns = [
@@ -11,4 +11,6 @@ urlpatterns = [
     path('notes/update/<str:noteNum>', PersonalNotesView.update_personal_note, name='update_personal_note'), #API Endpoint for note update
     path('notes/done/<str:noteNum>', PersonalNotesView.set_done, name='done_personal_note'), #API Endpoint for setting a note as done or not
     path('notes/delete/<str:noteNum>', PersonalNotesView.delete_personal_note, name='delete_personal_note'), #API Endpoint for note deletion
+    path('<str:role>/<int:account_id>/patients/', PhysicianPatientViewSet.as_view({'get': 'list'}), name='physician_patients_list'), # API Endpoint for a physician to get the list of assigned patients
+    path('nurse-patients/<int:pk>/change-physician/', NursePatientViewSet.as_view({'post': 'change_physician'}), name='nurse_patient_change_physician'), # API Endpoint for a nurse to change the assigned physician of a specific patient
 ]

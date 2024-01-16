@@ -5,7 +5,9 @@ import 'package:capstone_sams/global-widgets/TitleAppBar.dart';
 import 'package:capstone_sams/global-widgets/buttons/CancelButton.dart';
 import 'package:capstone_sams/global-widgets/text-fields/Textfields.dart';
 import 'package:capstone_sams/models/AccountModel.dart';
+import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
+import 'package:capstone_sams/providers/PatientProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/EhrListScreen.dart';
 import 'package:capstone_sams/global-widgets/dropdown/MultiSelect.dart';
 import 'package:dio/dio.dart';
@@ -16,6 +18,7 @@ import 'package:provider/provider.dart';
 
 class IndividualRecordForm extends StatefulWidget {
   final String? course;
+
   const IndividualRecordForm({
     super.key,
     this.course,
@@ -27,10 +30,13 @@ class IndividualRecordForm extends StatefulWidget {
 
 class _IndividualRecordFormState extends State<IndividualRecordForm> {
   var _isLoading = false;
-  bool _isChecked1 = false;
-  bool _isChecked2 = false;
+  bool _isCheckedEmail = false;
+  bool _isCheckedLMP = false;
+  bool _isCheckedContactNum = false;
   final _genInfoFormKey = GlobalKey<FormState>();
+  final _genInfo = Patient();
   final _medInfoFormKey = GlobalKey<FormState>();
+  // final _medInfo = Medical
   final _emergencyInfoFormKey = GlobalKey<FormState>();
   TextEditingController firstAddress = TextEditingController();
   TextEditingController secondAddress = TextEditingController();
@@ -40,6 +46,20 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
   List<String> _selectedIllnesses = [];
   late bool _autoValidate = false;
   DateTime? _birthDate;
+  final _account = Account(isSuperuser: false);
+  late String token = context.read<AccountProvider>().token!;
+
+  void _onSubmit() async {
+    setState(() => _isLoading = true);
+    var accountID = context.read<AccountProvider>().id;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EhrListScreen(),
+      ),
+    );
+  }
+
   List<String> statusList = [
     'Single',
     'Married',
@@ -47,8 +67,6 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
     'Separated',
     'Widowed'
   ];
-  final _account = Account(isSuperuser: false);
-  late String token = context.read<AccountProvider>().token!;
 
   void _selectAllergy() async {
     List<String> allergyList = ['N/A', 'Food', 'Medicine', 'Other'];
@@ -149,15 +167,6 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
   late String statustValue = statusList.first;
   String selectedGender = '';
 
-  void _onSubmit() async {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => EhrListScreen(),
-      ),
-    );
-  }
-
   @override
   void initState() {
     super.initState();
@@ -227,6 +236,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                             children: [
                               Flexible(
                                 child: FormTextField(
+                                  onsaved: (value) => _genInfo.lastName,
                                   labeltext: 'Surname*',
                                   validator: 'Enter their surname!',
                                   type: TextInputType.name,
@@ -235,6 +245,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                               SizedBox(width: Sizing.formSpacing),
                               Flexible(
                                 child: FormTextField(
+                                  onsaved: (value) => _genInfo.firstName,
                                   labeltext: 'First Name*',
                                   validator: 'Enter their first name!',
                                   type: TextInputType.name,
@@ -246,6 +257,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                                   maxWidth: 60.0,
                                 ),
                                 child: FormTextField(
+                                  onsaved: (value) => _genInfo.middleInitial,
                                   labeltext: 'M.I.*',
                                   validator: 'Enter their middle initial!',
                                   type: TextInputType.name,
@@ -260,6 +272,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                             children: <Widget>[
                               Flexible(
                                 child: FormTextField(
+                                  onsaved: (value) => _genInfo.age,
                                   labeltext: 'Age*',
                                   validator: 'Enter their age!',
                                   type: TextInputType.number,
@@ -406,6 +419,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                               SizedBox(width: Sizing.formSpacing),
                               Flexible(
                                 child: FormTextField(
+                                  onsaved: (value) => _genInfo.yrLevel,
                                   labeltext: 'Year*',
                                   validator: 'Enter the student year!',
                                   type: TextInputType.number,
@@ -416,6 +430,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                           SizedBox(height: Sizing.formSpacing),
                           Flexible(
                             child: FormTextField(
+                              onsaved: (value) => _genInfo.studNumber,
                               labeltext: 'Student Number*',
                               validator: 'Enter their student number I.D.!',
                               type: TextInputType.number,
@@ -431,6 +446,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                             children: <Widget>[
                               Flexible(
                                 child: FormTextField(
+                                  onsaved: (value) => _genInfo.height,
                                   labeltext: 'Height*',
                                   validator: 'Enter their height!',
                                   type: TextInputType.number,
@@ -439,6 +455,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                               SizedBox(width: Sizing.formSpacing),
                               Flexible(
                                 child: FormTextField(
+                                  onsaved: (value) => _genInfo.weight,
                                   labeltext: 'Weight*',
                                   validator: 'Enter their weight!',
                                   type: TextInputType.number,
@@ -454,6 +471,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                                 child: Column(
                                   children: [
                                     FormTextField(
+                                      onsaved: (value) => _genInfo.email,
                                       labeltext: 'Active Email',
                                       validator: 'Enter their email!',
                                       type: TextInputType.emailAddress,
@@ -461,10 +479,10 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                                     Row(
                                       children: [
                                         Checkbox(
-                                          value: _isChecked1,
+                                          value: _isCheckedEmail,
                                           onChanged: (value) {
                                             setState(() {
-                                              _isChecked1 = value!;
+                                              _isCheckedEmail = value!;
                                             });
                                           },
                                         ),
@@ -481,10 +499,33 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                               ),
                               SizedBox(width: Sizing.formSpacing),
                               Flexible(
-                                child: FormTextField(
-                                  labeltext: 'Contact Number*',
-                                  validator: 'Enter their contact number!',
-                                  type: TextInputType.phone,
+                                child: Column(
+                                  children: [
+                                    FormTextField(
+                                      onsaved: (value) => _genInfo.phone,
+                                      labeltext: 'Contact Number*',
+                                      validator: 'Enter their contact number!',
+                                      type: TextInputType.phone,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Checkbox(
+                                          value: _isCheckedContactNum,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _isCheckedContactNum = value!;
+                                            });
+                                          },
+                                        ),
+                                        Flexible(
+                                          child: Text(
+                                            'Require contact number',
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
@@ -654,32 +695,32 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                         otherTextField(),
                       SizedBox(height: Sizing.formSpacing),
                       if (selectedGender.contains('female'))
-                        Flexible(
-                          child: FormTextField(
-                            labeltext: 'LMP (Last Menstrual Period)',
-                            validator: 'Enter their LMP!',
-                            type: TextInputType.name,
-                          ),
-                        ),
-                      if (selectedGender.contains('female'))
-                        Row(
-                          children: [
-                            Checkbox(
-                              value: _isChecked2,
-                              onChanged: (value) {
-                                setState(() {
-                                  _isChecked2 = value!;
-                                });
-                              },
-                            ),
-                            Flexible(
-                              child: Text(
-                                'Require LMP',
-                                overflow: TextOverflow.ellipsis,
+                        // Flexible(
+                        //   child: FormTextField(
+                        //     labeltext: 'LMP (Last Menstrual Period)',
+                        //     validator: 'Enter their LMP!',
+                        //     type: TextInputType.name,
+                        //   ),
+                        // ),
+                        if (selectedGender.contains('female'))
+                          Row(
+                            children: [
+                              Checkbox(
+                                value: _isCheckedLMP,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _isCheckedLMP = value!;
+                                  });
+                                },
                               ),
-                            ),
-                          ],
-                        ),
+                              Flexible(
+                                child: Text(
+                                  'Require LMP',
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
                     ],
                   ),
                 ),
@@ -703,21 +744,21 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Flexible(
-                        child: FormTextField(
-                          labeltext: 'Full Name*',
-                          validator: 'Enter their full name!',
-                          type: TextInputType.name,
-                        ),
-                      ),
+                      // Flexible(
+                      //   child: FormTextField(
+                      //     labeltext: 'Full Name*',
+                      //     validator: 'Enter their full name!',
+                      //     type: TextInputType.name,
+                      //   ),
+                      // ),
                       SizedBox(height: Sizing.formSpacing),
-                      Flexible(
-                        child: FormTextField(
-                          labeltext: 'Contact Number*',
-                          validator: 'Enter their contact number!',
-                          type: TextInputType.phone,
-                        ),
-                      ),
+                      // Flexible(
+                      //   child: FormTextField(
+                      //     labeltext: 'Contact Number*',
+                      //     validator: 'Enter their contact number!',
+                      //     type: TextInputType.phone,
+                      //   ),
+                      // ),
                       SizedBox(height: Sizing.formSpacing),
                       Flexible(
                         child: AddressFormField(

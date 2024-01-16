@@ -35,11 +35,11 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen> {
         scrollDirection: Axis.vertical,
         physics: BouncingScrollPhysics(),
         child: Column(
-          children: [ 
-            AssignDoctorCard(),
+          children: [
             PatientInfoCard(
               patient: widget.patient,
             ),
+            AssignDoctorCard(),
           ],
         ),
       ),

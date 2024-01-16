@@ -1,3 +1,4 @@
+import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:flutter/material.dart';
 import '../../constants/theme/pallete.dart';
 
@@ -118,17 +119,19 @@ class FormTextField extends StatefulWidget {
   final TextInputType type;
   final int? maxlength;
   final int? maxlines;
-  final String? countertext;
+  final String? countertext; 
+  late final dynamic onsaved;
 
-  const FormTextField({
+  FormTextField({
     super.key,
     required this.labeltext,
     required this.type,
+    required this.onsaved,
     this.controller,
     this.validator,
     this.countertext,
     this.maxlength,
-    this.maxlines,
+    this.maxlines, 
   });
 
   @override
@@ -154,6 +157,13 @@ class _FormTextFieldState extends State<FormTextField> {
       keyboardType: widget.type,
       maxLength: widget.maxlength,
       maxLines: widget.maxlines,
+      onSaved: (value) {
+        if (widget.onsaved != null) {
+          widget.onsaved!(value);
+        } else {
+          widget.onsaved = value;
+        }
+      },
     );
   }
 }

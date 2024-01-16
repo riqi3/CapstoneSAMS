@@ -12,7 +12,7 @@ class AccountProvider extends ChangeNotifier {
   // List<Account> get account => _accounts;
   Account? _account;
   Account? get acc => _account;
-  String? get id => _account?.accountID;
+  int? get id => _account?.accountID;
   String? get photo => _account?.profile_photo;
   String? get username => _account?.username;
   String? get password => _account?.password;

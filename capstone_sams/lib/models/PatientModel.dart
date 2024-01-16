@@ -1,55 +1,87 @@
 class Patient {
-  final String patientId;
-  final String firstName;
-  String? middleName;
-  final String lastName;
-  final int age;
-  final String gender;
-  final DateTime birthDate;
-  final DateTime registration;
+  String? patientId;
+  String? firstName;
+  String? middleInitial;
+  String? lastName;
+  int? age;
+  String? gender;
+  DateTime? birthDate;
+  // final String department;
+  String? course;
+  int? yrLevel;
+  String? studNumber;
+  String? address;
+  double? height;
+  double? weight;
+  // final DateTime registration;
   String? phone;
   String? email;
+  int? assignedPhysician;
 
   Patient({
-    required this.patientId,
-    required this.firstName,
-    this.middleName,
-    required this.lastName,
-    required this.age,
-    required this.gender,
-    required this.birthDate,
-    required this.registration,
-    this.phone,
-    this.email,
+    this.patientId,
+    this.firstName,
+    this.middleInitial,
+    this.lastName,
+     this.age,
+     this.gender,
+     this.birthDate,
+    // required this.department,
+     this.course,
+     this.yrLevel,
+     this.studNumber,
+     this.address,
+     this.height,
+     this.weight,
+    // required this.registration,
+     this.phone,
+     this.email,
+     this.assignedPhysician,
   });
 
   Map<String, dynamic> toJson() {
     return {
       'patientId': patientId,
       'firstName': firstName,
-      'middleName': middleName,
+      'middleInitial': middleInitial,
       'lastName': lastName,
       'age': age,
       'gender': gender,
-      'birthDate': birthDate.toIso8601String(),
-      'registration': registration.toIso8601String(),
+      'birthDate': birthDate!.toIso8601String(),
+      // 'department': department,
+      'course': course,
+      'yrLevel': yrLevel,
+      'studNumber': studNumber,
+      'address': address,
+      'height': height,
+      'weight': weight,
+      // 'registration': registration.toIso8601String(),
       'phone': phone,
       'email': email,
+      'assignedPhysician': assignedPhysician,
     };
   }
 
   factory Patient.fromJson(Map<String, dynamic> json) {
     return Patient(
-      patientId: json['patientID'],
+      patientId: json['patientID'].toString(),
       firstName: json['firstName'],
-      middleName: json['middleName'],
+      middleInitial: json['middleInitial'],
       lastName: json['lastName'],
       age: json['age'],
       gender: json['gender'],
       birthDate: DateTime.parse(json['birthDate']),
-      registration: DateTime.parse(json['registration']),
+      // department: json['department'],
+      course: json['course'],
+      yrLevel: json['yrLevel'],
+      studNumber: json['studNumber'],
+      address: json['address'],
+      height: json['height'],
+      weight: json['weight'],
+      // registration: DateTime.parse(json['registration']),
       phone: json['phone'],
       email: json['email'],
+      assignedPhysician: json['assignedPhysician'],
     );
   }
 }

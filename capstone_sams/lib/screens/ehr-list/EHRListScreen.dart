@@ -3,9 +3,12 @@ import 'package:capstone_sams/constants/Dimensions.dart';
 import 'package:capstone_sams/constants/Strings.dart';
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/global-widgets/SearchAppBar.dart';
+import 'package:capstone_sams/models/ContactPersonModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
+import 'package:capstone_sams/providers/ContactPersonProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/widgets/PatientCard.dart';
+import 'package:capstone_sams/screens/home/widgets/CourseDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +25,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
   late Stream<List<Patient>> patients;
   late String token;
   ScrollController _controller = ScrollController();
-
+  String selectedPatientId = '';
   final double items = 24;
   final start = 0;
   int currentPageIndex = 0;
@@ -110,13 +113,15 @@ class _EhrListScreenState extends State<EhrListScreen> {
           },
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () => showDialog(
-      //     context: context,
-      //     builder: (ctx) => CourseDialog(),
-      //   ),
-      //   child: FaIcon(FontAwesomeIcons.pencil),
-      // ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => showDialog(
+          context: context,
+          builder: (ctx) => CourseDialog(),
+        ),
+        child: FaIcon(
+          FontAwesomeIcons.pencil,
+        ),
+      ),
       bottomNavigationBar: Padding(
         padding: EdgeInsets.symmetric(vertical: Sizing.spacing),
         child: Row(
@@ -187,15 +192,23 @@ class _EhrListScreenState extends State<EhrListScreen> {
       itemCount: dataToShow.length,
       itemBuilder: (context, index) {
         final patient = dataToShow[index];
-        final labresult = int.parse(patient.patientId);
-        return PatientCard(patient: patient, labresult: labresult);
+        final labresult = int.parse(patient.patientId as String);
+        return PatientCard(
+          patient: patient,
+          onSelect: (patientId) {
+            setState(() {
+              selectedPatientId = patientId;
+            });
+          },
+          labresult: labresult,
+        );
       },
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 1,
         mainAxisSpacing: 10,
         crossAxisSpacing: 10,
         childAspectRatio: MediaQuery.of(context).size.width /
-            (MediaQuery.of(context).size.height / 4),
+            (MediaQuery.of(context).size.height / 3.5),
       ),
     );
   }
@@ -207,8 +220,18 @@ class _EhrListScreenState extends State<EhrListScreen> {
       itemCount: dataToShow.length,
       itemBuilder: (context, index) {
         final patient = dataToShow[index];
-        final labresult = int.parse(patient.patientId);
-        return PatientCard(patient: patient, labresult: labresult);
+        final labresult = int.parse(
+          patient.patientId as String,
+        );
+        return PatientCard(
+          patient: patient,
+          onSelect: (patientId) {
+            setState(() {
+              selectedPatientId = patientId;
+            });
+          },
+          labresult: labresult,
+        );
       },
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
