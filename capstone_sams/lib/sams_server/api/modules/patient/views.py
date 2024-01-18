@@ -49,21 +49,6 @@ class PatientView(viewsets.ModelViewSet):
                 email=patient_data['email'],
                 assignedPhysician=physician
             )
-            patient_instance = get_object_or_404(Patient, pk=patient_data['patientID'])
-            record = Medical_Record.objects.create( 
-                illnesses = patient_data['illnesses'],
-                pastDiseases = patient_data['pastDiseases'],
-                allergies = patient_data['allergies'],
-                familyHistory = patient_data['familyHistory'],
-                lastMensPeriod = patient_data['lastMensPeriod'],
-                patient = patient_instance
-            )
-            contact = Contact_Person.objects.create(
-                fullName = patient_data['fullName'],
-                phone = patient_data['phone'],
-                address = patient_data['address'],
-                patient = patient_instance
-            )
             data = json.loads(request.body)
             accountID = data['account']
             account = get_object_or_404(Account, pk=accountID)
@@ -174,7 +159,24 @@ class MedicalRecordView(viewsets.ViewSet):
         except Medical_Record.DoesNotExist:
             return Response({"message": "Health Record does not exist."}, status=status.HTTP_404_NOT_FOUND)
     
-
+    @api_view(['POST'])
+    def create_health_record(request):
+        try:
+            record_data = json.loads(request.body)
+            patientID = record_data['patientID'] 
+            patient = Patient.objects.get(pk=patientID)
+            record = Medical_Record.objects.create( 
+                illnesses = record_data['illnesses'],
+                pastDiseases = record_data['pastDiseases'],
+                allergies = record_data['allergies'],
+                familyHistory = record_data['familyHistory'],
+                lastMensPeriod = record_data['lastMensPeriod'],
+                patient = patientID
+            )
+            return Response({"message": "Health record created successfully."}, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({"message": "Failed to create healt record.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
     @api_view(['PUT'])
     def update_health_record(request, patientID):
         try:
@@ -196,6 +198,21 @@ class MedicalRecordView(viewsets.ViewSet):
             return Response({"message": "Failed to update health record.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class ContactPersonView(viewsets.ViewSet):
+    @api_view(['POST'])
+    def create_contact_person(request):
+        try:
+            contact_data = json.loads(request.body)
+            patientID = contact_data['patientID']
+            patient = Patient.objects.get(pk=patientID)
+            contact = Contact_Person.objects.create(
+                fullName = contact_data['fullName'],
+                phone = contact_data['phone'],
+                address = contact_data['address'],
+                patient = patientID
+            )
+            return Response({"message": "Health record created successfully."}, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({"message": "Failed to create healt record.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST) 
     @api_view(['PUT'])
     def update_contact_person(request, patientID):
         try:
