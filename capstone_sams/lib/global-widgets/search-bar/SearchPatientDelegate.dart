@@ -53,7 +53,7 @@ class SearchPatientDelegate extends SearchDelegate {
           itemCount: patient?.length,
           itemBuilder: (context, index) {
             final patient1 = snapshot.data![index];
-            final labresult = int.parse(patient1.patientId as String);
+            final labresult = int.parse(patient1.patientID as String);
             return GestureDetector(
               onTap: () {
                 Navigator.push(
@@ -91,7 +91,7 @@ class SearchPatientDelegate extends SearchDelegate {
                             ),
                             child: Center(
                               child: Text(
-                                '${patient?[index].patientId}',
+                                '${patient?[index].patientID}',
                                 style: TextStyle(
                                     fontSize: Sizing.header4,
                                     fontWeight: FontWeight.bold,

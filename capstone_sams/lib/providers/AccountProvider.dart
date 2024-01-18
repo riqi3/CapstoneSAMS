@@ -23,6 +23,26 @@ class AccountProvider extends ChangeNotifier {
   bool get supera => _account!.isSuperuser;
   bool _isAuthentificated = false;
 
+  Future<Account?> fetchAccount(int? accountID, String token) async {
+    final header = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token',
+    }; 
+    try {
+      final response = await http.get(
+          Uri.parse('${Env.prefix}/user/users/account/${accountID}'),
+          headers: header);
+      await Future.delayed(Duration(milliseconds: 3000));
+      if (response.statusCode == 200) {
+        return Account.fromJson(jsonDecode(response.body));
+      } else {
+        return null;
+      }
+    } on Exception catch (e) {
+      return null;
+    }
+  }
+
   Future<bool> login(String username, String password) async {
     try {
       final response = await http.post(

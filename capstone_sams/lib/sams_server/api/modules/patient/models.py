@@ -26,18 +26,15 @@ class Patient(models.Model):
     lastName = models.CharField(max_length=100, blank = False)
     age = models.IntegerField(blank= False)
     gender = models.CharField(choices = GENDER_OPTIONS)
-    birthDate = models.DateField(blank = False)
-    # department = models.CharField(max_length=100, blank = False)
+    birthDate = models.DateField(blank = False) 
     course = models.CharField(choices = COURSE_OPTIONS)
     yrLevel = models.IntegerField(blank = False)
     studNumber = models.CharField(max_length=100, blank = False)
     address = models.CharField(blank= False)
     height = models.FloatField(blank = False)
-    weight = models.FloatField(blank= False)
-    # registration = models.DateField(blank=False)
+    weight = models.FloatField(blank= False) 
     phone = models.CharField(max_length = 11, blank = True)
-    email = models.CharField(max_length = 50, blank = True)
-    # user = models.CharField(null = True, blank = True)
+    email = models.CharField(max_length = 50, blank = True) 
     assignedPhysician = models.ForeignKey(Account, null=True, on_delete = models.CASCADE)
 
     
@@ -64,9 +61,7 @@ record is connected to only one patient.
 class Medical_Record(models.Model):
     #Health Record Attributes
     patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
-    recordNum = models.AutoField(primary_key = True)
-    # symptoms = models.JSONField(blank = True, default=None, null=True)
-    # diseases = models.JSONField(blank = True, default=None, null=True)
+    recordNum = models.AutoField(primary_key = True) 
     illnesses = models.JSONField(blank = True, default=None, null=True)
     allergies = models.JSONField(blank = True, default=None, null=True)
     pastDisease = models.JSONField(blank = True, default=None, null=True)

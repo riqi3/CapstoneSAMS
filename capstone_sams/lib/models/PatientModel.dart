@@ -1,11 +1,13 @@
+import 'package:capstone_sams/models/AccountModel.dart';
+
 class Patient {
-  String? patientId;
+  String? patientID;
   String? firstName;
   String? middleInitial;
   String? lastName;
   int? age;
   String? gender;
-  DateTime? birthDate;
+  String? birthDate;
   // final String department;
   String? course;
   int? yrLevel;
@@ -19,35 +21,35 @@ class Patient {
   int? assignedPhysician;
 
   Patient({
-    this.patientId,
+    this.patientID,
     this.firstName,
     this.middleInitial,
     this.lastName,
-     this.age,
-     this.gender,
-     this.birthDate,
-    // required this.department,
-     this.course,
-     this.yrLevel,
-     this.studNumber,
-     this.address,
-     this.height,
-     this.weight,
-    // required this.registration,
-     this.phone,
-     this.email,
-     this.assignedPhysician,
+    this.age,
+    this.gender,
+    this.birthDate,
+    // this.department,
+    this.course,
+    this.yrLevel,
+    this.studNumber,
+    this.address,
+    this.height,
+    this.weight,
+    // this.registration,
+    this.phone,
+    this.email,
+    this.assignedPhysician,
   });
 
   Map<String, dynamic> toJson() {
     return {
-      'patientId': patientId,
+      'patientID': patientID,
       'firstName': firstName,
       'middleInitial': middleInitial,
       'lastName': lastName,
       'age': age,
       'gender': gender,
-      'birthDate': birthDate!.toIso8601String(),
+      'birthDate': birthDate.toString(),
       // 'department': department,
       'course': course,
       'yrLevel': yrLevel,
@@ -64,13 +66,13 @@ class Patient {
 
   factory Patient.fromJson(Map<String, dynamic> json) {
     return Patient(
-      patientId: json['patientID'].toString(),
+      patientID: json['patientID'].toString(),
       firstName: json['firstName'],
       middleInitial: json['middleInitial'],
       lastName: json['lastName'],
       age: json['age'],
       gender: json['gender'],
-      birthDate: DateTime.parse(json['birthDate']),
+      birthDate: json['birthDate'],
       // department: json['department'],
       course: json['course'],
       yrLevel: json['yrLevel'],

@@ -134,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           onPressed: _isLoading ? null : _onSubmit,
                           style: ElevatedButton.styleFrom(
                             minimumSize: Size(elementWidth, elementWidth / 8),
-                            backgroundColor: Pallete.whiteColor,
+                            backgroundColor: Pallete.mainColor,
                             shape: RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.circular(Sizing.borderRadius),
@@ -146,18 +146,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                   height: 24,
                                   padding: const EdgeInsets.all(4),
                                   child: const CircularProgressIndicator(
-                                    color: Pallete.mainColor,
+                                    color: Pallete.whiteColor,
                                     strokeWidth: 3,
                                   ),
                                 )
                               : const Icon(
                                   Icons.login,
-                                  color: Pallete.mainColor,
+                                  color: Pallete.whiteColor,
                                 ),
                           label: const Text(
                             'Login',
                             style: TextStyle(
-                              color: Pallete.mainColor,
+                              color: Pallete.whiteColor,
                             ),
                           ),
                         ),

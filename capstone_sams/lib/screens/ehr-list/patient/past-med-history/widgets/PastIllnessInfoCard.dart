@@ -88,7 +88,7 @@ class _PastIllnesInfoCardState extends State<PastIllnesInfoCard> {
                 ),
                 child: FutureBuilder<MedicalRecord>(
                   future: medicalRecordProvider.fetchMedicalRecords(
-                      token, widget.patient.patientId),
+                      token, widget.patient.patientID),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(child: CircularProgressIndicator());

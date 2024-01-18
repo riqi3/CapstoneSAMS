@@ -174,8 +174,7 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                                       right: Sizing.formSpacing),
                                   child: TitleValueText(
                                     title: 'Birthdate: ',
-                                    value:
-                                        '${DateFormat.yMMMd('en_US').format(widget.patient.birthDate as DateTime)}',
+                                    value: '${widget.patient.birthDate}',
                                   ),
                                 ),
                                 TitleValueText(
@@ -278,7 +277,7 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                 ),
                 child: FutureBuilder<ContactPerson>(
                   future: contactPersonProvider.fetchContactPeople(
-                      token, widget.patient.patientId),
+                      token, widget.patient.patientID),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(child: CircularProgressIndicator());

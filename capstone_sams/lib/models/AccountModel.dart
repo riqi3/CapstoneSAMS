@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import '../constants/Env.dart';
 
 class Account {
-  final int? accountID;
+  int? accountID;
   final String? username;
   String? profile_photo;
   final String? password;

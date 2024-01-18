@@ -29,30 +29,28 @@ class PatientView(viewsets.ModelViewSet):
     def create_patient(request):
         try:
             patient_data = json.loads(request.body)
+            accountID = patient_data['assignedPhysician']
+            physician = Account.objects.get(pk=accountID)
             patient = Patient.objects.create(
-                patientID=patient_data['patientID'],
+                patientID=patient_data['patientID'], 
                 firstName=patient_data['firstName'],
                 middleInitial=patient_data['middleInitial'],
                 lastName=patient_data['lastName'],
                 age=patient_data['age'],
                 gender=patient_data['gender'],
-                birthDate=patient_data['birthDate'],
-                # department=patient_data['department'],
+                birthDate=patient_data['birthDate'], 
                 course=patient_data['course'],
                 yrLevel=patient_data['yrLevel'],
                 studNumber=patient_data['studNumber'],
                 address=patient_data['address'],
                 height=patient_data['height'],
-                weight=patient_data['weight'],
-                # registration=patient_data['registration'],
+                weight=patient_data['weight'], 
                 phone=patient_data['phone'],
                 email=patient_data['email'],
-                assignedPhysician=patient_data['assignedPhysician']
+                assignedPhysician=physician
             )
             patient_instance = get_object_or_404(Patient, pk=patient_data['patientID'])
-            record = Medical_Record.objects.create(
-                # symptoms = patient_data['symptoms'],
-                # diseases = patient_data['diseases'],
+            record = Medical_Record.objects.create( 
                 illnesses = patient_data['illnesses'],
                 pastDiseases = patient_data['pastDiseases'],
                 allergies = patient_data['allergies'],

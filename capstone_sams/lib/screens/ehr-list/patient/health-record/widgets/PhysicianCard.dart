@@ -37,7 +37,7 @@ class _PhysicianCardState extends State<PhysicianCard> {
       final provider =
           Provider.of<PrescriptionProvider>(context, listen: false);
       await provider.fetchPrescriptions(
-          widget.patient.patientId, context.read<AccountProvider>().token!);
+          widget.patient.patientID, context.read<AccountProvider>().token!);
       return provider.physicians;
     } catch (error, stackTrace) {
       print("Error fetching data: $error");

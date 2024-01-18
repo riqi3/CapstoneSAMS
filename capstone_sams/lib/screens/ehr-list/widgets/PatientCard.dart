@@ -55,7 +55,7 @@ class _PatientCardState extends State<PatientCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        widget.onSelect(widget.patient.patientId as String);
+        widget.onSelect(widget.patient.patientID as String);
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -119,7 +119,7 @@ class _PatientCardState extends State<PatientCard> {
                           TitleValueText(
                             title: 'Birthdate: ',
                             value:
-                                '${DateFormat.yMMMd('en_US').format(widget.patient.birthDate  as DateTime)}',
+                                '${widget.patient.birthDate }',
                           ),
                           SizedBox(width: Sizing.textSizeAppBar),
                           TitleValueText(

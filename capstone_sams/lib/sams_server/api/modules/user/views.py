@@ -10,8 +10,8 @@ from django.shortcuts import get_object_or_404
 import json
 from api.modules.user.models import Personal_Note, Account, Data_Log
 from api.modules.user.serializers import PersonalNoteSerializer, AccountSerializer
-from capstone_sams.lib.sams_server.api.modules.patient.models import Patient
-from capstone_sams.lib.sams_server.api.modules.patient.serializers import PatientSerializer
+from api.modules.patient.models import Patient
+from api.modules.patient.serializers import PatientSerializer
 from rest_framework.decorators import action
 
 '''
