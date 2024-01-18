@@ -42,4 +42,32 @@ class ContactPersonProvider extends ChangeNotifier {
       return throw Exception('Failed to load contacts');
     }
   }
+
+
+  Future<bool> createContactRecord(ContactPerson contactPerson, String? patientID, String token) async {
+    final header = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      // 'Authorization': 'Bearer $token',
+    };
+    try {
+      final response = await http.post(
+        Uri.parse('${Env.prefix}/patient/patients/create/'),
+        headers: header,
+        body: jsonEncode(contactPerson.toJson()), 
+      );
+      // await Future.delayed(Duration(milliseconds: 3000));
+      if (response.statusCode == 201) {
+        fetchContactPeople(token, patientID);
+        notifyListeners();
+        return true;
+      } else {
+        print('cannot add contact record!'); 
+        print("HTTP Response: ${response.statusCode} ${response.body}");
+        return false;
+      }
+    } on Exception catch (e) {
+      print(e);
+      return false;
+    }
+  }
 }

@@ -46,7 +46,7 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
     var medicines = medicineProvider.medicines;
     if (patient != null && medicines.isNotEmpty) {
       final medicineProvider = context.read<MedicineProvider>();
-      final patientID = patient.patientId;
+      final patientID = patient.patientID;
       final success = await medicineProvider.saveToPrescription(
           accountID, patientID, finalPrediction, token);
       if (success) {

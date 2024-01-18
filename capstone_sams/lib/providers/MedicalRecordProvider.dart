@@ -7,12 +7,28 @@ import '../constants/Env.dart';
 
 class MedicalRecordProvider with ChangeNotifier {
   var data = [];
+  MedicalRecord? _medicalRecord;
+  MedicalRecord? get medicalRecord => _medicalRecord;
   List<MedicalRecord> _medicalRecords = [];
-
   List<MedicalRecord> get medicalRecords => _medicalRecords;
 
+  int _recordNum = 0;
+  List<dynamic> _illnesses = [];
+  List<dynamic> _allergies = [];
+  List<dynamic> _pastDisease = [];
+  List<dynamic> _familyHistory = [];
+  String _lastMensPeriod = '';
+  String _patientID = '';
 
-Future<MedicalRecord> fetchMedicalRecords(
+  int get recordNum => _recordNum;
+  List<dynamic> get illnesses => _illnesses;
+  List<dynamic> get allergies => _allergies;
+  List<dynamic> get pastDisease => _pastDisease;
+  List<dynamic> get familyHistory => _familyHistory;
+  String get lastMensPeriod => _lastMensPeriod;
+  String get patientID => _patientID;
+
+  Future<MedicalRecord> fetchMedicalRecords(
       String token, String? patientID) async {
     print('provider${patientID}');
     final header = <String, String>{
@@ -24,13 +40,43 @@ Future<MedicalRecord> fetchMedicalRecords(
           Uri.parse('${Env.prefix}/patient/patients/history/${patientID}'),
           headers: header);
       await Future.delayed(Duration(milliseconds: 3000));
-      if (response.statusCode == 200) { 
-        return MedicalRecord.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+      if (response.statusCode == 200) {
+        return MedicalRecord.fromJson(
+            jsonDecode(response.body) as Map<String, dynamic>);
       } else {
         return throw Exception('Failed to load medical records');
       }
     } on Exception catch (e) {
       return throw Exception('Failed to load medical records');
+    }
+  }
+
+  Future<bool> createMedicalRecord(
+      String? patientID, MedicalRecord medicalRecord, String token) async {
+    final header = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      // 'Authorization': 'Bearer $token',
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse('${Env.prefix}/patient/patients/create/'),
+        headers: header,
+        body: jsonEncode(medicalRecord.toJson()),
+      );
+      // await Future.delayed(Duration(milliseconds: 3000));
+      if (response.statusCode == 201) {
+        fetchMedicalRecords(token, patientID);
+        notifyListeners();
+        return true;
+      } else {
+        print('cannot add medical record!');
+        print("HTTP Response: ${response.statusCode} ${response.body}");
+        return false;
+      }
+    } on Exception catch (e) {
+      print(e);
+      return false;
     }
   }
 
@@ -51,7 +97,7 @@ Future<MedicalRecord> fetchMedicalRecords(
   //   } on Exception catch (e) {
   //     return [];
   //   }
-  }
+}
 
   // void addLabResult(Labresult labresult) async {
   //   try {

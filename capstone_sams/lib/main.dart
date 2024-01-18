@@ -84,6 +84,9 @@ class SAMSApp extends StatelessWidget {
             ),
           ),
         ),
+        cardTheme: CardTheme(
+          color: Pallete.whiteColor,
+        ),
         dialogBackgroundColor: Pallete.whiteColor,
         scaffoldBackgroundColor: Pallete.backgroundColor,
         floatingActionButtonTheme: FloatingActionButtonThemeData(

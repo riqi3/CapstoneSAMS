@@ -94,7 +94,7 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
               health_record: widget.prescription!.health_record,
               disease: widget.prescription!.disease,
             ),
-            widget.patient.patientId,
+            widget.patient.patientID,
             context.read<AccountProvider>().token!);
             
         int routesCount = 0;

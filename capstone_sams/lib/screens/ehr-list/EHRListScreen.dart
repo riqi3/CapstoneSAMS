@@ -7,6 +7,7 @@ import 'package:capstone_sams/models/ContactPersonModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/ContactPersonProvider.dart';
+import 'package:capstone_sams/screens/ehr-list/forms/IndividualRecordForm.dart';
 import 'package:capstone_sams/screens/ehr-list/widgets/PatientCard.dart';
 import 'package:capstone_sams/screens/home/widgets/CourseDialog.dart';
 import 'package:flutter/material.dart';
@@ -114,7 +115,9 @@ class _EhrListScreenState extends State<EhrListScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => showDialog(
+        onPressed: () =>
+            // IndividualRecordForm(),
+            showDialog(
           context: context,
           builder: (ctx) => CourseDialog(),
         ),
@@ -192,7 +195,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
       itemCount: dataToShow.length,
       itemBuilder: (context, index) {
         final patient = dataToShow[index];
-        final labresult = int.parse(patient.patientId as String);
+        final labresult = int.parse('${patient.patientID}');
         return PatientCard(
           patient: patient,
           onSelect: (patientId) {
@@ -221,7 +224,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
       itemBuilder: (context, index) {
         final patient = dataToShow[index];
         final labresult = int.parse(
-          patient.patientId as String,
+          patient.patientID as String,
         );
         return PatientCard(
           patient: patient,

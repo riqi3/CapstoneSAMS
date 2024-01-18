@@ -1,16 +1,16 @@
 class ContactPerson {
-  final String contactId;
-  final String fullName;
-  final String phone;
-  final String address;
-  final String patient;
+   String? contactId;
+   String? fullName;
+   String? phone;
+   String? address;
+   String? patient;
 
   ContactPerson({
-    required this.contactId,
-    required this.fullName,
-    required this.phone,
-    required this.address,
-    required this.patient,
+     this.contactId,
+     this.fullName,
+     this.phone,
+     this.address,
+     this.patient,
   });
 
   Map<String, dynamic> toJson() {

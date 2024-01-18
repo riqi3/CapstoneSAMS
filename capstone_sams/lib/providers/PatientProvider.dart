@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:capstone_sams/constants/Env.dart';
+import 'package:capstone_sams/models/AccountModel.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
@@ -11,13 +12,13 @@ import '../providers/AccountProvider.dart';
 class PatientProvider extends ChangeNotifier {
   Patient? _patient;
   Patient? get patient => _patient;
-  String? get id => _patient?.patientId;
+  String? get id => _patient!.patientID;
   String? get firstName => _patient?.firstName;
   String? get middleName => _patient?.middleInitial;
   String? get lastName => _patient?.lastName;
   int? get age => _patient?.age;
   String? get gender => _patient?.gender;
-  DateTime? get birthDate => _patient?.birthDate;
+  String? get birthDate => _patient?.birthDate;
   // String? get department => _patient?.department;
   String? get course => _patient?.course;
   int? get yrLevel => _patient?.yrLevel;
@@ -63,6 +64,34 @@ class PatientProvider extends ChangeNotifier {
       }
     } catch (e) {
       return [];
+    }
+  }
+
+  Future<bool> createPatientRecord(Patient patient, String token) async {
+    final header = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      // 'Authorization': 'Bearer $token',
+    };
+    try {
+      final response = await http.post(
+        Uri.parse('${Env.prefix}/patient/patients/create/'),
+        headers: header,
+        body: jsonEncode(patient.toJson()),
+        // body: jsonEncode(data),
+      );
+      // await Future.delayed(Duration(milliseconds: 3000));
+      if (response.statusCode == 201) {
+        fetchPatients(token);
+        notifyListeners();
+        return true;
+      } else {
+        print('cannot add patient record!'); 
+        print("HTTP Response: ${response.statusCode} ${response.body}");
+        return false;
+      }
+    } on Exception catch (e) {
+      print(e);
+      return false;
     }
   }
 
@@ -126,20 +155,20 @@ class PatientProvider extends ChangeNotifier {
         if (query != null) {
           _patients = _patients.where(
             (element) {
-              return element.firstName
-                      !.toLowerCase()
+              return element.firstName!
+                      .toLowerCase()
                       .contains((query.toLowerCase())) ||
-                  element.lastName
-                      !.toLowerCase()
+                  element.lastName!
+                      .toLowerCase()
                       .contains((query.toLowerCase())) ||
-                  element.middleInitial
-                      !.toLowerCase()
+                  element.middleInitial!
+                      .toLowerCase()
                       .contains((query.toLowerCase())) ||
-                  element.patientId
-                      !.toLowerCase()
-                      .contains((query.toLowerCase()))||
-                  element.studNumber
-                      !.toLowerCase()
+                  element.patientID!
+                      .toLowerCase()
+                      .contains((query.toLowerCase())) ||
+                  element.studNumber!
+                      .toLowerCase()
                       .contains((query.toLowerCase()));
             },
           ).toList();

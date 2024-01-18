@@ -97,7 +97,7 @@ class _CounterScreenState extends State<CounterScreen> {
           health_record: widget.prescription.health_record,
           disease: widget.prescription.disease,
         ),
-        widget.patient.patientId,
+        widget.patient.patientID,
         token,
       );
 
