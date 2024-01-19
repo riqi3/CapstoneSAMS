@@ -10,7 +10,7 @@ class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
         fields = [
-            'patientID',
+            # 'patientID',
             "firstName",
             "middleInitial",
             "lastName",

@@ -120,13 +120,13 @@ class FormTextField extends StatefulWidget {
   final int? maxlength;
   final int? maxlines;
   final String? countertext;
-  late final dynamic onsaved;
+  late final dynamic onchanged;
 
   FormTextField({
     super.key,
     required this.labeltext,
     required this.type,
-    required this.onsaved,
+    required this.onchanged,
     this.controller,
     this.validator,
     this.countertext,
@@ -157,8 +157,8 @@ class _FormTextFieldState extends State<FormTextField> {
       keyboardType: widget.type,
       maxLength: widget.maxlength,
       maxLines: widget.maxlines,
-      onSaved: (value) {
-        widget.onsaved?.call(value);
+      onChanged: (value) {
+        widget.onchanged?.call(value);
       },
       // onSaved: (value) {
       //   if (widget.onsaved != null) {

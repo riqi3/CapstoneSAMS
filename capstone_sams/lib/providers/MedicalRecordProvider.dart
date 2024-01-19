@@ -60,7 +60,7 @@ class MedicalRecordProvider with ChangeNotifier {
 
     try {
       final response = await http.post(
-        Uri.parse('${Env.prefix}/patient/patients/create/'),
+        Uri.parse('${Env.prefix}/patient/patients/history/create/'),
         headers: header,
         body: jsonEncode(medicalRecord.toJson()),
       );

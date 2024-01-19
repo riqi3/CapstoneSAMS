@@ -54,35 +54,37 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
   List<String> _selectedIllnesses = [];
   late bool _autoValidate = false;
   DateTime? _birthDate;
-  late int? a = 0;
+  late int? getAccountID = 0;
+  // late String? getPatientID = '';
   var _account = Account(isSuperuser: false);
   late String tokena = context.read<AccountProvider>().token!;
 
   void _onSubmit() async {
-    Account? account =
-        await context.read<AccountProvider>().fetchAccount(a, tokena);
+    // Account? getAccount = await context
+    //     .read<AccountProvider>()
+    //     .fetchAccount(getAccountID, tokena);
+
+    //     Account? patient =
+    // await context.read<PatientProvider>().fetchPatient(a, tokena);
 
     // var a = account!.accountID;
 
     final isValid1 = _genInfoFormKey.currentState!.validate();
-    // final isValid2 = _medInfoFormKey.currentState!.validate();
-    // final isValid3 = _contactInfoFormKey.currentState!.validate();
+    final isValid2 = _medInfoFormKey.currentState!.validate();
+    final isValid3 = _contactInfoFormKey.currentState!.validate();
 
-    if (!isValid1
-        // && !isValid2
-        // && !isValid3
-        ) {
+    if (!isValid1 && !isValid2 && !isValid3) {
       return;
     } else {
       setState(() => _isLoading = true);
       String formattedDate =
           DateFormat('yyyy-MM-dd').format(_birthDate as DateTime);
 
-      var s = account!.accountID;
+      // var s = account!.accountID;
 
-      print('account ID ${s}');
+      // print('account ID ${s}');
       final patient = Patient(
-        patientID: '88',
+        patientID: Uuid().v4(),
         firstName: _genInfo.firstName,
         middleInitial: _genInfo.middleInitial,
         lastName: _genInfo.lastName,
@@ -97,8 +99,12 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
         address: firstAddress.toString(),
         email: _genInfo.email,
         phone: _genInfo.phone,
-        assignedPhysician: s,
+        assignedPhysician: getAccountID,
       );
+
+      // Patient? getPatient = await context
+      //     .read<PatientProvider>()
+      //     .fetchPatient(patient.patientID, tokena);
 
       final medicalRecord = MedicalRecord(
         recordNum: Uuid().v4(),
@@ -109,6 +115,8 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
         // lastMensPeriod: _medInfo.lastMensPeriod,
         patient: patient.patientID,
       );
+
+      print('PATIENT ID here  ${patient.patientID}');
 
       final contactRecord = ContactPerson(
         contactId: Uuid().v4(),
@@ -434,7 +442,8 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                             children: [
                               Flexible(
                                 child: FormTextField(
-                                  onsaved: (value) => _genInfo.lastName = value,
+                                  onchanged: (value) =>
+                                      _genInfo.lastName = value,
                                   labeltext: 'Surname*',
                                   validator: 'Enter their surname!',
                                   type: TextInputType.name,
@@ -443,7 +452,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                               SizedBox(width: Sizing.formSpacing),
                               Flexible(
                                 child: FormTextField(
-                                  onsaved: (value) =>
+                                  onchanged: (value) =>
                                       _genInfo.firstName = value,
                                   labeltext: 'First Name*',
                                   validator: 'Enter their first name!',
@@ -456,7 +465,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                                   maxWidth: 60.0,
                                 ),
                                 child: FormTextField(
-                                  onsaved: (value) =>
+                                  onchanged: (value) =>
                                       _genInfo.middleInitial = value,
                                   labeltext: 'M.I.*',
                                   validator: 'Enter their middle initial!',
@@ -472,7 +481,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                             children: <Widget>[
                               Flexible(
                                 child: FormTextField(
-                                  onsaved: (value) {
+                                  onchanged: (value) {
                                     _genInfo.age = int.tryParse(value);
                                   },
                                   labeltext: 'Age*',
@@ -597,11 +606,12 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                                   }
                                 });
                               },
-                              controller: TextEditingController(
-                                text: _birthDate != null
-                                    ? '${DateFormat.yMMMd('en_US').format(_birthDate as DateTime)}'
-                                    : '',
-                              ),
+                              onChanged: (value) => _birthDate,
+                              // controller: TextEditingController(
+                              //   text: _birthDate != null
+                              //       ? '${DateFormat.yMMMd('en_US').format(_birthDate as DateTime)}'
+                              //       : '',
+                              // ),
                             ),
                           ),
                           SizedBox(height: Sizing.formSpacing),
@@ -609,7 +619,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                             children: <Widget>[
                               Flexible(
                                 child: FormTextField(
-                                  onsaved: (value) {
+                                  onchanged: (value) {
                                     _genInfo.course = value;
                                   },
                                   labeltext: 'Course*',
@@ -636,7 +646,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                               SizedBox(width: Sizing.formSpacing),
                               Flexible(
                                 child: FormTextField(
-                                  onsaved: (value) {
+                                  onchanged: (value) {
                                     _genInfo.yrLevel = int.tryParse(value);
                                   },
                                   labeltext: 'Year*',
@@ -649,7 +659,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                           SizedBox(height: Sizing.formSpacing),
                           Flexible(
                             child: FormTextField(
-                              onsaved: (value) => _genInfo.studNumber = value,
+                              onchanged: (value) => _genInfo.studNumber = value,
                               labeltext: 'Student Number*',
                               validator: 'Enter their student number I.D.!',
                               type: TextInputType.number,
@@ -665,7 +675,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                             children: <Widget>[
                               Flexible(
                                 child: FormTextField(
-                                  onsaved: (value) {
+                                  onchanged: (value) {
                                     _genInfo.height = double.tryParse(value);
                                   },
                                   labeltext: 'Height*',
@@ -676,7 +686,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                               SizedBox(width: Sizing.formSpacing),
                               Flexible(
                                 child: FormTextField(
-                                  onsaved: (value) {
+                                  onchanged: (value) {
                                     _genInfo.weight = double.tryParse(value);
                                   },
                                   labeltext: 'Weight*',
@@ -694,7 +704,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                                 child: Column(
                                   children: [
                                     FormTextField(
-                                      onsaved: (value) =>
+                                      onchanged: (value) =>
                                           _genInfo.email = value,
                                       labeltext: 'Active Email',
                                       validator: 'Enter their email!',
@@ -726,7 +736,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                                 child: Column(
                                   children: [
                                     FormTextField(
-                                      onsaved: (value) =>
+                                      onchanged: (value) =>
                                           _genInfo.phone = value,
                                       labeltext: 'Contact Number*',
                                       validator: 'Enter their contact number!',
@@ -971,7 +981,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                     children: <Widget>[
                       Flexible(
                         child: FormTextField(
-                          onsaved: (value) => _contactInfo.fullName = value,
+                          onchanged: (value) => _contactInfo.fullName = value,
                           labeltext: 'Full Name*',
                           validator: 'Enter their full name!',
                           type: TextInputType.name,
@@ -980,7 +990,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                       SizedBox(height: Sizing.formSpacing),
                       Flexible(
                         child: FormTextField(
-                          onsaved: (value) => _contactInfo.phone = value,
+                          onchanged: (value) => _contactInfo.phone = value,
                           labeltext: 'Contact Number*',
                           validator: 'Enter their contact number!',
                           type: TextInputType.phone,
@@ -1040,7 +1050,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                         "Authorization": "Bearer $tokena",
                       }),
                     );
-                    print("Dio Response: $response");
+                    // print("Dio Response: $response");
                     var models = List<Account>.from(
                       response.data.map(
                         (json) => Account.fromJson(json),
@@ -1055,7 +1065,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                   },
                   onChanged: (Account? data) {
                     _account.accountRole = data?.accountRole.toString();
-                    a = data?.accountID;
+                    getAccountID = data?.accountID;
                   },
                 ),
                 Padding(

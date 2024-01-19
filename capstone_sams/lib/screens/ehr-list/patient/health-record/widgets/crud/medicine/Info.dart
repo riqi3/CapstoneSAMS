@@ -18,7 +18,7 @@ class Info extends StatefulWidget {
   final Medicine medicine;
   final Account physician;
   final Patient patient;
-  final String index;
+  final String? index;
   Info(
       {Key? key,
       required this.patient,
@@ -214,7 +214,9 @@ class _InfoState extends State<Info> {
       context,
       MaterialPageRoute(
           builder: (context) =>
-              PatientTabsScreen(patient: widget.patient, index: index)),
+              PatientTabsScreen(patient: widget.patient, 
+              // index: index,
+              )),
       (Route<dynamic> route) {
         if (routesCount < 3) {
           routesCount++;
@@ -240,14 +242,14 @@ class _InfoState extends State<Info> {
     provider.removeMedicine(prescription, widget.patient.patientID, drugId,
         context.read<AccountProvider>().token!);
 
-    int? index = int.tryParse(widget.index);
+    // int? index = int.tryParse(widget.index);
 
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => PatientTabsScreen(
           patient: widget.patient,
-          index: index!,
+          // index: index!,
         ),
       ),
     );
@@ -269,7 +271,7 @@ class _InfoState extends State<Info> {
         builder: (context) => EditMedicineScreen(
           medicine: widget.medicine,
           patient: widget.patient,
-          index: index,
+          // index: index,
           prescription: prescription,
           presNum: presNum,
         ),

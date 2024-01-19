@@ -85,7 +85,7 @@ class PatientProvider extends ChangeNotifier {
         notifyListeners();
         return true;
       } else {
-        print('cannot add patient record!'); 
+        print('cannot add patient record!');
         print("HTTP Response: ${response.statusCode} ${response.body}");
         return false;
       }
@@ -119,7 +119,7 @@ class PatientProvider extends ChangeNotifier {
   //   }
   // }
 
-  Future<Patient?> fetchPatient(String index, String token) async {
+  Future<Patient?> fetchPatient(String? index, String token) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',

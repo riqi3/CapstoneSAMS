@@ -403,7 +403,7 @@ class PatientAdmin(admin.ModelAdmin):
     # form = PatientAdminForm, HealthRecordAdminForm, ContactAdminForm
     inlines = [MedicalRecordInline, ContactInline]
     list_display = (
-        "patientID",
+        # "patientID",
         "firstName",
         "middleInitial",
         "lastName",
@@ -422,9 +422,11 @@ class PatientAdmin(admin.ModelAdmin):
         "email", 
         'assignedPhysician',
     )
-    list_filter = ("patientID", "gender",'assignedPhysician')
+    list_filter = (
+        # "patientID", 
+        "gender",'assignedPhysician')
     search_fields = (
-        "patientID",
+        # "patientID",
         "firstName",
         "middleInitial",
         "lastName",

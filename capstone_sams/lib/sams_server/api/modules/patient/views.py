@@ -49,14 +49,15 @@ class PatientView(viewsets.ModelViewSet):
                 email=patient_data['email'],
                 assignedPhysician=physician
             )
-            data = json.loads(request.body)
-            accountID = data['account']
-            account = get_object_or_404(Account, pk=accountID)
-            data_log = Data_Log.objects.create(
-                event = f"{account.username} created patient",
-                type = "User Created Patient",
-                account = account
-            )
+            # data = json.loads(request.body)
+            # accountId = data['accountID']
+            # # account = get_object_or_404(Account, pk=accountID)
+            # account = Account.objects.get(accountID=accountId)
+            # data_log = Data_Log.objects.create(
+            #     event = f"{account.username} created patient",
+            #     type = "User Created Patient",
+            #     account = account
+            # )
             return Response({"message": "Patient created successfully."}, status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response({"message": "Failed to create patient.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
@@ -175,7 +176,7 @@ class MedicalRecordView(viewsets.ViewSet):
             )
             return Response({"message": "Health record created successfully."}, status=status.HTTP_201_CREATED)
         except Exception as e:
-            return Response({"message": "Failed to create healt record.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "Failed to create health record.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
     @api_view(['PUT'])
     def update_health_record(request, patientID):
@@ -210,9 +211,9 @@ class ContactPersonView(viewsets.ViewSet):
                 address = contact_data['address'],
                 patient = patientID
             )
-            return Response({"message": "Health record created successfully."}, status=status.HTTP_201_CREATED)
+            return Response({"message": "Contact record created successfully."}, status=status.HTTP_201_CREATED)
         except Exception as e:
-            return Response({"message": "Failed to create healt record.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST) 
+            return Response({"message": "Failed to create contact record.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST) 
     @api_view(['PUT'])
     def update_contact_person(request, patientID):
         try:

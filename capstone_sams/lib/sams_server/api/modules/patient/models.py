@@ -20,7 +20,7 @@ class Patient(models.Model):
     } 
 
     #Patient Indentification
-    patientID = models.AutoField(primary_key = True)
+    patientID = models.CharField(primary_key = True)
     firstName = models.CharField(max_length=100, blank = False)
     middleInitial = models.CharField(max_length=1, blank = False)
     lastName = models.CharField(max_length=100, blank = False)

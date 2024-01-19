@@ -33,8 +33,9 @@ class ContactPersonProvider extends ChangeNotifier {
           Uri.parse('${Env.prefix}/patient/patients/contact/${patientID}'),
           headers: header);
       await Future.delayed(Duration(milliseconds: 3000));
-      if (response.statusCode == 200) { 
-        return ContactPerson.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+      if (response.statusCode == 200) {
+        return ContactPerson.fromJson(
+            jsonDecode(response.body) as Map<String, dynamic>);
       } else {
         return throw Exception('Failed to load contacts');
       }
@@ -43,17 +44,17 @@ class ContactPersonProvider extends ChangeNotifier {
     }
   }
 
-
-  Future<bool> createContactRecord(ContactPerson contactPerson, String? patientID, String token) async {
+  Future<bool> createContactRecord(
+      ContactPerson contactPerson, String? patientID, String token) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       // 'Authorization': 'Bearer $token',
     };
     try {
       final response = await http.post(
-        Uri.parse('${Env.prefix}/patient/patients/create/'),
+        Uri.parse('${Env.prefix}/patient/patients/contact/create/'),
         headers: header,
-        body: jsonEncode(contactPerson.toJson()), 
+        body: jsonEncode(contactPerson.toJson()),
       );
       // await Future.delayed(Duration(milliseconds: 3000));
       if (response.statusCode == 201) {
@@ -61,7 +62,7 @@ class ContactPersonProvider extends ChangeNotifier {
         notifyListeners();
         return true;
       } else {
-        print('cannot add contact record!'); 
+        print('cannot add contact record!');
         print("HTTP Response: ${response.statusCode} ${response.body}");
         return false;
       }

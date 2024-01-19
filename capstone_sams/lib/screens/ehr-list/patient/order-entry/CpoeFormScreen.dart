@@ -16,7 +16,7 @@ import '../../../../providers/MedicineProvider.dart';
 class CpoeFormScreen extends StatefulWidget {
   final String initialPrediction;
   final double initialConfidence;
-  final int index;
+  final String? index;
   final Patient patient;
   CpoeFormScreen({
     required this.patient,
@@ -55,7 +55,9 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
           context,
           MaterialPageRoute(
               builder: (context) => PatientTabsScreen(
-                  patient: widget.patient, index: widget.index)),
+                  patient: widget.patient, 
+                  // index: widget.index,
+                  )),
           (Route<dynamic> route) {
             if (routesCount < 2) {
               routesCount++;
