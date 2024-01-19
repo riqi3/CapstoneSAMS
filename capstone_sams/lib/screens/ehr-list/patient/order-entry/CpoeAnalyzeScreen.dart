@@ -13,7 +13,7 @@ import '../../../../models/PatientModel.dart';
 import 'CpoeFormScreen.dart';
 
 class CpoeAnalyzeScreen extends StatefulWidget {
-  final int index;
+  final String? index;
   final Patient patient;
   CpoeAnalyzeScreen({
     required this.patient,

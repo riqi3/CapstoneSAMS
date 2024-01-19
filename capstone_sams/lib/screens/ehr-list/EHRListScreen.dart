@@ -195,7 +195,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
       itemCount: dataToShow.length,
       itemBuilder: (context, index) {
         final patient = dataToShow[index];
-        final labresult = int.parse('${patient.patientID}');
+        // final labresult = int.parse('${patient.patientID}');
         return PatientCard(
           patient: patient,
           onSelect: (patientId) {
@@ -203,7 +203,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
               selectedPatientId = patientId;
             });
           },
-          labresult: labresult,
+          // labresult: labresult,
         );
       },
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -223,9 +223,9 @@ class _EhrListScreenState extends State<EhrListScreen> {
       itemCount: dataToShow.length,
       itemBuilder: (context, index) {
         final patient = dataToShow[index];
-        final labresult = int.parse(
-          patient.patientID as String,
-        );
+        // final labresult = int.parse(
+        //   patient.patientID as String,
+        // );
         return PatientCard(
           patient: patient,
           onSelect: (patientId) {
@@ -233,7 +233,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
               selectedPatientId = patientId;
             });
           },
-          labresult: labresult,
+          // labresult: labresult,
         );
       },
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

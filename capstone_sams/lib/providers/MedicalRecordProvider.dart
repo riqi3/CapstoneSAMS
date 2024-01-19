@@ -15,7 +15,7 @@ class MedicalRecordProvider with ChangeNotifier {
   int _recordNum = 0;
   List<dynamic> _illnesses = [];
   List<dynamic> _allergies = [];
-  List<dynamic> _pastDisease = [];
+  List<dynamic> _pastDiseases = [];
   List<dynamic> _familyHistory = [];
   String _lastMensPeriod = '';
   String _patientID = '';
@@ -23,7 +23,7 @@ class MedicalRecordProvider with ChangeNotifier {
   int get recordNum => _recordNum;
   List<dynamic> get illnesses => _illnesses;
   List<dynamic> get allergies => _allergies;
-  List<dynamic> get pastDisease => _pastDisease;
+  List<dynamic> get pastDiseases => _pastDiseases;
   List<dynamic> get familyHistory => _familyHistory;
   String get lastMensPeriod => _lastMensPeriod;
   String get patientID => _patientID;
@@ -58,9 +58,11 @@ class MedicalRecordProvider with ChangeNotifier {
       // 'Authorization': 'Bearer $token',
     };
 
+    print(patientID);
+
     try {
       final response = await http.post(
-        Uri.parse('${Env.prefix}/patient/patients/create/'),
+        Uri.parse('${Env.prefix}/patient/patients/history/create/'),
         headers: header,
         body: jsonEncode(medicalRecord.toJson()),
       );

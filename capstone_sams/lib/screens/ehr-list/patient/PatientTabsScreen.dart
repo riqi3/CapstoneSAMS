@@ -15,12 +15,12 @@ import 'health-record/HealthRecordScreen.dart';
 
 class PatientTabsScreen extends StatefulWidget {
   final Patient patient;
-  final int index;
+  // final int? index;
 
   const PatientTabsScreen({
     super.key,
     required this.patient,
-    required this.index,
+    // required this.index,
   });
 
   @override

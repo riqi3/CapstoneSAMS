@@ -18,14 +18,14 @@ class EditMedicineScreen extends StatefulWidget {
   final Prescription? prescription;
   final int? presNum;
   final Patient patient;
-  final int index;
+  // final String? index;
 
   EditMedicineScreen({
     required this.medicine,
     required this.prescription,
     required this.presNum,
     required this.patient,
-    required this.index,
+    // required this.index,
   });
 
   @override
@@ -58,71 +58,71 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
     medicines = widget.prescription?.medicines;
   }
 
-  void savePrescription() {
-    final isValid = _formKey.currentState!.validate();
+  // void savePrescription() {
+  //   final isValid = _formKey.currentState!.validate();
 
-    if (!isValid) {
-      return;
-    } else {
-      final selectedMedicineIndex = widget.index;
+  //   if (!isValid) {
+  //     return;
+  //   } else {
+  //     final selectedMedicineIndex = widget.index;
 
-      List<dynamic> updatedMedicines = List.from(medicines!);
+  //     List<dynamic> updatedMedicines = List.from(medicines!);
 
-      if (selectedMedicineIndex >= 0 &&
-          selectedMedicineIndex < updatedMedicines.length) {
-        Medicine modifiedMedicine = Medicine(
-          drugId: drugId,
-          endDate: selectedEndDate,
-          drugCode: drugCode,
-          drugName: name,
-          quantity: quantity,
-          startDate: selectedStartDate,
-          instructions: instructions,
-        );
+  //     if (selectedMedicineIndex >= 0 &&
+  //         selectedMedicineIndex < updatedMedicines.length) {
+  //       Medicine modifiedMedicine = Medicine(
+  //         drugId: drugId,
+  //         endDate: selectedEndDate,
+  //         drugCode: drugCode,
+  //         drugName: name,
+  //         quantity: quantity,
+  //         startDate: selectedStartDate,
+  //         instructions: instructions,
+  //       );
 
-        updatedMedicines[selectedMedicineIndex] = modifiedMedicine;
-        print('list ${updatedMedicines}');
+  //       // updatedMedicines[selectedMedicineIndex] = modifiedMedicine;
+  //       print('list ${updatedMedicines}');
 
-        final provider =
-            Provider.of<PrescriptionProvider>(context, listen: false);
-        provider.updatePrescription(
-            Prescription(
-              presNum: widget.presNum,
-              medicines: updatedMedicines,
-              account: widget.prescription!.account,
-              patientID: widget.prescription!.patientID,
-              health_record: widget.prescription!.health_record,
-              disease: widget.prescription!.disease,
-            ),
-            widget.patient.patientID,
-            context.read<AccountProvider>().token!);
+  //       final provider =
+  //           Provider.of<PrescriptionProvider>(context, listen: false);
+  //       provider.updatePrescription(
+  //           Prescription(
+  //             presNum: widget.presNum,
+  //             medicines: updatedMedicines,
+  //             account: widget.prescription!.account,
+  //             patientID: widget.prescription!.patientID,
+  //             health_record: widget.prescription!.health_record,
+  //             disease: widget.prescription!.disease,
+  //           ),
+  //           widget.patient.patientID,
+  //           context.read<AccountProvider>().token!);
             
-        int routesCount = 0;
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-              builder: (context) => PatientTabsScreen(
-                  patient: widget.patient, index: widget.index)),
-          (Route<dynamic> route) {
-            if (routesCount < 5) {
-              routesCount++;
-              return false;
-            }
-            return true;
-          },
-        );
+  //       int routesCount = 0;
+  //       Navigator.pushAndRemoveUntil(
+  //         context,
+  //         MaterialPageRoute(
+  //             builder: (context) => PatientTabsScreen(
+  //                 patient: widget.patient, index: widget.index)),
+  //         (Route<dynamic> route) {
+  //           if (routesCount < 5) {
+  //             routesCount++;
+  //             return false;
+  //           }
+  //           return true;
+  //         },
+  //       );
 
-        const snackBar = SnackBar(
-          backgroundColor: Pallete.successColor,
-          content: Text(
-            'Updated the medicine',
-            style: TextStyle(fontWeight: FontWeight.w700),
-          ),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      }
-    }
-  }
+  //       const snackBar = SnackBar(
+  //         backgroundColor: Pallete.successColor,
+  //         content: Text(
+  //           'Updated the medicine',
+  //           style: TextStyle(fontWeight: FontWeight.w700),
+  //         ),
+  //       );
+  //       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -375,7 +375,9 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
                                       SizedBox(width: 10),
                                       ElevatedButton(
                                         child: Text('Submit'),
-                                        onPressed: savePrescription,
+                                        onPressed: (){}
+                                        // savePrescription
+                                        ,
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: Pallete.mainColor,
                                           shape: RoundedRectangleBorder(

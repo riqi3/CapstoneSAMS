@@ -106,7 +106,9 @@ class _CounterScreenState extends State<CounterScreen> {
         context,
         MaterialPageRoute(
           builder: (context) =>
-              PatientTabsScreen(patient: widget.patient, index: widget.index),
+              PatientTabsScreen(patient: widget.patient, 
+              // index: widget.index,
+              ),
         ),
         (Route<dynamic> route) {
           if (routesCount < 5) {

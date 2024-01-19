@@ -45,7 +45,7 @@ class MedicalRecordSerializer(serializers.ModelSerializer):
             # 'diseases',
             'illnesses',
             'allergies',
-            'pastDisease',
+            'pastDiseases',
             'familyHistory',
             'lastMensPeriod',
             'patient',
