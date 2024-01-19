@@ -46,11 +46,12 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
   final _medInfoFormKey = GlobalKey<FormState>();
   final _contactInfoFormKey = GlobalKey<FormState>();
   final _contactInfo = ContactPerson();
+  TextEditingController lmp = TextEditingController();
   TextEditingController firstAddress = TextEditingController();
   TextEditingController secondAddress = TextEditingController();
   List<String> _selectedAllergy = [];
   List<String> _selectedFamHistory = [];
-  List<String> _selectedPastDisease = [];
+  List<String> _selectedPastDiseases = [];
   List<String> _selectedIllnesses = [];
   late bool _autoValidate = false;
   DateTime? _birthDate;
@@ -96,7 +97,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
         studNumber: _genInfo.studNumber,
         height: _genInfo.height,
         weight: _genInfo.weight,
-        address: firstAddress.toString(),
+        address: firstAddress.text,
         email: _genInfo.email,
         phone: _genInfo.phone,
         assignedPhysician: getAccountID,
@@ -109,14 +110,15 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
       final medicalRecord = MedicalRecord(
         recordNum: Uuid().v4(),
         illnesses: _selectedIllnesses,
-        pastDisease: _selectedPastDisease,
+        pastDiseases: _selectedPastDiseases,
         allergies: _selectedAllergy,
         familyHistory: _selectedFamHistory,
-        // lastMensPeriod: _medInfo.lastMensPeriod,
+        lastMensPeriod: lmp.text,
         patient: patient.patientID,
       );
 
-      print('PATIENT ID here  ${patient.patientID}');
+      print('RECORD ID ${medicalRecord.recordNum}');
+      print('PATIENT ID ${medicalRecord.patient}');
 
       final contactRecord = ContactPerson(
         contactId: Uuid().v4(),
@@ -126,7 +128,6 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
         patient: patient.patientID,
       );
 
-      print('${_genInfo.lastName} PATIENT ${patient.patientID}');
       print('${_selectedAllergy} SAKIT ${_selectedIllnesses}');
 
       _genInfoFormKey.currentState?.save();
@@ -149,7 +150,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
       );
       final medicalRecordSuccess =
           await medicalRecordProvider.createMedicalRecord(
-        patient.patientID,
+        medicalRecord.patient,
         medicalRecord,
         token,
       );
@@ -339,7 +340,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
 
     if (results != null) {
       setState(() {
-        _selectedPastDisease = results;
+        _selectedPastDiseases = results;
       });
     }
   }
@@ -372,6 +373,14 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
 
   late String statustValue = statusList.first;
   String _selectedGender = '';
+
+  @override
+  void dispose() {
+    lmp.dispose();
+    firstAddress.dispose();
+    secondAddress.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -607,11 +616,11 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                                 });
                               },
                               onChanged: (value) => _birthDate,
-                              // controller: TextEditingController(
-                              //   text: _birthDate != null
-                              //       ? '${DateFormat.yMMMd('en_US').format(_birthDate as DateTime)}'
-                              //       : '',
-                              // ),
+                              controller: TextEditingController(
+                                text: _birthDate != null
+                                    ? '${DateFormat.yMMMd('en_US').format(_birthDate as DateTime)}'
+                                    : '',
+                              ),
                             ),
                           ),
                           SizedBox(height: Sizing.formSpacing),
@@ -846,7 +855,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                         ),
                       ),
                       Wrap(
-                        children: _selectedPastDisease.map((e) {
+                        children: _selectedPastDiseases.map((e) {
                           return Padding(
                             padding:
                                 const EdgeInsets.only(right: Sizing.spacing),
@@ -856,7 +865,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                           );
                         }).toList(),
                       ),
-                      if (_selectedPastDisease.contains('Other'))
+                      if (_selectedPastDiseases.contains('Other'))
                         otherTextField(),
                       SizedBox(height: Sizing.formSpacing),
                       Text(
@@ -930,32 +939,33 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                         otherTextField(),
                       SizedBox(height: Sizing.formSpacing),
                       if (_selectedGender.contains('female'))
-                        // Flexible(
-                        //   child: FormTextField(
-                        //     labeltext: 'LMP (Last Menstrual Period)',
-                        //     validator: 'Enter their LMP!',
-                        //     type: TextInputType.name,
-                        //   ),
-                        // ),
-                        if (_selectedGender.contains('female'))
-                          Row(
-                            children: [
-                              Checkbox(
-                                value: _isCheckedLMP,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _isCheckedLMP = value!;
-                                  });
-                                },
-                              ),
-                              Flexible(
-                                child: Text(
-                                  'Require LMP',
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
+                        Flexible(
+                          child: FormTextField(
+                            onchanged: (value) => lmp = value,
+                            labeltext: 'LMP (Last Menstrual Period)',
+                            validator: 'Enter their LMP!',
+                            type: TextInputType.text,
                           ),
+                        ),
+                      if (_selectedGender.contains('female'))
+                        Row(
+                          children: [
+                            Checkbox(
+                              value: _isCheckedLMP,
+                              onChanged: (value) {
+                                setState(() {
+                                  _isCheckedLMP = value!;
+                                });
+                              },
+                            ),
+                            Flexible(
+                              child: Text(
+                                'Require LMP',
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
                     ],
                   ),
                 ),
@@ -1130,7 +1140,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
       ),
       controller: controller,
       maxLines: 4,
-      keyboardType: TextInputType.streetAddress,
+      keyboardType: TextInputType.text,
     );
   }
 

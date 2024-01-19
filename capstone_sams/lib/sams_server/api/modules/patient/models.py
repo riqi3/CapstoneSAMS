@@ -1,3 +1,4 @@
+import uuid 
 from django.db import models
 from api.modules.user.models import Account
 '''
@@ -20,7 +21,8 @@ class Patient(models.Model):
     } 
 
     #Patient Indentification
-    patientID = models.CharField(primary_key = True)
+    patientID = models.UUIDField(primary_key = True, default = uuid.uuid4, 
+         editable = False)
     firstName = models.CharField(max_length=100, blank = False)
     middleInitial = models.CharField(max_length=1, blank = False)
     lastName = models.CharField(max_length=100, blank = False)
@@ -47,7 +49,8 @@ class Patient(models.Model):
 
 class Contact_Person(models.Model):
     patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
-    contactId = models.AutoField(primary_key = True)
+    contactId = models.UUIDField(primary_key = True, default = uuid.uuid4, 
+         editable = False)
     fullName = models.CharField(max_length=100, blank = False)
     phone = models.CharField(max_length=11, blank = False)
     address = models.CharField(blank= False)
@@ -61,10 +64,11 @@ record is connected to only one patient.
 class Medical_Record(models.Model):
     #Health Record Attributes
     patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
-    recordNum = models.AutoField(primary_key = True) 
+    recordNum = models.UUIDField(primary_key = True, default = uuid.uuid4, 
+         editable = False) 
     illnesses = models.JSONField(blank = True, default=None, null=True)
     allergies = models.JSONField(blank = True, default=None, null=True)
-    pastDisease = models.JSONField(blank = True, default=None, null=True)
+    pastDiseases = models.JSONField(blank = True, default=None, null=True)
     familyHistory = models.JSONField(blank = True, default=None, null=True)
     lastMensPeriod = models.CharField(max_length=100, blank = True, default=None)
     

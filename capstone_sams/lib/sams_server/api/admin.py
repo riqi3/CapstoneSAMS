@@ -363,7 +363,7 @@ and updating existing patients.
 #         fields = (  
 #             'illnesses',
 #             'allergies',
-#             'pastDisease',
+#             'pastDiseases',
 #             'familyHistory',
 #             'lastMensPeriod', 
 #         )

@@ -164,15 +164,15 @@ class MedicalRecordView(viewsets.ViewSet):
     def create_health_record(request):
         try:
             record_data = json.loads(request.body)
-            patientID = record_data['patientID'] 
-            patient = Patient.objects.get(pk=patientID)
+            patientID = record_data['patient'] 
+            patient = Patient.objects.get(patientID=patientID)
             record = Medical_Record.objects.create( 
                 illnesses = record_data['illnesses'],
-                pastDiseases = record_data['pastDiseases'],
                 allergies = record_data['allergies'],
+                pastDiseases = record_data['pastDiseases'],
                 familyHistory = record_data['familyHistory'],
                 lastMensPeriod = record_data['lastMensPeriod'],
-                patient = patientID
+                patient = patient
             )
             return Response({"message": "Health record created successfully."}, status=status.HTTP_201_CREATED)
         except Exception as e:
@@ -188,7 +188,7 @@ class MedicalRecordView(viewsets.ViewSet):
             record.diseases = record_data['symptoms']
             record.illnesses = record_data['illnesses']
             record.allergies = record_data['allergies']
-            record.pastDisease = record_data['pastDisease']
+            record.pastDiseases = record_data['pastDiseases']
             record.familyHistory = record_data['familyHistory']
             record.lastMensPeriod = record_data['lastMensPeriod']
             record.save()
@@ -203,13 +203,13 @@ class ContactPersonView(viewsets.ViewSet):
     def create_contact_person(request):
         try:
             contact_data = json.loads(request.body)
-            patientID = contact_data['patientID']
-            patient = Patient.objects.get(pk=patientID)
+            patientID = contact_data['patient']
+            patient = Patient.objects.get(patientID=patientID)
             contact = Contact_Person.objects.create(
                 fullName = contact_data['fullName'],
                 phone = contact_data['phone'],
                 address = contact_data['address'],
-                patient = patientID
+                patient = patient
             )
             return Response({"message": "Contact record created successfully."}, status=status.HTTP_201_CREATED)
         except Exception as e:

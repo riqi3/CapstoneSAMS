@@ -10,7 +10,7 @@ class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
         fields = [
-            # 'patientID',
+            'patientID',
             "firstName",
             "middleInitial",
             "lastName",
@@ -45,7 +45,7 @@ class MedicalRecordSerializer(serializers.ModelSerializer):
             # 'diseases',
             'illnesses',
             'allergies',
-            'pastDisease',
+            'pastDiseases',
             'familyHistory',
             'lastMensPeriod',
             'patient',
