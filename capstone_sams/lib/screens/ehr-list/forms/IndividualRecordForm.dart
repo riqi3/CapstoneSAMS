@@ -124,7 +124,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
         contactId: Uuid().v4(),
         fullName: _contactInfo.fullName,
         phone: _contactInfo.phone,
-        address: secondAddress.toString(),
+        address: secondAddress.text,
         patient: patient.patientID,
       );
 
