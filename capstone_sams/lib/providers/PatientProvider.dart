@@ -67,16 +67,20 @@ class PatientProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> createPatientRecord(Patient patient, String token) async {
+  Future<bool> createPatientRecord(
+      Patient patient, String token, int accountID) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       // 'Authorization': 'Bearer $token',
     };
     try {
+      var body = patient.toJson();
+      body['account'] = accountID;
+      print(body);
       final response = await http.post(
         Uri.parse('${Env.prefix}/patient/patients/create/'),
         headers: header,
-        body: jsonEncode(patient.toJson()),
+        body: jsonEncode(body),
         // body: jsonEncode(data),
       );
       // await Future.delayed(Duration(milliseconds: 3000));

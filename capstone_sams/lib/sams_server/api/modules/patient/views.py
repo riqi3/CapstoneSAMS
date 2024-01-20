@@ -29,8 +29,8 @@ class PatientView(viewsets.ModelViewSet):
     def create_patient(request):
         try:
             patient_data = json.loads(request.body)
-            accountID = patient_data['assignedPhysician']
-            physician = Account.objects.get(pk=accountID)
+            assignedID = patient_data['assignedPhysician']
+            physician = Account.objects.get(pk=assignedID)
             patient = Patient.objects.create(
                 patientID=patient_data['patientID'], 
                 firstName=patient_data['firstName'],
@@ -49,15 +49,13 @@ class PatientView(viewsets.ModelViewSet):
                 email=patient_data['email'],
                 assignedPhysician=physician
             )
-            # data = json.loads(request.body)
-            # accountId = data['accountID']
-            # # account = get_object_or_404(Account, pk=accountID)
-            # account = Account.objects.get(accountID=accountId)
-            # data_log = Data_Log.objects.create(
-            #     event = f"{account.username} created patient",
-            #     type = "User Created Patient",
-            #     account = account
-            # )
+            accountID = patient_data['account']
+            account = Account.objects.get(accountID=accountID)
+            data_log = Data_Log.objects.create(
+                event = f"{account.username} created patient",
+                type = "User Created Patient",
+                account = account
+            )
             return Response({"message": "Patient created successfully."}, status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response({"message": "Failed to create patient.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
@@ -119,7 +117,7 @@ class PatientView(viewsets.ModelViewSet):
             patient.assignedPhysician = patient_data['assignedPhysician']
             patient.save()
             accountID = patient_data['account']
-            account = get_object_or_404(Account, pk=accountID)
+            account = Account.object.get(pk=accountID)
             data_log = Data_Log.objects.create(
                 event = f"{account.username} updated patient id {patient_id}",
                 type = "User Update Patient Data",

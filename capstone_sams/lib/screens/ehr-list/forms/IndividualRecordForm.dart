@@ -142,12 +142,13 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
       final contactRecordProvider =
           Provider.of<ContactPersonProvider>(context, listen: false);
       final token = context.read<AccountProvider>().token!;
+      final accountID = context.read<AccountProvider>().id!;
 
       final patientSuccess = await patientRecordProvider.createPatientRecord(
-        // accountID,
-        patient,
-        token,
-      );
+          // accountID,
+          patient,
+          token,
+          accountID);
       final medicalRecordSuccess =
           await medicalRecordProvider.createMedicalRecord(
         medicalRecord.patient,
