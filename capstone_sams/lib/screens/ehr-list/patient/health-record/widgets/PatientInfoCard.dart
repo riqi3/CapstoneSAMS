@@ -246,7 +246,7 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                   ),
                   TitleValueText(
                     title: 'Status: ',
-                    value: 'UPDATE',
+                    value: '${widget.patient.patientStatus}',
                   ),
                 ],
               ),

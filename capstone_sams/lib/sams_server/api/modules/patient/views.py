@@ -38,6 +38,7 @@ class PatientView(viewsets.ModelViewSet):
                 lastName=patient_data['lastName'],
                 age=patient_data['age'],
                 gender=patient_data['gender'],
+                patientStatus=patient_data['patientStatus'],
                 birthDate=patient_data['birthDate'], 
                 course=patient_data['course'],
                 yrLevel=patient_data['yrLevel'],
@@ -106,8 +107,9 @@ class PatientView(viewsets.ModelViewSet):
             patient.lastName = patient_data['lastName']
             patient.age = patient_data['age']
             patient.gender = patient_data['gender']
+            patient.patientStatus = patient_data['patientStatus']
             patient.birthDate = patient_data['birthDate']
-            patient.department = patient_data['department']
+            # patient.department = patient_data['department']
             patient.course=patient_data['course']
             patient.yrLevel=patient_data['yrLevel']
             patient.studNumber=patient_data['studNumber']

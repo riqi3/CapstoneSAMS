@@ -67,6 +67,13 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
   late int? getAccountID = 0;
   var _account = Account(isSuperuser: false);
   late String tokena = context.read<AccountProvider>().token!;
+  List<String> statusList = [
+    'Single',
+    'Married',
+    'Divorced',
+    'Separated',
+    'Widowed'
+  ];
 
   void _onSubmit() async {
     setState(() => _isLoading = true);
@@ -90,6 +97,13 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
           ? DateFormat('yyyy-MM-dd').format(_birthDate!)
           : 'No date selected';
 
+      var email = _genInfo.email == null
+          ? _genInfo.email = 'None'
+          : _genInfo.email.toString();
+      var phone = _genInfo.phone == null
+          ? _genInfo.phone = 'None'
+          : _genInfo.phone.toString();
+
       final patient = Patient(
         patientID: Uuid().v4(),
         firstName: _genInfo.firstName,
@@ -97,6 +111,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
         lastName: _genInfo.lastName,
         age: _genInfo.age,
         gender: _selectedGender,
+        patientStatus: statustValue,
         birthDate: formattedDate,
         course: _genInfo.course,
         yrLevel: _genInfo.yrLevel,
@@ -104,8 +119,8 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
         height: _genInfo.height,
         weight: _genInfo.weight,
         address: firstAddress.text,
-        email: _genInfo.email,
-        phone: _genInfo.phone,
+        email: email,
+        phone: phone,
         assignedPhysician: getAccountID,
       );
 
@@ -190,82 +205,8 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
-
-      // try {
-      //   _genInfoFormKey.currentState?.save();
-      //   var accountID = context.read<AccountProvider>().id;
-      //   final patientRecordProvider = context.read<PatientProvider>();
-
-      //   final success = await patientRecordProvider.createPatientRecord(
-      //     // accountID,
-      //     patient,
-      //     token,
-      //   );
-
-      //   if (success) {
-      //     int routesCount = 0;
-      //     Navigator.pushAndRemoveUntil(
-      //       context,
-      //       MaterialPageRoute(
-      //         builder: (context) => EhrListScreen(),
-      //       ),
-      //       (Route<dynamic> route) {
-      //         if (routesCount < 2) {
-      //           routesCount++;
-      //           return false;
-      //         }
-      //         return true;
-      //       },
-      //     );
-      //     const snackBar = SnackBar(
-      //       backgroundColor: Pallete.successColor,
-      //       content: Text(
-      //         '${Strings.successfulAdd} patient.',
-      //         style: TextStyle(fontWeight: FontWeight.w700),
-      //       ),
-      //     );
-      //     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      //   } else {
-      //     setState(() {
-      //       _isLoading = false;
-      //     });
-
-      //     const snackBar = SnackBar(
-      //       backgroundColor: Pallete.dangerColor,
-      //       content: Text(
-      //         '${Strings.dangerAdd} patient.',
-      //         style: TextStyle(fontWeight: FontWeight.w700),
-      //       ),
-      //     );
-      //     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      //   }
-      // } catch (error) {
-      //   // Handle unexpected errors
-      //   print('Error during patient submission: $error');
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //     SnackBar(
-      //       backgroundColor: Pallete.dangerColor,
-      //       content: Text(
-      //         'An unexpected error occurred: $error',
-      //         style: TextStyle(fontWeight: FontWeight.w700),
-      //       ),
-      //     ),
-      //   );
-      // } finally {
-      //   setState(() {
-      //     _isLoading = false;
-      //   });
-      // }
     }
   }
-
-  List<String> statusList = [
-    'Single',
-    'Married',
-    'Divorced',
-    'Separated',
-    'Widowed'
-  ];
 
   void _selectAllergy() async {
     List<String> allergyList = ['N/A', 'Food', 'Medicine', 'Other'];
@@ -521,8 +462,6 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
     );
   }
 
-
-  
   Column GenInfoFormSection() {
     print(_isInvalid);
     return Column(
@@ -751,12 +690,12 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
               SizedBox(height: Sizing.formSpacing),
               Flexible(
                 child: FormTextField(
-                  onchanged: (value) => secondAddress = value,
+                  // onchanged: (value) => firstAddress = value,
                   labeltext: 'Current Address*',
                   validator: 'Enter their Address!',
                   type: TextInputType.text,
                   maxlines: 4,
-                  controller: secondAddress,
+                  controller: firstAddress,
                 ),
               ),
               SizedBox(height: Sizing.formSpacing),
@@ -795,9 +734,9 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                         FormTextField(
                           onchanged: (value) => _genInfo.email = value,
                           labeltext: 'Active Email',
-                          validator: 'Enter their email!',
+                          // validator: 'Enter their email!',
                           type: TextInputType.emailAddress,
-                        ), 
+                        ),
                       ],
                     ),
                   ),
@@ -808,9 +747,9 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                         FormTextField(
                           onchanged: (value) => _genInfo.phone = value,
                           labeltext: 'Contact Number*',
-                          validator: 'Enter their contact number!',
+                          // validator: 'Enter their contact number!',
                           type: TextInputType.phone,
-                        ), 
+                        ),
                       ],
                     ),
                   ),
@@ -974,37 +913,35 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                   child: FormTextField(
                     onchanged: (value) => lmp = value,
                     labeltext: 'LMP (Last Menstrual Period)',
-                    validator: 'Enter their LMP!',
+                    // validator: 'Enter their LMP!',
                     type: TextInputType.text,
                   ),
                 ),
-              if (_selectedGender == 'F')
-                Row(
-                  children: [
-                    Checkbox(
-                      value: _isCheckedLMP,
-                      onChanged: (value) {
-                        setState(() {
-                          _isCheckedLMP = value!;
-                        });
-                      },
-                    ),
-                    Flexible(
-                      child: Text(
-                        'Require LMP',
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
+              // if (_selectedGender == 'F')
+              //   Row(
+              //     children: [
+              //       Checkbox(
+              //         value: _isCheckedLMP,
+              //         onChanged: (value) {
+              //           setState(() {
+              //             _isCheckedLMP = value!;
+              //           });
+              //         },
+              //       ),
+              //       Flexible(
+              //         child: Text(
+              //           'Require LMP',
+              //           overflow: TextOverflow.ellipsis,
+              //         ),
+              //       ),
+              //     ],
+              //   ),
             ],
           ),
         ),
       ],
     );
   }
-
- 
 
   Column ContactInfoFormSection() {
     return Column(
@@ -1039,7 +976,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
               SizedBox(height: Sizing.formSpacing),
               Flexible(
                 child: FormTextField(
-                  onchanged: (value) => secondAddress = value,
+                  // onchanged: (value) => secondAddress = value,
                   labeltext: 'Current Address*',
                   validator: 'Enter their Address!',
                   type: TextInputType.text,
@@ -1067,7 +1004,6 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
       ],
     );
   }
-
 
   Flexible otherTextField(TextEditingController controller) {
     return Flexible(
