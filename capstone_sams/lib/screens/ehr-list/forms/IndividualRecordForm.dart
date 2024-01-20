@@ -8,6 +8,7 @@ import 'package:capstone_sams/global-widgets/buttons/RadioTileButton.dart';
 import 'package:capstone_sams/global-widgets/datepicker/Datepicker.dart';
 import 'package:capstone_sams/global-widgets/text-fields/Textfields.dart';
 import 'package:capstone_sams/global-widgets/cards/CardSectionTitleWidget.dart';
+import 'package:capstone_sams/global-widgets/texts/FormTitleWidget.dart';
 import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/ContactPersonModel.dart';
 import 'package:capstone_sams/models/MedicalRecordModel.dart';
@@ -520,261 +521,14 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
     );
   }
 
-  Column ContactInfoFormSection() {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(
-              top: Sizing.formSpacing * 2, bottom: Sizing.formSpacing),
-          child: Text(
-            'Person to be notified in case of Emergency',
-            style: TextStyle(
-                color: Pallete.mainColor,
-                fontSize: Sizing.header4,
-                fontWeight: FontWeight.w600),
-          ),
-        ),
-        Form(
-          key: _contactInfoFormKey,
-          autovalidateMode: _autoValidate
-              ? AutovalidateMode.always
-              : AutovalidateMode.disabled,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Flexible(
-                child: FormTextField(
-                  onchanged: (value) => _contactInfo.fullName = value,
-                  labeltext: 'Full Name*',
-                  validator: 'Enter their full name!',
-                  type: TextInputType.name,
-                ),
-              ),
-              SizedBox(height: Sizing.formSpacing),
-              Flexible(
-                child: FormTextField(
-                  onchanged: (value) => _contactInfo.phone = value,
-                  labeltext: 'Contact Number*',
-                  validator: 'Enter their contact number!',
-                  type: TextInputType.phone,
-                ),
-              ),
-              SizedBox(height: Sizing.formSpacing),
-              Flexible(
-                child: AddressFormField(
-                  'Current Address*',
-                  secondAddress,
-                ),
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Pallete.mainColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(Sizing.borderRadius),
-                  ),
-                ),
-                onPressed: () {
-                  if (firstAddress.text.isNotEmpty) {
-                    secondAddress.text = firstAddress.text;
-                  }
-                },
-                child: const Text('Copy Address Above'),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
 
-  Column MedicalInfoFormSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // SectionTitleWidget(title: 'Medical Information'),
-        Form(
-          key: _medInfoFormKey,
-          autovalidateMode: _autoValidate
-              ? AutovalidateMode.always
-              : AutovalidateMode.disabled,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text(
-                'Past Disease*',
-                style: TextStyle(
-                  fontSize: Sizing.formTitle,
-                  color: Pallete.greyColor,
-                ),
-              ),
-              Flexible(
-                child: ElevatedButton.icon(
-                  icon: FaIcon(FontAwesomeIcons.circleChevronDown),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Pallete.mainColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(Sizing.borderRadius),
-                    ),
-                  ),
-                  onPressed: _selectPastDisease,
-                  label: Text('Select Past Disease'),
-                ),
-              ),
-              Wrap(
-                children: _selectedPastDiseases.map((e) {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: Sizing.spacing),
-                    child: Chip(
-                      label: Text(e),
-                    ),
-                  );
-                }).toList(),
-              ),
-              if (_selectedPastDiseases.contains('Other'))
-                otherTextField(otherPastDiseasses),
-              SizedBox(height: Sizing.formSpacing),
-              Text(
-                'Family History*',
-                style: TextStyle(
-                  fontSize: Sizing.formTitle,
-                  color: Pallete.greyColor,
-                ),
-              ),
-              Flexible(
-                child: ElevatedButton.icon(
-                  icon: FaIcon(FontAwesomeIcons.circleChevronDown),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Pallete.mainColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(Sizing.borderRadius),
-                    ),
-                  ),
-                  onPressed: _selectFamHistory,
-                  label: Text('Select Family History Illnesses'),
-                ),
-              ),
-              Wrap(
-                children: _selectedFamHistory.map((e) {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: Sizing.spacing),
-                    child: Chip(
-                      label: Text(e),
-                    ),
-                  );
-                }).toList(),
-              ),
-              if (_selectedFamHistory.contains('Other'))
-                otherTextField(otherFamHistory),
-              SizedBox(height: Sizing.formSpacing),
-              Text(
-                'Allergy Type*',
-                style: TextStyle(
-                  fontSize: Sizing.formTitle,
-                  color: Pallete.greyColor,
-                ),
-              ),
-              Flexible(
-                child: ElevatedButton.icon(
-                  icon: FaIcon(FontAwesomeIcons.circleChevronDown),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Pallete.mainColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(Sizing.borderRadius),
-                    ),
-                  ),
-                  onPressed: _selectAllergy,
-                  label: Text('Select Allergy'),
-                ),
-              ),
-              Wrap(
-                children: _selectedAllergy.map((e) {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: Sizing.spacing),
-                    child: Chip(
-                      label: Text(e),
-                    ),
-                  );
-                }).toList(),
-              ),
-              if (_selectedAllergy.contains('Other'))
-                otherTextField(otherAllergies),
-              SizedBox(height: Sizing.formSpacing),
-              Text(
-                'Illnesses*',
-                style: TextStyle(
-                  fontSize: Sizing.formTitle,
-                  color: Pallete.greyColor,
-                ),
-              ),
-              Flexible(
-                child: ElevatedButton.icon(
-                  icon: FaIcon(FontAwesomeIcons.circleChevronDown),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Pallete.mainColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(Sizing.borderRadius),
-                    ),
-                  ),
-                  onPressed: _selectIllnesses,
-                  label: Text('Select Illnesses'),
-                ),
-              ),
-              Wrap(
-                children: _selectedIllnesses.map((e) {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: Sizing.spacing),
-                    child: Chip(
-                      label: Text(e),
-                    ),
-                  );
-                }).toList(),
-              ),
-              if (_selectedIllnesses.contains('Other'))
-                otherTextField(otherIllnesses),
-              SizedBox(height: Sizing.formSpacing),
-              if (_selectedGender == 'F')
-                Flexible(
-                  child: FormTextField(
-                    onchanged: (value) => lmp = value,
-                    labeltext: 'LMP (Last Menstrual Period)',
-                    validator: 'Enter their LMP!',
-                    type: TextInputType.text,
-                  ),
-                ),
-              if (_selectedGender == 'F')
-                Row(
-                  children: [
-                    Checkbox(
-                      value: _isCheckedLMP,
-                      onChanged: (value) {
-                        setState(() {
-                          _isCheckedLMP = value!;
-                        });
-                      },
-                    ),
-                    Flexible(
-                      child: Text(
-                        'Require LMP',
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
+  
   Column GenInfoFormSection() {
     print(_isInvalid);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // SectionTitleWidget(title: 'General Information'),
+        FormTitleWidget(title: 'General Information'),
         Form(
           key: _genInfoFormKey,
           autovalidateMode: _autoValidate
@@ -996,7 +750,14 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
               ),
               SizedBox(height: Sizing.formSpacing),
               Flexible(
-                child: AddressFormField('Current Address*', firstAddress),
+                child: FormTextField(
+                  onchanged: (value) => secondAddress = value,
+                  labeltext: 'Current Address*',
+                  validator: 'Enter their Address!',
+                  type: TextInputType.text,
+                  maxlines: 4,
+                  controller: secondAddress,
+                ),
               ),
               SizedBox(height: Sizing.formSpacing),
               Row(
@@ -1036,25 +797,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                           labeltext: 'Active Email',
                           validator: 'Enter their email!',
                           type: TextInputType.emailAddress,
-                        ),
-                        Row(
-                          children: [
-                            Checkbox(
-                              value: _isCheckedEmail,
-                              onChanged: (value) {
-                                setState(() {
-                                  _isCheckedEmail = value!;
-                                });
-                              },
-                            ),
-                            Flexible(
-                              child: Text(
-                                'Require email',
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
+                        ), 
                       ],
                     ),
                   ),
@@ -1067,25 +810,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                           labeltext: 'Contact Number*',
                           validator: 'Enter their contact number!',
                           type: TextInputType.phone,
-                        ),
-                        Row(
-                          children: [
-                            Checkbox(
-                              value: _isCheckedContactNum,
-                              onChanged: (value) {
-                                setState(() {
-                                  _isCheckedContactNum = value!;
-                                });
-                              },
-                            ),
-                            Flexible(
-                              child: Text(
-                                'Require contact number',
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
+                        ), 
                       ],
                     ),
                   ),
@@ -1098,25 +823,251 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
     );
   }
 
-  TextFormField AddressFormField(
-      String labeltext, TextEditingController controller) {
-    return TextFormField(
-      decoration: InputDecoration(
-        alignLabelWithHint: true,
-        labelText: labeltext,
-        border: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Pallete.primaryColor,
+  Column MedicalInfoFormSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        FormTitleWidget(title: 'Medical Information'),
+        Form(
+          key: _medInfoFormKey,
+          autovalidateMode: _autoValidate
+              ? AutovalidateMode.always
+              : AutovalidateMode.disabled,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text(
+                'Past Disease*',
+                style: TextStyle(
+                  fontSize: Sizing.formTitle,
+                  color: Pallete.greyColor,
+                ),
+              ),
+              Flexible(
+                child: ElevatedButton.icon(
+                  icon: FaIcon(FontAwesomeIcons.circleChevronDown),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Pallete.mainColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(Sizing.borderRadius),
+                    ),
+                  ),
+                  onPressed: _selectPastDisease,
+                  label: Text('Select Past Disease'),
+                ),
+              ),
+              Wrap(
+                children: _selectedPastDiseases.map((e) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: Sizing.spacing),
+                    child: Chip(
+                      label: Text(e),
+                    ),
+                  );
+                }).toList(),
+              ),
+              if (_selectedPastDiseases.contains('Other'))
+                otherTextField(otherPastDiseasses),
+              SizedBox(height: Sizing.formSpacing),
+              Text(
+                'Family History*',
+                style: TextStyle(
+                  fontSize: Sizing.formTitle,
+                  color: Pallete.greyColor,
+                ),
+              ),
+              Flexible(
+                child: ElevatedButton.icon(
+                  icon: FaIcon(FontAwesomeIcons.circleChevronDown),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Pallete.mainColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(Sizing.borderRadius),
+                    ),
+                  ),
+                  onPressed: _selectFamHistory,
+                  label: Text('Select Family History Illnesses'),
+                ),
+              ),
+              Wrap(
+                children: _selectedFamHistory.map((e) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: Sizing.spacing),
+                    child: Chip(
+                      label: Text(e),
+                    ),
+                  );
+                }).toList(),
+              ),
+              if (_selectedFamHistory.contains('Other'))
+                otherTextField(otherFamHistory),
+              SizedBox(height: Sizing.formSpacing),
+              Text(
+                'Allergy Type*',
+                style: TextStyle(
+                  fontSize: Sizing.formTitle,
+                  color: Pallete.greyColor,
+                ),
+              ),
+              Flexible(
+                child: ElevatedButton.icon(
+                  icon: FaIcon(FontAwesomeIcons.circleChevronDown),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Pallete.mainColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(Sizing.borderRadius),
+                    ),
+                  ),
+                  onPressed: _selectAllergy,
+                  label: Text('Select Allergy'),
+                ),
+              ),
+              Wrap(
+                children: _selectedAllergy.map((e) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: Sizing.spacing),
+                    child: Chip(
+                      label: Text(e),
+                    ),
+                  );
+                }).toList(),
+              ),
+              if (_selectedAllergy.contains('Other'))
+                otherTextField(otherAllergies),
+              SizedBox(height: Sizing.formSpacing),
+              Text(
+                'Illnesses*',
+                style: TextStyle(
+                  fontSize: Sizing.formTitle,
+                  color: Pallete.greyColor,
+                ),
+              ),
+              Flexible(
+                child: ElevatedButton.icon(
+                  icon: FaIcon(FontAwesomeIcons.circleChevronDown),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Pallete.mainColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(Sizing.borderRadius),
+                    ),
+                  ),
+                  onPressed: _selectIllnesses,
+                  label: Text('Select Illnesses'),
+                ),
+              ),
+              Wrap(
+                children: _selectedIllnesses.map((e) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: Sizing.spacing),
+                    child: Chip(
+                      label: Text(e),
+                    ),
+                  );
+                }).toList(),
+              ),
+              if (_selectedIllnesses.contains('Other'))
+                otherTextField(otherIllnesses),
+              SizedBox(height: Sizing.formSpacing),
+              if (_selectedGender == 'F')
+                Flexible(
+                  child: FormTextField(
+                    onchanged: (value) => lmp = value,
+                    labeltext: 'LMP (Last Menstrual Period)',
+                    validator: 'Enter their LMP!',
+                    type: TextInputType.text,
+                  ),
+                ),
+              if (_selectedGender == 'F')
+                Row(
+                  children: [
+                    Checkbox(
+                      value: _isCheckedLMP,
+                      onChanged: (value) {
+                        setState(() {
+                          _isCheckedLMP = value!;
+                        });
+                      },
+                    ),
+                    Flexible(
+                      child: Text(
+                        'Require LMP',
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+            ],
           ),
         ),
-        filled: true,
-        fillColor: Pallete.palegrayColor,
-      ),
-      controller: controller,
-      maxLines: 4,
-      keyboardType: TextInputType.text,
+      ],
     );
   }
+
+ 
+
+  Column ContactInfoFormSection() {
+    return Column(
+      children: [
+        FormTitleWidget(title: 'Person to be notified in case of Emergency'),
+        Form(
+          key: _contactInfoFormKey,
+          autovalidateMode: _autoValidate
+              ? AutovalidateMode.always
+              : AutovalidateMode.disabled,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Flexible(
+                child: FormTextField(
+                  onchanged: (value) => _contactInfo.fullName = value,
+                  labeltext: 'Full Name*',
+                  validator: 'Enter their full name!',
+                  type: TextInputType.name,
+                ),
+              ),
+              SizedBox(height: Sizing.formSpacing),
+              Flexible(
+                child: FormTextField(
+                  onchanged: (value) => _contactInfo.phone = value,
+                  labeltext: 'Contact Number*',
+                  validator: 'Enter their contact number!',
+                  type: TextInputType.phone,
+                ),
+              ),
+              SizedBox(height: Sizing.formSpacing),
+              Flexible(
+                child: FormTextField(
+                  onchanged: (value) => secondAddress = value,
+                  labeltext: 'Current Address*',
+                  validator: 'Enter their Address!',
+                  type: TextInputType.text,
+                  maxlines: 4,
+                  controller: secondAddress,
+                ),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Pallete.mainColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(Sizing.borderRadius),
+                  ),
+                ),
+                onPressed: () {
+                  if (firstAddress.text.isNotEmpty) {
+                    secondAddress.text = firstAddress.text;
+                  }
+                },
+                child: const Text('Same Address As Above'),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
 
   Flexible otherTextField(TextEditingController controller) {
     return Flexible(

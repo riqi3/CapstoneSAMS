@@ -143,6 +143,7 @@ class _FormTextFieldState extends State<FormTextField> {
   Widget build(BuildContext context) {
     return TextFormField(
       decoration: InputDecoration(
+        alignLabelWithHint: true,
         labelText: '${widget.labeltext}',
         border: OutlineInputBorder(
           borderSide: BorderSide(

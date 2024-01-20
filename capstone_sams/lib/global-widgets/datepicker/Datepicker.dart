@@ -25,11 +25,6 @@ class Datepicker extends StatelessWidget {
             color: isInvalid == true
                 ? Pallete.dangerColor
                 : Pallete.textSecondaryColor),
-        // border: OutlineInputBorder(
-        //   borderSide: BorderSide(
-        //     color: Pallete.dangerColor,
-        //   ),
-        // ),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
               color: isInvalid == true
