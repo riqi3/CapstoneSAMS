@@ -117,9 +117,15 @@ class _EhrListScreenState extends State<EhrListScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () =>
             // IndividualRecordForm(),
-            showDialog(
-          context: context,
-          builder: (ctx) => CourseDialog(),
+            //     showDialog(
+            //   context: context,
+            //   builder: (ctx) => CourseDialog(),
+            // ),
+            Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => IndividualRecordForm(),
+          ),
         ),
         child: FaIcon(
           FontAwesomeIcons.pencil,

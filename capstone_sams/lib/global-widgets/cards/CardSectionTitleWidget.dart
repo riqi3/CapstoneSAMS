@@ -2,8 +2,8 @@ import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:flutter/material.dart';
 
-class SectionTitleWidget extends StatelessWidget {
-  const SectionTitleWidget({super.key, required this.title});
+class CardSectionTitleWidget extends StatelessWidget {
+  const CardSectionTitleWidget({super.key, required this.title});
 
   final String title;
 
