@@ -27,29 +27,26 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
-class IndividualRecordForm extends StatefulWidget {
+class PatientRegistrationForm extends StatefulWidget {
   final String? course;
 
-  const IndividualRecordForm({
+  const PatientRegistrationForm({
     super.key,
     this.course,
   });
 
   @override
-  State<IndividualRecordForm> createState() => _IndividualRecordFormState();
+  State<PatientRegistrationForm> createState() =>
+      _PatientRegistrationFormState();
 }
 
-class _IndividualRecordFormState extends State<IndividualRecordForm> {
-  var _isLoading = false;
-  bool _isInvalid = false;
-  bool _isCheckedEmail = false;
-  bool _isCheckedLMP = false;
-  bool _isCheckedContactNum = false;
+class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
   final _genInfoFormKey = GlobalKey<FormState>();
   final _genInfo = Patient();
   final _medInfoFormKey = GlobalKey<FormState>();
   final _contactInfoFormKey = GlobalKey<FormState>();
   final _contactInfo = ContactPerson();
+
   TextEditingController otherIllnesses = TextEditingController();
   TextEditingController otherAllergies = TextEditingController();
   TextEditingController otherPastDiseasses = TextEditingController();
@@ -57,16 +54,21 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
   TextEditingController lmp = TextEditingController();
   TextEditingController firstAddress = TextEditingController();
   TextEditingController secondAddress = TextEditingController();
+
   List<String> _selectedAllergy = [];
   List<String> _selectedFamHistory = [];
   List<String> _selectedPastDiseases = [];
   List<String> _selectedIllnesses = [];
+
+  var _isLoading = false;
+  var _isInvalid = false;
+  var _account = Account(isSuperuser: false);
   late bool _autoValidate = false;
+  late int? getAccountID = 0;
+  late String tokena = context.read<AccountProvider>().token!;
+
   DateTime? _birthDate;
   String? _selectedGender;
-  late int? getAccountID = 0;
-  var _account = Account(isSuperuser: false);
-  late String tokena = context.read<AccountProvider>().token!;
   List<String> statusList = [
     'Single',
     'Married',
@@ -78,19 +80,21 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
   void _onSubmit() async {
     setState(() => _isLoading = true);
     setState(() => _isInvalid = true);
-    print('on submit $_isInvalid');
-    // Account? getAccount = await context
-    //     .read<AccountProvider>()
-    //     .fetchAccount(getAccountID, tokena);
-
-    //     Account? patient =
-    // await context.read<PatientProvider>().fetchPatient(a, tokena);
-    // var a = account!.accountID;
     final isValid1 = _genInfoFormKey.currentState!.validate();
     final isValid2 = _medInfoFormKey.currentState!.validate();
     final isValid3 = _contactInfoFormKey.currentState!.validate();
 
-    if (!isValid1 && !isValid2 && !isValid3) {
+    if (!isValid1 || !isValid2 || !isValid3 || getAccountID == 0) {
+      setState(() => _isLoading = false);
+
+      const snackBar = SnackBar(
+        backgroundColor: Pallete.dangerColor,
+        content: Text(
+          'Incomplete form inputs! Please double check inputs.',
+          style: TextStyle(fontWeight: FontWeight.w700),
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
       return;
     } else {
       String formattedDate = _birthDate != null
@@ -104,7 +108,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
           ? _genInfo.phone = 'None'
           : _genInfo.phone.toString();
 
-      final patient = Patient(
+      var patient = Patient(
         patientID: Uuid().v4(),
         firstName: _genInfo.firstName,
         middleInitial: _genInfo.middleInitial,
@@ -124,27 +128,23 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
         assignedPhysician: getAccountID,
       );
 
-      final medicalRecord = MedicalRecord(
+      var medicalRecord = MedicalRecord(
         recordNum: Uuid().v4(),
-        illnesses: _selectedIllnesses,
         pastDiseases: _selectedPastDiseases,
-        allergies: _selectedAllergy,
         familyHistory: _selectedFamHistory,
+        allergies: _selectedAllergy,
+        illnesses: _selectedIllnesses,
         lastMensPeriod: lmp.text,
         patient: patient.patientID,
       );
 
-      final contactRecord = ContactPerson(
+      var contactRecord = ContactPerson(
         contactId: Uuid().v4(),
         fullName: _contactInfo.fullName,
         phone: _contactInfo.phone,
         address: secondAddress.text,
         patient: patient.patientID,
       );
-
-      // _genInfoFormKey.currentState?.save();
-      // _medInfoFormKey.currentState?.save();
-      // _contactInfoFormKey.currentState?.save();
 
       final patientRecordProvider =
           Provider.of<PatientProvider>(context, listen: false);
@@ -170,7 +170,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
         token,
       );
 
-      if (patientSuccess && medicalRecordSuccess && contactSuccess) {
+      if (patientSuccess || medicalRecordSuccess || contactSuccess) {
         int routesCount = 0;
         Navigator.pushAndRemoveUntil(
           context,
@@ -408,62 +408,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
     );
   }
 
-  Column AssignPhysicianFormSection() {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(
-              top: Sizing.formSpacing * 2, bottom: Sizing.formSpacing),
-          child: Text(
-            'Assign Doctor',
-            style: TextStyle(
-                color: Pallete.mainColor,
-                fontSize: Sizing.header4,
-                fontWeight: FontWeight.w600),
-          ),
-        ),
-        DropdownSearch<Account>(
-          dropdownDecoratorProps: DropDownDecoratorProps(
-            dropdownSearchDecoration:
-                InputDecoration(labelText: "Select Physician On Duty "),
-          ),
-          clearButtonProps: ClearButtonProps(isVisible: true),
-          popupProps: PopupProps.modalBottomSheet(
-            showSearchBox: true,
-          ),
-          asyncItems: (String filter) async {
-            var response = await Dio().get(
-              '${Env.prefix}/user/users/physician',
-              queryParameters: {"filter": filter},
-              options: Options(headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer $tokena",
-              }),
-            );
-            // print("Dio Response: $response");
-            var models = List<Account>.from(
-              response.data.map(
-                (json) => Account.fromJson(json),
-              ),
-            );
-            return models;
-          },
-          itemAsString: (Account account) {
-            var string =
-                'Dr. ${account.firstName.toString()} ${account.lastName.toString()}';
-            return string;
-          },
-          onChanged: (Account? data) {
-            _account.accountRole = data?.accountRole.toString();
-            getAccountID = data?.accountID;
-          },
-        ),
-      ],
-    );
-  }
-
   Column GenInfoFormSection() {
-    print(_isInvalid);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -483,7 +428,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                     child: FormTextField(
                       onchanged: (value) => _genInfo.lastName = value,
                       labeltext: 'Surname*',
-                      validator: 'Enter their surname!',
+                      validator: Strings.requiredField,
                       type: TextInputType.name,
                     ),
                   ),
@@ -492,7 +437,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                     child: FormTextField(
                       onchanged: (value) => _genInfo.firstName = value,
                       labeltext: 'First Name*',
-                      validator: 'Enter their first name!',
+                      validator: Strings.requiredField,
                       type: TextInputType.name,
                     ),
                   ),
@@ -504,7 +449,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                     child: FormTextField(
                       onchanged: (value) => _genInfo.middleInitial = value,
                       labeltext: 'M.I.*',
-                      validator: 'Enter their middle initial!',
+                      validator: Strings.requiredField,
                       type: TextInputType.name,
                       countertext: '',
                       maxlength: 1,
@@ -521,7 +466,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                         _genInfo.age = int.tryParse(value);
                       },
                       labeltext: 'Age*',
-                      validator: 'Enter their age!',
+                      validator: Strings.requiredField,
                       type: TextInputType.number,
                     ),
                   ),
@@ -558,11 +503,10 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                             });
                           },
                         ),
-
                         Visibility(
                           visible: _isInvalid,
                           child: Text(
-                            'Select a gender!',
+                            Strings.requiredField,
                             style: TextStyle(color: Pallete.dangerColor),
                           ),
                         ),
@@ -632,7 +576,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
               Visibility(
                 visible: _isInvalid,
                 child: Text(
-                  'Select a birthdate!',
+                  Strings.requiredField,
                   style: TextStyle(color: Pallete.dangerColor),
                 ),
               ),
@@ -645,25 +589,9 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                         _genInfo.course = value;
                       },
                       labeltext: 'Course*',
-                      validator: 'Enter the student course!',
+                      validator: Strings.requiredField,
                       type: TextInputType.text,
                     ),
-
-                    // TextFormField(
-                    //   decoration: InputDecoration(
-                    //     labelText: 'Course*',
-                    //     border: OutlineInputBorder(
-                    //       borderSide: BorderSide(
-                    //         color: Pallete.primaryColor,
-                    //       ),
-                    //     ),
-                    //     filled: true,
-                    //     fillColor: Pallete.palegrayColor,
-                    //   ),
-                    //   enabled: false,
-                    //   keyboardType: TextInputType.name,
-                    //   initialValue: widget.course,
-                    // ),
                   ),
                   SizedBox(width: Sizing.formSpacing),
                   Flexible(
@@ -672,7 +600,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                         _genInfo.yrLevel = int.tryParse(value);
                       },
                       labeltext: 'Year*',
-                      validator: 'Enter the student year!',
+                      validator: Strings.requiredField,
                       type: TextInputType.number,
                     ),
                   ),
@@ -683,7 +611,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                 child: FormTextField(
                   onchanged: (value) => _genInfo.studNumber = value,
                   labeltext: 'Student Number*',
-                  validator: 'Enter their student number I.D.!',
+                  validator: Strings.requiredField,
                   type: TextInputType.number,
                 ),
               ),
@@ -692,7 +620,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                 child: FormTextField(
                   // onchanged: (value) => firstAddress = value,
                   labeltext: 'Current Address*',
-                  validator: 'Enter their Address!',
+                  validator: Strings.requiredField,
                   type: TextInputType.text,
                   maxlines: 4,
                   controller: firstAddress,
@@ -707,7 +635,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                         _genInfo.height = double.tryParse(value);
                       },
                       labeltext: 'Height*',
-                      validator: 'Enter their height!',
+                      validator: Strings.requiredField,
                       type: TextInputType.number,
                     ),
                   ),
@@ -718,7 +646,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                         _genInfo.weight = double.tryParse(value);
                       },
                       labeltext: 'Weight*',
-                      validator: 'Enter their weight!',
+                      validator: Strings.requiredField,
                       type: TextInputType.number,
                     ),
                   ),
@@ -734,7 +662,6 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                         FormTextField(
                           onchanged: (value) => _genInfo.email = value,
                           labeltext: 'Active Email',
-                          // validator: 'Enter their email!',
                           type: TextInputType.emailAddress,
                         ),
                       ],
@@ -746,8 +673,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                       children: [
                         FormTextField(
                           onchanged: (value) => _genInfo.phone = value,
-                          labeltext: 'Contact Number*',
-                          // validator: 'Enter their contact number!',
+                          labeltext: 'Contact Number',
                           type: TextInputType.phone,
                         ),
                       ],
@@ -806,8 +732,21 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                   );
                 }).toList(),
               ),
+              Visibility(
+                visible: _isInvalid,
+                child: Text(
+                  '${Strings.checkboxSelect} past disease.',
+                  style: TextStyle(color: Pallete.dangerColor),
+                ),
+              ),
               if (_selectedPastDiseases.contains('Other'))
-                otherTextField(otherPastDiseasses),
+                FormTextField(
+                  labeltext: 'Other*',
+                  validator: '${Strings.textValidation2} past disease.',
+                  type: TextInputType.text,
+                  maxlines: 2,
+                  controller: otherPastDiseasses,
+                ),
               SizedBox(height: Sizing.formSpacing),
               Text(
                 'Family History*',
@@ -839,8 +778,22 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                   );
                 }).toList(),
               ),
+              Visibility(
+                visible: _isInvalid,
+                child: Text(
+                  '${Strings.checkboxSelect} family history illness.',
+                  style: TextStyle(color: Pallete.dangerColor),
+                ),
+              ),
               if (_selectedFamHistory.contains('Other'))
-                otherTextField(otherFamHistory),
+                FormTextField(
+                  labeltext: 'Other*',
+                  validator:
+                      '${Strings.textValidation2} family history illness.',
+                  type: TextInputType.text,
+                  maxlines: 2,
+                  controller: otherFamHistory,
+                ),
               SizedBox(height: Sizing.formSpacing),
               Text(
                 'Allergy Type*',
@@ -872,8 +825,21 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                   );
                 }).toList(),
               ),
+              Visibility(
+                visible: _isInvalid,
+                child: Text(
+                  '${Strings.checkboxSelect} allergy.',
+                  style: TextStyle(color: Pallete.dangerColor),
+                ),
+              ),
               if (_selectedAllergy.contains('Other'))
-                otherTextField(otherAllergies),
+                FormTextField(
+                  labeltext: 'Other*',
+                  validator: '${Strings.textValidation2} allergy.',
+                  type: TextInputType.text,
+                  maxlines: 2,
+                  controller: otherAllergies,
+                ),
               SizedBox(height: Sizing.formSpacing),
               Text(
                 'Illnesses*',
@@ -905,37 +871,30 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                   );
                 }).toList(),
               ),
+              Visibility(
+                visible: _isInvalid,
+                child: Text(
+                  '${Strings.checkboxSelect} illness.',
+                  style: TextStyle(color: Pallete.dangerColor),
+                ),
+              ),
               if (_selectedIllnesses.contains('Other'))
-                otherTextField(otherIllnesses),
+                FormTextField(
+                  labeltext: 'Other*',
+                  validator: '${Strings.textValidation2} illness.',
+                  type: TextInputType.text,
+                  maxlines: 2,
+                  controller: otherIllnesses,
+                ),
               SizedBox(height: Sizing.formSpacing),
               if (_selectedGender == 'F')
                 Flexible(
                   child: FormTextField(
                     onchanged: (value) => lmp = value,
                     labeltext: 'LMP (Last Menstrual Period)',
-                    // validator: 'Enter their LMP!',
                     type: TextInputType.text,
                   ),
                 ),
-              // if (_selectedGender == 'F')
-              //   Row(
-              //     children: [
-              //       Checkbox(
-              //         value: _isCheckedLMP,
-              //         onChanged: (value) {
-              //           setState(() {
-              //             _isCheckedLMP = value!;
-              //           });
-              //         },
-              //       ),
-              //       Flexible(
-              //         child: Text(
-              //           'Require LMP',
-              //           overflow: TextOverflow.ellipsis,
-              //         ),
-              //       ),
-              //     ],
-              //   ),
             ],
           ),
         ),
@@ -960,7 +919,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                 child: FormTextField(
                   onchanged: (value) => _contactInfo.fullName = value,
                   labeltext: 'Full Name*',
-                  validator: 'Enter their full name!',
+                  validator: Strings.requiredField,
                   type: TextInputType.name,
                 ),
               ),
@@ -969,7 +928,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                 child: FormTextField(
                   onchanged: (value) => _contactInfo.phone = value,
                   labeltext: 'Contact Number*',
-                  validator: 'Enter their contact number!',
+                  validator: Strings.requiredField,
                   type: TextInputType.phone,
                 ),
               ),
@@ -978,7 +937,7 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                 child: FormTextField(
                   // onchanged: (value) => secondAddress = value,
                   labeltext: 'Current Address*',
-                  validator: 'Enter their Address!',
+                  validator: Strings.requiredField,
                   type: TextInputType.text,
                   maxlines: 4,
                   controller: secondAddress,
@@ -999,6 +958,74 @@ class _IndividualRecordFormState extends State<IndividualRecordForm> {
                 child: const Text('Same Address As Above'),
               ),
             ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Column AssignPhysicianFormSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        FormTitleWidget(title: 'Assign Doctor'),
+        DropdownSearch<Account>(
+          dropdownDecoratorProps: DropDownDecoratorProps(
+            dropdownSearchDecoration: InputDecoration(
+              labelText: "Select A Physician",
+              labelStyle: TextStyle(
+                color: _isInvalid == true
+                    ? Pallete.dangerColor
+                    : Pallete.textSecondaryColor,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: _isInvalid == true
+                      ? Pallete.dangerColor
+                      : Pallete.textSecondaryColor,
+                ),
+              ),
+              suffixIconColor: _isInvalid == true
+                  ? Pallete.dangerColor
+                  : Pallete.textSecondaryColor,
+            ),
+          ),
+          clearButtonProps: ClearButtonProps(isVisible: true),
+          popupProps: PopupProps.modalBottomSheet(
+            showSearchBox: true,
+          ),
+          asyncItems: (String filter) async {
+            var response = await Dio().get(
+              '${Env.prefix}/user/users/physician',
+              queryParameters: {"filter": filter},
+              options: Options(headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer $tokena",
+              }),
+            );
+            // print("Dio Response: $response");
+            var models = List<Account>.from(
+              response.data.map(
+                (json) => Account.fromJson(json),
+              ),
+            );
+            return models;
+          },
+          itemAsString: (Account account) {
+            var string =
+                'Dr. ${account.firstName.toString()} ${account.lastName.toString()}';
+            return string;
+          },
+          onChanged: (Account? data) {
+            _account.accountRole = data?.accountRole.toString();
+            getAccountID = data?.accountID;
+          },
+        ),
+        Visibility(
+          visible: _isInvalid,
+          child: Text(
+            Strings.requiredField,
+            style: TextStyle(color: Pallete.dangerColor),
           ),
         ),
       ],

@@ -3,13 +3,10 @@ import 'package:capstone_sams/constants/Dimensions.dart';
 import 'package:capstone_sams/constants/Strings.dart';
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/global-widgets/SearchAppBar.dart';
-import 'package:capstone_sams/models/ContactPersonModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
-import 'package:capstone_sams/providers/ContactPersonProvider.dart';
-import 'package:capstone_sams/screens/ehr-list/forms/IndividualRecordForm.dart';
+import 'package:capstone_sams/global-widgets/forms/PatientRegistrationForm.dart';
 import 'package:capstone_sams/screens/ehr-list/widgets/PatientCard.dart';
-import 'package:capstone_sams/screens/home/widgets/CourseDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -115,16 +112,10 @@ class _EhrListScreenState extends State<EhrListScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () =>
-            // IndividualRecordForm(),
-            //     showDialog(
-            //   context: context,
-            //   builder: (ctx) => CourseDialog(),
-            // ),
-            Navigator.push(
+        onPressed: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => IndividualRecordForm(),
+            builder: (context) => PatientRegistrationForm(),
           ),
         ),
         child: FaIcon(

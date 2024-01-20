@@ -85,88 +85,6 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
     );
   }
 
-  FutureBuilder<ContactPerson> ContactInfoData(
-      ContactPersonProvider contactPersonProvider) {
-    return FutureBuilder<ContactPerson>(
-      future: contactPersonProvider.fetchContactPeople(
-          token, widget.patient.patientID),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        } else {
-          final ContactPerson contactPerson = snapshot.data!;
-          print('address ${contactPerson.address}');
-
-          return ShaderMask(
-            shaderCallback: (Rect bounds) {
-              return LinearGradient(
-                colors: [Colors.black, Colors.transparent],
-                stops: [0.95, 1],
-              ).createShader(bounds);
-            },
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    children: [
-                      Text(
-                        '${contactPerson.fullName}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: Sizing.header5,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Table(
-                    columnWidths: <int, TableColumnWidth>{
-                      0: FixedColumnWidth(Sizing.columnWidth4),
-                    },
-                    children: [
-                      TableRow(
-                        children: <Widget>[
-                          TitleValueText(
-                            title: 'Contact No#: ',
-                            value: '${contactPerson.phone}',
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Address: ',
-                            style: TextStyle(fontWeight: FontWeight.w500),
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width / 1,
-                            child: Text(
-                              '${contactPerson.address}',
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          );
-        }
-      },
-    );
-  }
-
   SingleChildScrollView GeneralInfoData(BuildContext context) {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
@@ -297,6 +215,87 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
           ),
         ],
       ),
+    );
+  }
+
+  FutureBuilder<ContactPerson> ContactInfoData(
+      ContactPersonProvider contactPersonProvider) {
+    return FutureBuilder<ContactPerson>(
+      future: contactPersonProvider.fetchContactPeople(
+          token, widget.patient.patientID),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          final ContactPerson contactPerson = snapshot.data!;
+
+          return ShaderMask(
+            shaderCallback: (Rect bounds) {
+              return LinearGradient(
+                colors: [Colors.black, Colors.transparent],
+                stops: [0.95, 1],
+              ).createShader(bounds);
+            },
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              scrollDirection: Axis.horizontal,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    children: [
+                      Text(
+                        '${contactPerson.fullName}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: Sizing.header5,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Table(
+                    columnWidths: <int, TableColumnWidth>{
+                      0: FixedColumnWidth(Sizing.columnWidth4),
+                    },
+                    children: [
+                      TableRow(
+                        children: <Widget>[
+                          TitleValueText(
+                            title: 'Contact No#: ',
+                            value: '${contactPerson.phone}',
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Address: ',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width / 1,
+                            child: Text(
+                              '${contactPerson.address}',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+      },
     );
   }
 }
