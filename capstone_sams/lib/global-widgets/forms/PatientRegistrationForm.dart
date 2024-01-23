@@ -5,6 +5,7 @@ import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/global-widgets/TitleAppBar.dart';
 import 'package:capstone_sams/global-widgets/buttons/CancelButton.dart';
 import 'package:capstone_sams/global-widgets/buttons/RadioTileButton.dart';
+import 'package:capstone_sams/global-widgets/chips/ListItemChips.dart';
 import 'package:capstone_sams/global-widgets/datepicker/Datepicker.dart';
 import 'package:capstone_sams/global-widgets/text-fields/Textfields.dart';
 import 'package:capstone_sams/global-widgets/cards/CardSectionTitleWidget.dart';
@@ -722,16 +723,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                   label: Text('Select Past Disease'),
                 ),
               ),
-              Wrap(
-                children: _selectedPastDiseases.map((e) {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: Sizing.spacing),
-                    child: Chip(
-                      label: Text(e),
-                    ),
-                  );
-                }).toList(),
-              ),
+              ListItemChip(list: _selectedPastDiseases),
               Visibility(
                 visible: _isInvalid,
                 child: Text(
@@ -768,16 +760,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                   label: Text('Select Family History Illnesses'),
                 ),
               ),
-              Wrap(
-                children: _selectedFamHistory.map((e) {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: Sizing.spacing),
-                    child: Chip(
-                      label: Text(e),
-                    ),
-                  );
-                }).toList(),
-              ),
+              ListItemChip(list: _selectedFamHistory),
               Visibility(
                 visible: _isInvalid,
                 child: Text(
@@ -815,16 +798,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                   label: Text('Select Allergy'),
                 ),
               ),
-              Wrap(
-                children: _selectedAllergy.map((e) {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: Sizing.spacing),
-                    child: Chip(
-                      label: Text(e),
-                    ),
-                  );
-                }).toList(),
-              ),
+              ListItemChip(list: _selectedAllergy),
               Visibility(
                 visible: _isInvalid,
                 child: Text(
@@ -861,16 +835,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                   label: Text('Select Illnesses'),
                 ),
               ),
-              Wrap(
-                children: _selectedIllnesses.map((e) {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: Sizing.spacing),
-                    child: Chip(
-                      label: Text(e),
-                    ),
-                  );
-                }).toList(),
-              ),
+              ListItemChip(list: _selectedIllnesses),
               Visibility(
                 visible: _isInvalid,
                 child: Text(
