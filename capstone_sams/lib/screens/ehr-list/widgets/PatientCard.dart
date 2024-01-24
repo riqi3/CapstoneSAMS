@@ -118,8 +118,7 @@ class _PatientCardState extends State<PatientCard> {
                         children: [
                           TitleValueText(
                             title: 'Birthdate: ',
-                            value:
-                                '${widget.patient.birthDate }',
+                            value: '${widget.patient.birthDate}',
                           ),
                           SizedBox(width: Sizing.textSizeAppBar),
                           TitleValueText(

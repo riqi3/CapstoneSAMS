@@ -1,6 +1,6 @@
 import 'package:capstone_sams/constants/Strings.dart';
 import 'package:capstone_sams/global-widgets/separators/DividerWidget.dart';
-import 'package:capstone_sams/global-widgets/texts/CardSectionTitle.dart';
+import 'package:capstone_sams/global-widgets/cards/CardSectionTitleWidget.dart';
 import 'package:capstone_sams/global-widgets/texts/TitleValueText.dart';
 import 'package:capstone_sams/models/ContactPersonModel.dart';
 import 'package:capstone_sams/models/MedicalRecordModel.dart';
@@ -66,7 +66,7 @@ class _PastIllnesInfoCardState extends State<PastIllnesInfoCard> {
                     fontWeight: FontWeight.w600),
               ),
             ),
-            SectionTitleWidget(
+            CardSectionTitleWidget(
               title: 'adca Information',
             ),
             Material(

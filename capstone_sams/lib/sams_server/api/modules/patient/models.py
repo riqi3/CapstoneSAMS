@@ -11,6 +11,13 @@ class Patient(models.Model):
         ('M', 'Male'),
         ('F', 'Female')
     } 
+    STATUS_OPTIONS = {
+        ('Single', 'Single'),
+        ('Married', 'Married'),
+        ('Divorced', 'Divorced'),
+        ('Separated', 'Separated'),
+        ('Widowed', 'Widowed')
+    } 
     COURSE_OPTIONS = {
         ('Nursery', 'Nursery'),
         ('Kindergarten', 'Kindergarten'),
@@ -28,15 +35,17 @@ class Patient(models.Model):
     lastName = models.CharField(max_length=100, blank = False)
     age = models.IntegerField(blank= False)
     gender = models.CharField(choices = GENDER_OPTIONS)
+    patientStatus = models.CharField(choices = STATUS_OPTIONS)
     birthDate = models.DateField(blank = False) 
-    course = models.CharField(choices = COURSE_OPTIONS)
+    # course = models.CharField(choices = COURSE_OPTIONS)
+    course = models.CharField(max_length=300, blank = False)
     yrLevel = models.IntegerField(blank = False)
     studNumber = models.CharField(max_length=100, blank = False)
     address = models.CharField(blank= False)
     height = models.FloatField(blank = False)
     weight = models.FloatField(blank= False) 
-    phone = models.CharField(max_length = 11, blank = True)
-    email = models.CharField(max_length = 50, blank = True) 
+    phone = models.CharField(max_length = 11, null=True,blank = True)
+    email = models.CharField(max_length = 50, null=True,blank = True) 
     assignedPhysician = models.ForeignKey(Account, null=True, on_delete = models.CASCADE)
 
     

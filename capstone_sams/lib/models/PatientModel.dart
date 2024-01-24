@@ -7,6 +7,7 @@ class Patient {
   String? lastName;
   int? age;
   String? gender;
+  String? patientStatus;
   String? birthDate;
   // final String department;
   String? course;
@@ -27,6 +28,7 @@ class Patient {
     this.lastName,
     this.age,
     this.gender,
+    this.patientStatus,
     this.birthDate,
     // this.department,
     this.course,
@@ -49,6 +51,7 @@ class Patient {
       'lastName': lastName,
       'age': age,
       'gender': gender,
+      'patientStatus':patientStatus,
       'birthDate': birthDate.toString(),
       // 'department': department,
       'course': course,
@@ -72,6 +75,7 @@ class Patient {
       lastName: json['lastName'],
       age: json['age'],
       gender: json['gender'],
+      patientStatus: json['patientStatus'],
       birthDate: json['birthDate'],
       // department: json['department'],
       course: json['course'],

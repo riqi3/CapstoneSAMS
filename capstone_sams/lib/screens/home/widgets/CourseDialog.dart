@@ -1,5 +1,5 @@
-import 'package:capstone_sams/constants/theme/sizing.dart';
-import 'package:capstone_sams/screens/ehr-list/forms/IndividualRecordForm.dart';
+import 'package:capstone_sams/constants/theme/sizing.dart';  
+import 'package:capstone_sams/global-widgets/forms/PatientRegistrationForm.dart';
 import 'package:flutter/material.dart';
 
 class CourseDialog extends StatelessWidget {
@@ -73,7 +73,7 @@ class CourseDialog extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => IndividualRecordForm(
+                              builder: (context) => PatientRegistrationForm(
                                 course: courses[index],
                               ),
                             ),

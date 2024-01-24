@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-// Multi Select widget
-// This widget is reusable
 class MultiSelect extends StatefulWidget {
   final List<String> items;
   final String title;
@@ -13,10 +11,8 @@ class MultiSelect extends StatefulWidget {
 }
 
 class _MultiSelectState extends State<MultiSelect> {
-  // this variable holds the selected items
   final List<String> _selectedItems = [];
-  final String title='';
-// This function is triggered when a checkbox is checked or unchecked
+  final String title = '';
   void _itemChange(String itemValue, bool isSelected) {
     setState(() {
       if (isSelected) {
@@ -27,12 +23,10 @@ class _MultiSelectState extends State<MultiSelect> {
     });
   }
 
-  // this function is called when the Cancel button is pressed
   void _cancel() {
     Navigator.pop(context);
   }
 
-// this function is called when the Submit button is tapped
   void _submit() {
     Navigator.pop(context, _selectedItems);
   }

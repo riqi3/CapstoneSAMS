@@ -10,5 +10,9 @@ class Strings {
   static const searchAPatient = 'Search A Patient...';
   static const successfulAdd = 'Successfully added ';
   static const dangerAdd = 'Failed to add ';
+  static const checkboxSelect = 'Please select at least one';
+  static const requiredField = 'Please enter required field.';
+  static const textValidation2 = 'Please enter at least one';
+
   const Strings._();
 }

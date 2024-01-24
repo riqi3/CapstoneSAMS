@@ -16,6 +16,7 @@ class PatientSerializer(serializers.ModelSerializer):
             "lastName",
             "age",
             "gender",
+            'patientStatus',
             "birthDate",
             # 'department',
             'course',
