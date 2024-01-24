@@ -1,5 +1,6 @@
 import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 // ignore: must_be_immutable
 class ListItemChip extends StatefulWidget {
@@ -14,9 +15,8 @@ class ListItemChip extends StatefulWidget {
 }
 
 class _ListItemChipState extends State<ListItemChip> {
-  
   void removeItemFromList(String item, List<String> list) {
-    int index = item.indexOf(item);
+    int index = list.indexOf(item);
     setState(() {
       list.removeAt(index);
     });
@@ -28,11 +28,9 @@ class _ListItemChipState extends State<ListItemChip> {
       children: widget.list.map((e) {
         return Padding(
           padding: const EdgeInsets.only(right: Sizing.spacing),
-          child: GestureDetector(
-            onTap: () => removeItemFromList(e, widget.list),
-            child: Chip(
-              label: Text(e),
-            ),
+          child: Chip(
+            onDeleted: () => removeItemFromList(e, widget.list),
+            label: Text(e),
           ),
         );
       }).toList(),

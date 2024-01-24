@@ -8,7 +8,6 @@ import 'package:capstone_sams/global-widgets/buttons/RadioTileButton.dart';
 import 'package:capstone_sams/global-widgets/chips/ListItemChips.dart';
 import 'package:capstone_sams/global-widgets/datepicker/Datepicker.dart';
 import 'package:capstone_sams/global-widgets/text-fields/Textfields.dart';
-import 'package:capstone_sams/global-widgets/cards/CardSectionTitleWidget.dart';
 import 'package:capstone_sams/global-widgets/texts/FormTitleWidget.dart';
 import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/ContactPersonModel.dart';
@@ -44,7 +43,6 @@ class PatientRegistrationForm extends StatefulWidget {
 class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
   final _genInfoFormKey = GlobalKey<FormState>();
   final _genInfo = Patient();
-  final _medInfoFormKey = GlobalKey<FormState>();
   final _contactInfoFormKey = GlobalKey<FormState>();
   final _contactInfo = ContactPerson();
 
@@ -61,8 +59,12 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
   List<String> _selectedPastDiseases = [];
   List<String> _selectedIllnesses = [];
 
-  var _isLoading = false;
-  var _isInvalid = false;
+  bool _isPastDiseaseInvalid = false;
+  bool _isFamHistoryInvalid = false;
+  bool _isAllergyInvalid = false;
+  bool _isIllnessInvalid = false;
+  bool _isLoading = false;
+  bool _isInvalid = false;
   var _account = Account(isSuperuser: false);
   late bool _autoValidate = false;
   late int? getAccountID = 0;
@@ -82,11 +84,32 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
     setState(() => _isLoading = true);
     setState(() => _isInvalid = true);
     final isValid1 = _genInfoFormKey.currentState!.validate();
-    final isValid2 = _medInfoFormKey.currentState!.validate();
-    final isValid3 = _contactInfoFormKey.currentState!.validate();
+    final isValid2 = _contactInfoFormKey.currentState!.validate();
 
-    if (!isValid1 || !isValid2 || !isValid3 || getAccountID == 0) {
+    if (!isValid1 ||
+        !isValid2 ||
+        getAccountID == 0 ||
+        _selectedPastDiseases.isEmpty ||
+        _selectedFamHistory.isEmpty ||
+        _selectedAllergy.isEmpty ||
+        _selectedIllnesses.isEmpty) {
       setState(() => _isLoading = false);
+
+      updateInvalidState(_selectedPastDiseases.isEmpty, (bool value) {
+        _isPastDiseaseInvalid = value;
+      });
+
+      updateInvalidState(_selectedFamHistory.isEmpty, (bool value) {
+        _isFamHistoryInvalid = value;
+      });
+
+      updateInvalidState(_selectedAllergy.isEmpty, (bool value) {
+        _isAllergyInvalid = value;
+      });
+
+      updateInvalidState(_selectedIllnesses.isEmpty, (bool value) {
+        _isIllnessInvalid = value;
+      });
 
       const snackBar = SnackBar(
         backgroundColor: Pallete.dangerColor,
@@ -207,6 +230,12 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
     }
+  }
+
+  void updateInvalidState(bool condition, Function(bool) setStateFunction) {
+    setState(() {
+      setStateFunction(condition);
+    });
   }
 
   void _selectAllergy() async {
@@ -694,174 +723,167 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         FormTitleWidget(title: 'Medical Information'),
-        Form(
-          key: _medInfoFormKey,
-          autovalidateMode: _autoValidate
-              ? AutovalidateMode.always
-              : AutovalidateMode.disabled,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text(
-                'Past Disease*',
-                style: TextStyle(
-                  fontSize: Sizing.formTitle,
-                  color: Pallete.greyColor,
-                ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(
+              'Past Disease*',
+              style: TextStyle(
+                fontSize: Sizing.formTitle,
+                color: Pallete.greyColor,
               ),
+            ),
+            Flexible(
+              child: ElevatedButton.icon(
+                icon: FaIcon(FontAwesomeIcons.circleChevronDown),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Pallete.mainColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(Sizing.borderRadius),
+                  ),
+                ),
+                onPressed: _selectPastDisease,
+                label: Text('Select Past Disease'),
+              ),
+            ),
+            ListItemChip(list: _selectedPastDiseases),
+            Visibility(
+              visible: _isPastDiseaseInvalid,
+              child: Text(
+                '${Strings.checkboxSelect} past disease.',
+                style: TextStyle(color: Pallete.dangerColor),
+              ),
+            ),
+            if (_selectedPastDiseases.contains('Other'))
+              FormTextField(
+                labeltext: 'Other*',
+                validator: '${Strings.textValidation2} past disease.',
+                type: TextInputType.text,
+                maxlines: 2,
+                controller: otherPastDiseasses,
+              ),
+            SizedBox(height: Sizing.formSpacing),
+            Text(
+              'Family History*',
+              style: TextStyle(
+                fontSize: Sizing.formTitle,
+                color: Pallete.greyColor,
+              ),
+            ),
+            Flexible(
+              child: ElevatedButton.icon(
+                icon: FaIcon(FontAwesomeIcons.circleChevronDown),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Pallete.mainColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(Sizing.borderRadius),
+                  ),
+                ),
+                onPressed: _selectFamHistory,
+                label: Text('Select Family History Illnesses'),
+              ),
+            ),
+            ListItemChip(list: _selectedFamHistory),
+            Visibility(
+              visible: _isFamHistoryInvalid,
+              child: Text(
+                '${Strings.checkboxSelect} family history illness.',
+                style: TextStyle(color: Pallete.dangerColor),
+              ),
+            ),
+            if (_selectedFamHistory.contains('Other'))
+              FormTextField(
+                labeltext: 'Other*',
+                validator: '${Strings.textValidation2} family history illness.',
+                type: TextInputType.text,
+                maxlines: 2,
+                controller: otherFamHistory,
+              ),
+            SizedBox(height: Sizing.formSpacing),
+            Text(
+              'Allergy Type*',
+              style: TextStyle(
+                fontSize: Sizing.formTitle,
+                color: Pallete.greyColor,
+              ),
+            ),
+            Flexible(
+              child: ElevatedButton.icon(
+                icon: FaIcon(FontAwesomeIcons.circleChevronDown),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Pallete.mainColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(Sizing.borderRadius),
+                  ),
+                ),
+                onPressed: _selectAllergy,
+                label: Text('Select Allergy'),
+              ),
+            ),
+            ListItemChip(list: _selectedAllergy),
+            Visibility(
+              visible: _isAllergyInvalid,
+              child: Text(
+                '${Strings.checkboxSelect} allergy.',
+                style: TextStyle(color: Pallete.dangerColor),
+              ),
+            ),
+            if (_selectedAllergy.contains('Other'))
+              FormTextField(
+                labeltext: 'Other*',
+                validator: '${Strings.textValidation2} allergy.',
+                type: TextInputType.text,
+                maxlines: 2,
+                controller: otherAllergies,
+              ),
+            SizedBox(height: Sizing.formSpacing),
+            Text(
+              'Illnesses*',
+              style: TextStyle(
+                fontSize: Sizing.formTitle,
+                color: Pallete.greyColor,
+              ),
+            ),
+            Flexible(
+              child: ElevatedButton.icon(
+                icon: FaIcon(FontAwesomeIcons.circleChevronDown),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Pallete.mainColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(Sizing.borderRadius),
+                  ),
+                ),
+                onPressed: _selectIllnesses,
+                label: Text('Select Illnesses'),
+              ),
+            ),
+            ListItemChip(list: _selectedIllnesses),
+            Visibility(
+              visible: _isIllnessInvalid,
+              child: Text(
+                '${Strings.checkboxSelect} illness.',
+                style: TextStyle(color: Pallete.dangerColor),
+              ),
+            ),
+            if (_selectedIllnesses.contains('Other'))
+              FormTextField(
+                labeltext: 'Other*',
+                validator: '${Strings.textValidation2} illness.',
+                type: TextInputType.text,
+                maxlines: 2,
+                controller: otherIllnesses,
+              ),
+            SizedBox(height: Sizing.formSpacing),
+            if (_selectedGender == 'F')
               Flexible(
-                child: ElevatedButton.icon(
-                  icon: FaIcon(FontAwesomeIcons.circleChevronDown),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Pallete.mainColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(Sizing.borderRadius),
-                    ),
-                  ),
-                  onPressed: _selectPastDisease,
-                  label: Text('Select Past Disease'),
-                ),
-              ),
-              ListItemChip(list: _selectedPastDiseases),
-              Visibility(
-                visible: _isInvalid,
-                child: Text(
-                  '${Strings.checkboxSelect} past disease.',
-                  style: TextStyle(color: Pallete.dangerColor),
-                ),
-              ),
-              if (_selectedPastDiseases.contains('Other'))
-                FormTextField(
-                  labeltext: 'Other*',
-                  validator: '${Strings.textValidation2} past disease.',
+                child: FormTextField(
+                  onchanged: (value) => lmp = value,
+                  labeltext: 'LMP (Last Menstrual Period)',
                   type: TextInputType.text,
-                  maxlines: 2,
-                  controller: otherPastDiseasses,
-                ),
-              SizedBox(height: Sizing.formSpacing),
-              Text(
-                'Family History*',
-                style: TextStyle(
-                  fontSize: Sizing.formTitle,
-                  color: Pallete.greyColor,
                 ),
               ),
-              Flexible(
-                child: ElevatedButton.icon(
-                  icon: FaIcon(FontAwesomeIcons.circleChevronDown),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Pallete.mainColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(Sizing.borderRadius),
-                    ),
-                  ),
-                  onPressed: _selectFamHistory,
-                  label: Text('Select Family History Illnesses'),
-                ),
-              ),
-              ListItemChip(list: _selectedFamHistory),
-              Visibility(
-                visible: _isInvalid,
-                child: Text(
-                  '${Strings.checkboxSelect} family history illness.',
-                  style: TextStyle(color: Pallete.dangerColor),
-                ),
-              ),
-              if (_selectedFamHistory.contains('Other'))
-                FormTextField(
-                  labeltext: 'Other*',
-                  validator:
-                      '${Strings.textValidation2} family history illness.',
-                  type: TextInputType.text,
-                  maxlines: 2,
-                  controller: otherFamHistory,
-                ),
-              SizedBox(height: Sizing.formSpacing),
-              Text(
-                'Allergy Type*',
-                style: TextStyle(
-                  fontSize: Sizing.formTitle,
-                  color: Pallete.greyColor,
-                ),
-              ),
-              Flexible(
-                child: ElevatedButton.icon(
-                  icon: FaIcon(FontAwesomeIcons.circleChevronDown),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Pallete.mainColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(Sizing.borderRadius),
-                    ),
-                  ),
-                  onPressed: _selectAllergy,
-                  label: Text('Select Allergy'),
-                ),
-              ),
-              ListItemChip(list: _selectedAllergy),
-              Visibility(
-                visible: _isInvalid,
-                child: Text(
-                  '${Strings.checkboxSelect} allergy.',
-                  style: TextStyle(color: Pallete.dangerColor),
-                ),
-              ),
-              if (_selectedAllergy.contains('Other'))
-                FormTextField(
-                  labeltext: 'Other*',
-                  validator: '${Strings.textValidation2} allergy.',
-                  type: TextInputType.text,
-                  maxlines: 2,
-                  controller: otherAllergies,
-                ),
-              SizedBox(height: Sizing.formSpacing),
-              Text(
-                'Illnesses*',
-                style: TextStyle(
-                  fontSize: Sizing.formTitle,
-                  color: Pallete.greyColor,
-                ),
-              ),
-              Flexible(
-                child: ElevatedButton.icon(
-                  icon: FaIcon(FontAwesomeIcons.circleChevronDown),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Pallete.mainColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(Sizing.borderRadius),
-                    ),
-                  ),
-                  onPressed: _selectIllnesses,
-                  label: Text('Select Illnesses'),
-                ),
-              ),
-              ListItemChip(list: _selectedIllnesses),
-              Visibility(
-                visible: _isInvalid,
-                child: Text(
-                  '${Strings.checkboxSelect} illness.',
-                  style: TextStyle(color: Pallete.dangerColor),
-                ),
-              ),
-              if (_selectedIllnesses.contains('Other'))
-                FormTextField(
-                  labeltext: 'Other*',
-                  validator: '${Strings.textValidation2} illness.',
-                  type: TextInputType.text,
-                  maxlines: 2,
-                  controller: otherIllnesses,
-                ),
-              SizedBox(height: Sizing.formSpacing),
-              if (_selectedGender == 'F')
-                Flexible(
-                  child: FormTextField(
-                    onchanged: (value) => lmp = value,
-                    labeltext: 'LMP (Last Menstrual Period)',
-                    type: TextInputType.text,
-                  ),
-                ),
-            ],
-          ),
+          ],
         ),
       ],
     );
