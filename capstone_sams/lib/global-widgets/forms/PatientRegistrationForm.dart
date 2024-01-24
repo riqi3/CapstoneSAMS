@@ -48,7 +48,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
 
   TextEditingController otherIllnesses = TextEditingController();
   TextEditingController otherAllergies = TextEditingController();
-  TextEditingController otherPastDiseasses = TextEditingController();
+  TextEditingController otherPastDiseases = TextEditingController();
   TextEditingController otherFamHistory = TextEditingController();
   TextEditingController lmp = TextEditingController();
   TextEditingController firstAddress = TextEditingController();
@@ -63,15 +63,18 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
   bool _isFamHistoryInvalid = false;
   bool _isAllergyInvalid = false;
   bool _isIllnessInvalid = false;
+  bool _isGenderInvalid = false;
+  bool _isBirthdateInvalid = false;
+  bool _isPhysicianInvalid = false;
   bool _isLoading = false;
-  bool _isInvalid = false;
+
   var _account = Account(isSuperuser: false);
   late bool _autoValidate = false;
   late int? getAccountID = 0;
   late String tokena = context.read<AccountProvider>().token!;
 
   DateTime? _birthDate;
-  String? _selectedGender;
+  String? _selectedGender = '';
   List<String> statusList = [
     'Single',
     'Married',
@@ -82,7 +85,6 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
 
   void _onSubmit() async {
     setState(() => _isLoading = true);
-    setState(() => _isInvalid = true);
     final isValid1 = _genInfoFormKey.currentState!.validate();
     final isValid2 = _contactInfoFormKey.currentState!.validate();
 
@@ -95,20 +97,26 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
         _selectedIllnesses.isEmpty) {
       setState(() => _isLoading = false);
 
+      updateInvalidState(_selectedGender == '', (bool value) {
+        _isGenderInvalid = value;
+      });
+      updateInvalidState(_birthDate == null, (bool value) {
+        _isBirthdateInvalid = value;
+      });
       updateInvalidState(_selectedPastDiseases.isEmpty, (bool value) {
         _isPastDiseaseInvalid = value;
       });
-
       updateInvalidState(_selectedFamHistory.isEmpty, (bool value) {
         _isFamHistoryInvalid = value;
       });
-
       updateInvalidState(_selectedAllergy.isEmpty, (bool value) {
         _isAllergyInvalid = value;
       });
-
       updateInvalidState(_selectedIllnesses.isEmpty, (bool value) {
         _isIllnessInvalid = value;
+      });
+      updateInvalidState(getAccountID == 0, (bool value) {
+        _isPhysicianInvalid = value;
       });
 
       const snackBar = SnackBar(
@@ -123,7 +131,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
     } else {
       String formattedDate = _birthDate != null
           ? DateFormat('yyyy-MM-dd').format(_birthDate!)
-          : 'No date selected';
+          : '';
 
       var email = _genInfo.email == null
           ? _genInfo.email = 'None'
@@ -131,6 +139,11 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
       var phone = _genInfo.phone == null
           ? _genInfo.phone = 'None'
           : _genInfo.phone.toString();
+
+      _appendToTextList(otherPastDiseases, _selectedPastDiseases);
+      _appendToTextList(otherFamHistory, _selectedFamHistory);
+      _appendToTextList(otherAllergies, _selectedAllergy);
+      _appendToTextList(otherIllnesses, _selectedIllnesses);
 
       var patient = Patient(
         patientID: Uuid().v4(),
@@ -232,27 +245,35 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
     }
   }
 
-  void updateInvalidState(bool condition, Function(bool) setStateFunction) {
+  void updateInvalidState(var condition, Function(bool) setStateFunction) {
     setState(() {
       setStateFunction(condition);
     });
   }
 
-  void _selectAllergy() async {
-    List<String> allergyList = ['N/A', 'Food', 'Medicine', 'Other'];
+  void _selectPastDisease() async {
+    List<String> pastDisease = [
+      'N/A',
+      'Asthma',
+      'Hypertension',
+      'Cancer',
+      'Thyroid problem',
+      'Eye problem',
+      'Diabetes mellitus',
+      'Other'
+    ];
 
     final List<String>? results = await showDialog(
       context: context,
       builder: (BuildContext context) {
-        return MultiSelect(title: 'Allergy', items: allergyList);
+        return MultiSelect(title: 'Past Disease', items: pastDisease);
       },
     );
 
     if (results != null) {
       setState(() {
-        _selectedAllergy = results;
+        _selectedPastDiseases = results;
       });
-      print('${_selectedAllergy}aadadd');
     }
   }
 
@@ -283,29 +304,21 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
     }
   }
 
-  void _selectPastDisease() async {
-    List<String> pastDisease = [
-      'N/A',
-      'Asthma',
-      'Hypertension',
-      'Cancer',
-      'Thyroid problem',
-      'Eye problem',
-      'Diabetes mellitus',
-      'Other'
-    ];
+  void _selectAllergy() async {
+    List<String> allergyList = ['N/A', 'Food', 'Medicine', 'Other'];
 
     final List<String>? results = await showDialog(
       context: context,
       builder: (BuildContext context) {
-        return MultiSelect(title: 'Past Disease', items: pastDisease);
+        return MultiSelect(title: 'Allergy', items: allergyList);
       },
     );
 
     if (results != null) {
       setState(() {
-        _selectedPastDiseases = results;
+        _selectedAllergy = results;
       });
+      print('${_selectedAllergy}aadadd');
     }
   }
 
@@ -331,6 +344,18 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
     if (results != null) {
       setState(() {
         _selectedIllnesses = results;
+      });
+    }
+  }
+
+  void _appendToTextList(TextEditingController contoller, List<String> list) {
+    String newText = contoller.text;
+
+    print('DAMN N${newText}');
+    if (newText.isNotEmpty) {
+      setState(() {
+        list.add(newText);
+        contoller.clear();
       });
     }
   }
@@ -512,7 +537,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                           ),
                         ),
                         RadioTileButton(
-                          isInvalid: _isInvalid,
+                          isInvalid: _isGenderInvalid,
                           title: 'Male',
                           value: 'M',
                           groupvalue: _selectedGender,
@@ -523,7 +548,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                           },
                         ),
                         RadioTileButton(
-                          isInvalid: _isInvalid,
+                          isInvalid: _isGenderInvalid,
                           title: 'Female',
                           value: 'F',
                           groupvalue: _selectedGender,
@@ -534,7 +559,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                           },
                         ),
                         Visibility(
-                          visible: _isInvalid,
+                          visible: _isGenderInvalid,
                           child: Text(
                             Strings.requiredField,
                             style: TextStyle(color: Pallete.dangerColor),
@@ -579,7 +604,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
               SizedBox(height: Sizing.formSpacing),
               Flexible(
                 child: Datepicker(
-                  isInvalid: _isInvalid,
+                  isInvalid: _isBirthdateInvalid,
                   title: 'Date of Birth*',
                   ontap: () {
                     showDatePicker(
@@ -604,7 +629,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                 ),
               ),
               Visibility(
-                visible: _isInvalid,
+                visible: _isBirthdateInvalid,
                 child: Text(
                   Strings.requiredField,
                   style: TextStyle(color: Pallete.dangerColor),
@@ -761,7 +786,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                 validator: '${Strings.textValidation2} past disease.',
                 type: TextInputType.text,
                 maxlines: 2,
-                controller: otherPastDiseasses,
+                controller: otherPastDiseases,
               ),
             SizedBox(height: Sizing.formSpacing),
             Text(
@@ -961,18 +986,18 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
             dropdownSearchDecoration: InputDecoration(
               labelText: "Select A Physician",
               labelStyle: TextStyle(
-                color: _isInvalid == true
+                color: _isPhysicianInvalid == true
                     ? Pallete.dangerColor
                     : Pallete.textSecondaryColor,
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: _isInvalid == true
+                  color: _isPhysicianInvalid == true
                       ? Pallete.dangerColor
                       : Pallete.textSecondaryColor,
                 ),
               ),
-              suffixIconColor: _isInvalid == true
+              suffixIconColor: _isPhysicianInvalid == true
                   ? Pallete.dangerColor
                   : Pallete.textSecondaryColor,
             ),
@@ -1009,7 +1034,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
           },
         ),
         Visibility(
-          visible: _isInvalid,
+          visible: _isPhysicianInvalid,
           child: Text(
             Strings.requiredField,
             style: TextStyle(color: Pallete.dangerColor),
