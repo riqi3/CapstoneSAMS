@@ -183,6 +183,8 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
         patient: patient.patientID,
       );
 
+      final accountID = context.read<AccountProvider>().id;
+
       final patientRecordProvider =
           Provider.of<PatientProvider>(context, listen: false);
       final medicalRecordProvider =
@@ -192,9 +194,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
       final token = context.read<AccountProvider>().token!;
 
       final patientSuccess = await patientRecordProvider.createPatientRecord(
-        patient,
-        token,
-      );
+          patient, token, accountID);
       final medicalRecordSuccess =
           await medicalRecordProvider.createMedicalRecord(
         medicalRecord.patient,

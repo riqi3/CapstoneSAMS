@@ -69,7 +69,7 @@ class PatientProvider extends ChangeNotifier {
   }
 
   Future<bool> createPatientRecord(
-      Patient patient, String token, int accountID) async {
+      Patient patient, String token, int? accountID) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       // 'Authorization': 'Bearer $token',
