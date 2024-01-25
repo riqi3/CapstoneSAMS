@@ -240,9 +240,9 @@ class PresentIllnessView(viewsets.ViewSet):
             return Response({"message": "Failed to fetch complaints.", "error": str(e)}, status=status.HTTP_404_NOT_FOUND)
 
     @api_view(['GET'])
-    def fetch_complaint_by_id(request, illnessNum):
+    def fetch_complaint_by_id(request, illnessID):
         try:
-            complaint = Present_Illness.objects.get(pk=illnessNum)
+            complaint = Present_Illness.objects.get(pk=illnessID)
             serializer = PresentIllnessSerializer(complaint)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except PresentIllnessSerializer.DoesNotExist:
