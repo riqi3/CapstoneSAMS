@@ -46,7 +46,9 @@ class _HistoryPresentIllnessState extends State<HistoryPresentIllness> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => showDialog(
           context: context,
-          builder: (ctx) => PresentMedHistoryForm(),
+          builder: (ctx) => PresentMedHistoryForm(
+            patient: widget.patient,
+          ),
         ),
         child: FaIcon(FontAwesomeIcons.pencil),
       ),

@@ -14,8 +14,8 @@ class PresentIllnessProvider extends ChangeNotifier {
   String? get findings => _presentIllness?.findings;
   String? get diagnosis => _presentIllness?.diagnosis;
   String? get treatment => _presentIllness?.treatment;
-  DateTime? get created_at => _presentIllness?.created_at;
-  DateTime? get updated_at => _presentIllness?.updated_at;
+  String? get created_at => _presentIllness?.created_at;
+  String? get updated_at => _presentIllness?.updated_at;
 
   Future<PresentIllness> fetchComplaints(String token) async {
     final header = <String, String>{
@@ -34,7 +34,38 @@ class PresentIllnessProvider extends ChangeNotifier {
         return throw Exception('Failed to load present illness records');
       }
     } on Exception catch (e) {
+      print(e);
       return throw Exception('Failed to load present illness records');
+    }
+  }
+
+  Future<bool> createComplaint(PresentIllness presentIllness, String token,
+      String? patientID, int? accountID) async {
+    final header = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      // 'Authorization': 'Bearer $token',
+    };
+    try {
+      var body = presentIllness.toJson();
+      body['account'] = accountID;
+      print(body);
+      final response = await http.post(
+        Uri.parse('${Env.prefix}/patient/patients/complaints/${patientID}'),
+        headers: header,
+        body: jsonEncode(body),
+      );
+      if (response.statusCode == 201) {
+        fetchComplaints(token);
+        notifyListeners();
+        return true;
+      } else {
+        print('cannot add complaint record!');
+        print("HTTP Response: ${response.statusCode} ${response.body}");
+        return false;
+      }
+    } on Exception catch (e) {
+      print(e);
+      return false;
     }
   }
 }

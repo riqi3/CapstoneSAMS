@@ -6,8 +6,8 @@ class PresentIllness {
   String? diagnosis;
   String? treatment;
   String? patient;
-  DateTime? created_at;
-  DateTime? updated_at;
+  String? created_at;
+  String? updated_at;
 
   PresentIllness({
     this.illnessID,
@@ -42,8 +42,8 @@ class PresentIllness {
       findings: json['findings'],
       diagnosis: json['diagnosis'],
       treatment: json['treatment'],
-      created_at: DateTime.parse(json['created_at']),
-      updated_at: DateTime.parse(json['updated_at']),
+      created_at: json['created_at'],
+      updated_at: json['updated_at'],
     );
   }
 }

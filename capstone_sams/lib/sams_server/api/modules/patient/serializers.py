@@ -71,5 +71,6 @@ class PresentIllnessSerializer(serializers.ModelSerializer):
             'treatment',
             'created_at',
             'updated_at',
-            'patient'
+            'patient',
+            'assignedPhysician',
         ]

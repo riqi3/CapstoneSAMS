@@ -5,6 +5,7 @@ import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/global-widgets/TitleAppBar.dart';
 import 'package:capstone_sams/global-widgets/buttons/CancelButton.dart';
 import 'package:capstone_sams/global-widgets/buttons/RadioTileButton.dart';
+import 'package:capstone_sams/global-widgets/buttons/FormSubmitButton.dart';
 import 'package:capstone_sams/global-widgets/chips/ListItemChips.dart';
 import 'package:capstone_sams/global-widgets/datepicker/Datepicker.dart';
 import 'package:capstone_sams/global-widgets/forms/FormTemplate.dart';
@@ -403,29 +404,11 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
           Expanded(child: CancelButton()),
           SizedBox(width: Sizing.formSpacing),
           Expanded(
-            child: ElevatedButton.icon(
-              onPressed: _isLoading ? null : _onSubmit,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Pallete.mainColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(Sizing.borderRadius),
-                ),
-              ),
-              icon: _isLoading
-                  ? Container(
-                      width: 24,
-                      height: 24,
-                      padding: const EdgeInsets.all(4),
-                      child: const CircularProgressIndicator(
-                        color: Pallete.whiteColor,
-                        strokeWidth: 3,
-                      ),
-                    )
-                  : const Icon(
-                      Icons.upload,
-                      color: Pallete.whiteColor,
-                    ),
-              label: const Text('Submit'),
+            child: FormSubmitButton(
+              title: 'Submit',
+              icon: Icons.upload,
+              isLoading: _isLoading,
+              onpressed: _isLoading ? null : _onSubmit,
             ),
           ),
         ],
@@ -872,7 +855,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
             SizedBox(height: Sizing.formSpacing),
             if (_selectedGender == 'F')
               Flexible(
-                child: FormTextField( 
+                child: FormTextField(
                   labeltext: 'LMP (Last Menstrual Period)',
                   type: TextInputType.text,
                   controller: lmp,
