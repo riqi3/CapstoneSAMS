@@ -1,28 +1,20 @@
-import 'package:capstone_sams/constants/theme/pallete.dart';
-import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:flutter/material.dart';
 
-
+// ignore: must_be_immutable
 class FormTitleWidget extends StatelessWidget {
-  final String title;
-  const FormTitleWidget({
+  String title;
+  FormTitleWidget({
     super.key,
     required this.title,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(
-          top: Sizing.formSpacing * 2, bottom: Sizing.formSpacing),
+    return Center(
       child: Text(
         title,
-        style: TextStyle(
-            color: Pallete.mainColor,
-            fontSize: Sizing.header4,
-            fontWeight: FontWeight.w600),
+        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
       ),
     );
   }
 }
-

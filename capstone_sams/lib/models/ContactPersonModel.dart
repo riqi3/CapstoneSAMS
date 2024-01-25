@@ -1,21 +1,21 @@
 class ContactPerson {
-   String? contactId;
-   String? fullName;
-   String? phone;
-   String? address;
-   String? patient;
+  String? contactID;
+  String? fullName;
+  String? phone;
+  String? address;
+  String? patient;
 
   ContactPerson({
-     this.contactId,
-     this.fullName,
-     this.phone,
-     this.address,
-     this.patient,
+    this.contactID,
+    this.fullName,
+    this.phone,
+    this.address,
+    this.patient,
   });
 
   Map<String, dynamic> toJson() {
     return {
-      'contactId': contactId,
+      'contactID': contactID,
       'fullName': fullName,
       'phone': phone,
       'address': address,
@@ -25,7 +25,7 @@ class ContactPerson {
 
   factory ContactPerson.fromJson(Map<String, dynamic> json) {
     return ContactPerson(
-      contactId: json['contactId'].toString(),
+      contactID: json['contactID'].toString(),
       fullName: json['fullName'],
       phone: json['phone'],
       address: json['address'],

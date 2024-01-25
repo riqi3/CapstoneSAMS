@@ -1,5 +1,6 @@
 import 'package:capstone_sams/constants/Strings.dart';
 import 'package:capstone_sams/global-widgets/cards/CardSectionInfoWidget.dart';
+import 'package:capstone_sams/global-widgets/cards/CardTemplate.dart';
 import 'package:capstone_sams/global-widgets/cards/CardTitleWidget.dart';
 import 'package:capstone_sams/global-widgets/separators/DividerWidget.dart';
 import 'package:capstone_sams/global-widgets/cards/CardSectionTitleWidget.dart';
@@ -64,23 +65,15 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
     ContactPersonProvider contactPersonProvider =
         Provider.of<ContactPersonProvider>(context);
 
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: Sizing.sectionSymmPadding),
-      child: Material(
-        elevation: Sizing.cardElevation,
-        borderRadius: BorderRadius.all(
-          Radius.circular(Sizing.borderRadius),
-        ),
-        child: Column(
-          children: [
-            CardTitleWidget(title: 'Patient Information'),
-            CardSectionTitleWidget(title: 'General Information'),
-            CardSectionInfoWidget(widget: GeneralInfoData(context)),
-            CardSectionTitleWidget(title: 'Emergency Contact Information'),
-            CardSectionInfoWidget(
-                widget: ContactInfoData(contactPersonProvider)),
-          ],
-        ),
+    return CardTemplate(
+      column: Column(
+        children: [
+          CardTitleWidget(title: 'Patient Information'),
+          CardSectionTitleWidget(title: 'General Information'),
+          CardSectionInfoWidget(widget: GeneralInfoData(context)),
+          CardSectionTitleWidget(title: 'Emergency Contact Information'),
+          CardSectionInfoWidget(widget: ContactInfoData(contactPersonProvider)),
+        ],
       ),
     );
   }

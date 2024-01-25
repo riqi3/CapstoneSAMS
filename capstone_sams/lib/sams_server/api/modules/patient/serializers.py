@@ -17,15 +17,13 @@ class PatientSerializer(serializers.ModelSerializer):
             "age",
             "gender",
             'patientStatus',
-            "birthDate",
-            # 'department',
+            "birthDate", 
             'course',
             'yrLevel',
             'studNumber',
             'address',
             'height',
-            'weight',
-            # "registration",
+            'weight', 
             "phone",
             "email", 
             'assignedPhysician',
@@ -41,9 +39,7 @@ class MedicalRecordSerializer(serializers.ModelSerializer):
     class Meta:
         model = Medical_Record
         fields = [
-            'recordNum',
-            # 'symptoms',
-            # 'diseases',
+            'recordID', 
             'illnesses',
             'allergies',
             'pastDiseases',
@@ -56,7 +52,7 @@ class ContactPersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contact_Person
         fields = [
-            'contactId',
+            'contactID',
             'fullName',
             'phone',
             'address', 
@@ -67,10 +63,13 @@ class PresentIllnessSerializer(serializers.ModelSerializer):
     class Meta:
         model = Present_Illness,
         fields = [
-            'illnessNum',
+            'illnessID',
+            'illnessName',
             'complaint',
             'findings',
             'diagnosis',
             'treatment',
+            'created_at',
+            'updated_at',
             'patient'
         ]

@@ -1,11 +1,7 @@
 import 'dart:convert';
-
 import 'package:capstone_sams/constants/Env.dart';
-import 'package:capstone_sams/models/AccountModel.dart';
-
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-
 import '../models/PatientModel.dart';
 import '../providers/AccountProvider.dart';
 
@@ -20,14 +16,12 @@ class PatientProvider extends ChangeNotifier {
   String? get gender => _patient?.gender;
   String? get patientStatus => _patient?.patientStatus;
   String? get birthDate => _patient?.birthDate;
-  // String? get department => _patient?.department;
   String? get course => _patient?.course;
   int? get yrLevel => _patient?.yrLevel;
   String? get studNumber => _patient?.studNumber;
   String? get address => _patient?.address;
   double? get height => _patient?.height;
-  double? get weight => _patient?.weight;
-  // DateTime? get registrationDate => _patient?.registration;
+  double? get weight => _patient?.weight; 
   String? get phone => _patient?.phone;
   String? get email => _patient?.email;
   int? get assignedPhysician => _patient?.assignedPhysician;

@@ -10,7 +10,7 @@ import '../models/ContactPersonModel.dart';
 class ContactPersonProvider extends ChangeNotifier {
   ContactPerson? _contactPerson;
   ContactPerson? get contactPerson => _contactPerson;
-  String? get id => _contactPerson?.contactId;
+  String? get id => _contactPerson?.contactID;
   String? get fullName => _contactPerson?.fullName;
   String? get phone => _contactPerson?.phone;
   String? get address => _contactPerson?.address;

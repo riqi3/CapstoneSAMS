@@ -255,10 +255,13 @@ class PresentIllnessView(viewsets.ViewSet):
             patient = Patient.objects.get(pk=patientID)
             illness_data = json.loads(request.body)
             illness = Present_Illness.objects.create(
+                illnessName = illness_data['illnessName'],
                 complaint = illness_data['complaint'],
                 findings = illness_data['findings'],
                 diagnosis = illness_data['diagnois'],
                 treatment = illness_data['treatment'],
+                created_at = illness_data['created_at'],
+                updated_at = illness_data['updated_at'],
                 patient = patient
             )
             return Response({"message": "Complaint created successfully."}, status=status.HTTP_201_CREATED)
@@ -266,14 +269,17 @@ class PresentIllnessView(viewsets.ViewSet):
             return Response({"message": "Failed to create complaint.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
     @api_view(['PUT'])
-    def update_complaint(request, illnessNum):
+    def update_complaint(request, illnessID):
         try:
-            present_illness = Present_Illness.objects.get(pk = illnessNum)
+            present_illness = Present_Illness.objects.get(pk = illnessID)
             illness_data = json.loads(request.body)
+            present_illness.complaint = illness_data['illnessName'],
             present_illness.complaint = illness_data['complain']
             present_illness.findings = illness_data['findings']
             present_illness.diagnosis = illness_data['diagnosis']
             present_illness.treatment = illness_data['treatment']
+            present_illness.created_at = illness_data['created_at']
+            present_illness.updated_at = illness_data['updated_at']
             present_illness.save()
             return Response({"message": "Complaint updated successfully."}, status=status.HTTP_200_OK)
         except Present_Illness.DoesNotExist:
