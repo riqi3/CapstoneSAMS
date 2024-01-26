@@ -1,10 +1,14 @@
 import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/present-illness-history/forms/PresentMedHistoryForm.dart';
+import 'package:capstone_sams/global-widgets/forms/PresentMedHistoryForm.dart';
+import 'package:capstone_sams/models/PresentIllness.dart';
+import 'package:capstone_sams/providers/AccountProvider.dart';
+import 'package:capstone_sams/providers/PresentIllnessProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/present-illness-history/widgets/DiagnosisCard.dart';
 import 'package:capstone_sams/screens/home/widgets/CourseDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 class HistoryPresentIllness extends StatefulWidget {
   final Patient patient;
@@ -19,13 +23,6 @@ class HistoryPresentIllness extends StatefulWidget {
 }
 
 class _HistoryPresentIllnessState extends State<HistoryPresentIllness> {
-  ScrollController _controller = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,18 +30,25 @@ class _HistoryPresentIllnessState extends State<HistoryPresentIllness> {
         padding: EdgeInsets.only(
           left: Sizing.sectionSymmPadding,
           right: Sizing.sectionSymmPadding,
-          top: Sizing.sectionSymmPadding * 2,
+          top: Sizing.sectionSymmPadding,
           bottom: Sizing.sectionSymmPadding * 4,
         ),
-        controller: _controller,
         scrollDirection: Axis.vertical,
         physics: BouncingScrollPhysics(),
-        child: DiagnosisCard(),
+        child: Column(
+          children: [
+            DiagnosisCard(
+              patient: widget.patient,
+            ),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => showDialog(
           context: context,
-          builder: (ctx) => PresentMedHistoryForm(),
+          builder: (ctx) => PresentMedHistoryForm(
+            patient: widget.patient,
+          ),
         ),
         child: FaIcon(FontAwesomeIcons.pencil),
       ),

@@ -1,5 +1,5 @@
 class MedicalRecord {
-  String? recordNum;
+  String? recordID;
   List<dynamic>? illnesses;
   List<dynamic>? allergies;
   List<dynamic>? pastDiseases;
@@ -8,7 +8,7 @@ class MedicalRecord {
   String? patient;
 
   MedicalRecord({
-    this.recordNum,
+    this.recordID,
     this.illnesses,
     this.allergies,
     this.pastDiseases,
@@ -19,7 +19,7 @@ class MedicalRecord {
 
   Map<String, dynamic> toJson() {
     return {
-      'recordNum': recordNum,
+      'recordID': recordID,
       'illnesses': illnesses,
       'allergies': allergies,
       'pastDiseases': pastDiseases,
@@ -40,7 +40,7 @@ class MedicalRecord {
         json['familyHistory'] is List<dynamic> ? json['familyHistory'] : [];
 
     return MedicalRecord(
-      recordNum: json['recordNum'].toString(),
+      recordID: json['recordID'].toString(),
       illnesses: illnesses,
       allergies: allergies,
       pastDiseases: pastDiseases,

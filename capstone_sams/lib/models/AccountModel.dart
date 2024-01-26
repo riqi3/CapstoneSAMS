@@ -8,6 +8,7 @@ class Account {
   String? profile_photo;
   final String? password;
   final String? firstName;
+  final String? middleName;
   final String? lastName;
   String? accountRole;
   String? token;
@@ -21,6 +22,7 @@ class Account {
     this.profile_photo,
     this.password,
     this.firstName,
+    this.middleName,
     this.lastName,
     this.accountRole,
     this.token,
@@ -35,6 +37,7 @@ class Account {
         'profile_photo': profile_photo,
         'password': password,
         'firstName': firstName,
+        'middleName': middleName,
         'lastName': lastName,
         'accountRole': accountRole,
         'token': token,
@@ -50,6 +53,7 @@ class Account {
       profile_photo: json['profile_photo'],
       password: json['password'],
       firstName: json['firstName'],
+      middleName: json['middleName'],
       lastName: json['lastName'],
       accountRole: json['accountRole'],
       token: json['token'],

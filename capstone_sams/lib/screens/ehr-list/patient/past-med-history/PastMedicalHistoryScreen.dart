@@ -44,33 +44,6 @@ class _PastMedHistoryState extends State<PastMedHistory> {
         child: Column(
           children: [
             PastIllnesInfoCard(patient: widget.patient),
-            // FutureBuilder(
-            //   future: medicalRecords,
-            //   builder: (context, snapshot) {
-            //     List<MedicalRecord> dataToShow = [];
-            //     if (snapshot.hasError) {
-            //       return Center(
-            //         child: Text('Error: ${snapshot.error}'),
-            //       );
-            //     } else if (snapshot.connectionState ==
-            //         ConnectionState.waiting) {
-            //       return Center(
-            //         child: CircularProgressIndicator(),
-            //       );
-            //     } else if (snapshot.data!.isEmpty) {
-            //       return Center(
-            //         child: Text(Strings.noMedicalRecords),
-            //       );
-            //     } else if (snapshot.hasError) {
-            //       return Center(
-            //         child: Text('Error: ${snapshot.error}'),
-            //       );
-            //     }else if (snapshot.hasData) {
-            //       dataToShow = snapshot.data!;
-            //     }
-            //     return PastIllnesInfoCard(patient: widget.patient);
-            //   },
-            // ),
           ],
         ),
       ),

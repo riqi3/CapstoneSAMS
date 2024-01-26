@@ -18,6 +18,7 @@ class AccountSerializer(serializers.ModelSerializer):
             'username', 
             'password',
             'firstName',
+            'middleName',
             'lastName',
             'accountRole', 
             'token',

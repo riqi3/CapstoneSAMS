@@ -5,9 +5,12 @@ import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/global-widgets/TitleAppBar.dart';
 import 'package:capstone_sams/global-widgets/buttons/CancelButton.dart';
 import 'package:capstone_sams/global-widgets/buttons/RadioTileButton.dart';
+import 'package:capstone_sams/global-widgets/buttons/FormSubmitButton.dart';
 import 'package:capstone_sams/global-widgets/chips/ListItemChips.dart';
 import 'package:capstone_sams/global-widgets/datepicker/Datepicker.dart';
+import 'package:capstone_sams/global-widgets/forms/FormTemplate.dart';
 import 'package:capstone_sams/global-widgets/text-fields/Textfields.dart';
+import 'package:capstone_sams/global-widgets/texts/FormSectionTitleWidget.dart';
 import 'package:capstone_sams/global-widgets/texts/FormTitleWidget.dart';
 import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/ContactPersonModel.dart';
@@ -166,7 +169,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
       );
 
       var medicalRecord = MedicalRecord(
-        recordNum: Uuid().v4(),
+        recordID: Uuid().v4(),
         pastDiseases: _selectedPastDiseases,
         familyHistory: _selectedFamHistory,
         allergies: _selectedAllergy,
@@ -176,7 +179,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
       );
 
       var contactRecord = ContactPerson(
-        contactId: Uuid().v4(),
+        contactID: Uuid().v4(),
         fullName: _contactInfo.fullName,
         phone: _contactInfo.phone,
         address: secondAddress.text,
@@ -377,48 +380,16 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-        child: TitleAppBar(
-          text: '',
-          iconColorLeading: Pallete.whiteColor,
-          iconColorTrailing: Pallete.whiteColor,
-          backgroundColor: Pallete.mainColor,
-        ),
-        preferredSize: Size.fromHeight(kToolbarHeight),
-      ),
-      body: ListView(
+    return FormTemplate(
+      column: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Container(
-            margin: EdgeInsets.all(20),
-            padding: EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: Offset(0, 3),
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  'Individual Health Record',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                GenInfoFormSection(),
-                MedicalInfoFormSection(),
-                ContactInfoFormSection(),
-                AssignPhysicianFormSection(),
-                SubmitButton(),
-              ],
-            ),
-          ),
+          FormTitleWidget(title: 'Patient Registration Form'),
+          GenInfoFormSection(),
+          MedicalInfoFormSection(),
+          ContactInfoFormSection(),
+          AssignPhysicianFormSection(),
+          SubmitButton(),
         ],
       ),
     );
@@ -433,29 +404,11 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
           Expanded(child: CancelButton()),
           SizedBox(width: Sizing.formSpacing),
           Expanded(
-            child: ElevatedButton.icon(
-              onPressed: _isLoading ? null : _onSubmit,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Pallete.mainColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(Sizing.borderRadius),
-                ),
-              ),
-              icon: _isLoading
-                  ? Container(
-                      width: 24,
-                      height: 24,
-                      padding: const EdgeInsets.all(4),
-                      child: const CircularProgressIndicator(
-                        color: Pallete.whiteColor,
-                        strokeWidth: 3,
-                      ),
-                    )
-                  : const Icon(
-                      Icons.upload,
-                      color: Pallete.whiteColor,
-                    ),
-              label: const Text('Submit'),
+            child: FormSubmitButton(
+              title: 'Submit',
+              icon: Icons.upload,
+              isLoading: _isLoading,
+              onpressed: _isLoading ? null : _onSubmit,
             ),
           ),
         ],
@@ -467,7 +420,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        FormTitleWidget(title: 'General Information'),
+        FormSectionTitleWidget(title: 'General Information'),
         Form(
           key: _genInfoFormKey,
           autovalidateMode: _autoValidate
@@ -747,7 +700,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        FormTitleWidget(title: 'Medical Information'),
+        FormSectionTitleWidget(title: 'Medical Information'),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -903,9 +856,9 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
             if (_selectedGender == 'F')
               Flexible(
                 child: FormTextField(
-                  onchanged: (value) => lmp = value,
                   labeltext: 'LMP (Last Menstrual Period)',
                   type: TextInputType.text,
+                  controller: lmp,
                 ),
               ),
           ],
@@ -917,7 +870,8 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
   Column ContactInfoFormSection() {
     return Column(
       children: [
-        FormTitleWidget(title: 'Person to be notified in case of Emergency'),
+        FormSectionTitleWidget(
+            title: 'Person to be notified in case of Emergency'),
         Form(
           key: _contactInfoFormKey,
           autovalidateMode: _autoValidate
@@ -980,7 +934,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        FormTitleWidget(title: 'Assign Doctor'),
+        FormSectionTitleWidget(title: 'Assign Doctor'),
         DropdownSearch<Account>(
           dropdownDecoratorProps: DropDownDecoratorProps(
             dropdownSearchDecoration: InputDecoration(

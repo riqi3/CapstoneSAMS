@@ -8,15 +8,13 @@ class Patient {
   int? age;
   String? gender;
   String? patientStatus;
-  String? birthDate;
-  // final String department;
+  String? birthDate; 
   String? course;
   int? yrLevel;
   String? studNumber;
   String? address;
   double? height;
-  double? weight;
-  // final DateTime registration;
+  double? weight; 
   String? phone;
   String? email;
   int? assignedPhysician;
@@ -29,15 +27,13 @@ class Patient {
     this.age,
     this.gender,
     this.patientStatus,
-    this.birthDate,
-    // this.department,
+    this.birthDate, 
     this.course,
     this.yrLevel,
     this.studNumber,
     this.address,
     this.height,
-    this.weight,
-    // this.registration,
+    this.weight, 
     this.phone,
     this.email,
     this.assignedPhysician,
@@ -76,15 +72,13 @@ class Patient {
       age: json['age'],
       gender: json['gender'],
       patientStatus: json['patientStatus'],
-      birthDate: json['birthDate'],
-      // department: json['department'],
+      birthDate: json['birthDate'], 
       course: json['course'],
       yrLevel: json['yrLevel'],
       studNumber: json['studNumber'],
       address: json['address'],
       height: json['height'],
-      weight: json['weight'],
-      // registration: DateTime.parse(json['registration']),
+      weight: json['weight'], 
       phone: json['phone'],
       email: json['email'],
       assignedPhysician: json['assignedPhysician'],

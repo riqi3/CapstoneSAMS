@@ -10,7 +10,7 @@ import '../models/ContactPersonModel.dart';
 class ContactPersonProvider extends ChangeNotifier {
   ContactPerson? _contactPerson;
   ContactPerson? get contactPerson => _contactPerson;
-  String? get id => _contactPerson?.contactId;
+  String? get id => _contactPerson?.contactID;
   String? get fullName => _contactPerson?.fullName;
   String? get phone => _contactPerson?.phone;
   String? get address => _contactPerson?.address;
@@ -37,10 +37,10 @@ class ContactPersonProvider extends ChangeNotifier {
         return ContactPerson.fromJson(
             jsonDecode(response.body) as Map<String, dynamic>);
       } else {
-        return throw Exception('Failed to load contacts');
+        return throw Exception('Failed to load contact');
       }
     } on Exception catch (e) {
-      return throw Exception('Failed to load contacts');
+      return throw Exception('Failed to load contact');
     }
   }
 
