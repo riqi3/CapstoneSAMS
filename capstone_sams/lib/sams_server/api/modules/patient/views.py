@@ -243,7 +243,7 @@ class   PresentIllnessView(viewsets.ViewSet):
     def fetch_complaint_by_id(request, patientID):
         try:
             patient = Patient.objects.get(pk=patientID)
-            complaint = Present_Illness.objects.get(patient=patient)
+            complaint = Present_Illness.objects.filter(patient=patient)
             serializer = PresentIllnessSerializer(complaint, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except PresentIllnessSerializer.DoesNotExist:

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:capstone_sams/constants/Env.dart';
 import 'package:capstone_sams/models/PresentIllness.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
@@ -17,7 +18,12 @@ class PresentIllnessProvider extends ChangeNotifier {
   String? get created_at => _presentIllness?.created_at;
   String? get updated_at => _presentIllness?.updated_at;
 
-  // Future<PresentIllness> fetchComplaints(String token) async {
+  List<PresentIllness> _presentIllnessList = [];
+
+  Future<List<PresentIllness>> get presentIllnesses =>
+      Future.value(_presentIllnessList);
+
+  // Future<PresentIllness> fetchComplaints(String token, String? patientID,) async {
   //   final header = <String, String>{
   //     'Content-Type': 'application/json; charset=UTF-8',
   //     'Authorization': 'Bearer $token',
@@ -39,7 +45,8 @@ class PresentIllnessProvider extends ChangeNotifier {
   //   }
   // }
 
-  Future<PresentIllness> fetchComplaint(String token, String? patientID) async {
+  Future<List<PresentIllness>> fetchComplaints(
+      String token, String? patientID) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',
@@ -51,14 +58,17 @@ class PresentIllnessProvider extends ChangeNotifier {
           headers: header);
       await Future.delayed(Duration(milliseconds: 3000));
       if (response.statusCode == 200) {
-        return PresentIllness.fromJson(
-            jsonDecode(response.body) as Map<String, dynamic>);
+        final items = json.decode(response.body);
+        List<PresentIllness> presentIllness = items.map<PresentIllness>((json) {
+          return PresentIllness.fromJson(json);
+        }).toList();
+
+        return presentIllness;
       } else {
-        return throw Exception('Failed to load present illness record');
+        return [];
       }
-    } on Exception catch (e) {
-      print(e);
-      return throw Exception('Failed to load present illness record');
+    } catch (e) {
+      return [];
     }
   }
 
@@ -79,7 +89,7 @@ class PresentIllnessProvider extends ChangeNotifier {
         body: jsonEncode(body),
       );
       if (response.statusCode == 201) {
-        fetchComplaint(token, patientID);
+        fetchComplaints(token, patientID);
         notifyListeners();
         return true;
       } else {

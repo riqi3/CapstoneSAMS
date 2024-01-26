@@ -17,6 +17,7 @@ class AccountProvider extends ChangeNotifier {
   String? get username => _account?.username;
   String? get password => _account?.password;
   String? get firstName => _account?.firstName;
+  String? get middleName => _account?.middleName;
   String? get lastName => _account?.lastName;
   String? get role => _account?.accountRole;
   String? get token => _account?.token;

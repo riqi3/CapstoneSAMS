@@ -4,6 +4,7 @@ import 'package:capstone_sams/global-widgets/cards/CardSectionInfoWidget.dart';
 import 'package:capstone_sams/global-widgets/cards/CardSectionTitleWidget.dart';
 import 'package:capstone_sams/global-widgets/cards/CardTemplate.dart';
 import 'package:capstone_sams/global-widgets/cards/CardTitleWidget.dart';
+import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/models/PresentIllness.dart';
@@ -28,82 +29,84 @@ class DiagnosisCard extends StatefulWidget {
 class _DiagnosisCardState extends State<DiagnosisCard> {
   late Stream<List<PresentIllness>> presentIllness;
   late String token = context.read<AccountProvider>().token!;
-  // late String illnessID = context.read<PresentIllnessProvider>().id!;
   @override
   void initState() {
     super.initState();
+
     token = context.read<AccountProvider>().token!;
+    presentIllness = Stream.fromFuture(context
+        .read<PresentIllnessProvider>()
+        .fetchComplaints(token, widget.patient.patientID));
   }
 
   @override
   Widget build(BuildContext context) {
-    PresentIllnessProvider presentIllnessProvider =
-        Provider.of<PresentIllnessProvider>(context);
+    AccountProvider accountProvider =
+        Provider.of<AccountProvider>(context);
+
+        String middleInitial = accountProvider.middleName![0];
 
     return CardTemplate(
       column: Column(
         children: [
-          CardTitleWidget(title: 'Dr. ${widget.patient.assignedPhysician}'),
-          CardSectionTitleWidget(title: 'ss'),
-          CardSectionInfoWidget(
-            widget: PresentIllnessData(presentIllnessProvider),
-          ),
+          CardTitleWidget(title: 'Dr. ${accountProvider.firstName} ${middleInitial}. ${accountProvider.lastName}'),
+          CardSectionTitleWidget(title: "Patient's Present Illnesses"),
+          CardSectionInfoWidget(widget: PresentIllnessData()),
         ],
       ),
     );
   }
 
-  FutureBuilder<PresentIllness> PresentIllnessData(
-      PresentIllnessProvider presentIllnessProvider) {
-    return FutureBuilder<PresentIllness>(
-      future: presentIllnessProvider.fetchComplaint(
-          token, widget.patient.patientID),
+  StreamBuilder<List<PresentIllness>> PresentIllnessData() {
+    return StreamBuilder(
+      stream: presentIllness,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Text('${snapshot.error}');
         } else {
-          final PresentIllness presentIllness = snapshot.data!;
+          final presentIllnessList = snapshot.data!;
 
-// ListView.builder(
-          //   physics: BouncingScrollPhysics(),
-          //     itemCount: presentIllness.length,
-          //     itemBuilder: (context, index){
+          return ListView.builder(
+            shrinkWrap: true,
+            physics: BouncingScrollPhysics(),
+            itemCount: presentIllnessList.length,
+            itemBuilder: (context, index) {
+              final prescription = presentIllnessList[index];
 
-          //     }
-
-          // );
-
-          return Card(
-            elevation: Sizing.cardElevation,
-            margin: EdgeInsets.symmetric(
-              vertical: Sizing.sectionSymmPadding / 2,
-              horizontal: Sizing.sectionSymmPadding,
-            ),
-            child: ListTile(
-              title: Row(
-                children: [
-                  Text(
-                    'Dx: ',
+              return Card(
+                color: Colors.white,
+                elevation: Sizing.cardElevation,
+                margin: EdgeInsets.symmetric(
+                  vertical: Sizing.sectionSymmPadding / 2,
+                  horizontal: Sizing.sectionSymmPadding,
+                ),
+                child: ListTile(
+                  title: Row(
+                    children: [
+                      Text(
+                        'Dx: ',
+                      ),
+                      Text(
+                        '${prescription.illnessName}',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
                   ),
-                  Text(
-                    '${presentIllness.illnessName}',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${prescription.created_at}',
+                        // style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${presentIllness.created_at}',
-                    // style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              trailing: popupActionWidget(presentIllness.illnessID),
-            ),
+                  trailing: popupActionWidget(prescription.illnessID),
+                ),
+              );
+            },
           );
         }
       },

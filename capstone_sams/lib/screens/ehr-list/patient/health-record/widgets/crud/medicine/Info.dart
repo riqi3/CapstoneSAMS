@@ -35,6 +35,7 @@ class _InfoState extends State<Info> {
   late Future<List<Prescription>> prescriptions;
   late Future<List<Account>> physicians;
   bool value = false;
+  
   @override
   void initState() {
     super.initState();
