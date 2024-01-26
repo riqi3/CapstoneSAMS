@@ -61,7 +61,7 @@ class ContactPersonSerializer(serializers.ModelSerializer):
 
 class PresentIllnessSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Present_Illness,
+        model = Present_Illness
         fields = [
             'illnessID',
             'illnessName',

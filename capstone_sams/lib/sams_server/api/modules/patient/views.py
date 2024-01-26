@@ -229,7 +229,7 @@ class ContactPersonView(viewsets.ViewSet):
         except Exception as e:
             return Response({"message": "Failed to update contact.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
-class PresentIllnessView(viewsets.ViewSet):
+class   PresentIllnessView(viewsets.ViewSet):
     @api_view(['GET'])
     def fetch_complaints(request):
         try:
