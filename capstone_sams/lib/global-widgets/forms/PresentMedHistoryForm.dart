@@ -1,14 +1,14 @@
 import 'package:capstone_sams/constants/Strings.dart';
 import 'package:capstone_sams/constants/theme/pallete.dart';
-import 'package:capstone_sams/constants/theme/sizing.dart'; 
+import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/global-widgets/buttons/FormSubmitButton.dart';
 import 'package:capstone_sams/global-widgets/forms/FormTemplate.dart';
-import 'package:capstone_sams/global-widgets/text-fields/Textfields.dart';  
+import 'package:capstone_sams/global-widgets/text-fields/Textfields.dart';
 import 'package:capstone_sams/global-widgets/texts/FormTitleWidget.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/models/PresentIllness.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
-import 'package:capstone_sams/providers/PresentIllnessProvider.dart'; 
+import 'package:capstone_sams/providers/PresentIllnessProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/present-illness-history/HistoryPresentIllnessScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -85,9 +85,10 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
 
       final token = context.read<AccountProvider>().token!;
 
-      final presentIllnessSuccess =
-          await presentIllnessProvider.createComplaint(
-              presentIllnessRecord, token, widget.patient.patientID, accountID);
+      final presentIllnessSuccess = await presentIllnessProvider
+          .createComplaint(presentIllnessRecord, token, widget.patient.patientID
+              // , accountID
+              );
 
       if (presentIllnessSuccess) {
         int routesCount = 0;
@@ -205,7 +206,6 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
                                         : _onSubmit
                                     : details.onStepContinue,
                               ),
- 
                             ),
                           ],
                         );

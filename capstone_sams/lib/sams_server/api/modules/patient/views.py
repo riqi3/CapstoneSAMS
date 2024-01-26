@@ -240,10 +240,11 @@ class   PresentIllnessView(viewsets.ViewSet):
             return Response({"message": "Failed to fetch complaints.", "error": str(e)}, status=status.HTTP_404_NOT_FOUND)
 
     @api_view(['GET'])
-    def fetch_complaint_by_id(request, illnessID):
+    def fetch_complaint_by_id(request, patientID):
         try:
-            complaint = Present_Illness.objects.get(pk=illnessID)
-            serializer = PresentIllnessSerializer(complaint)
+            patient = Patient.objects.get(pk=patientID)
+            complaint = Present_Illness.objects.get(patient=patient)
+            serializer = PresentIllnessSerializer(complaint, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except PresentIllnessSerializer.DoesNotExist:
             return Response({"message": "Complaint does not exist."}, status=status.HTTP_404_NOT_FOUND)
@@ -252,7 +253,7 @@ class   PresentIllnessView(viewsets.ViewSet):
     def create_complaint(request, patientID):
         try:
             patient = Patient.objects.get(pk=patientID)
-            assignedID = patient['assignedPhysician']
+            assignedID = patient.assignedPhysician.accountID
             physician = Account.objects.get(pk=assignedID)
             illness_data = json.loads(request.body)
             illness = Present_Illness.objects.create(

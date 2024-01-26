@@ -17,45 +17,69 @@ class PresentIllnessProvider extends ChangeNotifier {
   String? get created_at => _presentIllness?.created_at;
   String? get updated_at => _presentIllness?.updated_at;
 
-  Future<PresentIllness> fetchComplaints(String token) async {
+  // Future<PresentIllness> fetchComplaints(String token) async {
+  //   final header = <String, String>{
+  //     'Content-Type': 'application/json; charset=UTF-8',
+  //     'Authorization': 'Bearer $token',
+  //   };
+  //   try {
+  //     final response = await http.get(
+  //         Uri.parse('${Env.prefix}/patient/patients/complaints/'),
+  //         headers: header);
+  //     await Future.delayed(Duration(milliseconds: 3000));
+  //     if (response.statusCode == 200) {
+  //       return PresentIllness.fromJson(
+  //           jsonDecode(response.body) as Map<String, dynamic>);
+  //     } else {
+  //       return throw Exception('Failed to load all illness records');
+  //     }
+  //   } on Exception catch (e) {
+  //     print(e);
+  //     return throw Exception('Failed to load all illness records');
+  //   }
+  // }
+
+  Future<PresentIllness> fetchComplaint(String token, String? patientID) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',
     };
     try {
       final response = await http.get(
-          Uri.parse('${Env.prefix}/patient/patients/complaints/'),
+          Uri.parse(
+              '${Env.prefix}/patient/patients/complaints/illness/${patientID}'),
           headers: header);
       await Future.delayed(Duration(milliseconds: 3000));
       if (response.statusCode == 200) {
         return PresentIllness.fromJson(
             jsonDecode(response.body) as Map<String, dynamic>);
       } else {
-        return throw Exception('Failed to load present illness records');
+        return throw Exception('Failed to load present illness record');
       }
     } on Exception catch (e) {
       print(e);
-      return throw Exception('Failed to load present illness records');
+      return throw Exception('Failed to load present illness record');
     }
   }
 
-  Future<bool> createComplaint(PresentIllness presentIllness, String token,
-      String? patientID, int? accountID) async {
+  Future<bool> createComplaint(
+      PresentIllness presentIllness, String token, String? patientID) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       // 'Authorization': 'Bearer $token',
     };
     try {
       var body = presentIllness.toJson();
-      body['account'] = accountID;
-      print(body);
+      // body['account'] = accountID;
+      // print(body);
       final response = await http.post(
-        Uri.parse('${Env.prefix}/patient/patients/complaints/${patientID}'),
+        Uri.parse(
+            '${Env.prefix}/patient/patients/complaints/create/${patientID}'),
         headers: header,
         body: jsonEncode(body),
       );
       if (response.statusCode == 201) {
-        fetchComplaints(token);
+        fetchComplaint(token, patientID);
         notifyListeners();
         return true;
       } else {

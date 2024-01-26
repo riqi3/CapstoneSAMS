@@ -37,10 +37,10 @@ class ContactPersonProvider extends ChangeNotifier {
         return ContactPerson.fromJson(
             jsonDecode(response.body) as Map<String, dynamic>);
       } else {
-        return throw Exception('Failed to load contacts');
+        return throw Exception('Failed to load contact');
       }
     } on Exception catch (e) {
-      return throw Exception('Failed to load contacts');
+      return throw Exception('Failed to load contact');
     }
   }
 

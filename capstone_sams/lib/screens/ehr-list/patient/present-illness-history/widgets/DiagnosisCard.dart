@@ -28,6 +28,7 @@ class DiagnosisCard extends StatefulWidget {
 class _DiagnosisCardState extends State<DiagnosisCard> {
   late Stream<List<PresentIllness>> presentIllness;
   late String token = context.read<AccountProvider>().token!;
+  // late String illnessID = context.read<PresentIllnessProvider>().id!;
   @override
   void initState() {
     super.initState();
@@ -55,7 +56,8 @@ class _DiagnosisCardState extends State<DiagnosisCard> {
   FutureBuilder<PresentIllness> PresentIllnessData(
       PresentIllnessProvider presentIllnessProvider) {
     return FutureBuilder<PresentIllness>(
-      future: presentIllnessProvider.fetchComplaints(token),
+      future: presentIllnessProvider.fetchComplaint(
+          token, widget.patient.patientID),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
@@ -64,7 +66,17 @@ class _DiagnosisCardState extends State<DiagnosisCard> {
         } else {
           final PresentIllness presentIllness = snapshot.data!;
 
+// ListView.builder(
+          //   physics: BouncingScrollPhysics(),
+          //     itemCount: presentIllness.length,
+          //     itemBuilder: (context, index){
+
+          //     }
+
+          // );
+
           return Card(
+            elevation: Sizing.cardElevation,
             margin: EdgeInsets.symmetric(
               vertical: Sizing.sectionSymmPadding / 2,
               horizontal: Sizing.sectionSymmPadding,
@@ -90,7 +102,7 @@ class _DiagnosisCardState extends State<DiagnosisCard> {
                   ),
                 ],
               ),
-              // trailing: popupActionWidget(presentIllness.),
+              trailing: popupActionWidget(presentIllness.illnessID),
             ),
           );
         }
@@ -98,7 +110,7 @@ class _DiagnosisCardState extends State<DiagnosisCard> {
     );
   }
 
-  PopupMenuButton<dynamic> popupActionWidget(int index) {
+  PopupMenuButton<dynamic> popupActionWidget(String? illnessID) {
     return PopupMenuButton(
       itemBuilder: (context) => [
         PopupMenuItem(
