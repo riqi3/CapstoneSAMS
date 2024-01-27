@@ -89,6 +89,19 @@ class PatientView(viewsets.ModelViewSet):
         except Exception as e:
             return Response({"message": "Failed to fetch patients.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+    
+     
+    @api_view(['GET'])
+    def fetch_patient_by_accountid(request, accountID):
+        try:
+            account = Account.objects.get(pk=accountID)
+            patient = Patient.objects.filter(assignedPhysician=account)
+            serializer = PatientSerializer(patient, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Medical_Record.DoesNotExist:
+            return Response({"message": "Patient does not exist."}, status=status.HTTP_404_NOT_FOUND)
+    
+    
     '''
     This view allow the user to update a patient based on the patient's id.
     A data log will be automatically generated for reference.
@@ -158,7 +171,8 @@ class MedicalRecordView(viewsets.ViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Medical_Record.DoesNotExist:
             return Response({"message": "Health Record does not exist."}, status=status.HTTP_404_NOT_FOUND)
-    
+   
+
     @api_view(['POST'])
     def create_health_record(request):
         try:

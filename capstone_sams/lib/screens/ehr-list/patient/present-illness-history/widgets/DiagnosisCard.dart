@@ -1,9 +1,11 @@
+import 'package:capstone_sams/constants/Strings.dart';
 import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/global-widgets/cards/CardSectionInfoWidget.dart';
 import 'package:capstone_sams/global-widgets/cards/CardSectionTitleWidget.dart';
 import 'package:capstone_sams/global-widgets/cards/CardTemplate.dart';
 import 'package:capstone_sams/global-widgets/cards/CardTitleWidget.dart';
+import 'package:capstone_sams/global-widgets/texts/NoDataTextWidget.dart';
 import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
@@ -41,15 +43,16 @@ class _DiagnosisCardState extends State<DiagnosisCard> {
 
   @override
   Widget build(BuildContext context) {
-    AccountProvider accountProvider =
-        Provider.of<AccountProvider>(context);
+    AccountProvider accountProvider = Provider.of<AccountProvider>(context);
 
-        String middleInitial = accountProvider.middleName![0];
+    String middleInitial = accountProvider.middleName![0];
 
     return CardTemplate(
       column: Column(
         children: [
-          CardTitleWidget(title: 'Dr. ${accountProvider.firstName} ${middleInitial}. ${accountProvider.lastName}'),
+          CardTitleWidget(
+              title:
+                  'Dr. ${accountProvider.firstName} ${middleInitial}. ${accountProvider.lastName}'),
           CardSectionTitleWidget(title: "Patient's Present Illnesses"),
           CardSectionInfoWidget(widget: PresentIllnessData()),
         ],
@@ -65,6 +68,17 @@ class _DiagnosisCardState extends State<DiagnosisCard> {
           return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Text('${snapshot.error}');
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Center(
+            child: Container(
+              height: 100,
+              child: Center(
+                child: NoDataTextWidget(
+                  text: Strings.noRecordedIllnesses,
+                ),
+              ),
+            ),
+          );
         } else {
           final presentIllnessList = snapshot.data!;
 
@@ -73,14 +87,13 @@ class _DiagnosisCardState extends State<DiagnosisCard> {
             physics: BouncingScrollPhysics(),
             itemCount: presentIllnessList.length,
             itemBuilder: (context, index) {
-              final prescription = presentIllnessList[index];
+              final illness = presentIllnessList[index];
 
               return Card(
                 color: Colors.white,
                 elevation: Sizing.cardElevation,
                 margin: EdgeInsets.symmetric(
-                  vertical: Sizing.sectionSymmPadding / 2,
-                  horizontal: Sizing.sectionSymmPadding,
+                  vertical: Sizing.sectionSymmPadding / 4,
                 ),
                 child: ListTile(
                   title: Row(
@@ -89,7 +102,7 @@ class _DiagnosisCardState extends State<DiagnosisCard> {
                         'Dx: ',
                       ),
                       Text(
-                        '${prescription.illnessName}',
+                        '${illness.illnessName}',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ],
@@ -98,12 +111,12 @@ class _DiagnosisCardState extends State<DiagnosisCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${prescription.created_at}',
+                        '${illness.created_at}',
                         // style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
-                  trailing: popupActionWidget(prescription.illnessID),
+                  trailing: popupActionWidget(illness.illnessID),
                 ),
               );
             },

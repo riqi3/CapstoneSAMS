@@ -16,30 +16,20 @@ class CardSectionInfoWidget extends StatelessWidget {
           bottomLeft: Radius.circular(Sizing.borderRadius),
           bottomRight: Radius.circular(Sizing.borderRadius)),
       child: Container(
-          width: MediaQuery.of(context).size.width + 10,
-          decoration: BoxDecoration(
-            color: Pallete.whiteColor,
-            borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(Sizing.borderRadius),
-                bottomLeft: Radius.circular(Sizing.borderRadius)),
-          ),
-          padding: const EdgeInsets.only(
-            left: Sizing.sectionSymmPadding,
-            right: Sizing.sectionSymmPadding,
-            bottom: Sizing.sectionSymmPadding,
-          ),
-          child: widget
-
-          // ShaderMask(
-          //   shaderCallback: (Rect bounds) {
-          //     return LinearGradient(
-          //       colors: [Colors.black, Colors.transparent],
-          //       stops: [0.95, 1],
-          //     ).createShader(bounds);
-          //   },
-          //   child: widget,
-          // ),
-          ),
+        width: MediaQuery.of(context).size.width + 10,
+        decoration: BoxDecoration(
+          color: Pallete.whiteColor,
+          borderRadius: BorderRadius.only(
+              bottomRight: Radius.circular(Sizing.borderRadius),
+              bottomLeft: Radius.circular(Sizing.borderRadius)),
+        ),
+        padding: const EdgeInsets.only(
+          left: Sizing.sectionSymmPadding,
+          right: Sizing.sectionSymmPadding,
+          bottom: Sizing.sectionSymmPadding,
+        ),
+        child: widget,
+      ),
     );
   }
 }

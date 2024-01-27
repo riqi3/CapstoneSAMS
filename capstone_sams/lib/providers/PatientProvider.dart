@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:capstone_sams/constants/Env.dart';
+import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import '../models/PatientModel.dart';
-import '../providers/AccountProvider.dart';
 
 class PatientProvider extends ChangeNotifier {
   Patient? _patient;
@@ -21,7 +21,7 @@ class PatientProvider extends ChangeNotifier {
   String? get studNumber => _patient?.studNumber;
   String? get address => _patient?.address;
   double? get height => _patient?.height;
-  double? get weight => _patient?.weight; 
+  double? get weight => _patient?.weight;
   String? get phone => _patient?.phone;
   String? get email => _patient?.email;
   int? get assignedPhysician => _patient?.assignedPhysician;
@@ -30,21 +30,16 @@ class PatientProvider extends ChangeNotifier {
 
   List<Patient> get patients => _patients;
 
-  Future<List<Patient>> fetchPatients(String token) async {
-    String role = AccountProvider().role ?? '';
-    int id = AccountProvider().id ?? 0;
-
-    try {
-      final uri = role == 'doctor'
-          ? Uri.parse('${Env.prefix}/$role/$id/patients/')
-          : Uri.parse('${Env.prefix}/patient/patients/');
+  Future<List<Patient>> fetchPatients(
+      String token, int? accountID ) async { 
+    try { 
 
       final header = <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
       };
 
-      final response = await http.get(uri, headers: header);
+      final response = await http.get(Uri.parse('${Env.prefix}/patient/patients/user/$accountID'), headers: header);
       await Future.delayed(Duration(milliseconds: 3000));
 
       if (response.statusCode == 200) {
@@ -80,7 +75,7 @@ class PatientProvider extends ChangeNotifier {
       );
       // await Future.delayed(Duration(milliseconds: 3000));
       if (response.statusCode == 201) {
-        fetchPatients(token);
+        fetchPatients(token, accountID);
         notifyListeners();
         return true;
       } else {
@@ -161,9 +156,6 @@ class PatientProvider extends ChangeNotifier {
                       .toLowerCase()
                       .contains((query.toLowerCase())) ||
                   element.middleInitial!
-                      .toLowerCase()
-                      .contains((query.toLowerCase())) ||
-                  element.patientID!
                       .toLowerCase()
                       .contains((query.toLowerCase())) ||
                   element.studNumber!

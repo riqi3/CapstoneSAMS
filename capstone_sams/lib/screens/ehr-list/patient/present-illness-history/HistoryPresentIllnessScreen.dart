@@ -1,4 +1,5 @@
 import 'package:capstone_sams/constants/theme/sizing.dart';
+import 'package:capstone_sams/global-widgets/scaffolds/ScaffoldTemplate.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/global-widgets/forms/PresentMedHistoryForm.dart';
 import 'package:capstone_sams/models/PresentIllness.dart';
@@ -25,25 +26,15 @@ class HistoryPresentIllness extends StatefulWidget {
 class _HistoryPresentIllnessState extends State<HistoryPresentIllness> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        padding: EdgeInsets.only(
-          left: Sizing.sectionSymmPadding,
-          right: Sizing.sectionSymmPadding,
-          top: Sizing.sectionSymmPadding,
-          bottom: Sizing.sectionSymmPadding * 4,
-        ),
-        scrollDirection: Axis.vertical,
-        physics: BouncingScrollPhysics(),
-        child: Column(
-          children: [
-            DiagnosisCard(
-              patient: widget.patient,
-            ),
-          ],
-        ),
+    return ScaffoldTemplate(
+      column: Column(
+        children: [
+          DiagnosisCard(
+            patient: widget.patient,
+          ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
+      fab: FloatingActionButton(
         onPressed: () => showDialog(
           context: context,
           builder: (ctx) => PresentMedHistoryForm(

@@ -1,5 +1,6 @@
 import 'package:capstone_sams/global-widgets/separators/DividerWidget.dart';
 import 'package:capstone_sams/global-widgets/texts/TitleValueText.dart';
+import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/ContactPersonModel.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/PatientTabsScreen.dart';
 import 'package:flutter/material.dart';
@@ -9,12 +10,15 @@ import '../../../constants/theme/pallete.dart';
 import '../../../constants/theme/sizing.dart';
 import '../../../models/PatientModel.dart';
 
+// ignore: must_be_immutable
 class PatientCard extends StatefulWidget {
   final Patient patient;
+  Account? account;
   final Function(String) onSelect;
   // final int? labresult;
   PatientCard({
     required this.patient,
+    this.account,
     required this.onSelect,
     // required this.labresult,
   });
