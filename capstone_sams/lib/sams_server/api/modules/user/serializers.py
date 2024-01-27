@@ -24,7 +24,8 @@ class AccountSerializer(serializers.ModelSerializer):
             'token',
             'is_active', 
             'is_staff',
-            'is_superuser',]
+            'is_superuser',
+            'isDeleted',]
         extra_kwargs = {'password': {'write_only': True, 'required': False}}
  
 
@@ -41,7 +42,7 @@ This serializer will convert Personal_Note objects into jsons.
 class PersonalNoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Personal_Note
-        fields = ['noteNum', 'title', 'content', 'isDone', 'account']
+        fields = ['noteNum', 'title', 'content', 'isDone', 'account', 'isDeleted']
 
 
 '''
@@ -50,4 +51,4 @@ This serializer will convert Data_Log objects into jsons.
 class DataLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Data_Log
-        fields = ['logNum', 'event', 'date', 'account']
+        fields = ['logNum', 'event', 'date', 'account', 'isDeleted']
