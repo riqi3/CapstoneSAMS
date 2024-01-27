@@ -21,7 +21,7 @@ class PatientProvider extends ChangeNotifier {
   String? get studNumber => _patient?.studNumber;
   String? get address => _patient?.address;
   double? get height => _patient?.height;
-  double? get weight => _patient?.weight; 
+  double? get weight => _patient?.weight;
   String? get phone => _patient?.phone;
   String? get email => _patient?.email;
   int? get assignedPhysician => _patient?.assignedPhysician;
@@ -30,13 +30,11 @@ class PatientProvider extends ChangeNotifier {
 
   List<Patient> get patients => _patients;
 
-  Future<List<Patient>> fetchPatients(String token) async {
-    String role = AccountProvider().role ?? '';
-    int id = AccountProvider().id ?? 0;
-
+  Future<List<Patient>> fetchPatients(String token, String role, int id) async {
+    print("Role: $role, ID: $id");
     try {
-      final uri = role == 'doctor'
-          ? Uri.parse('${Env.prefix}/$role/$id/patients/')
+      final uri = role == 'physician'
+          ? Uri.parse('${Env.prefix}/$id/patients/')
           : Uri.parse('${Env.prefix}/patient/patients/');
 
       final header = <String, String>{
@@ -62,8 +60,8 @@ class PatientProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> createPatientRecord(
-      Patient patient, String token, int? accountID) async {
+  Future<bool> createPatientRecord(Patient patient, String token,
+      int? accountID, String role, int id) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       // 'Authorization': 'Bearer $token',
@@ -80,7 +78,7 @@ class PatientProvider extends ChangeNotifier {
       );
       // await Future.delayed(Duration(milliseconds: 3000));
       if (response.statusCode == 201) {
-        fetchPatients(token);
+        fetchPatients(token, role, id);
         notifyListeners();
         return true;
       } else {

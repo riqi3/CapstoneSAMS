@@ -21,6 +21,8 @@ class EhrListScreen extends StatefulWidget {
 
 class _EhrListScreenState extends State<EhrListScreen> {
   late Stream<List<Patient>> patients;
+  late String role;
+  late int id;
   late String token;
   ScrollController _controller = ScrollController();
   String selectedPatientId = '';
@@ -34,9 +36,13 @@ class _EhrListScreenState extends State<EhrListScreen> {
   @override
   void initState() {
     super.initState();
-    token = context.read<AccountProvider>().token!;
-    patients =
-        Stream.fromFuture(context.read<PatientProvider>().fetchPatients(token));
+    AccountProvider accountProvider = context.read<AccountProvider>();
+    token = accountProvider.token!;
+    role = accountProvider.role!;
+    id = accountProvider.id!;
+    patients = Stream.fromFuture(
+      context.read<PatientProvider>().fetchPatients(token, role, id),
+    );
   }
 
   void _scrollUp() {

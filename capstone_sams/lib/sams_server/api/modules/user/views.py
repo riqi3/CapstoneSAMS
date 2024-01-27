@@ -1,3 +1,4 @@
+from django.http import HttpResponseBadRequest
 from rest_framework import viewsets
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -116,13 +117,26 @@ class AccountView(viewsets.ModelViewSet):
 '''
 This view will provide the physician with the assigned patients
 '''    
+@permission_classes([IsAuthenticated])
 class PhysicianPatientViewSet(viewsets.ModelViewSet):
     serializer_class = PatientSerializer
-    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        physician = self.request.user
-        return Patient.objects.filter(assignedPhysician=physician)
+        try:
+            account_id = int(self.kwargs.get('accountID'))
+            print("Account ID:", account_id)
+
+            if not self.request.user.is_authenticated:
+                return HttpResponseBadRequest("User is not authenticated.")
+
+            if not hasattr(self.request.user, 'accountID') or self.request.user.accountID != account_id:
+                return HttpResponseBadRequest("You are not authorized to access this resource.")
+            return Patient.objects.filter(assignedPhysician=self.request.user)
+
+        except ValueError:
+            return HttpResponseBadRequest("Invalid 'accountID' in the URL.")
+
+
     
 '''
 This view will allow the nurse to changed the assigned physician of a specific patient. 
