@@ -39,7 +39,9 @@ class SearchPatientDelegate extends SearchDelegate {
   Widget buildResults(BuildContext context) {
     return FutureBuilder<List<Patient>>(
       future: _patientList.searchPatients(
-          query: query, token: context.read<AccountProvider>().token!),
+          query: query,
+          token: context.read<AccountProvider>().token!,
+          accountID: context.read<AccountProvider>().acc!.accountID!),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(
@@ -59,10 +61,10 @@ class SearchPatientDelegate extends SearchDelegate {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        PatientTabsScreen(patient: patient1, 
-                        // index: labresult
-                        ),
+                    builder: (context) => PatientTabsScreen(
+                      patient: patient1,
+                      // index: labresult
+                    ),
                   ),
                 );
               },
