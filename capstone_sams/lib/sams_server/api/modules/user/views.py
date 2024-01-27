@@ -14,6 +14,7 @@ from api.modules.user.serializers import PersonalNoteSerializer, AccountSerializ
 from api.modules.patient.models import Patient
 from api.modules.patient.serializers import PatientSerializer
 from rest_framework.decorators import action
+from django.db.models import F
 
 '''
 This view represent the ability to generate
@@ -116,25 +117,21 @@ class AccountView(viewsets.ModelViewSet):
         
 '''
 This view will provide the physician with the assigned patients
-'''    
-@permission_classes([IsAuthenticated])
-class PhysicianPatientViewSet(viewsets.ModelViewSet):
-    serializer_class = PatientSerializer
-
-    def get_queryset(self):
+'''
+class PhysicianPatientViewSet(viewsets.ViewSet):
+    def list(self, request, accountID):
+        print(f"Received request for physician with accountID: {accountID}")
         try:
-            account_id = int(self.kwargs.get('accountID'))
-            print("Account ID:", account_id)
+            physician = Account.objects.get(accountID=accountID, accountRole='physician')
 
-            if not self.request.user.is_authenticated:
-                return HttpResponseBadRequest("User is not authenticated.")
+            patients = Patient.objects.filter(assignedPhysician=physician)
 
-            if not hasattr(self.request.user, 'accountID') or self.request.user.accountID != account_id:
-                return HttpResponseBadRequest("You are not authorized to access this resource.")
-            return Patient.objects.filter(assignedPhysician=self.request.user)
+            serializer = PatientSerializer(patients, many=True)
 
-        except ValueError:
-            return HttpResponseBadRequest("Invalid 'accountID' in the URL.")
+            return Response(serializer.data)
+        except Account.DoesNotExist:
+            return Response({"error": "Physician not found"}, status=404)
+
 
 
     

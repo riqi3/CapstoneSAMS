@@ -34,7 +34,7 @@ class PatientProvider extends ChangeNotifier {
     print("Role: $role, ID: $id");
     try {
       final uri = role == 'physician'
-          ? Uri.parse('${Env.prefix}/$id/patients/')
+          ? Uri.parse('${Env.prefix}/physician/${id}/patients/')
           : Uri.parse('${Env.prefix}/patient/patients/');
 
       final header = <String, String>{
@@ -44,7 +44,8 @@ class PatientProvider extends ChangeNotifier {
 
       final response = await http.get(uri, headers: header);
       await Future.delayed(Duration(milliseconds: 3000));
-
+      print('Response Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         List<Patient> patients = data.map<Patient>((json) {
