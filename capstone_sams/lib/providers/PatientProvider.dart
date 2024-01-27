@@ -34,7 +34,7 @@ class PatientProvider extends ChangeNotifier {
     print("Role: $role, ID: $id");
     try {
       final uri = role == 'physician'
-          ? Uri.parse('${Env.prefix}/physician/${id}/patients/')
+          ? Uri.parse('${Env.prefix}/user/physician/${id}/patients/')
           : Uri.parse('${Env.prefix}/patient/patients/');
 
       final header = <String, String>{
