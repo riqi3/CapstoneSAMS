@@ -6,6 +6,7 @@ urlpatterns = [
     path('patients/', PatientView.fetch_patients, name='fetch_patients'), #API Endpoint for patient retrieval
     path('patients/<str:patientID>', PatientView.fetch_patient_by_id, name='fetch_patient'), #API Endpoint for patient retrieval based on patient id
     path('patients/update/', PatientView.update_patient, name='update_patients'), #API Endpoint for patient data update
+    path('patients/delete/<str:patientID>', PatientView.delete_patient, name='delete_patient'), 
     path('patients/history/<str:patientID>', MedicalRecordView.fetch_record_by_id, name='patient_record'), #API Endpoint for health record retrieval
     path('patients/history/create/', MedicalRecordView.create_health_record, name='create_patient_record'),
     path('patients/history/update/<str:patientID>', MedicalRecordView.update_health_record, name='update_patient_record'),
@@ -16,4 +17,5 @@ urlpatterns = [
     path('patients/complaints/update/<str:illnessID>', PresentIllnessView.update_complaint, name='update_complaint'),
     path('patients/complaints/', PresentIllnessView.fetch_complaints, name='fetch_complaints'),
     path('patients/complaints/illness/<str:patientID>', PresentIllnessView.fetch_complaint_by_id, name='fetch_complaint_by_id'),
+    path('patients/complaints/illness/delete/<str:illnessID>', PresentIllnessView.delete_complaint, name='delete_complaint'),
 ]
