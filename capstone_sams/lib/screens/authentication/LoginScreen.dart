@@ -1,3 +1,4 @@
+import 'package:capstone_sams/global-widgets/buttons/FormSubmitButton.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../constants/theme/pallete.dart';
@@ -130,36 +131,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           hintText: 'Password',
                         ),
                         SizedBox(height: 20),
-                        ElevatedButton.icon(
-                          onPressed: _isLoading ? null : _onSubmit,
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: Size(elementWidth, elementWidth / 8),
-                            backgroundColor: Pallete.whiteColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(Sizing.borderRadius),
-                            ),
-                          ),
-                          icon: _isLoading
-                              ? Container(
-                                  width: 24,
-                                  height: 24,
-                                  padding: const EdgeInsets.all(4),
-                                  child: const CircularProgressIndicator(
-                                    color: Pallete.mainColor,
-                                    strokeWidth: 3,
-                                  ),
-                                )
-                              : const Icon(
-                                  Icons.login,
-                                  color: Pallete.mainColor,
-                                ),
-                          label: const Text(
-                            'Login',
-                            style: TextStyle(
-                              color: Pallete.mainColor,
-                            ),
-                          ),
+                        FormSubmitButton(
+                          title: 'Login',
+                          icon: Icons.login,
+                          isLoading: _isLoading,
+                          onpressed: _isLoading ? null : _onSubmit,
                         ),
                       ],
                     ),

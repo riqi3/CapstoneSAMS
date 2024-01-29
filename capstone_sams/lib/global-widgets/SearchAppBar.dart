@@ -26,8 +26,8 @@ class SearchAppBar extends StatelessWidget {
           size: 30,
         ),
         backgroundColor: backgroundColor,
-        elevation: 8,
-        shadowColor: Pallete.greyColor,
+        // elevation: 8,
+        // shadowColor: Pallete.greyColor,
         leading: Padding(
           padding: const EdgeInsets.only(
             left: 20.0,

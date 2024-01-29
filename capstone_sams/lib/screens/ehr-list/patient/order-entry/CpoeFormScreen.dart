@@ -16,7 +16,7 @@ import '../../../../providers/MedicineProvider.dart';
 class CpoeFormScreen extends StatefulWidget {
   final String initialPrediction;
   final double initialConfidence;
-  final int index;
+  final String? index;
   final Patient patient;
   CpoeFormScreen({
     required this.patient,
@@ -38,24 +38,34 @@ class _CpoeFormScreenState extends State<CpoeFormScreen> {
 
   void _onSubmit() async {
     setState(() => _isLoading = true);
+
     var accountID = context.read<AccountProvider>().id;
+
     var patient = await context
         .read<PatientProvider>()
         .fetchPatient(widget.index.toString(), token);
+
     final medicineProvider = context.read<MedicineProvider>();
+
     var medicines = medicineProvider.medicines;
+
     if (patient != null && medicines.isNotEmpty) {
+      
       final medicineProvider = context.read<MedicineProvider>();
-      final patientID = patient.patientId;
+      final patientID = patient.patientID;
       final success = await medicineProvider.saveToPrescription(
           accountID, patientID, finalPrediction, token);
+
+
       if (success) {
         int routesCount = 0;
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
               builder: (context) => PatientTabsScreen(
-                  patient: widget.patient, index: widget.index)),
+                  patient: widget.patient, 
+                  // index: widget.index,
+                  )),
           (Route<dynamic> route) {
             if (routesCount < 2) {
               routesCount++;

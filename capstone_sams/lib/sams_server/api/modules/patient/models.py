@@ -1,3 +1,4 @@
+import uuid 
 from django.db import models
 from api.modules.user.models import Account
 '''
@@ -10,6 +11,13 @@ class Patient(models.Model):
         ('M', 'Male'),
         ('F', 'Female')
     } 
+    STATUS_OPTIONS = {
+        ('Single', 'Single'),
+        ('Married', 'Married'),
+        ('Divorced', 'Divorced'),
+        ('Separated', 'Separated'),
+        ('Widowed', 'Widowed')
+    } 
     COURSE_OPTIONS = {
         ('Nursery', 'Nursery'),
         ('Kindergarten', 'Kindergarten'),
@@ -20,24 +28,23 @@ class Patient(models.Model):
     } 
 
     #Patient Indentification
-    patientID = models.AutoField(primary_key = True)
+    patientID = models.UUIDField(primary_key = True, default = uuid.uuid4, 
+         editable = False)
     firstName = models.CharField(max_length=100, blank = False)
     middleInitial = models.CharField(max_length=1, blank = False)
     lastName = models.CharField(max_length=100, blank = False)
     age = models.IntegerField(blank= False)
     gender = models.CharField(choices = GENDER_OPTIONS)
-    birthDate = models.DateField(blank = False)
-    # department = models.CharField(max_length=100, blank = False)
-    course = models.CharField(choices = COURSE_OPTIONS)
+    patientStatus = models.CharField(choices = STATUS_OPTIONS)
+    birthDate = models.DateField(blank = False)  
+    course = models.CharField(max_length=300, blank = False)
     yrLevel = models.IntegerField(blank = False)
     studNumber = models.CharField(max_length=100, blank = False)
     address = models.CharField(blank= False)
     height = models.FloatField(blank = False)
-    weight = models.FloatField(blank= False)
-    # registration = models.DateField(blank=False)
-    phone = models.CharField(max_length = 11, blank = True)
-    email = models.CharField(max_length = 50, blank = True)
-    # user = models.CharField(null = True, blank = True)
+    weight = models.FloatField(blank= False) 
+    phone = models.CharField(max_length = 11, null=True,blank = True)
+    email = models.CharField(max_length = 50, null=True,blank = True) 
     assignedPhysician = models.ForeignKey(Account, null=True, on_delete = models.CASCADE)
 
     
@@ -50,7 +57,8 @@ class Patient(models.Model):
 
 class Contact_Person(models.Model):
     patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
-    contactId = models.AutoField(primary_key = True)
+    contactID = models.UUIDField(primary_key = True, default = uuid.uuid4, 
+         editable = False)
     fullName = models.CharField(max_length=100, blank = False)
     phone = models.CharField(max_length=11, blank = False)
     address = models.CharField(blank= False)
@@ -64,12 +72,11 @@ record is connected to only one patient.
 class Medical_Record(models.Model):
     #Health Record Attributes
     patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
-    recordNum = models.AutoField(primary_key = True)
-    # symptoms = models.JSONField(blank = True, default=None, null=True)
-    # diseases = models.JSONField(blank = True, default=None, null=True)
+    recordID = models.UUIDField(primary_key = True, default = uuid.uuid4, 
+         editable = False) 
     illnesses = models.JSONField(blank = True, default=None, null=True)
     allergies = models.JSONField(blank = True, default=None, null=True)
-    pastDisease = models.JSONField(blank = True, default=None, null=True)
+    pastDiseases = models.JSONField(blank = True, default=None, null=True)
     familyHistory = models.JSONField(blank = True, default=None, null=True)
     lastMensPeriod = models.CharField(max_length=100, blank = True, default=None)
     
@@ -85,9 +92,14 @@ class Health_Record(models.Model):
         verbose_name_plural = "Health Record"
 
 class Present_Illness(models.Model):
-    illnessNum = models.AutoField(primary_key = True)
+    illnessID = models.UUIDField(primary_key = True, default = uuid.uuid4, 
+         editable = False)
+    illnessName = models.CharField(max_length=100, blank = False)
     complaint = models.TextField(blank = False, default = None, null = False)
     findings = models.TextField(blank = False, default = None, null = False)
     diagnosis = models.TextField(blank = False, default = None, null = False)
     treatment = models.TextField(blank = False, default = None, null = False)
+    created_at = models.DateTimeField(auto_now_add=True,   null = False,blank = False,)
+    updated_at = models.DateTimeField(auto_now=True, null = False,blank = False,)
     patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
+    assignedPhysician = models.ForeignKey(Account, null=True, on_delete = models.CASCADE)

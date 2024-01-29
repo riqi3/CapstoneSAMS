@@ -119,19 +119,19 @@ class FormTextField extends StatefulWidget {
   final TextInputType type;
   final int? maxlength;
   final int? maxlines;
-  final String? countertext; 
-  late final dynamic onsaved;
+  final String? countertext;
+  late final dynamic? onchanged;
 
   FormTextField({
     super.key,
     required this.labeltext,
     required this.type,
-    required this.onsaved,
+    this.onchanged,
     this.controller,
     this.validator,
     this.countertext,
     this.maxlength,
-    this.maxlines, 
+    this.maxlines,
   });
 
   @override
@@ -143,6 +143,7 @@ class _FormTextFieldState extends State<FormTextField> {
   Widget build(BuildContext context) {
     return TextFormField(
       decoration: InputDecoration(
+        alignLabelWithHint: true,
         labelText: '${widget.labeltext}',
         border: OutlineInputBorder(
           borderSide: BorderSide(
@@ -154,16 +155,21 @@ class _FormTextFieldState extends State<FormTextField> {
         fillColor: Pallete.palegrayColor,
       ),
       validator: (value) => value == '' ? widget.validator : null,
+      // validator: (value) => widget.validator,
       keyboardType: widget.type,
       maxLength: widget.maxlength,
       maxLines: widget.maxlines,
-      onSaved: (value) {
-        if (widget.onsaved != null) {
-          widget.onsaved!(value);
-        } else {
-          widget.onsaved = value;
-        }
+      controller: widget.controller,
+      onChanged: (value) {
+        widget.onchanged?.call(value);
       },
+      // onSaved: (value) {
+      //   if (widget.onsaved != null) {
+      //     widget.onsaved!(value);
+      //   } else {
+      //     widget.onsaved = value;
+      //   }
+      // },
     );
   }
 }

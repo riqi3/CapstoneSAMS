@@ -97,7 +97,7 @@ class _CounterScreenState extends State<CounterScreen> {
           health_record: widget.prescription.health_record,
           disease: widget.prescription.disease,
         ),
-        widget.patient.patientId,
+        widget.patient.patientID,
         token,
       );
 
@@ -106,7 +106,9 @@ class _CounterScreenState extends State<CounterScreen> {
         context,
         MaterialPageRoute(
           builder: (context) =>
-              PatientTabsScreen(patient: widget.patient, index: widget.index),
+              PatientTabsScreen(patient: widget.patient, 
+              // index: widget.index,
+              ),
         ),
         (Route<dynamic> route) {
           if (routesCount < 5) {

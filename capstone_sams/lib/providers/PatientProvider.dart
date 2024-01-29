@@ -1,31 +1,27 @@
 import 'dart:convert';
-
 import 'package:capstone_sams/constants/Env.dart';
-
+import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-
 import '../models/PatientModel.dart';
-import '../providers/AccountProvider.dart';
 
 class PatientProvider extends ChangeNotifier {
   Patient? _patient;
   Patient? get patient => _patient;
-  String? get id => _patient?.patientId;
+  String? get id => _patient!.patientID;
   String? get firstName => _patient?.firstName;
   String? get middleName => _patient?.middleInitial;
   String? get lastName => _patient?.lastName;
   int? get age => _patient?.age;
   String? get gender => _patient?.gender;
-  DateTime? get birthDate => _patient?.birthDate;
-  // String? get department => _patient?.department;
+  String? get patientStatus => _patient?.patientStatus;
+  String? get birthDate => _patient?.birthDate;
   String? get course => _patient?.course;
   int? get yrLevel => _patient?.yrLevel;
   String? get studNumber => _patient?.studNumber;
   String? get address => _patient?.address;
   double? get height => _patient?.height;
   double? get weight => _patient?.weight;
-  // DateTime? get registrationDate => _patient?.registration;
   String? get phone => _patient?.phone;
   String? get email => _patient?.email;
   int? get assignedPhysician => _patient?.assignedPhysician;
@@ -34,13 +30,11 @@ class PatientProvider extends ChangeNotifier {
 
   List<Patient> get patients => _patients;
 
-  Future<List<Patient>> fetchPatients(String token) async {
-    String role = AccountProvider().role ?? '';
-    int id = AccountProvider().id ?? 0;
-
+  Future<List<Patient>> fetchPatients(String token, String role, int id) async {
+    print("Role: $role, ID: $id");
     try {
-      final uri = role == 'doctor'
-          ? Uri.parse('${Env.prefix}/$role/$id/patients/')
+      final uri = role == 'physician'
+          ? Uri.parse('${Env.prefix}/user/physician/${id}/patients/')
           : Uri.parse('${Env.prefix}/patient/patients/');
 
       final header = <String, String>{
@@ -48,9 +42,12 @@ class PatientProvider extends ChangeNotifier {
         'Authorization': 'Bearer $token',
       };
 
-      final response = await http.get(uri, headers: header);
+      final response = await http.get(
+          uri,
+          headers: header);
       await Future.delayed(Duration(milliseconds: 3000));
-
+      print('Response Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         List<Patient> patients = data.map<Patient>((json) {
@@ -63,6 +60,38 @@ class PatientProvider extends ChangeNotifier {
       }
     } catch (e) {
       return [];
+    }
+  }
+
+  Future<bool> createPatientRecord(Patient patient, String token,
+      int? accountID, String role, int id) async {
+    final header = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      // 'Authorization': 'Bearer $token',
+    };
+    try {
+      var body = patient.toJson();
+      body['account'] = accountID;
+      print(body);
+      final response = await http.post(
+        Uri.parse('${Env.prefix}/patient/patients/create/'),
+        headers: header,
+        body: jsonEncode(body),
+        // body: jsonEncode(data),
+      );
+      // await Future.delayed(Duration(milliseconds: 3000));
+      if (response.statusCode == 201) {
+        fetchPatients(token, role, id);
+        notifyListeners();
+        return true;
+      } else {
+        print('cannot add patient record!');
+        print("HTTP Response: ${response.statusCode} ${response.body}");
+        return false;
+      }
+    } on Exception catch (e) {
+      print(e);
+      return false;
     }
   }
 
@@ -90,7 +119,7 @@ class PatientProvider extends ChangeNotifier {
   //   }
   // }
 
-  Future<Patient?> fetchPatient(String index, String token) async {
+  Future<Patient?> fetchPatient(String? index, String token) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',
@@ -98,8 +127,7 @@ class PatientProvider extends ChangeNotifier {
     try {
       final response = await http.get(
           Uri.parse('${Env.prefix}/patient/patients/${index}'),
-          headers: header);
-      await Future.delayed(Duration(milliseconds: 3000));
+          headers: header); 
       if (response.statusCode == 200) {
         return Patient.fromJson(jsonDecode(response.body));
       } else {
@@ -110,14 +138,16 @@ class PatientProvider extends ChangeNotifier {
     }
   }
 
-  Future<List<Patient>> searchPatients({String? query, String? token}) async {
+  Future<List<Patient>> searchPatients(
+      {String? query, String? token, int? accountID}) async {
     try {
       final header = <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
       };
-      final response = await http
-          .get(Uri.parse('${Env.prefix}/patient/patients/'), headers: header);
+      final response = await http.get(
+          Uri.parse('${Env.prefix}/patient/patients/user/${accountID}'),
+          headers: header);
       await Future.delayed(Duration(milliseconds: 3000));
       if (response.statusCode == 200) {
         data = json.decode(response.body);
@@ -126,20 +156,17 @@ class PatientProvider extends ChangeNotifier {
         if (query != null) {
           _patients = _patients.where(
             (element) {
-              return element.firstName
-                      !.toLowerCase()
+              return element.firstName!
+                      .toLowerCase()
                       .contains((query.toLowerCase())) ||
-                  element.lastName
-                      !.toLowerCase()
+                  element.lastName!
+                      .toLowerCase()
                       .contains((query.toLowerCase())) ||
-                  element.middleInitial
-                      !.toLowerCase()
+                  element.middleInitial!
+                      .toLowerCase()
                       .contains((query.toLowerCase())) ||
-                  element.patientId
-                      !.toLowerCase()
-                      .contains((query.toLowerCase()))||
-                  element.studNumber
-                      !.toLowerCase()
+                  element.studNumber!
+                      .toLowerCase()
                       .contains((query.toLowerCase()));
             },
           ).toList();

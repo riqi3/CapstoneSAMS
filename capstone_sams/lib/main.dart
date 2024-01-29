@@ -7,6 +7,7 @@ import 'package:capstone_sams/providers/MedicalRecordProvider.dart';
 import 'package:capstone_sams/providers/MedicineProvider.dart';
 import 'package:capstone_sams/providers/PatientProvider.dart';
 import 'package:capstone_sams/providers/PrescriptionProvider.dart';
+import 'package:capstone_sams/providers/PresentIllnessProvider.dart';
 import 'package:capstone_sams/providers/SymptomsFieldsProvider.dart';
 import 'package:capstone_sams/screens/authentication/LoginScreen.dart';
 import 'package:flutter/material.dart';
@@ -52,6 +53,9 @@ void main() async {
         ChangeNotifierProvider<MedicalRecordProvider>(
           create: (context) => MedicalRecordProvider(),
         ),
+        ChangeNotifierProvider<PresentIllnessProvider>(
+          create: (context) => PresentIllnessProvider(),
+        ),
       ],
       child: const SAMSApp(),
     ),
@@ -83,6 +87,9 @@ class SAMSApp extends StatelessWidget {
               Pallete.whiteColor,
             ),
           ),
+        ),
+        cardTheme: CardTheme(
+          color: Pallete.whiteColor,
         ),
         dialogBackgroundColor: Pallete.whiteColor,
         scaffoldBackgroundColor: Pallete.backgroundColor,

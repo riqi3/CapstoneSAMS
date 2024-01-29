@@ -1,26 +1,21 @@
 import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
-import 'package:capstone_sams/global-widgets/SearchAppBar.dart';
-import 'package:capstone_sams/providers/AccountProvider.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/present-illness-history/Diagnosis.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/present-illness-history/HistoryPresentIllnessScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/past-med-history/PastMedicalHistoryScreen.dart';
-import 'package:capstone_sams/screens/ehr-list/forms/IndividualRecordForm.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/treatment/Treatment.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../../../constants/theme/sizing.dart';
 import '../../../models/PatientModel.dart';
 import 'health-record/HealthRecordScreen.dart';
 
 class PatientTabsScreen extends StatefulWidget {
   final Patient patient;
-  final int index;
+  // final int? index;
 
   const PatientTabsScreen({
     super.key,
     required this.patient,
-    required this.index,
+    // required this.index,
   });
 
   @override

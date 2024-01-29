@@ -1,3 +1,4 @@
+from django.http import HttpResponseBadRequest
 from rest_framework import viewsets
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -10,9 +11,10 @@ from django.shortcuts import get_object_or_404
 import json
 from api.modules.user.models import Personal_Note, Account, Data_Log
 from api.modules.user.serializers import PersonalNoteSerializer, AccountSerializer
-from capstone_sams.lib.sams_server.api.modules.patient.models import Patient
-from capstone_sams.lib.sams_server.api.modules.patient.serializers import PatientSerializer
+from api.modules.patient.models import Patient
+from api.modules.patient.serializers import PatientSerializer
 from rest_framework.decorators import action
+from django.db.models import F
 
 '''
 This view represent the ability to generate
@@ -115,14 +117,23 @@ class AccountView(viewsets.ModelViewSet):
         
 '''
 This view will provide the physician with the assigned patients
-'''    
-class PhysicianPatientViewSet(viewsets.ModelViewSet):
-    serializer_class = PatientSerializer
-    permission_classes = [IsAuthenticated]
+'''
+class PhysicianPatientViewSet(viewsets.ViewSet):
+    def list(self, request, accountID):
+        print(f"Received request for physician with accountID: {accountID}")
+        try:
+            physician = Account.objects.get(accountID=accountID, accountRole='physician')
 
-    def get_queryset(self):
-        physician = self.request.user
-        return Patient.objects.filter(assignedPhysician=physician)
+            patients = Patient.objects.filter(assignedPhysician=physician)
+
+            serializer = PatientSerializer(patients, many=True)
+
+            return Response(serializer.data)
+        except Account.DoesNotExist:
+            return Response({"error": "Physician not found"}, status=404)
+
+
+
     
 '''
 This view will allow the nurse to changed the assigned physician of a specific patient. 

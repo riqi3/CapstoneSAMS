@@ -1,17 +1,17 @@
 class MedicalRecord {
-  String? recordNum;
+  String? recordID;
   List<dynamic>? illnesses;
   List<dynamic>? allergies;
-  List<dynamic>? pastDisease;
+  List<dynamic>? pastDiseases;
   List<dynamic>? familyHistory;
   String? lastMensPeriod;
   String? patient;
 
   MedicalRecord({
-    this.recordNum,
+    this.recordID,
     this.illnesses,
     this.allergies,
-    this.pastDisease,
+    this.pastDiseases,
     this.familyHistory,
     this.lastMensPeriod,
     this.patient,
@@ -19,10 +19,10 @@ class MedicalRecord {
 
   Map<String, dynamic> toJson() {
     return {
-      'recordNum': recordNum,
+      'recordID': recordID,
       'illnesses': illnesses,
       'allergies': allergies,
-      'pastDisease': pastDisease,
+      'pastDiseases': pastDiseases,
       'familyHistory': familyHistory,
       'lastMensPeriod': lastMensPeriod,
       'patient': patient,
@@ -32,18 +32,18 @@ class MedicalRecord {
   factory MedicalRecord.fromJson(Map<String, dynamic> json) {
     List<dynamic>? illnesses =
         json['illnesses'] is List<dynamic> ? json['illnesses'] : [];
-List<dynamic>? allergies =
+    List<dynamic>? allergies =
         json['allergies'] is List<dynamic> ? json['allergies'] : [];
-List<dynamic>? pastDisease =
-        json['pastDisease'] is List<dynamic> ? json['pastDisease'] : [];
-List<dynamic>? familyHistory =
+    List<dynamic>? pastDiseases =
+        json['pastDiseases'] is List<dynamic> ? json['pastDiseases'] : [];
+    List<dynamic>? familyHistory =
         json['familyHistory'] is List<dynamic> ? json['familyHistory'] : [];
 
     return MedicalRecord(
-      recordNum: json['recordNum'].toString(),
+      recordID: json['recordID'].toString(),
       illnesses: illnesses,
       allergies: allergies,
-      pastDisease: pastDisease,
+      pastDiseases: pastDiseases,
       familyHistory: familyHistory,
       lastMensPeriod: json['lastMensPeriod'],
       patient: json['patient'].toString(),

@@ -39,7 +39,9 @@ class SearchPatientDelegate extends SearchDelegate {
   Widget buildResults(BuildContext context) {
     return FutureBuilder<List<Patient>>(
       future: _patientList.searchPatients(
-          query: query, token: context.read<AccountProvider>().token!),
+          query: query,
+          token: context.read<AccountProvider>().token!,
+          accountID: context.read<AccountProvider>().acc!.accountID!),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(
@@ -53,14 +55,16 @@ class SearchPatientDelegate extends SearchDelegate {
           itemCount: patient?.length,
           itemBuilder: (context, index) {
             final patient1 = snapshot.data![index];
-            final labresult = int.parse(patient1.patientId as String);
+            // final labresult = int.parse(patient1.patientID as String);
             return GestureDetector(
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        PatientTabsScreen(patient: patient1, index: labresult),
+                    builder: (context) => PatientTabsScreen(
+                      patient: patient1,
+                      // index: labresult
+                    ),
                   ),
                 );
               },
@@ -91,7 +95,7 @@ class SearchPatientDelegate extends SearchDelegate {
                             ),
                             child: Center(
                               child: Text(
-                                '${patient?[index].patientId}',
+                                '${patient?[index].patientID}',
                                 style: TextStyle(
                                     fontSize: Sizing.header4,
                                     fontWeight: FontWeight.bold,

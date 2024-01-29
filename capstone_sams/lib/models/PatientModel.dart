@@ -1,53 +1,54 @@
+import 'package:capstone_sams/models/AccountModel.dart';
+
 class Patient {
-  String? patientId;
+  String? patientID;
   String? firstName;
   String? middleInitial;
   String? lastName;
   int? age;
   String? gender;
-  DateTime? birthDate;
-  // final String department;
+  String? patientStatus;
+  String? birthDate; 
   String? course;
   int? yrLevel;
   String? studNumber;
   String? address;
   double? height;
-  double? weight;
-  // final DateTime registration;
+  double? weight; 
   String? phone;
   String? email;
   int? assignedPhysician;
 
   Patient({
-    this.patientId,
+    this.patientID,
     this.firstName,
     this.middleInitial,
     this.lastName,
-     this.age,
-     this.gender,
-     this.birthDate,
-    // required this.department,
-     this.course,
-     this.yrLevel,
-     this.studNumber,
-     this.address,
-     this.height,
-     this.weight,
-    // required this.registration,
-     this.phone,
-     this.email,
-     this.assignedPhysician,
+    this.age,
+    this.gender,
+    this.patientStatus,
+    this.birthDate, 
+    this.course,
+    this.yrLevel,
+    this.studNumber,
+    this.address,
+    this.height,
+    this.weight, 
+    this.phone,
+    this.email,
+    this.assignedPhysician,
   });
 
   Map<String, dynamic> toJson() {
     return {
-      'patientId': patientId,
+      'patientID': patientID,
       'firstName': firstName,
       'middleInitial': middleInitial,
       'lastName': lastName,
       'age': age,
       'gender': gender,
-      'birthDate': birthDate!.toIso8601String(),
+      'patientStatus':patientStatus,
+      'birthDate': birthDate.toString(),
       // 'department': department,
       'course': course,
       'yrLevel': yrLevel,
@@ -64,21 +65,20 @@ class Patient {
 
   factory Patient.fromJson(Map<String, dynamic> json) {
     return Patient(
-      patientId: json['patientID'].toString(),
+      patientID: json['patientID'].toString(),
       firstName: json['firstName'],
       middleInitial: json['middleInitial'],
       lastName: json['lastName'],
       age: json['age'],
       gender: json['gender'],
-      birthDate: DateTime.parse(json['birthDate']),
-      // department: json['department'],
+      patientStatus: json['patientStatus'],
+      birthDate: json['birthDate'], 
       course: json['course'],
       yrLevel: json['yrLevel'],
       studNumber: json['studNumber'],
       address: json['address'],
       height: json['height'],
-      weight: json['weight'],
-      // registration: DateTime.parse(json['registration']),
+      weight: json['weight'], 
       phone: json['phone'],
       email: json['email'],
       assignedPhysician: json['assignedPhysician'],

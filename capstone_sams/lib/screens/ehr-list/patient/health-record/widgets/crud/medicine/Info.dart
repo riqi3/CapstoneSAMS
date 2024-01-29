@@ -18,7 +18,7 @@ class Info extends StatefulWidget {
   final Medicine medicine;
   final Account physician;
   final Patient patient;
-  final String index;
+  final String? index;
   Info(
       {Key? key,
       required this.patient,
@@ -35,6 +35,7 @@ class _InfoState extends State<Info> {
   late Future<List<Prescription>> prescriptions;
   late Future<List<Account>> physicians;
   bool value = false;
+  
   @override
   void initState() {
     super.initState();
@@ -47,7 +48,7 @@ class _InfoState extends State<Info> {
       final provider =
           Provider.of<PrescriptionProvider>(context, listen: false);
       await provider.fetchPrescriptions(
-          widget.patient.patientId , context.read<AccountProvider>().token!);
+          widget.patient.patientID , context.read<AccountProvider>().token!);
       return provider.prescriptions;
     } catch (error, stackTrace) {
       print("Error fetching data: $error");
@@ -61,7 +62,7 @@ class _InfoState extends State<Info> {
       final provider =
           Provider.of<PrescriptionProvider>(context, listen: false);
       await provider.fetchPrescriptions(
-          widget.patient.patientId, context.read<AccountProvider>().token!);
+          widget.patient.patientID, context.read<AccountProvider>().token!);
       return provider.physicians;
     } catch (error, stackTrace) {
       print("Error fetching data: $error");
@@ -206,7 +207,7 @@ class _InfoState extends State<Info> {
 
   void deletePrescription(BuildContext context, Prescription prescription) {
     final provider = Provider.of<PrescriptionProvider>(context, listen: false);
-    provider.removePrescription(prescription, widget.patient.patientId,
+    provider.removePrescription(prescription, widget.patient.patientID,
         context.read<AccountProvider>().token!);
     int index = 1;
     int routesCount = 0;
@@ -214,7 +215,9 @@ class _InfoState extends State<Info> {
       context,
       MaterialPageRoute(
           builder: (context) =>
-              PatientTabsScreen(patient: widget.patient, index: index)),
+              PatientTabsScreen(patient: widget.patient, 
+              // index: index,
+              )),
       (Route<dynamic> route) {
         if (routesCount < 3) {
           routesCount++;
@@ -237,17 +240,17 @@ class _InfoState extends State<Info> {
   void deleteMedicine(
       BuildContext context, Prescription prescription, String? drugId) {
     final provider = Provider.of<PrescriptionProvider>(context, listen: false);
-    provider.removeMedicine(prescription, widget.patient.patientId, drugId,
+    provider.removeMedicine(prescription, widget.patient.patientID, drugId,
         context.read<AccountProvider>().token!);
 
-    int? index = int.tryParse(widget.index);
+    // int? index = int.tryParse(widget.index);
 
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => PatientTabsScreen(
           patient: widget.patient,
-          index: index!,
+          // index: index!,
         ),
       ),
     );
@@ -269,7 +272,7 @@ class _InfoState extends State<Info> {
         builder: (context) => EditMedicineScreen(
           medicine: widget.medicine,
           patient: widget.patient,
-          index: index,
+          // index: index,
           prescription: prescription,
           presNum: presNum,
         ),
@@ -497,7 +500,6 @@ class _InfoState extends State<Info> {
                   if (medicine['quantity'] == 0)
                     InkWell(
                       onTap: () {
-                        print('${medicine["drugName"]} ${medicineIndex}');
                         detailsPrescription(
                             context, prescription, medicineIndex);
                       },

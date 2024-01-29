@@ -29,46 +29,29 @@ class PatientView(viewsets.ModelViewSet):
     def create_patient(request):
         try:
             patient_data = json.loads(request.body)
+            assignedID = patient_data['assignedPhysician']
+            physician = Account.objects.get(pk=assignedID)
             patient = Patient.objects.create(
-                patientID=patient_data['patientID'],
+                patientID=patient_data['patientID'], 
                 firstName=patient_data['firstName'],
                 middleInitial=patient_data['middleInitial'],
                 lastName=patient_data['lastName'],
                 age=patient_data['age'],
                 gender=patient_data['gender'],
-                birthDate=patient_data['birthDate'],
-                # department=patient_data['department'],
+                patientStatus=patient_data['patientStatus'],
+                birthDate=patient_data['birthDate'], 
                 course=patient_data['course'],
                 yrLevel=patient_data['yrLevel'],
                 studNumber=patient_data['studNumber'],
                 address=patient_data['address'],
                 height=patient_data['height'],
-                weight=patient_data['weight'],
-                # registration=patient_data['registration'],
+                weight=patient_data['weight'], 
                 phone=patient_data['phone'],
                 email=patient_data['email'],
-                assignedPhysician=patient_data['assignedPhysician']
+                assignedPhysician=physician
             )
-            patient_instance = get_object_or_404(Patient, pk=patient_data['patientID'])
-            record = Medical_Record.objects.create(
-                # symptoms = patient_data['symptoms'],
-                # diseases = patient_data['diseases'],
-                illnesses = patient_data['illnesses'],
-                pastDiseases = patient_data['pastDiseases'],
-                allergies = patient_data['allergies'],
-                familyHistory = patient_data['familyHistory'],
-                lastMensPeriod = patient_data['lastMensPeriod'],
-                patient = patient_instance
-            )
-            contact = Contact_Person.objects.create(
-                fullName = patient_data['fullName'],
-                phone = patient_data['phone'],
-                address = patient_data['address'],
-                patient = patient_instance
-            )
-            data = json.loads(request.body)
-            accountID = data['account']
-            account = get_object_or_404(Account, pk=accountID)
+            accountID = patient_data['account']
+            account = Account.objects.get(accountID=accountID)
             data_log = Data_Log.objects.create(
                 event = f"{account.username} created patient",
                 type = "User Created Patient",
@@ -106,6 +89,19 @@ class PatientView(viewsets.ModelViewSet):
         except Exception as e:
             return Response({"message": "Failed to fetch patients.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+    
+     
+    @api_view(['GET'])
+    def fetch_patient_by_accountid(request, accountID):
+        try:
+            account = Account.objects.get(pk=accountID)
+            patient = Patient.objects.filter(assignedPhysician=account)
+            serializer = PatientSerializer(patient, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Medical_Record.DoesNotExist:
+            return Response({"message": "Patient does not exist."}, status=status.HTTP_404_NOT_FOUND)
+    
+    
     '''
     This view allow the user to update a patient based on the patient's id.
     A data log will be automatically generated for reference.
@@ -115,15 +111,16 @@ class PatientView(viewsets.ModelViewSet):
     def update_patient(request):
         try:
             patient_data = json.loads(request.body)
-            patient_id = patient_data['patientID']
+            assignedID = patient_data['assignedPhysician']
             patient = Patient.objects.get(pk=patient_id)
+            patient_id = patient_data['patientID']
             patient.firstName = patient_data['firstName']
             patient.middleInitial = patient_data['middleInitial']
             patient.lastName = patient_data['lastName']
             patient.age = patient_data['age']
             patient.gender = patient_data['gender']
-            patient.birthDate = patient_data['birthDate']
-            patient.department = patient_data['department']
+            patient.patientStatus = patient_data['patientStatus']
+            patient.birthDate = patient_data['birthDate'] 
             patient.course=patient_data['course']
             patient.yrLevel=patient_data['yrLevel']
             patient.studNumber=patient_data['studNumber']
@@ -132,10 +129,10 @@ class PatientView(viewsets.ModelViewSet):
             patient.weight=patient_data['weight']
             patient.phone = patient_data['phone']
             patient.email = patient_data['email']
-            patient.assignedPhysician = patient_data['assignedPhysician']
+            patient.assignedPhysician = assignedID
             patient.save()
             accountID = patient_data['account']
-            account = get_object_or_404(Account, pk=accountID)
+            account = Account.object.get(pk=accountID)
             data_log = Data_Log.objects.create(
                 event = f"{account.username} updated patient id {patient_id}",
                 type = "User Update Patient Data",
@@ -175,8 +172,26 @@ class MedicalRecordView(viewsets.ViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Medical_Record.DoesNotExist:
             return Response({"message": "Health Record does not exist."}, status=status.HTTP_404_NOT_FOUND)
-    
+   
 
+    @api_view(['POST'])
+    def create_health_record(request):
+        try:
+            record_data = json.loads(request.body)
+            patientID = record_data['patient'] 
+            patient = Patient.objects.get(patientID=patientID)
+            record = Medical_Record.objects.create( 
+                illnesses = record_data['illnesses'],
+                allergies = record_data['allergies'],
+                pastDiseases = record_data['pastDiseases'],
+                familyHistory = record_data['familyHistory'],
+                lastMensPeriod = record_data['lastMensPeriod'],
+                patient = patient
+            )
+            return Response({"message": "Health record created successfully."}, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({"message": "Failed to create health record.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
     @api_view(['PUT'])
     def update_health_record(request, patientID):
         try:
@@ -187,7 +202,7 @@ class MedicalRecordView(viewsets.ViewSet):
             record.diseases = record_data['symptoms']
             record.illnesses = record_data['illnesses']
             record.allergies = record_data['allergies']
-            record.pastDisease = record_data['pastDisease']
+            record.pastDiseases = record_data['pastDiseases']
             record.familyHistory = record_data['familyHistory']
             record.lastMensPeriod = record_data['lastMensPeriod']
             record.save()
@@ -198,6 +213,21 @@ class MedicalRecordView(viewsets.ViewSet):
             return Response({"message": "Failed to update health record.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class ContactPersonView(viewsets.ViewSet):
+    @api_view(['POST'])
+    def create_contact_person(request):
+        try:
+            contact_data = json.loads(request.body)
+            patientID = contact_data['patient']
+            patient = Patient.objects.get(patientID=patientID)
+            contact = Contact_Person.objects.create(
+                fullName = contact_data['fullName'],
+                phone = contact_data['phone'],
+                address = contact_data['address'],
+                patient = patient
+            )
+            return Response({"message": "Contact record created successfully."}, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({"message": "Failed to create contact record.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST) 
     @api_view(['PUT'])
     def update_contact_person(request, patientID):
         try:
@@ -214,21 +244,22 @@ class ContactPersonView(viewsets.ViewSet):
         except Exception as e:
             return Response({"message": "Failed to update contact.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
-class PresentIllnessView(viewsets.ViewSet):
+class   PresentIllnessView(viewsets.ViewSet):
     @api_view(['GET'])
     def fetch_complaints(request):
         try:
-            complaints = Present_Illness.objects.all()
-            serializer = PresentIllnessSerializer(complaints)
+            queryset = Present_Illness.objects.all()
+            serializer = PresentIllnessSerializer(queryset, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
-            return Response({"message": "Failed to fetch complaints. str{e}"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"message": "Failed to fetch complaints.", "error": str(e)}, status=status.HTTP_404_NOT_FOUND)
 
     @api_view(['GET'])
-    def fetch_complaint_by_id(request, illnessNum):
+    def fetch_complaint_by_id(request, patientID):
         try:
-            complaint = Present_Illness.objects.get(pk=illnessNum)
-            serializer = PresentIllnessSerializer(complaint)
+            patient = Patient.objects.get(pk=patientID)
+            complaint = Present_Illness.objects.filter(patient=patient)
+            serializer = PresentIllnessSerializer(complaint, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except PresentIllnessSerializer.DoesNotExist:
             return Response({"message": "Complaint does not exist."}, status=status.HTTP_404_NOT_FOUND)
@@ -237,28 +268,39 @@ class PresentIllnessView(viewsets.ViewSet):
     def create_complaint(request, patientID):
         try:
             patient = Patient.objects.get(pk=patientID)
+            assignedID = patient.assignedPhysician.accountID
+            physician = Account.objects.get(pk=assignedID)
             illness_data = json.loads(request.body)
             illness = Present_Illness.objects.create(
+                illnessName = illness_data['illnessName'],
                 complaint = illness_data['complaint'],
                 findings = illness_data['findings'],
-                diagnosis = illness_data['diagnois'],
+                diagnosis = illness_data['diagnosis'],
                 treatment = illness_data['treatment'],
-                patient = patient
+                created_at = illness_data['created_at'],
+                updated_at = illness_data['updated_at'],
+                patient = patient,
+                assignedPhysician = physician
             )
             return Response({"message": "Complaint created successfully."}, status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response({"message": "Failed to create complaint.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
     @api_view(['PUT'])
-    def update_complaint(request, illnessNum):
+    def update_complaint(request, illnessID):
         try:
-            present_illness = Present_Illness.objects.get(pk = illnessNum)
+            present_illness = Present_Illness.objects.get(pk = illnessID)
             illness_data = json.loads(request.body)
+            present_illness.complaint = illness_data['illnessName'],
             present_illness.complaint = illness_data['complain']
             present_illness.findings = illness_data['findings']
             present_illness.diagnosis = illness_data['diagnosis']
             present_illness.treatment = illness_data['treatment']
+            present_illness.created_at = illness_data['created_at']
+            present_illness.updated_at = illness_data['updated_at']
             present_illness.save()
+            accountID = present_illness['account']
+            account = Account.object.get(pk=accountID)
             return Response({"message": "Complaint updated successfully."}, status=status.HTTP_200_OK)
         except Present_Illness.DoesNotExist:
             return Response({"message": "Complaint does not exist."}, status=status.HTTP_404_NOT_FOUND)
