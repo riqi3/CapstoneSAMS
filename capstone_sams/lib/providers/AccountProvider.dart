@@ -28,7 +28,7 @@ class AccountProvider extends ChangeNotifier {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',
-    }; 
+    };
     try {
       final response = await http.get(
           Uri.parse('${Env.prefix}/user/users/account/${accountID}'),
@@ -59,6 +59,7 @@ class AccountProvider extends ChangeNotifier {
         final data = jsonDecode(response.body);
         final account = Account.fromJson(data);
         setAccount(account);
+        isAuthentificated = true;
         return true;
       } else {
         // The login request failed, so return false
@@ -88,6 +89,7 @@ class AccountProvider extends ChangeNotifier {
 
   void setAccount(Account account) {
     _account = account;
+    print("Account Details: ${_account?.toJson()}");
     notifyListeners();
   }
 

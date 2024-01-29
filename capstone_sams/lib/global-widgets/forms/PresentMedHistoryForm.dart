@@ -3,12 +3,14 @@ import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/global-widgets/buttons/FormSubmitButton.dart';
 import 'package:capstone_sams/global-widgets/forms/FormTemplate.dart';
+import 'package:capstone_sams/global-widgets/snackbars/Snackbars.dart';
 import 'package:capstone_sams/global-widgets/text-fields/Textfields.dart';
 import 'package:capstone_sams/global-widgets/texts/FormTitleWidget.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/models/PresentIllness.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/PresentIllnessProvider.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/PatientTabsScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/present-illness-history/HistoryPresentIllnessScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -17,10 +19,10 @@ import 'package:uuid/uuid.dart';
 
 // ignore: must_be_immutable
 class PresentMedHistoryForm extends StatefulWidget {
-  Patient patient;
+  Patient patient; 
   PresentMedHistoryForm({
     Key? key,
-    required this.patient,
+    required this.patient, 
   }) : super(key: key);
 
   @override
@@ -28,15 +30,17 @@ class PresentMedHistoryForm extends StatefulWidget {
 }
 
 class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
-  int currentStep = 0;
-  int? maxLines = 4;
   final _presIllnessInfoFormKey = GlobalKey<FormState>();
   final _presIllnessInfo = PresentIllness();
+  final DateTime? createdAt = DateTime.now();
+  int currentStep = 0;
+  int? maxLines = 4;
 
-  // TextEditingController chiefComplaintField = TextEditingController();
-  // TextEditingController findingsField = TextEditingController();
-  // TextEditingController diagnosisField = TextEditingController();
-  // TextEditingController treatmentField = TextEditingController();
+  var incompleteInputs = dangerSnackbar('${Strings.incompleteInputs}');
+  var failedCreatedComplaint =
+      dangerSnackbar('${Strings.dangerAdd} diagnosis.');
+  var successfulCreatedComplaint =
+      successSnackbar('${Strings.successfulAdd} diagnosis.');
 
   bool _isLoading = false;
 
@@ -51,20 +55,14 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
     if (!isValid) {
       setState(() => _isLoading = false);
 
-      const snackBar = SnackBar(
-        backgroundColor: Pallete.dangerColor,
-        content: Text(
-          'Incomplete form inputs! Please double check inputs.',
-          style: TextStyle(fontWeight: FontWeight.w700),
-        ),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      ScaffoldMessenger.of(context).showSnackBar(incompleteInputs);
+ 
       return;
     } else {
-      final DateTime createdAt = DateTime.now();
+      print(createdAt);
 
       String formattedCreateDate =
-          _createdAt != null ? DateFormat('yyyy-MM-dd').format(createdAt) : '';
+          _createdAt != null ? DateFormat('yyyy-MM-dd').format(createdAt!) : '';
 
       var presentIllnessRecord = PresentIllness(
         illnessID: Uuid().v4(),
@@ -91,41 +89,22 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
               );
 
       if (presentIllnessSuccess) {
-        int routesCount = 0;
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
-            builder: (context) => HistoryPresentIllness(
-              patient: widget.patient,
-            ),
+            builder: (context) => PatientTabsScreen(patient: widget.patient),
           ),
-          (Route<dynamic> route) {
-            if (routesCount < 2) {
-              routesCount++;
-              return false;
-            }
-            return true;
-          },
+          (Route<dynamic> route) => false,
         );
-        const snackBar = SnackBar(
-          backgroundColor: Pallete.successColor,
-          content: Text(
-            '${Strings.successfulAdd} patient.',
-            style: TextStyle(fontWeight: FontWeight.w700),
-          ),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        // widget.onsubmit();
+        // Navigator.of(context).pop();
+        
+
+        ScaffoldMessenger.of(context).showSnackBar(successfulCreatedComplaint);
       } else {
         setState(() => _isLoading = false);
 
-        const snackBar = SnackBar(
-          backgroundColor: Pallete.dangerColor,
-          content: Text(
-            '${Strings.dangerAdd} patient.',
-            style: TextStyle(fontWeight: FontWeight.w700),
-          ),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        ScaffoldMessenger.of(context).showSnackBar(failedCreatedComplaint);
       }
     }
   }
@@ -197,7 +176,7 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
                             SizedBox(width: Sizing.formSpacing),
                             Expanded(
                               child: FormSubmitButton(
-                                title: isLastStep ? 'Confirm' : 'Next',
+                                title: isLastStep ? 'Submit' : 'Next',
                                 icon: Icons.upload,
                                 isLoading: _isLoading,
                                 onpressed: isLastStep
@@ -241,6 +220,9 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
               validator: Strings.requiredField,
               type: TextInputType.text,
             ),
+            SizedBox(
+              height: Sizing.sectionSymmPadding,
+            ),
             FormTextField(
               onchanged: (value) => _presIllnessInfo.complaint = value,
               labeltext: '',
@@ -248,13 +230,6 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
               maxlines: maxLines,
               type: TextInputType.text,
             ),
-            // FormTextField(
-            //   labeltext: '',
-            //   validator: Strings.requiredField,
-            //   type: TextInputType.text,
-            //   maxlines: maxLines,
-            //   // controller: chiefComplaintField,
-            // ),
           ],
         ),
       ),

@@ -1,34 +1,38 @@
+import 'package:capstone_sams/constants/Strings.dart';
 import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/global-widgets/cards/CardSectionInfoWidget.dart';
 import 'package:capstone_sams/global-widgets/cards/CardSectionTitleWidget.dart';
 import 'package:capstone_sams/global-widgets/cards/CardTemplate.dart';
 import 'package:capstone_sams/global-widgets/cards/CardTitleWidget.dart';
+import 'package:capstone_sams/global-widgets/texts/NoDataTextWidget.dart';
 import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/models/PresentIllness.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/PresentIllnessProvider.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/present-illness-history/widgets/crud/ViewIllnessScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
-class DiagnosisCard extends StatefulWidget {
+class DiagnosisInfoCard extends StatefulWidget {
   final Patient patient;
-  DiagnosisCard({
+  DiagnosisInfoCard({
     super.key,
     required this.patient,
   });
 
   @override
-  State<DiagnosisCard> createState() => _DiagnosisCardState();
+  State<DiagnosisInfoCard> createState() => _DiagnosisInfoCardState();
 }
 
-class _DiagnosisCardState extends State<DiagnosisCard> {
+class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
   late Stream<List<PresentIllness>> presentIllness;
   late String token = context.read<AccountProvider>().token!;
+
   @override
   void initState() {
     super.initState();
@@ -41,17 +45,21 @@ class _DiagnosisCardState extends State<DiagnosisCard> {
 
   @override
   Widget build(BuildContext context) {
-    AccountProvider accountProvider =
-        Provider.of<AccountProvider>(context);
+    AccountProvider accountProvider = Provider.of<AccountProvider>(context);
 
-        String middleInitial = accountProvider.middleName![0];
+    String middleInitial = accountProvider.middleName![0];
 
     return CardTemplate(
       column: Column(
         children: [
-          CardTitleWidget(title: 'Dr. ${accountProvider.firstName} ${middleInitial}. ${accountProvider.lastName}'),
+          CardTitleWidget(
+              title:
+                  'Dr. ${accountProvider.firstName} ${middleInitial}. ${accountProvider.lastName}'),
           CardSectionTitleWidget(title: "Patient's Present Illnesses"),
-          CardSectionInfoWidget(widget: PresentIllnessData()),
+          CardSectionInfoWidget(
+            shader: true,
+            widget: PresentIllnessData(),
+          ),
         ],
       ),
     );
@@ -65,6 +73,17 @@ class _DiagnosisCardState extends State<DiagnosisCard> {
           return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Text('${snapshot.error}');
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Center(
+            child: Container(
+              height: 100,
+              child: Center(
+                child: NoDataTextWidget(
+                  text: Strings.noRecordedIllnesses,
+                ),
+              ),
+            ),
+          );
         } else {
           final presentIllnessList = snapshot.data!;
 
@@ -73,37 +92,41 @@ class _DiagnosisCardState extends State<DiagnosisCard> {
             physics: BouncingScrollPhysics(),
             itemCount: presentIllnessList.length,
             itemBuilder: (context, index) {
-              final prescription = presentIllnessList[index];
+              final illness = presentIllnessList[index];
+              final illnessIndex = '${presentIllnessList.length - index}';
 
               return Card(
                 color: Colors.white,
                 elevation: Sizing.cardElevation,
                 margin: EdgeInsets.symmetric(
-                  vertical: Sizing.sectionSymmPadding / 2,
-                  horizontal: Sizing.sectionSymmPadding,
+                  vertical: Sizing.sectionSymmPadding / 4,
                 ),
-                child: ListTile(
-                  title: Row(
-                    children: [
-                      Text(
-                        'Dx: ',
-                      ),
-                      Text(
-                        '${prescription.illnessName}',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ],
+                child: GestureDetector(
+                  onTap: () =>
+                      viewIllnessMethod(context, illness, illnessIndex),
+                  child: ListTile(
+                    title: Row(
+                      children: [
+                        Text(
+                          'Dx #${illnessIndex}: ',
+                        ),
+                        Text(
+                          '${illness.illnessName}',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${illness.created_at}',
+                          // style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    trailing: popupActionWidget(illness, illnessIndex),
                   ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '${prescription.created_at}',
-                        // style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                  trailing: popupActionWidget(prescription.illnessID),
                 ),
               );
             },
@@ -113,7 +136,8 @@ class _DiagnosisCardState extends State<DiagnosisCard> {
     );
   }
 
-  PopupMenuButton<dynamic> popupActionWidget(String? illnessID) {
+  PopupMenuButton<dynamic> popupActionWidget(
+      PresentIllness illness, String illnessIndex) {
     return PopupMenuButton(
       itemBuilder: (context) => [
         PopupMenuItem(
@@ -129,7 +153,9 @@ class _DiagnosisCardState extends State<DiagnosisCard> {
                 color: Pallete.infoColor,
               ),
             ),
-            onTap: () {},
+            onTap: () {
+              viewIllnessMethod(context, illness, illnessIndex);
+            },
           ),
         ),
         PopupMenuItem(
@@ -165,6 +191,17 @@ class _DiagnosisCardState extends State<DiagnosisCard> {
           ),
         ),
       ],
+    );
+  }
+
+  void viewIllnessMethod(
+      BuildContext context, PresentIllness illness, String illnessIndex) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ViewIllnessScreen(
+            presentIllness: illness, illnessIndex: illnessIndex),
+      ),
     );
   }
 

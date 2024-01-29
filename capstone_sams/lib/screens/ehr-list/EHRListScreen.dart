@@ -3,9 +3,12 @@ import 'package:capstone_sams/constants/Dimensions.dart';
 import 'package:capstone_sams/constants/Strings.dart';
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/global-widgets/SearchAppBar.dart';
+import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
+import 'package:capstone_sams/models/PresentIllness.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/global-widgets/forms/PatientRegistrationForm.dart';
+import 'package:capstone_sams/providers/PresentIllnessProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/widgets/PatientCard.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -21,22 +24,32 @@ class EhrListScreen extends StatefulWidget {
 
 class _EhrListScreenState extends State<EhrListScreen> {
   late Stream<List<Patient>> patients;
+  late String role;
+  late int id;
   late String token;
   ScrollController _controller = ScrollController();
-  String selectedPatientId = '';
-  final double items = 24;
-  final start = 0;
   int currentPageIndex = 0;
   int pageRounded = 0;
+  int? assignedPhysician = 0;
   double? totalPatients = 0;
   double pages1 = 0;
+  final double items = 24;
+
+  String selectedPatientId = '';
+
+  final start = 0;
+
+  late Account? account = context.read<AccountProvider>().acc;
 
   @override
   void initState() {
     super.initState();
-    token = context.read<AccountProvider>().token!;
-    patients =
-        Stream.fromFuture(context.read<PatientProvider>().fetchPatients(token));
+    AccountProvider accountProvider = context.read<AccountProvider>();
+    token = accountProvider.token!;
+    role = accountProvider.role!;
+    id = accountProvider.id!;
+    patients = Stream.fromFuture(
+        context.read<PatientProvider>().fetchPatients(token, role, id));
   }
 
   void _scrollUp() {
@@ -86,17 +99,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
               );
             } else if (snapshot.hasData) {
               dataToShow = snapshot.data!;
-              final start = currentPageIndex * items.toInt();
-              final end = min(
-                  (currentPageIndex.toInt() * items.toInt()) + items.toInt(),
-                  dataToShow.length);
-
-              dataToShow = dataToShow.sublist(start, end);
-              totalPatients = snapshot.data?.length.toDouble();
-              pages1 = (totalPatients! / items);
-
-              if (pages1 > items) pages1++;
-              pageRounded = pages1.ceil();
+              dataToShow = CalculatePages(dataToShow, snapshot);
             }
 
             return LayoutBuilder(
@@ -136,6 +139,83 @@ class _EhrListScreenState extends State<EhrListScreen> {
         ),
       ),
     );
+  }
+
+  GridView _mobileView(List<Patient> dataToShow, int start) {
+    return GridView.builder(
+      shrinkWrap: true,
+      padding: EdgeInsets.only(),
+      physics: const BouncingScrollPhysics(),
+      itemCount: dataToShow.length,
+      itemBuilder: (context, index) {
+        final patient = dataToShow[index];
+        assignedPhysician = patient.assignedPhysician;
+        // final labresult = int.parse('${patient.patientID}');
+        return PatientCard(
+          patient: patient,
+          account: account,
+          onSelect: (patientId) {
+            setState(() {
+              selectedPatientId = patientId;
+            });
+          },
+          // labresult: labresult,
+        );
+
+        // print('${patient.assignedPhysician}');
+      },
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 1,
+        mainAxisSpacing: 10,
+        crossAxisSpacing: 10,
+        childAspectRatio: MediaQuery.of(context).size.width /
+            (MediaQuery.of(context).size.height / 5),
+      ),
+    );
+  }
+
+  GridView _tabletView(List<Patient> dataToShow, int start) {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const BouncingScrollPhysics(),
+      itemCount: dataToShow.length,
+      itemBuilder: (context, index) {
+        final patient = dataToShow[index];
+        // final labresult = int.parse(
+        //   patient.patientID as String,
+        // );
+        return PatientCard(
+          patient: patient,
+          onSelect: (patientId) {
+            setState(() {
+              selectedPatientId = patientId;
+            });
+          },
+          // labresult: labresult,
+        );
+      },
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 10,
+        crossAxisSpacing: 10,
+        childAspectRatio: 16 / 10,
+      ),
+    );
+  }
+
+  List<Patient> CalculatePages(
+      List<Patient> dataToShow, AsyncSnapshot<List<Patient>> snapshot) {
+    final start = currentPageIndex * items.toInt();
+    final end = min((currentPageIndex.toInt() * items.toInt()) + items.toInt(),
+        dataToShow.length);
+
+    dataToShow = dataToShow.sublist(start, end);
+    totalPatients = snapshot.data?.length.toDouble();
+    pages1 = (totalPatients! / items);
+
+    if (pages1 > items) pages1++;
+    pageRounded = pages1.ceil();
+    return dataToShow;
   }
 
   ElevatedButton ChevronPrev() {
@@ -180,64 +260,6 @@ class _EhrListScreenState extends State<EhrListScreen> {
           borderRadius: BorderRadius.circular(100.0),
         ),
         minimumSize: Size(50, 50),
-      ),
-    );
-  }
-
-  GridView _mobileView(List<Patient> dataToShow, int start) {
-    return GridView.builder(
-      shrinkWrap: true,
-      padding: EdgeInsets.only(),
-      physics: const BouncingScrollPhysics(),
-      itemCount: dataToShow.length,
-      itemBuilder: (context, index) {
-        final patient = dataToShow[index];
-        // final labresult = int.parse('${patient.patientID}');
-        return PatientCard(
-          patient: patient,
-          onSelect: (patientId) {
-            setState(() {
-              selectedPatientId = patientId;
-            });
-          },
-          // labresult: labresult,
-        );
-      },
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 1,
-        mainAxisSpacing: 10,
-        crossAxisSpacing: 10,
-        childAspectRatio: MediaQuery.of(context).size.width /
-            (MediaQuery.of(context).size.height / 3.5),
-      ),
-    );
-  }
-
-  GridView _tabletView(List<Patient> dataToShow, int start) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const BouncingScrollPhysics(),
-      itemCount: dataToShow.length,
-      itemBuilder: (context, index) {
-        final patient = dataToShow[index];
-        // final labresult = int.parse(
-        //   patient.patientID as String,
-        // );
-        return PatientCard(
-          patient: patient,
-          onSelect: (patientId) {
-            setState(() {
-              selectedPatientId = patientId;
-            });
-          },
-          // labresult: labresult,
-        );
-      },
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        mainAxisSpacing: 10,
-        crossAxisSpacing: 10,
-        childAspectRatio: 16 / 10,
       ),
     );
   }

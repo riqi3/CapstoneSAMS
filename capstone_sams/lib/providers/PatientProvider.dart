@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:capstone_sams/constants/Env.dart';
+import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import '../models/PatientModel.dart';
-import '../providers/AccountProvider.dart';
 
 class PatientProvider extends ChangeNotifier {
   Patient? _patient;
@@ -21,7 +21,7 @@ class PatientProvider extends ChangeNotifier {
   String? get studNumber => _patient?.studNumber;
   String? get address => _patient?.address;
   double? get height => _patient?.height;
-  double? get weight => _patient?.weight; 
+  double? get weight => _patient?.weight;
   String? get phone => _patient?.phone;
   String? get email => _patient?.email;
   int? get assignedPhysician => _patient?.assignedPhysician;
@@ -30,13 +30,11 @@ class PatientProvider extends ChangeNotifier {
 
   List<Patient> get patients => _patients;
 
-  Future<List<Patient>> fetchPatients(String token) async {
-    String role = AccountProvider().role ?? '';
-    int id = AccountProvider().id ?? 0;
-
+  Future<List<Patient>> fetchPatients(String token, String role, int id) async {
+    print("Role: $role, ID: $id");
     try {
-      final uri = role == 'doctor'
-          ? Uri.parse('${Env.prefix}/$role/$id/patients/')
+      final uri = role == 'physician'
+          ? Uri.parse('${Env.prefix}/user/physician/${id}/patients/')
           : Uri.parse('${Env.prefix}/patient/patients/');
 
       final header = <String, String>{
@@ -44,9 +42,12 @@ class PatientProvider extends ChangeNotifier {
         'Authorization': 'Bearer $token',
       };
 
-      final response = await http.get(uri, headers: header);
+      final response = await http.get(
+          uri,
+          headers: header);
       await Future.delayed(Duration(milliseconds: 3000));
-
+      print('Response Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         List<Patient> patients = data.map<Patient>((json) {
@@ -62,8 +63,8 @@ class PatientProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> createPatientRecord(
-      Patient patient, String token, int? accountID) async {
+  Future<bool> createPatientRecord(Patient patient, String token,
+      int? accountID, String role, int id) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       // 'Authorization': 'Bearer $token',
@@ -80,7 +81,7 @@ class PatientProvider extends ChangeNotifier {
       );
       // await Future.delayed(Duration(milliseconds: 3000));
       if (response.statusCode == 201) {
-        fetchPatients(token);
+        fetchPatients(token, role, id);
         notifyListeners();
         return true;
       } else {
@@ -126,8 +127,7 @@ class PatientProvider extends ChangeNotifier {
     try {
       final response = await http.get(
           Uri.parse('${Env.prefix}/patient/patients/${index}'),
-          headers: header);
-      await Future.delayed(Duration(milliseconds: 3000));
+          headers: header); 
       if (response.statusCode == 200) {
         return Patient.fromJson(jsonDecode(response.body));
       } else {
@@ -138,14 +138,16 @@ class PatientProvider extends ChangeNotifier {
     }
   }
 
-  Future<List<Patient>> searchPatients({String? query, String? token}) async {
+  Future<List<Patient>> searchPatients(
+      {String? query, String? token, int? accountID}) async {
     try {
       final header = <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
       };
-      final response = await http
-          .get(Uri.parse('${Env.prefix}/patient/patients/'), headers: header);
+      final response = await http.get(
+          Uri.parse('${Env.prefix}/patient/patients/user/${accountID}'),
+          headers: header);
       await Future.delayed(Duration(milliseconds: 3000));
       if (response.statusCode == 200) {
         data = json.decode(response.body);
@@ -161,9 +163,6 @@ class PatientProvider extends ChangeNotifier {
                       .toLowerCase()
                       .contains((query.toLowerCase())) ||
                   element.middleInitial!
-                      .toLowerCase()
-                      .contains((query.toLowerCase())) ||
-                  element.patientID!
                       .toLowerCase()
                       .contains((query.toLowerCase())) ||
                   element.studNumber!

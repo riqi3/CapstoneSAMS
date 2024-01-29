@@ -500,7 +500,6 @@ class _InfoState extends State<Info> {
                   if (medicine['quantity'] == 0)
                     InkWell(
                       onTap: () {
-                        print('${medicine["drugName"]} ${medicineIndex}');
                         detailsPrescription(
                             context, prescription, medicineIndex);
                       },

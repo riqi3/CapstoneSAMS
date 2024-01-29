@@ -1,21 +1,30 @@
 import 'package:capstone_sams/global-widgets/separators/DividerWidget.dart';
 import 'package:capstone_sams/global-widgets/texts/TitleValueText.dart';
+import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/ContactPersonModel.dart';
+import 'package:capstone_sams/models/PresentIllness.dart';
+import 'package:capstone_sams/providers/PresentIllnessProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/PatientTabsScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import '../../../constants/theme/pallete.dart';
 import '../../../constants/theme/sizing.dart';
 import '../../../models/PatientModel.dart';
 
+// ignore: must_be_immutable
 class PatientCard extends StatefulWidget {
   final Patient patient;
+  Account? account;
+  final Function(String)? callback;
   final Function(String) onSelect;
   // final int? labresult;
   PatientCard({
     required this.patient,
     required this.onSelect,
+    this.account,
+    this.callback,
     // required this.labresult,
   });
 
@@ -24,6 +33,9 @@ class PatientCard extends StatefulWidget {
 }
 
 class _PatientCardState extends State<PatientCard> {
+  late PresentIllness? presentIllness =
+      context.read<PresentIllnessProvider>().presentIllness;
+
   String course() {
     String course = '';
     if (widget.patient.course == 'Nursery') {
@@ -132,27 +144,27 @@ class _PatientCardState extends State<PatientCard> {
                           ),
                         ],
                       ),
-                      DividerWidget(),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Present Illness: ',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width / 2,
-                            child: Text(
-                              's ssssssssss s sss ss sssss s ss s sssssssss s ss wss s',
-                              style: TextStyle(
-                                height: 1.2,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      // DividerWidget(),
+                      // Row(
+                      //   crossAxisAlignment: CrossAxisAlignment.start,
+                      //   children: [
+                      //     Text(
+                      //       'Present Illness: ',
+                      //       style: TextStyle(
+                      //         fontWeight: FontWeight.w500,
+                      //       ),
+                      //     ),
+                      //     Container(
+                      //       width: MediaQuery.of(context).size.width / 2,
+                      //       child: Text(
+                      //         ('$dataFromChild'),
+                      //         style: TextStyle(
+                      //           height: 1.2,
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
                       // TitleValueText(
                       //   title: 'Present Illness: ',
                       //   value: 'ssssssssssss s ss s sssssssss s ss wss s',
