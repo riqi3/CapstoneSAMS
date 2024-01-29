@@ -27,14 +27,13 @@ class _EhrListScreenState extends State<EhrListScreen> {
   late String role;
   late int id;
   late String token;
-
+  ScrollController _controller = ScrollController();
   int currentPageIndex = 0;
   int pageRounded = 0;
   int? assignedPhysician = 0;
   double? totalPatients = 0;
   double pages1 = 0;
   final double items = 24;
-  late Stream<List<Patient>> patients;
 
   String selectedPatientId = '';
 
@@ -50,8 +49,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
     role = accountProvider.role!;
     id = accountProvider.id!;
     patients = Stream.fromFuture(
-      context.read<PatientProvider>().fetchPatients(token, role, id),
-    );
+        context.read<PatientProvider>().fetchPatients(token, role, id));
   }
 
   void _scrollUp() {

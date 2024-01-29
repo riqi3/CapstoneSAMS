@@ -43,7 +43,7 @@ class PatientProvider extends ChangeNotifier {
       };
 
       final response = await http.get(
-          Uri.parse('${Env.prefix}/patient/patients/user/$accountID'),
+          uri,
           headers: header);
       await Future.delayed(Duration(milliseconds: 3000));
       print('Response Status Code: ${response.statusCode}');
