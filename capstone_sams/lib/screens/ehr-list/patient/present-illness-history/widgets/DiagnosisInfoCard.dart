@@ -12,25 +12,27 @@ import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/models/PresentIllness.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/PresentIllnessProvider.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/present-illness-history/widgets/crud/ViewIllnessScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
-class DiagnosisCard extends StatefulWidget {
+class DiagnosisInfoCard extends StatefulWidget {
   final Patient patient;
-  DiagnosisCard({
+  DiagnosisInfoCard({
     super.key,
     required this.patient,
   });
 
   @override
-  State<DiagnosisCard> createState() => _DiagnosisCardState();
+  State<DiagnosisInfoCard> createState() => _DiagnosisInfoCardState();
 }
 
-class _DiagnosisCardState extends State<DiagnosisCard> {
+class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
   late Stream<List<PresentIllness>> presentIllness;
   late String token = context.read<AccountProvider>().token!;
+
   @override
   void initState() {
     super.initState();
@@ -53,18 +55,7 @@ class _DiagnosisCardState extends State<DiagnosisCard> {
           CardTitleWidget(
               title:
                   'Dr. ${accountProvider.firstName} ${middleInitial}. ${accountProvider.lastName}'),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              CardSectionTitleWidget(title: "Patient's Present Illnesses"),
-              Container(
-                  padding: EdgeInsets.only(right: Sizing.sectionSymmPadding),
-                  child: IconButton(
-                    icon: FaIcon(FontAwesomeIcons.sackDollar),
-                    onPressed: () {},
-                  ))
-            ],
-          ),
+          CardSectionTitleWidget(title: "Patient's Present Illnesses"),
           CardSectionInfoWidget(widget: PresentIllnessData()),
         ],
       ),
@@ -99,6 +90,7 @@ class _DiagnosisCardState extends State<DiagnosisCard> {
             itemCount: presentIllnessList.length,
             itemBuilder: (context, index) {
               final illness = presentIllnessList[index];
+              final illnessIndex = '${presentIllnessList.length - index}';
 
               return Card(
                 color: Colors.white,
@@ -106,28 +98,32 @@ class _DiagnosisCardState extends State<DiagnosisCard> {
                 margin: EdgeInsets.symmetric(
                   vertical: Sizing.sectionSymmPadding / 4,
                 ),
-                child: ListTile(
-                  title: Row(
-                    children: [
-                      Text(
-                        'Dx: ',
-                      ),
-                      Text(
-                        '${illness.illnessName}',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ],
+                child: GestureDetector(
+                  onTap: () =>
+                      viewIllnessMethod(context, illness, illnessIndex),
+                  child: ListTile(
+                    title: Row(
+                      children: [
+                        Text(
+                          'Dx #${illnessIndex}: ',
+                        ),
+                        Text(
+                          '${illness.illnessName}',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${illness.created_at}',
+                          // style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    trailing: popupActionWidget(illness, illnessIndex),
                   ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '${illness.created_at}',
-                        // style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                  trailing: popupActionWidget(illness.illnessID),
                 ),
               );
             },
@@ -137,7 +133,8 @@ class _DiagnosisCardState extends State<DiagnosisCard> {
     );
   }
 
-  PopupMenuButton<dynamic> popupActionWidget(String? illnessID) {
+  PopupMenuButton<dynamic> popupActionWidget(
+      PresentIllness illness, String illnessIndex) {
     return PopupMenuButton(
       itemBuilder: (context) => [
         PopupMenuItem(
@@ -153,7 +150,9 @@ class _DiagnosisCardState extends State<DiagnosisCard> {
                 color: Pallete.infoColor,
               ),
             ),
-            onTap: () {},
+            onTap: () {
+              viewIllnessMethod(context, illness, illnessIndex);
+            },
           ),
         ),
         PopupMenuItem(
@@ -189,6 +188,17 @@ class _DiagnosisCardState extends State<DiagnosisCard> {
           ),
         ),
       ],
+    );
+  }
+
+  void viewIllnessMethod(
+      BuildContext context, PresentIllness illness, String illnessIndex) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ViewIllnessScreen(
+            presentIllness: illness, illnessIndex: illnessIndex),
+      ),
     );
   }
 

@@ -166,7 +166,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
         mainAxisSpacing: 10,
         crossAxisSpacing: 10,
         childAspectRatio: MediaQuery.of(context).size.width /
-            (MediaQuery.of(context).size.height / 3.5),
+            (MediaQuery.of(context).size.height / 5),
       ),
     );
   }

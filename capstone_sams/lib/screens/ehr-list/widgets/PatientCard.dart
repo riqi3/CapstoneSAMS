@@ -17,12 +17,14 @@ import '../../../models/PatientModel.dart';
 class PatientCard extends StatefulWidget {
   final Patient patient;
   Account? account;
+  final Function(String)? callback;
   final Function(String) onSelect;
   // final int? labresult;
   PatientCard({
     required this.patient,
-    this.account,
     required this.onSelect,
+    this.account,
+    this.callback,
     // required this.labresult,
   });
 
@@ -60,6 +62,7 @@ class _PatientCardState extends State<PatientCard> {
 
     return course;
   }
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +73,7 @@ class _PatientCardState extends State<PatientCard> {
           context,
           MaterialPageRoute(
             builder: (context) => PatientTabsScreen(
-              patient: widget.patient,
+              patient: widget.patient, 
               // index: widget.labresult,
             ),
           ),
@@ -142,27 +145,27 @@ class _PatientCardState extends State<PatientCard> {
                           ),
                         ],
                       ),
-                      DividerWidget(),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Present Illness: ',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width / 2,
-                            child: Text(
-                              's',
-                              style: TextStyle(
-                                height: 1.2,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      // DividerWidget(),
+                      // Row(
+                      //   crossAxisAlignment: CrossAxisAlignment.start,
+                      //   children: [
+                      //     Text(
+                      //       'Present Illness: ',
+                      //       style: TextStyle(
+                      //         fontWeight: FontWeight.w500,
+                      //       ),
+                      //     ),
+                      //     Container(
+                      //       width: MediaQuery.of(context).size.width / 2,
+                      //       child: Text(
+                      //         ('$dataFromChild'),
+                      //         style: TextStyle(
+                      //           height: 1.2,
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
                       // TitleValueText(
                       //   title: 'Present Illness: ',
                       //   value: 'ssssssssssss s ss s sssssssss s ss wss s',

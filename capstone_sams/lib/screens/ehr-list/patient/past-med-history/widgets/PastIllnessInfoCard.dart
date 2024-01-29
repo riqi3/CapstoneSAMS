@@ -45,7 +45,7 @@ class _PastIllnesInfoCardState extends State<PastIllnesInfoCard> {
       column: Column(
         children: [
           CardTitleWidget(title: 'Medical Information'),
-          CardSectionTitleWidget(title: ''),
+          CardSectionTitleWidget(title: 'Past Medical History'),
           CardSectionInfoWidget(
             widget: MedicalRecordData(medicalRecordProvider),
           ),
