@@ -30,8 +30,13 @@ class PatientProvider extends ChangeNotifier {
 
   List<Patient> get patients => _patients;
 
-  Future<List<Patient>> fetchPatients(String token, int? accountID) async {
+  Future<List<Patient>> fetchPatients(String token, String role, int id) async {
+    print("Role: $role, ID: $id");
     try {
+      final uri = role == 'physician'
+          ? Uri.parse('${Env.prefix}/user/physician/${id}/patients/')
+          : Uri.parse('${Env.prefix}/patient/patients/');
+
       final header = <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
@@ -41,7 +46,8 @@ class PatientProvider extends ChangeNotifier {
           Uri.parse('${Env.prefix}/patient/patients/user/$accountID'),
           headers: header);
       await Future.delayed(Duration(milliseconds: 3000));
-
+      print('Response Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         List<Patient> patients = data.map<Patient>((json) {
@@ -57,8 +63,8 @@ class PatientProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> createPatientRecord(
-      Patient patient, String token, int? accountID) async {
+  Future<bool> createPatientRecord(Patient patient, String token,
+      int? accountID, String role, int id) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       // 'Authorization': 'Bearer $token',
@@ -75,7 +81,7 @@ class PatientProvider extends ChangeNotifier {
       );
       // await Future.delayed(Duration(milliseconds: 3000));
       if (response.statusCode == 201) {
-        fetchPatients(token, accountID);
+        fetchPatients(token, role, id);
         notifyListeners();
         return true;
       } else {
