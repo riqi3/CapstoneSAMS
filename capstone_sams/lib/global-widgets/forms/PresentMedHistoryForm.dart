@@ -3,6 +3,7 @@ import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/global-widgets/buttons/FormSubmitButton.dart';
 import 'package:capstone_sams/global-widgets/forms/FormTemplate.dart';
+import 'package:capstone_sams/global-widgets/snackbars/Snackbars.dart';
 import 'package:capstone_sams/global-widgets/text-fields/Textfields.dart';
 import 'package:capstone_sams/global-widgets/texts/FormTitleWidget.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
@@ -28,15 +29,17 @@ class PresentMedHistoryForm extends StatefulWidget {
 }
 
 class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
-  int currentStep = 0;
-  int? maxLines = 4;
   final _presIllnessInfoFormKey = GlobalKey<FormState>();
   final _presIllnessInfo = PresentIllness();
 
-  // TextEditingController chiefComplaintField = TextEditingController();
-  // TextEditingController findingsField = TextEditingController();
-  // TextEditingController diagnosisField = TextEditingController();
-  // TextEditingController treatmentField = TextEditingController();
+  int currentStep = 0;
+  int? maxLines = 4;
+
+  var incompleteInputs = dangerSnackbar('${Strings.incompleteInputs}');
+  var failedCreatedComplaint =
+      dangerSnackbar('${Strings.dangerAdd} diagnosis.');
+  var successfulCreatedComplaint =
+      successSnackbar('${Strings.successfulAdd} diagnosis.');
 
   bool _isLoading = false;
 
@@ -51,14 +54,7 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
     if (!isValid) {
       setState(() => _isLoading = false);
 
-      const snackBar = SnackBar(
-        backgroundColor: Pallete.dangerColor,
-        content: Text(
-          'Incomplete form inputs! Please double check inputs.',
-          style: TextStyle(fontWeight: FontWeight.w700),
-        ),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      ScaffoldMessenger.of(context).showSnackBar(incompleteInputs);
       return;
     } else {
       final DateTime createdAt = DateTime.now();
@@ -107,25 +103,12 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
             return true;
           },
         );
-        const snackBar = SnackBar(
-          backgroundColor: Pallete.successColor,
-          content: Text(
-            '${Strings.successfulAdd} patient.',
-            style: TextStyle(fontWeight: FontWeight.w700),
-          ),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+        ScaffoldMessenger.of(context).showSnackBar(successfulCreatedComplaint);
       } else {
         setState(() => _isLoading = false);
 
-        const snackBar = SnackBar(
-          backgroundColor: Pallete.dangerColor,
-          content: Text(
-            '${Strings.dangerAdd} patient.',
-            style: TextStyle(fontWeight: FontWeight.w700),
-          ),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        ScaffoldMessenger.of(context).showSnackBar(failedCreatedComplaint);
       }
     }
   }
@@ -240,6 +223,9 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
               labeltext: 'Illness Name*',
               validator: Strings.requiredField,
               type: TextInputType.text,
+            ),
+            SizedBox(
+              height: Sizing.sectionSymmPadding,
             ),
             FormTextField(
               onchanged: (value) => _presIllnessInfo.complaint = value,

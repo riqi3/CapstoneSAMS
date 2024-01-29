@@ -9,6 +9,7 @@ import 'package:capstone_sams/global-widgets/buttons/FormSubmitButton.dart';
 import 'package:capstone_sams/global-widgets/chips/ListItemChips.dart';
 import 'package:capstone_sams/global-widgets/datepicker/Datepicker.dart';
 import 'package:capstone_sams/global-widgets/forms/FormTemplate.dart';
+import 'package:capstone_sams/global-widgets/snackbars/Snackbars.dart';
 import 'package:capstone_sams/global-widgets/text-fields/Textfields.dart';
 import 'package:capstone_sams/global-widgets/texts/FormSectionTitleWidget.dart';
 import 'package:capstone_sams/global-widgets/texts/FormTitleWidget.dart';
@@ -48,6 +49,11 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
   final _genInfo = Patient();
   final _contactInfoFormKey = GlobalKey<FormState>();
   final _contactInfo = ContactPerson();
+
+  var incompleteInputs = dangerSnackbar('${Strings.incompleteInputs}');
+  var failedRegisterPatient = dangerSnackbar('${Strings.dangerAdd} patient.');
+  var successfulRegisterPatient =
+      successSnackbar('${Strings.successfulAdd} patient.');
 
   TextEditingController otherIllnesses = TextEditingController();
   TextEditingController otherAllergies = TextEditingController();
@@ -122,14 +128,8 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
         _isPhysicianInvalid = value;
       });
 
-      const snackBar = SnackBar(
-        backgroundColor: Pallete.dangerColor,
-        content: Text(
-          'Incomplete form inputs! Please double check inputs.',
-          style: TextStyle(fontWeight: FontWeight.w700),
-        ),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      ScaffoldMessenger.of(context).showSnackBar(incompleteInputs);
+
       return;
     } else {
       String formattedDate = _birthDate != null
@@ -225,25 +225,12 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
             return true;
           },
         );
-        const snackBar = SnackBar(
-          backgroundColor: Pallete.successColor,
-          content: Text(
-            '${Strings.successfulAdd} patient.',
-            style: TextStyle(fontWeight: FontWeight.w700),
-          ),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+        ScaffoldMessenger.of(context).showSnackBar(successfulRegisterPatient);
       } else {
         setState(() => _isLoading = false);
 
-        const snackBar = SnackBar(
-          backgroundColor: Pallete.dangerColor,
-          content: Text(
-            '${Strings.dangerAdd} patient.',
-            style: TextStyle(fontWeight: FontWeight.w700),
-          ),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        ScaffoldMessenger.of(context).showSnackBar(failedRegisterPatient);
       }
     }
   }

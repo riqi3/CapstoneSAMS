@@ -5,8 +5,10 @@ import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/global-widgets/SearchAppBar.dart';
 import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
+import 'package:capstone_sams/models/PresentIllness.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/global-widgets/forms/PatientRegistrationForm.dart';
+import 'package:capstone_sams/providers/PresentIllnessProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/widgets/PatientCard.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -21,17 +23,20 @@ class EhrListScreen extends StatefulWidget {
 }
 
 class _EhrListScreenState extends State<EhrListScreen> {
-  late Stream<List<Patient>> patients;
-  late String token;
   ScrollController _controller = ScrollController();
-  String selectedPatientId = '';
-  final double items = 24;
-  final start = 0;
+  late String token;
+
   int currentPageIndex = 0;
   int pageRounded = 0;
+  int? assignedPhysician = 0;
   double? totalPatients = 0;
   double pages1 = 0;
-  int? assignedPhysician = 0;
+  final double items = 24;
+  late Stream<List<Patient>> patients;
+
+  String selectedPatientId = '';
+
+  final start = 0;
 
   late Account? account = context.read<AccountProvider>().acc;
 
@@ -54,8 +59,6 @@ class _EhrListScreenState extends State<EhrListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('aa${account!.accountID}');
-
     return Scaffold(
       endDrawer: ValueDashboard(),
       appBar: PreferredSize(

@@ -53,7 +53,18 @@ class _DiagnosisCardState extends State<DiagnosisCard> {
           CardTitleWidget(
               title:
                   'Dr. ${accountProvider.firstName} ${middleInitial}. ${accountProvider.lastName}'),
-          CardSectionTitleWidget(title: "Patient's Present Illnesses"),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CardSectionTitleWidget(title: "Patient's Present Illnesses"),
+              Container(
+                  padding: EdgeInsets.only(right: Sizing.sectionSymmPadding),
+                  child: IconButton(
+                    icon: FaIcon(FontAwesomeIcons.sackDollar),
+                    onPressed: () {},
+                  ))
+            ],
+          ),
           CardSectionInfoWidget(widget: PresentIllnessData()),
         ],
       ),

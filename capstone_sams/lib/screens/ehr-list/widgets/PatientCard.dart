@@ -2,10 +2,13 @@ import 'package:capstone_sams/global-widgets/separators/DividerWidget.dart';
 import 'package:capstone_sams/global-widgets/texts/TitleValueText.dart';
 import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/ContactPersonModel.dart';
+import 'package:capstone_sams/models/PresentIllness.dart';
+import 'package:capstone_sams/providers/PresentIllnessProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/PatientTabsScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import '../../../constants/theme/pallete.dart';
 import '../../../constants/theme/sizing.dart';
 import '../../../models/PatientModel.dart';
@@ -28,6 +31,9 @@ class PatientCard extends StatefulWidget {
 }
 
 class _PatientCardState extends State<PatientCard> {
+  late PresentIllness? presentIllness =
+      context.read<PresentIllnessProvider>().presentIllness;
+
   String course() {
     String course = '';
     if (widget.patient.course == 'Nursery') {
@@ -149,7 +155,7 @@ class _PatientCardState extends State<PatientCard> {
                           Container(
                             width: MediaQuery.of(context).size.width / 2,
                             child: Text(
-                              's ssssssssss s sss ss sssss s ss s sssssssss s ss wss s',
+                              's',
                               style: TextStyle(
                                 height: 1.2,
                               ),

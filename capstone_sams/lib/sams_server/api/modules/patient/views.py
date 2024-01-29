@@ -111,8 +111,9 @@ class PatientView(viewsets.ModelViewSet):
     def update_patient(request):
         try:
             patient_data = json.loads(request.body)
-            patient_id = patient_data['patientID']
+            assignedID = patient_data['assignedPhysician']
             patient = Patient.objects.get(pk=patient_id)
+            patient_id = patient_data['patientID']
             patient.firstName = patient_data['firstName']
             patient.middleInitial = patient_data['middleInitial']
             patient.lastName = patient_data['lastName']
@@ -128,7 +129,7 @@ class PatientView(viewsets.ModelViewSet):
             patient.weight=patient_data['weight']
             patient.phone = patient_data['phone']
             patient.email = patient_data['email']
-            patient.assignedPhysician = patient_data['assignedPhysician']
+            patient.assignedPhysician = assignedID
             patient.save()
             accountID = patient_data['account']
             account = Account.object.get(pk=accountID)

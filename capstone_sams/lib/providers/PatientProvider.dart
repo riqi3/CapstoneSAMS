@@ -121,8 +121,7 @@ class PatientProvider extends ChangeNotifier {
     try {
       final response = await http.get(
           Uri.parse('${Env.prefix}/patient/patients/${index}'),
-          headers: header);
-      await Future.delayed(Duration(milliseconds: 3000));
+          headers: header); 
       if (response.statusCode == 200) {
         return Patient.fromJson(jsonDecode(response.body));
       } else {

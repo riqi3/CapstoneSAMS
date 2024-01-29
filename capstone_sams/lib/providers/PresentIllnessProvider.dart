@@ -62,6 +62,7 @@ class PresentIllnessProvider extends ChangeNotifier {
         List<PresentIllness> presentIllness = items.map<PresentIllness>((json) {
           return PresentIllness.fromJson(json);
         }).toList();
+        presentIllness = presentIllness.reversed.toList();
 
         return presentIllness;
       } else {
