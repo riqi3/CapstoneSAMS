@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../providers/healthcheckprovider.dart';
+import '../../../../providers/HealthCheckProvider.dart';
 import 'widgets/buildwidgets.dart';
 
 class HealthCheckScreen extends StatelessWidget {
