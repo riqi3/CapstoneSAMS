@@ -31,8 +31,7 @@ class TodosProvider extends ChangeNotifier {
           _getUrl('user/notes/get/$accountID'),
         ),
         headers: headers,
-      );
-      // await Future.delayed(Duration(milliseconds: 3000));
+      ); 
       if (response.statusCode == 200) {
         final items = json.decode(response.body).cast<Map<String, dynamic>>();
         List<Todo> list =
@@ -61,8 +60,7 @@ class TodosProvider extends ChangeNotifier {
         Uri.parse(_getUrl('user/notes/create/')),
         headers: headers,
         body: jsonEncode(todo.toJson()),
-      );
-      // await Future.delayed(Duration(milliseconds: 3000));
+      ); 
       if (response.statusCode == 201) {
         fetchTodos(accountID, token);
         notifyListeners();
@@ -86,8 +84,7 @@ class TodosProvider extends ChangeNotifier {
             _getUrl('user/notes/update/${todo.noteNum}'),
           ),
           headers: headers,
-          body: jsonEncode(todo.toJson()));
-      // await Future.delayed(Duration(milliseconds: 3000));
+          body: jsonEncode(todo.toJson())); 
 
       if (response.statusCode == 204) {
         fetchTodos(accountID, token);

@@ -55,8 +55,7 @@ class PresentIllnessProvider extends ChangeNotifier {
       final response = await http.get(
           Uri.parse(
               '${Env.prefix}/patient/patients/complaints/illness/${patientID}'),
-          headers: header);
-      await Future.delayed(Duration(milliseconds: 3000));
+          headers: header); 
       if (response.statusCode == 200) {
         final items = json.decode(response.body);
         List<PresentIllness> presentIllness = items.map<PresentIllness>((json) {

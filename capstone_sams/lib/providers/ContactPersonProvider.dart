@@ -31,8 +31,7 @@ class ContactPersonProvider extends ChangeNotifier {
     try {
       final response = await http.get(
           Uri.parse('${Env.prefix}/patient/patients/contact/${patientID}'),
-          headers: header);
-      await Future.delayed(Duration(milliseconds: 3000));
+          headers: header); 
       if (response.statusCode == 200) {
         return ContactPerson.fromJson(
             jsonDecode(response.body) as Map<String, dynamic>);
@@ -55,8 +54,7 @@ class ContactPersonProvider extends ChangeNotifier {
         Uri.parse('${Env.prefix}/patient/patients/contact/create/'),
         headers: header,
         body: jsonEncode(contactPerson.toJson()),
-      );
-      // await Future.delayed(Duration(milliseconds: 3000));
+      ); 
       if (response.statusCode == 201) {
         fetchContactPeople(token, patientID);
         notifyListeners();
