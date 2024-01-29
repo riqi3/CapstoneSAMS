@@ -60,113 +60,88 @@ class ViewIllnessScreenState extends State<ViewIllnessScreen> {
             child: Column(
               children: [
                 CardTitleWidget(title: 'Present Illness'),
-                CardSectionTitleWidget(title: 'Dx #${widget.illnessIndex}'),
-                CardSectionInfoWidget(
-                  widget: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Row(
-                          children: [
-                            Text(
-                              '${widget.presentIllness.illnessName}',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: Sizing.header5,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Chief Complaint: ',
-                                  style: TextStyle(fontWeight: FontWeight.w500),
-                                ),
-                                Container(
-                                  width: MediaQuery.of(context).size.width / 1,
-                                  child: Text(
-                                    '${widget.presentIllness.complaint}',
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Findings: ',
-                                  style: TextStyle(fontWeight: FontWeight.w500),
-                                ),
-                                Container(
-                                  width: MediaQuery.of(context).size.width / 1,
-                                  child: Text(
-                                    '${widget.presentIllness.findings}',
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Diagnosis: ',
-                                  style: TextStyle(fontWeight: FontWeight.w500),
-                                ),
-                                Container(
-                                  width: MediaQuery.of(context).size.width / 1,
-                                  child: Text(
-                                    '${widget.presentIllness.diagnosis}',
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Treatment: ',
-                                  style: TextStyle(fontWeight: FontWeight.w500),
-                                ),
-                                Container(
-                                  width: MediaQuery.of(context).size.width / 1,
-                                  child: Text(
-                                    '${widget.presentIllness.treatment}',
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
+                CardSectionTitleWidget(
+                    title:
+                        'Dx #${widget.illnessIndex} ${widget.presentIllness.illnessName}'),
+                CardSectionInfoWidget( 
+                  widget: PresentIllnessData(context),
                 ),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  SingleChildScrollView PresentIllnessData(BuildContext context) {
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      scrollDirection: Axis.horizontal,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Chief Complaint: ',
+                style: TextStyle(fontWeight: FontWeight.w500),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width / 1.5,
+                child: Text(
+                  '${widget.presentIllness.complaint}',
+                ),
+              ),
+            ],
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Findings: ',
+                style: TextStyle(fontWeight: FontWeight.w500),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width / 1,
+                child: Text(
+                  '${widget.presentIllness.findings}',
+                ),
+              ),
+            ],
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Diagnosis: ',
+                style: TextStyle(fontWeight: FontWeight.w500),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width / 1,
+                child: Text(
+                  '${widget.presentIllness.diagnosis}',
+                ),
+              ),
+            ],
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Treatment: ',
+                style: TextStyle(fontWeight: FontWeight.w500),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width / 1,
+                child: Text(
+                  '${widget.presentIllness.treatment}',
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

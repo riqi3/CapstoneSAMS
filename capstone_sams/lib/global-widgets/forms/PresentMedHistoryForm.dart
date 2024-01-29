@@ -10,6 +10,7 @@ import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/models/PresentIllness.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/PresentIllnessProvider.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/PatientTabsScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/present-illness-history/HistoryPresentIllnessScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -18,10 +19,10 @@ import 'package:uuid/uuid.dart';
 
 // ignore: must_be_immutable
 class PresentMedHistoryForm extends StatefulWidget {
-  Patient patient;
+  Patient patient; 
   PresentMedHistoryForm({
     Key? key,
-    required this.patient,
+    required this.patient, 
   }) : super(key: key);
 
   @override
@@ -31,7 +32,7 @@ class PresentMedHistoryForm extends StatefulWidget {
 class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
   final _presIllnessInfoFormKey = GlobalKey<FormState>();
   final _presIllnessInfo = PresentIllness();
-
+  final DateTime? createdAt = DateTime.now();
   int currentStep = 0;
   int? maxLines = 4;
 
@@ -55,12 +56,13 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
       setState(() => _isLoading = false);
 
       ScaffoldMessenger.of(context).showSnackBar(incompleteInputs);
+ 
       return;
     } else {
-      final DateTime createdAt = DateTime.now();
+      print(createdAt);
 
       String formattedCreateDate =
-          _createdAt != null ? DateFormat('yyyy-MM-dd').format(createdAt) : '';
+          _createdAt != null ? DateFormat('yyyy-MM-dd').format(createdAt!) : '';
 
       var presentIllnessRecord = PresentIllness(
         illnessID: Uuid().v4(),
@@ -87,22 +89,16 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
               );
 
       if (presentIllnessSuccess) {
-        int routesCount = 0;
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
-            builder: (context) => HistoryPresentIllness(
-              patient: widget.patient,
-            ),
+            builder: (context) => PatientTabsScreen(patient: widget.patient),
           ),
-          (Route<dynamic> route) {
-            if (routesCount < 2) {
-              routesCount++;
-              return false;
-            }
-            return true;
-          },
+          (Route<dynamic> route) => false,
         );
+        // widget.onsubmit();
+        // Navigator.of(context).pop();
+        
 
         ScaffoldMessenger.of(context).showSnackBar(successfulCreatedComplaint);
       } else {
@@ -180,7 +176,7 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
                             SizedBox(width: Sizing.formSpacing),
                             Expanded(
                               child: FormSubmitButton(
-                                title: isLastStep ? 'Confirm' : 'Next',
+                                title: isLastStep ? 'Submit' : 'Next',
                                 icon: Icons.upload,
                                 isLoading: _isLoading,
                                 onpressed: isLastStep
@@ -234,13 +230,6 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
               maxlines: maxLines,
               type: TextInputType.text,
             ),
-            // FormTextField(
-            //   labeltext: '',
-            //   validator: Strings.requiredField,
-            //   type: TextInputType.text,
-            //   maxlines: maxLines,
-            //   // controller: chiefComplaintField,
-            // ),
           ],
         ),
       ),

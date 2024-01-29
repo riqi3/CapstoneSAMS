@@ -62,7 +62,6 @@ class _PatientCardState extends State<PatientCard> {
 
     return course;
   }
- 
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +72,7 @@ class _PatientCardState extends State<PatientCard> {
           context,
           MaterialPageRoute(
             builder: (context) => PatientTabsScreen(
-              patient: widget.patient, 
+              patient: widget.patient,
               // index: widget.labresult,
             ),
           ),

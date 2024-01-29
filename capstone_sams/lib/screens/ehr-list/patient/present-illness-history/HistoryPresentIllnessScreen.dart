@@ -29,7 +29,7 @@ class _HistoryPresentIllnessState extends State<HistoryPresentIllness> {
       column: Column(
         children: [
           DiagnosisInfoCard(
-            patient: widget.patient, 
+            patient: widget.patient,
           ),
         ],
       ),
@@ -37,7 +37,7 @@ class _HistoryPresentIllnessState extends State<HistoryPresentIllness> {
         onPressed: () => showDialog(
           context: context,
           builder: (ctx) => PresentMedHistoryForm(
-            patient: widget.patient,
+            patient: widget.patient, 
           ),
         ),
         child: FaIcon(FontAwesomeIcons.pencil),

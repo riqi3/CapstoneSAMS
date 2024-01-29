@@ -2,12 +2,35 @@ import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:flutter/material.dart';
 
-class CardSectionInfoWidget extends StatelessWidget {
+// ignore: must_be_immutable
+class CardSectionInfoWidget extends StatefulWidget {
   final Widget widget;
-  const CardSectionInfoWidget({
+  bool? shader;
+  CardSectionInfoWidget({
     super.key,
     required this.widget,
+    this.shader,
   });
+
+  @override
+  State<CardSectionInfoWidget> createState() => _CardSectionInfoWidgetState();
+}
+
+class _CardSectionInfoWidgetState extends State<CardSectionInfoWidget> {
+  Widget widgetEffects(shader) {
+    if (shader == true) {
+      return widget.widget;
+    }
+    return ShaderMask(
+      shaderCallback: (Rect bounds) {
+        return LinearGradient(
+          colors: [Colors.white, Colors.transparent],
+          stops: [0.95, 1],
+        ).createShader(bounds);
+      },
+      child: widget.widget,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +51,7 @@ class CardSectionInfoWidget extends StatelessWidget {
           right: Sizing.sectionSymmPadding,
           bottom: Sizing.sectionSymmPadding,
         ),
-        child: widget,
+        child: widgetEffects(widget.shader),
       ),
     );
   }
