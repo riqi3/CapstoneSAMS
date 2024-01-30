@@ -38,8 +38,7 @@ class MedicalRecordProvider with ChangeNotifier {
     try {
       final response = await http.get(
           Uri.parse('${Env.prefix}/patient/patients/history/${patientID}'),
-          headers: header);
-      await Future.delayed(Duration(milliseconds: 3000));
+          headers: header); 
       if (response.statusCode == 200) {
         return MedicalRecord.fromJson(
             jsonDecode(response.body) as Map<String, dynamic>);
@@ -65,8 +64,7 @@ class MedicalRecordProvider with ChangeNotifier {
         Uri.parse('${Env.prefix}/patient/patients/history/create/'),
         headers: header,
         body: jsonEncode(medicalRecord.toJson()),
-      );
-      // await Future.delayed(Duration(milliseconds: 3000));
+      ); 
       if (response.statusCode == 201) {
         fetchMedicalRecords(token, patientID);
         notifyListeners();

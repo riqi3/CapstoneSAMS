@@ -142,7 +142,25 @@ class PatientView(viewsets.ModelViewSet):
         except Patient.DoesNotExist:
             return Response({"message": "Patient does not exist."}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            return Response({"message": "Failed to update patient.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "Failed to update patient.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST) 
+    
+    @api_view(['DELETE'])
+    # @permission_classes([IsAuthenticated])
+    def delete_patient(request, patientID):
+        try:
+            patient = Patient.objects.get(pk=patientID)
+            data = json.loads(request)
+            accountID = data['accountID']
+            patient.isDeleted = True
+            account = Account.object.get(pk=accountID)
+            data_log = Data_Log.objects.create(
+                event = f"{account.username} deleted patient id {patient.patientID}",
+                type = "User Soft Delete Patient Data",
+                account = account
+            )
+            return Response({"message": "Patient deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+        except Exception as e:
+            return Response({"message": "Failed to delete patient.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 '''
 This view represent all the functions necessary to conduct
 operations related to Medical_Record objects.
@@ -244,7 +262,7 @@ class ContactPersonView(viewsets.ViewSet):
         except Exception as e:
             return Response({"message": "Failed to update contact.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
-class   PresentIllnessView(viewsets.ViewSet):
+class PresentIllnessView(viewsets.ViewSet):
     @api_view(['GET'])
     def fetch_complaints(request):
         try:
@@ -306,3 +324,21 @@ class   PresentIllnessView(viewsets.ViewSet):
             return Response({"message": "Complaint does not exist."}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"message": "Failed to update complaint.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+    @api_view(['DELETE'])
+    # @permission_classes([IsAuthenticated])
+    def delete_complaint(request, illnessID):
+        try:
+            complaint = Present_Illness.objects.get(pk=illnessID)
+            data = json.loads(request)
+            accountID = data['accountID']
+            complaint.isDeleted = True
+            account = Account.object.get(pk=accountID)
+            data_log = Data_Log.objects.create(
+                event = f"{account.username} deleted complaint id {complaint.illnessID}",
+                type = "User Soft Delete Complaint Data",
+                account = account
+            )
+            return Response({"message": "Complaint deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+        except Exception as e:
+            return Response({"message": "Failed to delete complaint.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

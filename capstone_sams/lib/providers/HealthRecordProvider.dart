@@ -14,7 +14,7 @@ class HealthRecordProvider with ChangeNotifier {
   Future<bool> setRecord(String patientID) async {
     final response = await http
         .get(Uri.parse('${Env.prefix}/patient/patients/history/${patientID}'));
-    await Future.delayed(Duration(milliseconds: 3000));
+     
     if (response.statusCode == 200) {
       _healthrecord = HealthRecord.fromJson(jsonDecode(response.body));
       notifyListeners();

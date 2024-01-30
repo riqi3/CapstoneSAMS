@@ -32,8 +32,7 @@ class AccountProvider extends ChangeNotifier {
     try {
       final response = await http.get(
           Uri.parse('${Env.prefix}/user/users/account/${accountID}'),
-          headers: header);
-      await Future.delayed(Duration(milliseconds: 3000));
+          headers: header); 
       if (response.statusCode == 200) {
         return Account.fromJson(jsonDecode(response.body));
       } else {
@@ -52,8 +51,7 @@ class AccountProvider extends ChangeNotifier {
           'username': username,
           'password': password,
         },
-      );
-      await Future.delayed(Duration(milliseconds: 3000));
+      ); 
       if (response.statusCode == 200) {
         // The user was authenticated, so store the account data in the provider
         final data = jsonDecode(response.body);
@@ -74,8 +72,7 @@ class AccountProvider extends ChangeNotifier {
     try {
       final response = await http.post(
         Uri.parse('${Env.prefix}/user/logout/${id}'),
-      );
-      await Future.delayed(Duration(milliseconds: 3000));
+      ); 
       if (response.statusCode == 200) {
         return true;
       } else {

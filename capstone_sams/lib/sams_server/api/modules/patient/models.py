@@ -46,6 +46,7 @@ class Patient(models.Model):
     phone = models.CharField(max_length = 11, null=True,blank = True)
     email = models.CharField(max_length = 50, null=True,blank = True) 
     assignedPhysician = models.ForeignKey(Account, null=True, on_delete = models.CASCADE)
+    isDeleted = models.BooleanField(default = False)
 
     
     def __str__(self):
@@ -103,3 +104,4 @@ class Present_Illness(models.Model):
     updated_at = models.DateTimeField(auto_now=True, null = False,blank = False,)
     patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
     assignedPhysician = models.ForeignKey(Account, null=True, on_delete = models.CASCADE)
+    isDeleted = models.BooleanField(default = False)

@@ -33,8 +33,7 @@ class PrescriptionProvider with ChangeNotifier {
           _getUrl('cpoe/prescription/get-patient/${patientID}/'),
         ),
         headers: header,
-      );
-      await Future.delayed(Duration(milliseconds: 3000));
+      ); 
       if (response.statusCode == 200) {
         final items = json.decode(response.body);
         List<Prescription> newPrescriptions = items["prescriptions"]
@@ -73,8 +72,7 @@ class PrescriptionProvider with ChangeNotifier {
         ),
         headers: header,
         body: jsonEncode(prescription),
-      );
-      await Future.delayed(Duration(milliseconds: 3000));
+      ); 
 
       if (response.statusCode == 200) {
         fetchPrescriptions(patientID, token);
@@ -101,8 +99,7 @@ class PrescriptionProvider with ChangeNotifier {
         ),
         headers: header,
         body: jsonEncode(prescription),
-      );
-      await Future.delayed(Duration(milliseconds: 3000));
+      ); 
       if (response.statusCode == 200) {
         fetchPrescriptions(patientID, token);
         notifyListeners();
@@ -127,8 +124,7 @@ class PrescriptionProvider with ChangeNotifier {
             'cpoe/prescription/get-prescription/delete/${prescription.presNum}')),
         headers: header,
         body: body,
-      );
-      await Future.delayed(Duration(milliseconds: 3000));
+      ); 
       if (response.statusCode == 204) {
         fetchPrescriptions(patientID, token);
       } else {
@@ -152,8 +148,7 @@ class PrescriptionProvider with ChangeNotifier {
             'cpoe/prescription/get-prescription-${prescription.presNum}/delete-medicine/${drugId}')),
         headers: header,
         body: body,
-      );
-      await Future.delayed(Duration(milliseconds: 3000));
+      ); 
       if (response.statusCode == 204) {
         fetchPrescriptions(patientID, token);
       } else {

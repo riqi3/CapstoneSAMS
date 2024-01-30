@@ -27,6 +27,7 @@ class PatientSerializer(serializers.ModelSerializer):
             "phone",
             "email", 
             'assignedPhysician',
+            'isDeleted',
         ]
 
 
@@ -73,4 +74,5 @@ class PresentIllnessSerializer(serializers.ModelSerializer):
             'updated_at',
             'patient',
             'assignedPhysician',
+            'isDeleted',
         ]
