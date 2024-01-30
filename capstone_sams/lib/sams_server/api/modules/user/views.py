@@ -275,12 +275,12 @@ class PersonalNotesView(viewsets.ModelViewSet):
     def delete_personal_note(request, noteNum):
         try:
             note = Personal_Note.objects.get(noteNum = noteNum)
+            note.isDeleted = True
             data_log = Data_Log.objects.create(
                 event = f"{note.account.username} deleted personal note code {noteNum}",
                 type = "User Deleted Personal Note",
                 account = note.account 
             )
-            note.delete()
             return Response({"message": "Note successfully deleted"}, status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
              return Response({"message": "Failed to delete note", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
