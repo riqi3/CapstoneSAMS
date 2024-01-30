@@ -30,6 +30,9 @@ class PatientView(viewsets.ModelViewSet):
         try:
             patient_data = json.loads(request.body)
             assignedID = patient_data['assignedPhysician']
+            studentNumber = patient_data['studNumber']
+            if studentNumber and Patient.objects.filter(studNumber=studentNumber):
+                return Response({"message": "Patient with this student number already exists."}, status=status.HTTP_400_BAD_REQUEST)
             physician = Account.objects.get(pk=assignedID)
             patient = Patient.objects.create(
                 patientID=patient_data['patientID'], 
