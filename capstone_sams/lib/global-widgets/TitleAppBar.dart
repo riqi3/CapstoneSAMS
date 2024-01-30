@@ -2,7 +2,7 @@
 import 'package:capstone_sams/global-widgets/search-bar/widgets/SearchBarWidget.dart';
 import 'package:capstone_sams/screens/home/HomeScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart'; 
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../constants/theme/pallete.dart';
 import '../constants/theme/sizing.dart';
 
@@ -29,7 +29,6 @@ class TitleAppBar extends StatelessWidget {
           size: 30,
         ),
         backgroundColor: backgroundColor,
-        elevation: 8,
         shadowColor: Pallete.greyColor,
         leading: Padding(
           padding: const EdgeInsets.only(
@@ -52,7 +51,7 @@ class TitleAppBar extends StatelessWidget {
           ),
         ),
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Flexible(
               child: Text(
@@ -60,10 +59,10 @@ class TitleAppBar extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            SizedBox(
-              width: 5,
-            ),
-            SearchBarWidget(),
+            // SizedBox(
+            //   width: 5,
+            // ),
+            // SearchBarWidget(),
           ],
         ),
         bottom: bottom,

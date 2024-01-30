@@ -57,7 +57,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                   'Dr. ${accountProvider.firstName} ${middleInitial}. ${accountProvider.lastName}'),
           CardSectionTitleWidget(title: "Patient's Present Illnesses"),
           CardSectionInfoWidget(
-            shader: true,
+            shader: false,
             widget: PresentIllnessData(),
           ),
         ],
