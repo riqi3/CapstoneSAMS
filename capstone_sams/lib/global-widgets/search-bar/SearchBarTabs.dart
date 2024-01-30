@@ -5,7 +5,6 @@ import '../../constants/Strings.dart';
 import '../../constants/theme/pallete.dart';
 import '../../constants/theme/sizing.dart';
 
-
 class SearchBarTabs extends StatefulWidget {
   const SearchBarTabs({
     super.key,

@@ -5,10 +5,13 @@ import 'package:capstone_sams/global-widgets/cards/CardTitleWidget.dart';
 import 'package:capstone_sams/global-widgets/separators/DividerWidget.dart';
 import 'package:capstone_sams/global-widgets/cards/CardSectionTitleWidget.dart';
 import 'package:capstone_sams/global-widgets/texts/TitleValueText.dart';
+import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/ContactPersonModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/ContactPersonProvider.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/crud/physician/EditPhysicianScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../../../../constants/theme/pallete.dart';
@@ -64,6 +67,7 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
   Widget build(BuildContext context) {
     ContactPersonProvider contactPersonProvider =
         Provider.of<ContactPersonProvider>(context);
+    AccountProvider accountProvider = Provider.of<AccountProvider>(context);
 
     return CardTemplate(
       column: Column(
@@ -73,8 +77,77 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
           CardSectionInfoWidget(widget: GeneralInfoData(context)),
           CardSectionTitleWidget(title: 'Emergency Contact Information'),
           CardSectionInfoWidget(widget: ContactInfoData(contactPersonProvider)),
+          CardSectionTitleWidget(title: 'Current Physician'),
+          CardSectionInfoWidget(
+              shader: false, widget: AssignedPhysicianData(accountProvider)),
         ],
       ),
+    );
+  }
+
+  Container AssignedPhysicianData(AccountProvider accountProvider) {
+    String middleInitial = accountProvider.middleName![0];
+
+    return Container(
+      child: ListView.builder(
+        physics: BouncingScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: 1,
+        itemBuilder: (BuildContext context, int index) {
+          return Card(
+            child: ListTile(
+              title: Row(
+                children: [
+                  Text(
+                    '${accountProvider.firstName} ${middleInitial}. ${accountProvider.lastName}, M.D.',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'University Physician',
+                    // style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              trailing: popupActionWidget(),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  PopupMenuButton<dynamic> popupActionWidget() {
+    return PopupMenuButton(
+      itemBuilder: (context) => [
+        PopupMenuItem(
+          child: ListTile(
+            leading: FaIcon(
+              FontAwesomeIcons.pencil,
+              color: Pallete.successColor,
+            ),
+            title: Text(
+              'Change Physician',
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                color: Pallete.successColor,
+              ),
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditPhysicianScreen(),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 
@@ -224,67 +297,59 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
         } else {
           final ContactPerson contactPerson = snapshot.data!;
 
-          return ShaderMask(
-            shaderCallback: (Rect bounds) {
-              return LinearGradient(
-                colors: [Colors.black, Colors.transparent],
-                stops: [0.95, 1],
-              ).createShader(bounds);
-            },
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    children: [
-                      Text(
-                        '${contactPerson.fullName}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: Sizing.header5,
+          return SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  children: [
+                    Text(
+                      '${contactPerson.fullName}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Sizing.header5,
+                      ),
+                    ),
+                  ],
+                ),
+                Table(
+                  columnWidths: <int, TableColumnWidth>{
+                    0: FixedColumnWidth(Sizing.columnWidth4),
+                  },
+                  children: [
+                    TableRow(
+                      children: <Widget>[
+                        TitleValueText(
+                          title: 'Contact No#: ',
+                          value: '${contactPerson.phone}',
                         ),
-                      ),
-                    ],
-                  ),
-                  Table(
-                    columnWidths: <int, TableColumnWidth>{
-                      0: FixedColumnWidth(Sizing.columnWidth4),
-                    },
-                    children: [
-                      TableRow(
-                        children: <Widget>[
-                          TitleValueText(
-                            title: 'Contact No#: ',
-                            value: '${contactPerson.phone}',
+                      ],
+                    ),
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Address: ',
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width / 1,
+                          child: Text(
+                            '${contactPerson.address}',
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Address: ',
-                            style: TextStyle(fontWeight: FontWeight.w500),
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width / 1,
-                            child: Text(
-                              '${contactPerson.address}',
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
             ),
           );
         }

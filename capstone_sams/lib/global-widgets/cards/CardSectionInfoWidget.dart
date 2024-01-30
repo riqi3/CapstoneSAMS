@@ -18,7 +18,7 @@ class CardSectionInfoWidget extends StatefulWidget {
 
 class _CardSectionInfoWidgetState extends State<CardSectionInfoWidget> {
   Widget widgetEffects(shader) {
-    if (shader == true) {
+    if (shader == false) {
       return widget.widget;
     }
     return ShaderMask(
