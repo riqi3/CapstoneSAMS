@@ -28,6 +28,7 @@ from api.modules.disease_prediction.cdssModel.models import HealthSymptom
 from api.modules.disease_prediction.cdssModel.views import train_disease_prediction_model
 from api.modules.disease_prediction.diagnosticModel.models import DiagnosticFields
 from api.modules.disease_prediction.diagnosticModel.forms import CsvImportDiagnosticFieldsForm
+from capstone_sams.lib.sams_server.api.modules.disease_prediction.diagnosticModel.views import train_model
 
 '''
 This is a signal that will create a data log if a user logs in.
@@ -972,7 +973,7 @@ class DiagnosticFieldsAdmin(admin.ModelAdmin):
     def get_urls(self):
         urls = super().get_urls()
         new_urls = [
-            # path("retrain_model/", self.retrain_model, name="admin_retrain_model"),
+            path("retrain_model/", self.retrain_model, name="admin_retrain_model"),
             path("upload-csv/", self.upload_csv, name="upload-csv"),
         ]
         return new_urls + urls 
@@ -1009,6 +1010,24 @@ class DiagnosticFieldsAdmin(admin.ModelAdmin):
         form = CsvImportDiagnosticFieldsForm()
         data = {"form": form}
         return render(request, "admin/csv_upload.html", data)
+
+    def retrain_model(self, request):
+        try:
+            if request.method == 'POST':
+                success, message = train_model()
+                if success:
+                    self.message_user(request, f"Model retraining: {message}")
+                else:
+                    self.message_user(request, f"Model retraining failed: {message}")
+            else:
+                raise ValueError("Invalid request method")
+
+        except Exception as e:
+            error_message = f"An error occurred during model retraining: {str(e)}"
+            return JsonResponse({'success': False, 'message': error_message})
+
+        context = self.admin_site.each_context(request)
+        return HttpResponseRedirect("../")   
 
     def has_add_permission(self, request, obj=None):
         return False
