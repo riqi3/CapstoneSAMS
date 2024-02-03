@@ -17,12 +17,14 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
+import 'DiagnosisAddiStepper.dart';
+
 // ignore: must_be_immutable
 class PresentMedHistoryForm extends StatefulWidget {
-  Patient patient; 
+  Patient patient;
   PresentMedHistoryForm({
     Key? key,
-    required this.patient, 
+    required this.patient,
   }) : super(key: key);
 
   @override
@@ -56,7 +58,7 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
       setState(() => _isLoading = false);
 
       ScaffoldMessenger.of(context).showSnackBar(incompleteInputs);
- 
+
       return;
     } else {
       print(createdAt);
@@ -98,7 +100,6 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
         );
         // widget.onsubmit();
         // Navigator.of(context).pop();
-        
 
         ScaffoldMessenger.of(context).showSnackBar(successfulCreatedComplaint);
       } else {
@@ -261,12 +262,37 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
               fontSize: Sizing.header4,
               fontWeight: FontWeight.w600),
         ),
-        content: FormTextField(
-          onchanged: (value) => _presIllnessInfo.diagnosis = value,
-          labeltext: '',
-          validator: Strings.requiredField,
-          maxlines: maxLines,
-          type: TextInputType.text,
+        content: Column(
+          children: [
+            DiagnosisSteps(
+              currentStep: currentStep,
+              onStepTapped: (step) => setState(() {
+                currentStep = step;
+              }),
+              onStepContinue: () {
+                bool isLastStep = (currentStep == 1);
+                if (isLastStep) {
+                  //
+                } else {
+                  setState(() {
+                    currentStep += 1;
+                  });
+                }
+              },
+              onStepCancel: () => currentStep == 2
+                  ? null
+                  : setState(() {
+                      currentStep -= 1;
+                    }),
+            ),
+            FormTextField(
+              onchanged: (value) => _presIllnessInfo.diagnosis = value,
+              labeltext: '',
+              validator: Strings.requiredField,
+              maxlines: maxLines,
+              type: TextInputType.text,
+            ),
+          ],
         ),
       ),
       Step(

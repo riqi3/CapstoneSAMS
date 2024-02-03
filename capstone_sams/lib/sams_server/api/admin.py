@@ -28,7 +28,7 @@ from api.modules.disease_prediction.cdssModel.models import HealthSymptom
 from api.modules.disease_prediction.cdssModel.views import train_disease_prediction_model
 from api.modules.disease_prediction.diagnosticModel.models import DiagnosticFields
 from api.modules.disease_prediction.diagnosticModel.forms import CsvImportDiagnosticFieldsForm
-from capstone_sams.lib.sams_server.api.modules.disease_prediction.diagnosticModel.views import train_model
+from api.modules.disease_prediction.diagnosticModel.views import train_model
 
 '''
 This is a signal that will create a data log if a user logs in.
