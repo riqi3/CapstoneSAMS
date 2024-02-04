@@ -9,7 +9,7 @@ import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/ContactPersonModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/ContactPersonProvider.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/crud/physician/EditPhysicianScreen.dart';
+import 'package:capstone_sams/global-widgets/forms/ChangePhysicianForm.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';

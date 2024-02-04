@@ -42,9 +42,7 @@ class PatientProvider extends ChangeNotifier {
         'Authorization': 'Bearer $token',
       };
 
-      final response = await http.get(
-          uri,
-          headers: header);
+      final response = await http.get(uri, headers: header);
       await Future.delayed(Duration(milliseconds: 1000));
       print('Response Status Code: ${response.statusCode}');
       print('Response Body: ${response.body}');
@@ -78,7 +76,7 @@ class PatientProvider extends ChangeNotifier {
         headers: header,
         body: jsonEncode(body),
         // body: jsonEncode(data),
-      ); 
+      );
       if (response.statusCode == 201) {
         fetchPatients(token, role, id);
         notifyListeners();
@@ -126,7 +124,7 @@ class PatientProvider extends ChangeNotifier {
     try {
       final response = await http.get(
           Uri.parse('${Env.prefix}/patient/patients/${index}'),
-          headers: header); 
+          headers: header);
       if (response.statusCode == 200) {
         return Patient.fromJson(jsonDecode(response.body));
       } else {
@@ -147,7 +145,7 @@ class PatientProvider extends ChangeNotifier {
       final response = await http.get(
           Uri.parse('${Env.prefix}/patient/patients/user/${accountID}'),
           headers: header);
-      await Future.delayed(Duration(milliseconds: 1000));
+      await Future.delayed(Duration(milliseconds: 3000));
       if (response.statusCode == 200) {
         data = json.decode(response.body);
         _patients = data.map((e) => Patient.fromJson(e)).toList();

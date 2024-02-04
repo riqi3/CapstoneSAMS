@@ -32,6 +32,7 @@ class DiagnosisInfoCard extends StatefulWidget {
 class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
   late Stream<List<PresentIllness>> presentIllness;
   late String token = context.read<AccountProvider>().token!;
+  Account? account = Account(isSuperuser: false);
 
   @override
   void initState() {
@@ -52,10 +53,12 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
     return CardTemplate(
       column: Column(
         children: [
-          CardTitleWidget(
-              title:
-                  'Dr. ${accountProvider.firstName} ${middleInitial}. ${accountProvider.lastName}'),
-          CardSectionTitleWidget(title: "Patient's Present Illnesses"),
+          CardTitleWidget(title: "History of Illnesses"
+              // title:
+              //     'Dr. ${accountProvider.firstName} ${middleInitial}. ${accountProvider.lastName}'
+              ),
+          SizedBox(height: Sizing.sectionSymmPadding),
+          // CardSectionTitleWidget(title: "Patient's Present Illnesses"),
           CardSectionInfoWidget(
             shader: false,
             widget: PresentIllnessData(),
@@ -95,42 +98,112 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
               final illness = presentIllnessList[index];
               final illnessIndex = '${presentIllnessList.length - index}';
 
-              return Card(
-                color: Colors.white,
-                elevation: Sizing.cardElevation,
-                margin: EdgeInsets.symmetric(
-                  vertical: Sizing.sectionSymmPadding / 4,
-                ),
-                child: GestureDetector(
-                  onTap: () =>
-                      viewIllnessMethod(context, illness, illnessIndex),
-                  child: ListTile(
-                    title: Row(
-                      children: [
-                        Text(
-                          'Dx #${illnessIndex}: ',
+              return FutureBuilder<Account?>(
+                future: context
+                    .read<AccountProvider>()
+                    .fetchAccount(illness.assignedPhysician, token),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator(); // or a loading indicator
+                  } else if (snapshot.hasError) {
+                    return Text('Error loading account details');
+                  } else if (!snapshot.hasData || snapshot.data == null) {
+                    return Text('Account details not available');
+                  } else {
+                    final account = snapshot.data!;
+
+                    return Card(
+                      color: Colors.white,
+                      elevation: Sizing.cardElevation,
+                      margin: EdgeInsets.symmetric(
+                        vertical: Sizing.sectionSymmPadding / 4,
+                      ),
+                      child: GestureDetector(
+                        onTap: () =>
+                            viewIllnessMethod(context, illness, illnessIndex),
+                        child: ListTile(
+                          title: Row(
+                            children: [
+                              Text(
+                                'Dx #${illnessIndex}: ',
+                              ),
+                              Text(
+                                '${illness.illnessName}',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Created by: ${account.firstName} ${account.lastName}',
+                                style: TextStyle(color: Pallete.greyColor),
+                              ),
+                              Text(
+                                '${illness.created_at}',
+                                style: TextStyle(color: Pallete.greyColor),
+                              ),
+                            ],
+                          ),
+                          trailing: popupActionWidget(illness, illnessIndex),
                         ),
-                        Text(
-                          '${illness.illnessName}',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${illness.created_at}',
-                          // style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                    trailing: popupActionWidget(illness, illnessIndex),
-                  ),
-                ),
+                      ),
+                    );
+                  }
+                },
               );
             },
           );
+
+          // return ListView.builder(
+          //   shrinkWrap: true,
+          //   physics: BouncingScrollPhysics(),
+          //   itemCount: presentIllnessList.length,
+          //   itemBuilder: (context, index) {
+          //     final illness = presentIllnessList[index];
+          //     final illnessIndex = '${presentIllnessList.length - index}';
+
+          //     return Card(
+          //       color: Colors.white,
+          //       elevation: Sizing.cardElevation,
+          //       margin: EdgeInsets.symmetric(
+          //         vertical: Sizing.sectionSymmPadding / 4,
+          //       ),
+          //       child: GestureDetector(
+          //         onTap: () =>
+          //             viewIllnessMethod(context, illness, illnessIndex),
+          //         child: ListTile(
+          //           title: Row(
+          //             children: [
+          //               Text(
+          //                 'Dx #${illnessIndex}: ',
+          //               ),
+          //               Text(
+          //                 '${illness.illnessName}',
+          //                 style: TextStyle(fontWeight: FontWeight.bold),
+          //               ),
+          //             ],
+          //           ),
+          //           subtitle: Column(
+          //             crossAxisAlignment: CrossAxisAlignment.start,
+          //             children: [
+          //               Text(
+          //                 'Created by: ${illness.assignedPhysician}',
+          //                 style: TextStyle(color: Pallete.greyColor),
+          //               ),
+          //               Text(
+          //                 '${illness.created_at}',
+          //                 style: TextStyle(color: Pallete.greyColor),
+          //               ),
+          //             ],
+          //           ),
+          //           trailing: popupActionWidget(illness, illnessIndex),
+          //         ),
+          //       ),
+          //     );
+          //   },
+          // );
         }
       },
     );
@@ -202,33 +275,6 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
         builder: (context) => ViewIllnessScreen(
             presentIllness: illness, illnessIndex: illnessIndex),
       ),
-    );
-  }
-
-  PopupMenuButton<dynamic> nurseAction(
-    int index,
-    List<Prescription> prescriptionList,
-    Prescription prescription,
-  ) {
-    return PopupMenuButton(
-      itemBuilder: (context) => [
-        PopupMenuItem(
-          child: ListTile(
-            leading: FaIcon(
-              FontAwesomeIcons.pills,
-              color: Pallete.infoColor,
-            ),
-            title: Text(
-              'Manage',
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
-                color: Pallete.infoColor,
-              ),
-            ),
-            onTap: () {},
-          ),
-        ),
-      ],
     );
   }
 }
