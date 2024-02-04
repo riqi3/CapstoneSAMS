@@ -51,6 +51,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     firstName = models.CharField(max_length=100, blank = False) 
     middleName = models.CharField(max_length=100, blank = False)
     lastName = models.CharField(max_length=100, blank = False)
+    suffixTitle = models.CharField(max_length=10, blank = False)
     accountRole = models.CharField(max_length=100, choices=ACCOUNT_ROLE_CHOICES)
     token = models.CharField(max_length=255, blank=True, null=True)
     is_active = models.BooleanField(default=True)

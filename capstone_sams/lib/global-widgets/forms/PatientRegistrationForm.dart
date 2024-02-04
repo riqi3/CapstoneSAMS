@@ -343,7 +343,6 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
   void _appendToTextList(TextEditingController contoller, List<String> list) {
     String newText = contoller.text;
 
-    print('DAMN N${newText}');
     if (newText.isNotEmpty) {
       setState(() {
         list.add(newText);

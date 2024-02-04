@@ -20,6 +20,7 @@ class AccountSerializer(serializers.ModelSerializer):
             'firstName',
             'middleName',
             'lastName',
+            'suffixTitle',
             'accountRole', 
             'token',
             'is_active', 

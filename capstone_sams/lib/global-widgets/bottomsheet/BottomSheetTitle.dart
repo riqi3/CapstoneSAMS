@@ -2,26 +2,12 @@ import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:flutter/material.dart';
 
-// ignore: must_be_immutable
-class CardTitleWidget extends StatefulWidget {
+class BottomSheetTitle extends StatelessWidget {
   final String title;
-  CardTitleWidget({
+  const BottomSheetTitle({
     super.key,
     required this.title,
   });
-
-  @override
-  State<CardTitleWidget> createState() => _CardTitleWidgetState();
-}
-
-class _CardTitleWidgetState extends State<CardTitleWidget> {
-  void addSubtitlea(bool addSubtitle) {
-    if (addSubtitle != false) {
-      setState(() {
-        addSubtitle = true;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +23,9 @@ class _CardTitleWidgetState extends State<CardTitleWidget> {
       width: MediaQuery.of(context).size.width,
       height: Sizing.cardContainerHeight,
       child: Text(
-        widget.title,
+        title,
+        overflow: TextOverflow.ellipsis,
+        maxLines: 2,
         style: TextStyle(
             color: Pallete.whiteColor,
             fontSize: Sizing.header3,

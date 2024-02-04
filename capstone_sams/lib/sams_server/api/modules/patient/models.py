@@ -1,4 +1,5 @@
 import uuid 
+from django.utils import timezone
 from django.db import models
 from api.modules.user.models import Account
 '''
@@ -97,7 +98,7 @@ class Present_Illness(models.Model):
     findings = models.TextField(blank = False, default = None, null = False)
     diagnosis = models.TextField(blank = False, default = None, null = False)
     treatment = models.TextField(blank = False, default = None, null = False)
-    created_at = models.DateTimeField(auto_now_add=True,   null = False,blank = False,)
-    updated_at = models.DateTimeField(auto_now=True, null = False,blank = False,)
+    created_at = models.DateTimeField(default=timezone.now, blank = False, null = False)
+    updated_at = models.DateTimeField(blank = False, null = False)
     patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
     created_by = models.ForeignKey(Account, null=True, on_delete = models.CASCADE)
