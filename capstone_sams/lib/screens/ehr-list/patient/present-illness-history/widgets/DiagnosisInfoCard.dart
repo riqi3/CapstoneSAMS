@@ -170,8 +170,13 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                               ),
                             ],
                           ),
-                          trailing: popupActionWidget(
-                              illness, illnessIndex, account, accountProvider),
+                          trailing: account.accountID != accountProvider.id
+                              ? Icon(
+                                  Icons.abc,
+                                  color: Colors.transparent,
+                                )
+                              : popupActionWidget(illness, illnessIndex,
+                                  account, accountProvider),
                         ),
                       ),
                     );
@@ -187,34 +192,34 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
 
   PopupMenuButton<dynamic> popupActionWidget(PresentIllness illness,
       String illnessIndex, Account account, AccountProvider accountProvider) {
-    if (account.accountID != accountProvider.id) {
-      return PopupMenuButton(
-        itemBuilder: (context) => [
-          PopupMenuItem(
-            child: PopMenuItemTemplate(
-              icon: FontAwesomeIcons.solidEye,
-              color: Pallete.infoColor,
-              title: 'View',
-              ontap: () {
-                viewIllnessMethod(context, illness, illnessIndex, account);
-              },
-            ),
-          )
-        ],
-      );
-    }
+    // if (account.accountID != accountProvider.id) {
+    //   return PopupMenuButton(
+    //     itemBuilder: (context) => [
+    //       PopupMenuItem(
+    //         child: PopMenuItemTemplate(
+    //           icon: FontAwesomeIcons.solidEye,
+    //           color: Pallete.infoColor,
+    //           title: 'View',
+    //           ontap: () {
+    //             viewIllnessMethod(context, illness, illnessIndex, account);
+    //           },
+    //         ),
+    //       )
+    //     ],
+    //   );
+    // }
     return PopupMenuButton(
       itemBuilder: (context) => [
-        PopupMenuItem(
-          child: PopMenuItemTemplate(
-            icon: FontAwesomeIcons.solidEye,
-            color: Pallete.infoColor,
-            title: 'View',
-            ontap: () {
-              viewIllnessMethod(context, illness, illnessIndex, account);
-            },
-          ),
-        ),
+        // PopupMenuItem(
+        //   child: PopMenuItemTemplate(
+        //     icon: FontAwesomeIcons.solidEye,
+        //     color: Pallete.infoColor,
+        //     title: 'View',
+        //     ontap: () {
+        //       viewIllnessMethod(context, illness, illnessIndex, account);
+        //     },
+        //   ),
+        // ),
         PopupMenuItem(
           child: PopMenuItemTemplate(
             icon: FontAwesomeIcons.pen,
