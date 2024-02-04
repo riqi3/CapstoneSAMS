@@ -77,49 +77,49 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
           CardSectionInfoWidget(widget: GeneralInfoData(context)),
           CardSectionTitleWidget(title: 'Emergency Contact Information'),
           CardSectionInfoWidget(widget: ContactInfoData(contactPersonProvider)),
-          CardSectionTitleWidget(title: 'Current Physician'),
-          CardSectionInfoWidget(
-              shader: false, widget: AssignedPhysicianData(accountProvider)),
+          // CardSectionTitleWidget(title: 'Current Physician'),
+          // CardSectionInfoWidget(
+          //     shader: false, widget: AssignedPhysicianData(accountProvider)),
         ],
       ),
     );
   }
 
-  Container AssignedPhysicianData(AccountProvider accountProvider) {
-    String middleInitial = accountProvider.middleName![0];
+  // Container AssignedPhysicianData(AccountProvider accountProvider) {
+  //   String middleInitial = accountProvider.middleName![0];
 
-    return Container(
-      child: ListView.builder(
-        physics: BouncingScrollPhysics(),
-        shrinkWrap: true,
-        itemCount: 1,
-        itemBuilder: (BuildContext context, int index) {
-          return Card(
-            child: ListTile(
-              title: Row(
-                children: [
-                  Text(
-                    '${accountProvider.firstName} ${middleInitial}. ${accountProvider.lastName}, M.D.',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'University Physician',
-                    // style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              trailing: popupActionWidget(),
-            ),
-          );
-        },
-      ),
-    );
-  }
+  //   return Container(
+  //     child: ListView.builder(
+  //       physics: BouncingScrollPhysics(),
+  //       shrinkWrap: true,
+  //       itemCount: 1,
+  //       itemBuilder: (BuildContext context, int index) {
+  //         return Card(
+  //           child: ListTile(
+  //             title: Row(
+  //               children: [
+  //                 Text(
+  //                   '${accountProvider.firstName} ${middleInitial}. ${accountProvider.lastName}, M.D.',
+  //                   style: TextStyle(fontWeight: FontWeight.bold),
+  //                 ),
+  //               ],
+  //             ),
+  //             subtitle: Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 Text(
+  //                   'University Physician',
+  //                   // style: TextStyle(fontWeight: FontWeight.bold),
+  //                 ),
+  //               ],
+  //             ),
+  //             trailing: popupActionWidget(),
+  //           ),
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
 
   PopupMenuButton<dynamic> popupActionWidget() {
     return PopupMenuButton(

@@ -332,54 +332,7 @@ class UserAdmin(BaseUserAdmin):
 '''
 This represent the forms that will be shown to the admin when creating a new patient
 and updating existing patients.
-'''
-# class PatientAdminForm(forms.ModelForm):
-#     class Meta:
-#         model = Patient
-#         fields = (
-#             # "patientID",
-#             "firstName",
-#             "middleInitial",
-#             "lastName",
-#             "age",
-#             "gender",
-#             "birthDate",
-#             'department',
-#             'course',
-#             'yrLevel',
-#             'studNumber',
-#             'address',
-#             'height',
-#             'weight',
-#             "registration",
-#             "phone",
-#             "email", 
-#             'assignedPhysician',
-#         )
-
-# class HealthRecordAdminForm(forms.ModelForm):
-#     class Meta:
-#         model = Health_Record
-#         fields = (  
-#             'illnesses',
-#             'allergies',
-#             'pastDiseases',
-#             'familyHistory',
-#             'lastMensPeriod', 
-#         )
-
-# class ContactAdminForm(forms.ModelForm):
-#     class Meta:
-#         model = Contact_Person
-#         fields = (  
-#             'fullName',
-#             'contactNum',
-#             'contactAddress',
-#         )
-
-# class PatientInline(admin.TabularInline):
-#     model = Patient
- 
+'''  
 
 class MedicalRecordInline(admin.StackedInline):
     model = Medical_Record 
@@ -401,7 +354,7 @@ This represent the table that will be shown to the admin looking at the currentl
 '''
 class PatientAdmin(admin.ModelAdmin): 
     # form = PatientAdminForm, HealthRecordAdminForm, ContactAdminForm
-    inlines = [MedicalRecordInline, ContactInline]
+    inlines = [MedicalRecordInline, ContactInline] 
     list_display = (
         # "patientID",
         "firstName",
@@ -420,11 +373,13 @@ class PatientAdmin(admin.ModelAdmin):
         # "registration",
         "phone",
         "email", 
-        'assignedPhysician',
+        # 'assignedPhysician',
     )
     list_filter = (
         # "patientID", 
-        "gender",'assignedPhysician')
+        "gender",
+        # 'assignedPhysician'
+        )
     search_fields = (
         # "patientID",
         "firstName",
@@ -433,7 +388,7 @@ class PatientAdmin(admin.ModelAdmin):
         "birthDate",
         # 'department',
         "email",
-        'assignedPhysician',
+        # 'assignedPhysician',
     )
 
     def get_urls(self):

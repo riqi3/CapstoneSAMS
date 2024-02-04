@@ -44,9 +44,7 @@ class Patient(models.Model):
     height = models.FloatField(blank = False)
     weight = models.FloatField(blank= False) 
     phone = models.CharField(max_length = 11, null=True,blank = True)
-    email = models.CharField(max_length = 50, null=True,blank = True) 
-    assignedPhysician = models.ForeignKey(Account, null=True, on_delete = models.CASCADE)
-
+    email = models.CharField(max_length = 50, null=True,blank = True)  
     
     def __str__(self):
         return f"{self.patientID} - {self.firstName} {self.middleInitial} {self.lastName}"
@@ -102,4 +100,4 @@ class Present_Illness(models.Model):
     created_at = models.DateTimeField(auto_now_add=True,   null = False,blank = False,)
     updated_at = models.DateTimeField(auto_now=True, null = False,blank = False,)
     patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
-    assignedPhysician = models.ForeignKey(Account, null=True, on_delete = models.CASCADE)
+    created_by = models.ForeignKey(Account, null=True, on_delete = models.CASCADE)

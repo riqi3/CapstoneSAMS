@@ -25,8 +25,7 @@ class PatientSerializer(serializers.ModelSerializer):
             'height',
             'weight', 
             "phone",
-            "email", 
-            'assignedPhysician',
+            "email",  
         ]
 
 
@@ -72,5 +71,5 @@ class PresentIllnessSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
             'patient',
-            'assignedPhysician',
+            'created_by',
         ]

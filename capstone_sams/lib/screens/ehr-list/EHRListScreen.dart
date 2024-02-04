@@ -30,7 +30,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
   ScrollController _controller = ScrollController();
   int currentPageIndex = 0;
   int pageRounded = 0;
-  int? assignedPhysician = 0;
+  // int? assignedPhysician = 0;
   double? totalPatients = 0;
   double pages1 = 0;
   final double items = 24;
@@ -49,7 +49,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
     role = accountProvider.role!;
     id = accountProvider.id!;
     patients = Stream.fromFuture(
-        context.read<PatientProvider>().fetchPatients(token, role, id));
+        context.read<PatientProvider>().fetchPatients(token));
   }
 
   void _scrollUp() {
@@ -149,7 +149,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
       itemCount: dataToShow.length,
       itemBuilder: (context, index) {
         final patient = dataToShow[index];
-        assignedPhysician = patient.assignedPhysician;
+        // assignedPhysician = patient.assignedPhysician;
         // final labresult = int.parse('${patient.patientID}');
         return PatientCard(
           patient: patient,

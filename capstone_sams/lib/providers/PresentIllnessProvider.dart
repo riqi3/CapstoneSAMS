@@ -18,7 +18,7 @@ class PresentIllnessProvider extends ChangeNotifier {
   String? get created_at => _presentIllness?.created_at;
   String? get updated_at => _presentIllness?.updated_at;
   String? get patient => _presentIllness?.patient;
-  int? get assignedPhysician => _presentIllness?.assignedPhysician;
+  int? get created_by => _presentIllness?.created_by;
 
   List<PresentIllness> _presentIllnessList = [];
 
@@ -53,8 +53,8 @@ class PresentIllnessProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> createComplaint(
-      PresentIllness presentIllness, String token, String? patientID) async {
+  Future<bool> createComplaint(PresentIllness presentIllness, String token,
+      String? patientID, int? accountID) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       // 'Authorization': 'Bearer $token',
@@ -65,7 +65,7 @@ class PresentIllnessProvider extends ChangeNotifier {
       // print(body);
       final response = await http.post(
         Uri.parse(
-            '${Env.prefix}/patient/patients/complaints/create/${patientID}'),
+            '${Env.prefix}/patient/patients/complaints/create/${patientID}/${accountID}'),
         headers: header,
         body: jsonEncode(body),
       );

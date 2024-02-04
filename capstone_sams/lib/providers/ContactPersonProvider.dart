@@ -23,7 +23,6 @@ class ContactPersonProvider extends ChangeNotifier {
 
   Future<ContactPerson> fetchContactPeople(
       String token, String? patientID) async {
-    print('provider${patientID}');
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',
@@ -31,7 +30,7 @@ class ContactPersonProvider extends ChangeNotifier {
     try {
       final response = await http.get(
           Uri.parse('${Env.prefix}/patient/patients/contact/${patientID}'),
-          headers: header); 
+          headers: header);
       if (response.statusCode == 200) {
         return ContactPerson.fromJson(
             jsonDecode(response.body) as Map<String, dynamic>);
@@ -54,7 +53,7 @@ class ContactPersonProvider extends ChangeNotifier {
         Uri.parse('${Env.prefix}/patient/patients/contact/create/'),
         headers: header,
         body: jsonEncode(contactPerson.toJson()),
-      ); 
+      );
       if (response.statusCode == 201) {
         fetchContactPeople(token, patientID);
         notifyListeners();

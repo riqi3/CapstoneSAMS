@@ -8,7 +8,7 @@ class PresentIllness {
   String? created_at;
   String? updated_at;
   String? patient;
-  int? assignedPhysician;
+  int? created_by;
 
   PresentIllness({
     this.illnessID,
@@ -20,7 +20,7 @@ class PresentIllness {
     this.created_at,
     this.updated_at,
     this.patient,
-    this.assignedPhysician,
+    this.created_by,
   });
 
   Map<String, dynamic> toJson() {
@@ -34,7 +34,7 @@ class PresentIllness {
       'created_at': created_at,
       'updated_at': updated_at,
       'patient': patient,
-      'assignedPhysician': assignedPhysician,
+      'created_by': created_by,
     };
   }
 
@@ -48,7 +48,7 @@ class PresentIllness {
       treatment: json['treatment'],
       created_at: json['created_at'],
       updated_at: json['updated_at'],
-      assignedPhysician: json['assignedPhysician'],
+      created_by: json['created_by'],
     );
   }
 }

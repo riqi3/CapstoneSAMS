@@ -79,7 +79,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
 
   var _account = Account(isSuperuser: false);
   late bool _autoValidate = false;
-  late int? getAccountID = 0;
+  // late int? getAccountID = 0;
   late String tokena = context.read<AccountProvider>().token!;
 
   DateTime? _birthDate;
@@ -99,7 +99,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
 
     if (!isValid1 ||
         !isValid2 ||
-        getAccountID == 0 ||
+        // getAccountID == 0 ||
         _selectedPastDiseases.isEmpty ||
         _selectedFamHistory.isEmpty ||
         _selectedAllergy.isEmpty ||
@@ -124,9 +124,9 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
       updateInvalidState(_selectedIllnesses.isEmpty, (bool value) {
         _isIllnessInvalid = value;
       });
-      updateInvalidState(getAccountID == 0, (bool value) {
-        _isPhysicianInvalid = value;
-      });
+      // updateInvalidState(getAccountID == 0, (bool value) {
+      //   _isPhysicianInvalid = value;
+      // });
 
       ScaffoldMessenger.of(context).showSnackBar(incompleteInputs);
 
@@ -165,7 +165,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
         address: firstAddress.text,
         email: email,
         phone: phone,
-        assignedPhysician: getAccountID,
+        // assignedPhysician: getAccountID,
       );
 
       var medicalRecord = MedicalRecord(
@@ -377,7 +377,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
           GenInfoFormSection(),
           MedicalInfoFormSection(),
           ContactInfoFormSection(),
-          AssignPhysicianFormSection(),
+          // AssignPhysicianFormSection(),
           SubmitButton(),
         ],
       ),
@@ -919,73 +919,73 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
     );
   }
 
-  Column AssignPhysicianFormSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        FormSectionTitleWidget(title: 'Assign Doctor'),
-        DropdownSearch<Account>(
-          dropdownDecoratorProps: DropDownDecoratorProps(
-            dropdownSearchDecoration: InputDecoration(
-              labelText: "Select A Physician",
-              labelStyle: TextStyle(
-                color: _isPhysicianInvalid == true
-                    ? Pallete.dangerColor
-                    : Pallete.textSecondaryColor,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: _isPhysicianInvalid == true
-                      ? Pallete.dangerColor
-                      : Pallete.textSecondaryColor,
-                ),
-              ),
-              suffixIconColor: _isPhysicianInvalid == true
-                  ? Pallete.dangerColor
-                  : Pallete.textSecondaryColor,
-            ),
-          ),
-          clearButtonProps: ClearButtonProps(isVisible: true),
-          popupProps: PopupProps.modalBottomSheet(
-            showSearchBox: true,
-          ),
-          asyncItems: (String filter) async {
-            var response = await Dio().get(
-              '${Env.prefix}/user/users/physician',
-              queryParameters: {"filter": filter},
-              options: Options(headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer $tokena",
-              }),
-            );
-            // print("Dio Response: $response");
-            var models = List<Account>.from(
-              response.data.map(
-                (json) => Account.fromJson(json),
-              ),
-            );
-            return models;
-          },
-          itemAsString: (Account account) {
-            var string =
-                'Dr. ${account.firstName.toString()} ${account.lastName.toString()}';
-            return string;
-          },
-          onChanged: (Account? data) {
-            _account.accountRole = data?.accountRole.toString();
-            getAccountID = data?.accountID;
-          },
-        ),
-        Visibility(
-          visible: _isPhysicianInvalid,
-          child: Text(
-            Strings.requiredField,
-            style: TextStyle(color: Pallete.dangerColor),
-          ),
-        ),
-      ],
-    );
-  }
+  // Column AssignPhysicianFormSection() {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       FormSectionTitleWidget(title: 'Assign Doctor'),
+  //       DropdownSearch<Account>(
+  //         dropdownDecoratorProps: DropDownDecoratorProps(
+  //           dropdownSearchDecoration: InputDecoration(
+  //             labelText: "Select A Physician",
+  //             labelStyle: TextStyle(
+  //               color: _isPhysicianInvalid == true
+  //                   ? Pallete.dangerColor
+  //                   : Pallete.textSecondaryColor,
+  //             ),
+  //             focusedBorder: OutlineInputBorder(
+  //               borderSide: BorderSide(
+  //                 color: _isPhysicianInvalid == true
+  //                     ? Pallete.dangerColor
+  //                     : Pallete.textSecondaryColor,
+  //               ),
+  //             ),
+  //             suffixIconColor: _isPhysicianInvalid == true
+  //                 ? Pallete.dangerColor
+  //                 : Pallete.textSecondaryColor,
+  //           ),
+  //         ),
+  //         clearButtonProps: ClearButtonProps(isVisible: true),
+  //         popupProps: PopupProps.modalBottomSheet(
+  //           showSearchBox: true,
+  //         ),
+  //         asyncItems: (String filter) async {
+  //           var response = await Dio().get(
+  //             '${Env.prefix}/user/users/physician',
+  //             queryParameters: {"filter": filter},
+  //             options: Options(headers: {
+  //               "Content-Type": "application/json",
+  //               "Authorization": "Bearer $tokena",
+  //             }),
+  //           );
+  //           // print("Dio Response: $response");
+  //           var models = List<Account>.from(
+  //             response.data.map(
+  //               (json) => Account.fromJson(json),
+  //             ),
+  //           );
+  //           return models;
+  //         },
+  //         itemAsString: (Account account) {
+  //           var string =
+  //               'Dr. ${account.firstName.toString()} ${account.lastName.toString()}';
+  //           return string;
+  //         },
+  //         onChanged: (Account? data) {
+  //           _account.accountRole = data?.accountRole.toString();
+  //           getAccountID = data?.accountID;
+  //         },
+  //       ),
+  //       Visibility(
+  //         visible: _isPhysicianInvalid,
+  //         child: Text(
+  //           Strings.requiredField,
+  //           style: TextStyle(color: Pallete.dangerColor),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Flexible otherTextField(TextEditingController controller) {
     return Flexible(

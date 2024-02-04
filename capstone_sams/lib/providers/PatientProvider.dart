@@ -24,14 +24,14 @@ class PatientProvider extends ChangeNotifier {
   double? get weight => _patient?.weight;
   String? get phone => _patient?.phone;
   String? get email => _patient?.email;
-  int? get assignedPhysician => _patient?.assignedPhysician;
+  // int? get assignedPhysician => _patient?.assignedPhysician;
   var data = [];
   List<Patient> _patients = [];
 
   List<Patient> get patients => _patients;
 
-  Future<List<Patient>> fetchPatients(String token, String role, int id) async {
-    print("Role: $role, ID: $id");
+  Future<List<Patient>> fetchPatients(String token) async {
+    // print("Role: $role, ID: $id");
     try {
       // final uri = role == 'physician'
       //     ? Uri.parse('${Env.prefix}/user/physician/${id}/patients/')
@@ -78,7 +78,7 @@ class PatientProvider extends ChangeNotifier {
         // body: jsonEncode(data),
       );
       if (response.statusCode == 201) {
-        fetchPatients(token, role, id);
+        fetchPatients(token);
         notifyListeners();
         return true;
       } else {

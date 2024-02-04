@@ -5,6 +5,7 @@ import 'package:capstone_sams/global-widgets/cards/CardSectionInfoWidget.dart';
 import 'package:capstone_sams/global-widgets/cards/CardSectionTitleWidget.dart';
 import 'package:capstone_sams/global-widgets/cards/CardTemplate.dart';
 import 'package:capstone_sams/global-widgets/cards/CardTitleWidget.dart';
+import 'package:capstone_sams/global-widgets/pop-menu-buttons/pop-menu-item/PopMenuItemTemplate.dart';
 import 'package:capstone_sams/global-widgets/texts/NoDataTextWidget.dart';
 import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
@@ -37,7 +38,6 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
   @override
   void initState() {
     super.initState();
-
     token = context.read<AccountProvider>().token!;
     presentIllness = Stream.fromFuture(context
         .read<PresentIllnessProvider>()
@@ -46,9 +46,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
 
   @override
   Widget build(BuildContext context) {
-    AccountProvider accountProvider = Provider.of<AccountProvider>(context);
-
-    String middleInitial = accountProvider.middleName![0];
+    // String middleInitial = accountProvider.middleName![0];
 
     return CardTemplate(
       column: Column(
@@ -101,7 +99,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
               return FutureBuilder<Account?>(
                 future: context
                     .read<AccountProvider>()
-                    .fetchAccount(illness.assignedPhysician, token),
+                    .fetchAccount(illness.created_by, token),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return CircularProgressIndicator(); // or a loading indicator
@@ -111,6 +109,9 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                     return Text('Account details not available');
                   } else {
                     final account = snapshot.data!;
+
+                    AccountProvider accountProvider =
+                        Provider.of<AccountProvider>(context);
 
                     return Card(
                       color: Colors.white,
@@ -146,7 +147,8 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                               ),
                             ],
                           ),
-                          trailing: popupActionWidget(illness, illnessIndex),
+                          trailing: popupActionWidget(
+                              illness, illnessIndex, account, accountProvider),
                         ),
                       ),
                     );
@@ -155,112 +157,56 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
               );
             },
           );
-
-          // return ListView.builder(
-          //   shrinkWrap: true,
-          //   physics: BouncingScrollPhysics(),
-          //   itemCount: presentIllnessList.length,
-          //   itemBuilder: (context, index) {
-          //     final illness = presentIllnessList[index];
-          //     final illnessIndex = '${presentIllnessList.length - index}';
-
-          //     return Card(
-          //       color: Colors.white,
-          //       elevation: Sizing.cardElevation,
-          //       margin: EdgeInsets.symmetric(
-          //         vertical: Sizing.sectionSymmPadding / 4,
-          //       ),
-          //       child: GestureDetector(
-          //         onTap: () =>
-          //             viewIllnessMethod(context, illness, illnessIndex),
-          //         child: ListTile(
-          //           title: Row(
-          //             children: [
-          //               Text(
-          //                 'Dx #${illnessIndex}: ',
-          //               ),
-          //               Text(
-          //                 '${illness.illnessName}',
-          //                 style: TextStyle(fontWeight: FontWeight.bold),
-          //               ),
-          //             ],
-          //           ),
-          //           subtitle: Column(
-          //             crossAxisAlignment: CrossAxisAlignment.start,
-          //             children: [
-          //               Text(
-          //                 'Created by: ${illness.assignedPhysician}',
-          //                 style: TextStyle(color: Pallete.greyColor),
-          //               ),
-          //               Text(
-          //                 '${illness.created_at}',
-          //                 style: TextStyle(color: Pallete.greyColor),
-          //               ),
-          //             ],
-          //           ),
-          //           trailing: popupActionWidget(illness, illnessIndex),
-          //         ),
-          //       ),
-          //     );
-          //   },
-          // );
         }
       },
     );
   }
 
-  PopupMenuButton<dynamic> popupActionWidget(
-      PresentIllness illness, String illnessIndex) {
+  PopupMenuButton<dynamic> popupActionWidget(PresentIllness illness,
+      String illnessIndex, Account account, AccountProvider accountProvider) {
+    if (account.accountID != accountProvider.id) {
+      return PopupMenuButton(
+        itemBuilder: (context) => [
+          PopupMenuItem(
+            
+            child: PopMenuItemTemplate(
+              icon: FontAwesomeIcons.solidEye,
+              color: Pallete.infoColor,
+              title: 'View',
+              ontap: () {
+                viewIllnessMethod(context, illness, illnessIndex);
+              },
+            ),
+          )
+        ],
+      );
+    }
     return PopupMenuButton(
       itemBuilder: (context) => [
         PopupMenuItem(
-          child: ListTile(
-            leading: FaIcon(
-              FontAwesomeIcons.solidEye,
-              color: Pallete.infoColor,
-            ),
-            title: Text(
-              'View',
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
-                color: Pallete.infoColor,
-              ),
-            ),
-            onTap: () {
+          child: PopMenuItemTemplate(
+            icon: FontAwesomeIcons.solidEye,
+            color: Pallete.infoColor,
+            title: 'View',
+            ontap: () {
               viewIllnessMethod(context, illness, illnessIndex);
             },
           ),
         ),
         PopupMenuItem(
-          child: ListTile(
-            leading: FaIcon(
-              FontAwesomeIcons.pen,
-              color: Pallete.successColor,
-            ),
-            title: Text(
-              'Edit',
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
-                color: Pallete.successColor,
-              ),
-            ),
-            onTap: () {},
+          child: PopMenuItemTemplate(
+            icon: FontAwesomeIcons.pen,
+            color: Pallete.successColor,
+            title: 'Edit',
+            ontap: () {},
           ),
         ),
         PopupMenuItem(
-          child: ListTile(
-            leading: FaIcon(
-              FontAwesomeIcons.trash,
-              color: Pallete.dangerColor,
-            ),
-            title: Text(
-              'Delete',
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
-                color: Pallete.dangerColor,
-              ),
-            ),
-            onTap: () {},
+          child: PopMenuItemTemplate(
+            icon: FontAwesomeIcons.trash,
+            color: Pallete.dangerColor,
+            title: 'Delete',
+            ontap: () {},
           ),
         ),
       ],

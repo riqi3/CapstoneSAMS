@@ -28,9 +28,7 @@ class PatientView(viewsets.ModelViewSet):
     @api_view(['POST'])
     def create_patient(request):
         try:
-            patient_data = json.loads(request.body)
-            assignedID = patient_data['assignedPhysician']
-            physician = Account.objects.get(pk=assignedID)
+            patient_data = json.loads(request.body) 
             patient = Patient.objects.create(
                 patientID=patient_data['patientID'], 
                 firstName=patient_data['firstName'],
@@ -47,8 +45,7 @@ class PatientView(viewsets.ModelViewSet):
                 height=patient_data['height'],
                 weight=patient_data['weight'], 
                 phone=patient_data['phone'],
-                email=patient_data['email'],
-                assignedPhysician=physician
+                email=patient_data['email'], 
             )
             accountID = patient_data['account']
             account = Account.objects.get(accountID=accountID)
@@ -91,15 +88,15 @@ class PatientView(viewsets.ModelViewSet):
 
     
      
-    @api_view(['GET'])
-    def fetch_patient_by_accountid(request, accountID):
-        try:
-            account = Account.objects.get(pk=accountID)
-            patient = Patient.objects.filter(assignedPhysician=account)
-            serializer = PatientSerializer(patient, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except Medical_Record.DoesNotExist:
-            return Response({"message": "Patient does not exist."}, status=status.HTTP_404_NOT_FOUND)
+    # @api_view(['GET'])
+    # def fetch_patient_by_accountid(request, accountID):
+    #     try:
+    #         account = Account.objects.get(pk=accountID)
+    #         patient = Patient.objects.filter(assignedPhysician=account)
+    #         serializer = PatientSerializer(patient, many=True)
+    #         return Response(serializer.data, status=status.HTTP_200_OK)
+    #     except Medical_Record.DoesNotExist:
+    #         return Response({"message": "Patient does not exist."}, status=status.HTTP_404_NOT_FOUND)
     
     
     '''
@@ -111,7 +108,7 @@ class PatientView(viewsets.ModelViewSet):
     def update_patient(request):
         try:
             patient_data = json.loads(request.body)
-            assignedID = patient_data['assignedPhysician']
+            # assignedID = patient_data['assignedPhysician']
             patient = Patient.objects.get(pk=patient_id)
             patient_id = patient_data['patientID']
             patient.firstName = patient_data['firstName']
@@ -129,7 +126,7 @@ class PatientView(viewsets.ModelViewSet):
             patient.weight=patient_data['weight']
             patient.phone = patient_data['phone']
             patient.email = patient_data['email']
-            patient.assignedPhysician = assignedID
+            # patient.assignedPhysician = assignedID
             patient.save()
             accountID = patient_data['account']
             account = Account.object.get(pk=accountID)
@@ -265,11 +262,11 @@ class   PresentIllnessView(viewsets.ViewSet):
             return Response({"message": "Complaint does not exist."}, status=status.HTTP_404_NOT_FOUND)
     
     @api_view(['POST'])
-    def create_complaint(request, patientID):
+    def create_complaint(request, patientID, accountID):
         try:
             patient = Patient.objects.get(pk=patientID)
-            assignedID = patient.assignedPhysician.accountID
-            physician = Account.objects.get(pk=assignedID)
+            # accountID = account.accountID
+            account = Account.objects.get(pk=accountID)
             illness_data = json.loads(request.body)
             illness = Present_Illness.objects.create(
                 illnessName = illness_data['illnessName'],
@@ -280,7 +277,7 @@ class   PresentIllnessView(viewsets.ViewSet):
                 created_at = illness_data['created_at'],
                 updated_at = illness_data['updated_at'],
                 patient = patient,
-                assignedPhysician = physician
+                created_by = account
             )
             return Response({"message": "Complaint created successfully."}, status=status.HTTP_201_CREATED)
         except Exception as e:
