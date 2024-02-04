@@ -111,13 +111,10 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
 
                     AccountProvider accountProvider =
                         Provider.of<AccountProvider>(context);
-
                     String middleInitial = account.middleName![0];
                     DateTime originalDate = DateTime.parse(illness.created_at!);
-                    print('ORIGINAL ${illness.created_at}');
                     String formattedDate =
                         DateFormat('MMMM d, y | HH:mm').format(originalDate);
-                    print('FORMAT ${formattedDate}');
                     return Card(
                       color: Colors.white,
                       elevation: Sizing.cardElevation,
@@ -135,7 +132,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                               ),
                               Expanded(
                                 child: Text(
-                                  '${illness.illnessName}',
+                                  '${illness.illnessName?.toUpperCase()}',
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),

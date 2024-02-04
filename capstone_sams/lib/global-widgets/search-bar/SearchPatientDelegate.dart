@@ -87,49 +87,37 @@ class SearchPatientDelegate extends SearchDelegate {
                       vertical: Sizing.sectionSymmPadding / 4,
                     ),
                     child: ListTile(
-                      title: Row(
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Row(
                             children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    '${patient?[index].firstName}',
-                                    style: TextStyle(
-                                      fontSize: Sizing.header5,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                              Expanded(
+                                child: Text(
+                                  "${patient?[index].firstName?.toUpperCase()} ${patient?[index].middleInitial?.toUpperCase()}. ${patient?[index].lastName?.toUpperCase()}",
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: Sizing.header4,
+                                    color: Pallete.textColor,
                                   ),
-                                  SizedBox(width: 5),
-                                  Text(
-                                    '${patient?[index].middleInitial}.',
-                                    style: TextStyle(
-                                      fontSize: Sizing.header5,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  SizedBox(width: 5),
-                                  Text(
-                                    '${patient?[index].lastName}',
-                                    style: TextStyle(
-                                      fontSize: Sizing.header5,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                '${patient?[index].studNumber}',
-                                style: TextStyle(
-                                    fontSize: Sizing.header5,
-                                    fontWeight: FontWeight.normal),
+                                ),
                               ),
                             ],
                           ),
+                          Text(
+                            '${patient?[index].studNumber}',
+                            style: TextStyle(
+                                color: Pallete.greyColor,
+                                fontSize: Sizing.header5,
+                                fontWeight: FontWeight.normal),
+                          ),
                         ],
                       ),
-                      trailing: FaIcon(FontAwesomeIcons.arrowRight),
+                      trailing: FaIcon(
+                        FontAwesomeIcons.arrowRight,
+                        color: Pallete.greyColor,
+                      ),
                     ),
                   ),
                 ),

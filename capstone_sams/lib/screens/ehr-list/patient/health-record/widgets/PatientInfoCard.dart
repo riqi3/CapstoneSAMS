@@ -162,7 +162,7 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
           Row(
             children: [
               Text(
-                '${widget.patient.firstName} ${widget.patient.middleInitial}. ${widget.patient.lastName}',
+                '${widget.patient.firstName?.toUpperCase()} ${widget.patient.middleInitial?.toUpperCase()}. ${widget.patient.lastName?.toUpperCase()}',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: Sizing.header5,
@@ -307,7 +307,7 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                 Row(
                   children: [
                     Text(
-                      '${contactPerson.fullName}',
+                      '${contactPerson.fullName?.toUpperCase()}',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: Sizing.header5,

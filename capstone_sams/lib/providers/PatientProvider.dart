@@ -44,9 +44,7 @@ class PatientProvider extends ChangeNotifier {
 
       final response = await http
           .get(Uri.parse('${Env.prefix}/patient/patients/'), headers: header);
-      await Future.delayed(Duration(milliseconds: 1000));
-      print('Response Status Code: ${response.statusCode}');
-      print('Response Body: ${response.body}');
+      await Future.delayed(Duration(milliseconds: 1000)); 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         List<Patient> patients = data.map<Patient>((json) {

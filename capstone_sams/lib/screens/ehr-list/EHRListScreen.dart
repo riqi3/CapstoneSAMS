@@ -172,8 +172,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
           },
           // labresult: labresult,
         );
-
-        // print('${patient.assignedPhysician}');
+ 
       },
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 1,

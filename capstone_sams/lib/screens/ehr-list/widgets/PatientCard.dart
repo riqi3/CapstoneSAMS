@@ -96,13 +96,15 @@ class _PatientCardState extends State<PatientCard> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            "${widget.patient.firstName}  ${widget.patient.middleInitial}. ${widget.patient.lastName}",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: Sizing.header4,
-                              color: Pallete.textColor,
+                          Expanded(
+                            child: Text(
+                              "${widget.patient.firstName?.toUpperCase()} ${widget.patient.middleInitial?.toUpperCase()}. ${widget.patient.lastName?.toUpperCase()}",
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: Sizing.header4,
+                                color: Pallete.textColor,
+                              ),
                             ),
                           ),
                           // IconButton(
@@ -123,6 +125,11 @@ class _PatientCardState extends State<PatientCard> {
                             title: 'Course/Year: ',
                             value: '${course()} ${widget.patient.yrLevel}',
                           ),
+                          SizedBox(width: Sizing.sectionSymmPadding),
+                          TitleValueText(
+                            title: 'Sex: ',
+                            value: '${widget.patient.gender}',
+                          ),
                         ],
                       ),
                       // SizedBox(height: Sizing.spacing),
@@ -136,11 +143,6 @@ class _PatientCardState extends State<PatientCard> {
                           TitleValueText(
                             title: 'Age: ',
                             value: '${widget.patient.age}',
-                          ),
-                          SizedBox(width: Sizing.textSizeAppBar),
-                          TitleValueText(
-                            title: 'Sex: ',
-                            value: '${widget.patient.gender}',
                           ),
                         ],
                       ),
