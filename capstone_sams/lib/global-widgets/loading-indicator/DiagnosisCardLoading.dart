@@ -2,8 +2,8 @@ import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-class DiagnosisCardLoading extends StatelessWidget {
-  const DiagnosisCardLoading({super.key});
+class ListCardLoading extends StatelessWidget {
+  const ListCardLoading({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class DiagnosisCardLoading extends StatelessWidget {
       child: ListView.builder(
         physics: BouncingScrollPhysics(),
         shrinkWrap: true,
-        itemCount: 5,
+        itemCount: 8,
         itemBuilder: (context, index) {
           return Card(
             color: Pallete.lightGreyColor2,

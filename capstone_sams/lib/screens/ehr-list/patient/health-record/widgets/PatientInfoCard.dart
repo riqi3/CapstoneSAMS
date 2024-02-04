@@ -2,7 +2,7 @@ import 'package:capstone_sams/constants/Strings.dart';
 import 'package:capstone_sams/global-widgets/cards/CardSectionInfoWidget.dart';
 import 'package:capstone_sams/global-widgets/cards/CardTemplate.dart';
 import 'package:capstone_sams/global-widgets/cards/CardTitleWidget.dart';
-import 'package:capstone_sams/global-widgets/loading-indicator/ContactInfoLoading.dart';
+import 'package:capstone_sams/global-widgets/loading-indicator/CardContentLoading.dart';
 import 'package:capstone_sams/global-widgets/separators/DividerWidget.dart';
 import 'package:capstone_sams/global-widgets/cards/CardSectionTitleWidget.dart';
 import 'package:capstone_sams/global-widgets/texts/TitleValueText.dart';
@@ -292,15 +292,13 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
           token, widget.patient.patientID),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: ContactInfoLoading());
+          return Center(child: CardContentLoading());
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
           final ContactPerson contactPerson = snapshot.data!;
 
-          return  
-
-          SingleChildScrollView(
+          return SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             scrollDirection: Axis.horizontal,
             child: Column(

@@ -69,7 +69,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
       stream: presentIllness,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: DiagnosisCardLoading());
+          return Center(child: ListCardLoading());
         } else if (snapshot.hasError) {
           return Text('${snapshot.error}');
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {

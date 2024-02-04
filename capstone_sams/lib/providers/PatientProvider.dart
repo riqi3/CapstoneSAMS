@@ -42,7 +42,8 @@ class PatientProvider extends ChangeNotifier {
         'Authorization': 'Bearer $token',
       };
 
-      final response = await http.get(Uri.parse('${Env.prefix}/patient/patients/'), headers: header);
+      final response = await http
+          .get(Uri.parse('${Env.prefix}/patient/patients/'), headers: header);
       await Future.delayed(Duration(milliseconds: 1000));
       print('Response Status Code: ${response.statusCode}');
       print('Response Body: ${response.body}');
@@ -135,16 +136,14 @@ class PatientProvider extends ChangeNotifier {
     }
   }
 
-  Future<List<Patient>> searchPatients(
-      {String? query, String? token, int? accountID}) async {
+  Future<List<Patient>> searchPatients({String? query, String? token}) async {
     try {
       final header = <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
       };
-      final response = await http.get(
-          Uri.parse('${Env.prefix}/patient/patients/user/${accountID}'),
-          headers: header);
+      final response = await http
+          .get(Uri.parse('${Env.prefix}/patient/patients/'), headers: header);
       await Future.delayed(Duration(milliseconds: 3000));
       if (response.statusCode == 200) {
         data = json.decode(response.body);

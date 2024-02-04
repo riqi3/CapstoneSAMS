@@ -3,8 +3,8 @@ import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-class ContactInfoLoading extends StatelessWidget {
-  const ContactInfoLoading({super.key});
+class CardContentLoading extends StatelessWidget {
+  const CardContentLoading({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,13 +19,13 @@ class ContactInfoLoading extends StatelessWidget {
               children: [
                 Container(
                   color: Pallete.lightGreyColor2,
-                  height: 30,
+                  height: 25,
                   width: 120,
                 ),
                 SizedBox(width: Sizing.formSpacing),
                 Container(
                   color: Pallete.lightGreyColor2,
-                  height: 30,
+                  height: 25,
                   width: 120,
                 ),
               ],
@@ -42,24 +42,23 @@ class ContactInfoLoading extends StatelessWidget {
                 Container(
                   color: Pallete.lightGreyColor2,
                   height: 20,
-                  width: 100,
+                  width: 150,
                 ),
               ],
             ),
             SizedBox(height: Sizing.formSpacing),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
                   color: Pallete.lightGreyColor2,
                   height: 20,
-                  width: 80,
+                  width: 50,
                 ),
                 SizedBox(width: Sizing.formSpacing),
                 Container(
                   color: Pallete.lightGreyColor2,
-                  height: 50,
-                  width: 200,
+                  height: 20,
+                  width: 150,
                 ),
               ],
             ),
