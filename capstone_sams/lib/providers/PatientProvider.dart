@@ -33,16 +33,16 @@ class PatientProvider extends ChangeNotifier {
   Future<List<Patient>> fetchPatients(String token, String role, int id) async {
     print("Role: $role, ID: $id");
     try {
-      final uri = role == 'physician'
-          ? Uri.parse('${Env.prefix}/user/physician/${id}/patients/')
-          : Uri.parse('${Env.prefix}/patient/patients/');
+      // final uri = role == 'physician'
+      //     ? Uri.parse('${Env.prefix}/user/physician/${id}/patients/')
+      //     : Uri.parse('${Env.prefix}/patient/patients/');
 
       final header = <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
       };
 
-      final response = await http.get(uri, headers: header);
+      final response = await http.get(Uri.parse('${Env.prefix}/patient/patients/'), headers: header);
       await Future.delayed(Duration(milliseconds: 1000));
       print('Response Status Code: ${response.statusCode}');
       print('Response Body: ${response.body}');
