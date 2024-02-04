@@ -3,6 +3,7 @@ import 'package:capstone_sams/constants/Dimensions.dart';
 import 'package:capstone_sams/constants/Strings.dart';
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/global-widgets/SearchAppBar.dart';
+import 'package:capstone_sams/global-widgets/loading-indicator/PatientCardLoading.dart';
 import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/models/PresentIllness.dart';
@@ -48,8 +49,8 @@ class _EhrListScreenState extends State<EhrListScreen> {
     token = accountProvider.token!;
     role = accountProvider.role!;
     id = accountProvider.id!;
-    patients = Stream.fromFuture(
-        context.read<PatientProvider>().fetchPatients(token));
+    patients =
+        Stream.fromFuture(context.read<PatientProvider>().fetchPatients(token));
   }
 
   void _scrollUp() {
@@ -90,9 +91,19 @@ class _EhrListScreenState extends State<EhrListScreen> {
                 child: Text('Error: ${snapshot.error}'),
               );
             } else if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: const CircularProgressIndicator(),
+              return LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                  if (constraints.maxWidth >= Dimensions.mobileWidth) {
+                    return PatientCardLoadingTablet();
+                  } else {
+                    return PatientCardLoadingPhone();
+                  }
+                },
               );
+
+              // Center(
+              //   child: const CircularProgressIndicator(),
+              // );
             } else if (snapshot.data!.isEmpty) {
               return Center(
                 child: Text(Strings.noPatientResults),

@@ -5,6 +5,7 @@ import 'package:capstone_sams/global-widgets/cards/CardSectionInfoWidget.dart';
 import 'package:capstone_sams/global-widgets/cards/CardSectionTitleWidget.dart';
 import 'package:capstone_sams/global-widgets/cards/CardTemplate.dart';
 import 'package:capstone_sams/global-widgets/cards/CardTitleWidget.dart';
+import 'package:capstone_sams/global-widgets/loading-indicator/DiagnosisCardLoading.dart';
 import 'package:capstone_sams/global-widgets/pop-menu-buttons/pop-menu-item/PopMenuItemTemplate.dart';
 import 'package:capstone_sams/global-widgets/texts/NoDataTextWidget.dart';
 import 'package:capstone_sams/models/AccountModel.dart';
@@ -17,6 +18,7 @@ import 'package:capstone_sams/screens/ehr-list/patient/present-illness-history/w
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 // ignore: must_be_immutable
 class DiagnosisInfoCard extends StatefulWidget {
@@ -71,7 +73,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
       stream: presentIllness,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return Center(child: DiagnosisCardLoading());
         } else if (snapshot.hasError) {
           return Text('${snapshot.error}');
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -102,7 +104,8 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                     .fetchAccount(illness.created_by, token),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator(); // or a loading indicator
+                    // return CircularProgressIndicator();
+                    return Container(); // or a loading indicator
                   } else if (snapshot.hasError) {
                     return Text('Error loading account details');
                   } else if (!snapshot.hasData || snapshot.data == null) {
@@ -137,10 +140,27 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                'Created by: ${account.firstName} ${account.lastName}',
-                                style: TextStyle(color: Pallete.greyColor),
-                              ),
+                              account.accountID == accountProvider.id
+                                  ? Row(
+                                      children: [
+                                        Text(
+                                          'Created by: ',
+                                          style: TextStyle(
+                                              color: Pallete.greyColor),
+                                        ),
+                                        Text(
+                                          '${account.firstName} ${account.lastName}',
+                                          style: TextStyle(
+                                              color: Pallete.greyColor,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    )
+                                  : Text(
+                                      'Created by: ${account.firstName} ${account.lastName}',
+                                      style:
+                                          TextStyle(color: Pallete.greyColor),
+                                    ),
                               Text(
                                 '${illness.created_at}',
                                 style: TextStyle(color: Pallete.greyColor),
@@ -168,7 +188,6 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
       return PopupMenuButton(
         itemBuilder: (context) => [
           PopupMenuItem(
-            
             child: PopMenuItemTemplate(
               icon: FontAwesomeIcons.solidEye,
               color: Pallete.infoColor,
