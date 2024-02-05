@@ -8,7 +8,7 @@ class Strings {
   static const noPrescriptions = 'No prescription results to show...';
   static const noMedicalRecords = 'No medical records to show...';
   static const noRecordedIllnesses = 'No recorded illnesses to show...';
-  static const searchAPatient = 'Search A Patient...';
+  static const searchAPatient = 'Search';
   static const successfulAdd = 'Successfully added ';
   static const dangerAdd = 'Failed to add ';
   static const incompleteInputs =

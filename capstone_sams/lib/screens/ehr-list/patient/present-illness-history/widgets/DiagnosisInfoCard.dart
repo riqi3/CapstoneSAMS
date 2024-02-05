@@ -240,6 +240,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
   void viewIllnessMethod(BuildContext context, PresentIllness illness,
       String illnessIndex, Account account) {
     String middleInitial = account.middleName![0];
+    
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,

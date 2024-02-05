@@ -44,7 +44,6 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
       successSnackbar('${Strings.successfulAdd} diagnosis.');
 
   bool _isLoading = false;
- 
 
   late bool _autoValidate = false;
 
@@ -94,14 +93,21 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
               presentIllnessRecord, token, widget.patient.patientID, accountID);
 
       if (presentIllnessSuccess) {
+        int routesCount = 0;
+
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
             builder: (context) => PatientTabsScreen(patient: widget.patient),
           ),
-          (Route<dynamic> route) => false,
+          (Route<dynamic> route) {
+            if (routesCount < 2) {
+              routesCount++;
+              return false;
+            }
+            return true;
+          },
         );
-
         ScaffoldMessenger.of(context).showSnackBar(successfulCreatedComplaint);
       } else {
         setState(() => _isLoading = false);
