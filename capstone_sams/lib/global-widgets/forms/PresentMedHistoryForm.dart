@@ -9,6 +9,7 @@ import 'package:capstone_sams/global-widgets/texts/FormTitleWidget.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/models/PresentIllness.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
+import 'package:capstone_sams/providers/HealthCheckProvider.dart';
 import 'package:capstone_sams/providers/PresentIllnessProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/PatientTabsScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/present-illness-history/HistoryPresentIllnessScreen.dart';
@@ -17,7 +18,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
-import 'DiagnosisAddiStepper.dart';
+import 'healthcheckscreen.dart';
 
 // ignore: must_be_immutable
 class PresentMedHistoryForm extends StatefulWidget {
@@ -264,26 +265,20 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
         ),
         content: Column(
           children: [
-            DiagnosisSteps(
-              currentStep: currentStep,
-              onStepTapped: (step) => setState(() {
-                currentStep = step;
-              }),
-              onStepContinue: () {
-                bool isLastStep = (currentStep == 1);
-                if (isLastStep) {
-                  //
-                } else {
-                  setState(() {
-                    currentStep += 1;
-                  });
-                }
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return ChangeNotifierProvider<HealthCheckProvider>(
+                        create: (context) => HealthCheckProvider(),
+                        child: HealthCheckScreen(),
+                      );
+                    },
+                  ),
+                );
               },
-              onStepCancel: () => currentStep == 2
-                  ? null
-                  : setState(() {
-                      currentStep -= 1;
-                    }),
+              child: Text('Evaluation'),
             ),
             FormTextField(
               onchanged: (value) => _presIllnessInfo.diagnosis = value,
