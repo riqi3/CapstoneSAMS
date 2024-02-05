@@ -12,10 +12,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class HistoryPresentIllness extends StatefulWidget {
-  final Patient patient; 
+  final Patient patient;
   const HistoryPresentIllness({
     super.key,
-    required this.patient, 
+    required this.patient,
   });
 
   @override
@@ -23,7 +23,6 @@ class HistoryPresentIllness extends StatefulWidget {
 }
 
 class _HistoryPresentIllnessState extends State<HistoryPresentIllness> {
-  
   @override
   Widget build(BuildContext context) {
     return ScaffoldTemplate(
@@ -33,7 +32,7 @@ class _HistoryPresentIllnessState extends State<HistoryPresentIllness> {
             patient: widget.patient,
           ),
         ],
-      ), 
+      ),
     );
   }
 }
