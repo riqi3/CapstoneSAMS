@@ -17,7 +17,7 @@ class Patient {
   double? weight; 
   String? phone;
   String? email;
-  int? assignedPhysician;
+  // int? assignedPhysician;
 
   Patient({
     this.patientID,
@@ -36,7 +36,7 @@ class Patient {
     this.weight, 
     this.phone,
     this.email,
-    this.assignedPhysician,
+    // this.assignedPhysician,
   });
 
   Map<String, dynamic> toJson() {
@@ -59,7 +59,7 @@ class Patient {
       // 'registration': registration.toIso8601String(),
       'phone': phone,
       'email': email,
-      'assignedPhysician': assignedPhysician,
+      // 'assignedPhysician': assignedPhysician,
     };
   }
 
@@ -81,7 +81,7 @@ class Patient {
       weight: json['weight'], 
       phone: json['phone'],
       email: json['email'],
-      assignedPhysician: json['assignedPhysician'],
+      // assignedPhysician: json['assignedPhysician'],
     );
   }
 }

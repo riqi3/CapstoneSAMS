@@ -19,6 +19,7 @@ class AccountProvider extends ChangeNotifier {
   String? get firstName => _account?.firstName;
   String? get middleName => _account?.middleName;
   String? get lastName => _account?.lastName;
+  String? get suffixTitle => _account?.suffixTitle;
   String? get role => _account?.accountRole;
   String? get token => _account?.token;
   bool get supera => _account!.isSuperuser;
@@ -32,7 +33,7 @@ class AccountProvider extends ChangeNotifier {
     try {
       final response = await http.get(
           Uri.parse('${Env.prefix}/user/users/account/${accountID}'),
-          headers: header); 
+          headers: header);
       if (response.statusCode == 200) {
         return Account.fromJson(jsonDecode(response.body));
       } else {
@@ -51,7 +52,7 @@ class AccountProvider extends ChangeNotifier {
           'username': username,
           'password': password,
         },
-      ); 
+      );
       if (response.statusCode == 200) {
         // The user was authenticated, so store the account data in the provider
         final data = jsonDecode(response.body);
@@ -72,7 +73,7 @@ class AccountProvider extends ChangeNotifier {
     try {
       final response = await http.post(
         Uri.parse('${Env.prefix}/user/logout/${id}'),
-      ); 
+      );
       if (response.statusCode == 200) {
         return true;
       } else {

@@ -1,26 +1,35 @@
 import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
+import 'package:capstone_sams/global-widgets/forms/PresentMedHistoryForm.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/present-illness-history/HistoryPresentIllnessScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/past-med-history/PastMedicalHistoryScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/treatment/Treatment.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../constants/theme/sizing.dart';
 import '../../../models/PatientModel.dart';
 import 'health-record/HealthRecordScreen.dart';
 
 class PatientTabsScreen extends StatefulWidget {
   final Patient patient;
-  // final int? index;
+  final GlobalKey<_PatientTabsScreenState>? patientTabsScreenKey; // Add this line
 
-  const PatientTabsScreen({
-    super.key,
+  // final int? index;
+const PatientTabsScreen({
+    Key? key,
     required this.patient,
-    // required this.index,
-  });
+    this.patientTabsScreenKey, // Add this line
+  }) : super(key: key);
+  // const PatientTabsScreen({
+  //   super.key,
+  //   required this.patient,
+  //   // required this.index,
+  // });
 
   @override
   State<PatientTabsScreen> createState() => _PatientTabsScreenState();
 }
+ 
 
 class _PatientTabsScreenState extends State<PatientTabsScreen>
     with SingleTickerProviderStateMixin {
@@ -64,6 +73,17 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
             patient: widget.patient,
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PresentMedHistoryForm(
+              patient: widget.patient,
+            ),
+          ),
+        ),
+        child: FaIcon(FontAwesomeIcons.stethoscope),
       ),
     );
   }

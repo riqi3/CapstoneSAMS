@@ -2,8 +2,12 @@ import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class CardSectionTitleWidget extends StatelessWidget {
-  const CardSectionTitleWidget({super.key, required this.title});
+  CardSectionTitleWidget({
+    super.key,
+    required this.title,
+  });
 
   final String title;
 

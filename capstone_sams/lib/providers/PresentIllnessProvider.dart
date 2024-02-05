@@ -17,33 +17,13 @@ class PresentIllnessProvider extends ChangeNotifier {
   String? get treatment => _presentIllness?.treatment;
   String? get created_at => _presentIllness?.created_at;
   String? get updated_at => _presentIllness?.updated_at;
+  String? get patient => _presentIllness?.patient;
+  int? get created_by => _presentIllness?.created_by;
 
   List<PresentIllness> _presentIllnessList = [];
 
   Future<List<PresentIllness>> get presentIllnesses =>
       Future.value(_presentIllnessList);
-
-  // Future<PresentIllness> fetchComplaints(String token, String? patientID,) async {
-  //   final header = <String, String>{
-  //     'Content-Type': 'application/json; charset=UTF-8',
-  //     'Authorization': 'Bearer $token',
-  //   };
-  //   try {
-  //     final response = await http.get(
-  //         Uri.parse('${Env.prefix}/patient/patients/complaints/'),
-  //         headers: header);
-  //     await Future.delayed(Duration(milliseconds: 3000));
-  //     if (response.statusCode == 200) {
-  //       return PresentIllness.fromJson(
-  //           jsonDecode(response.body) as Map<String, dynamic>);
-  //     } else {
-  //       return throw Exception('Failed to load all illness records');
-  //     }
-  //   } on Exception catch (e) {
-  //     print(e);
-  //     return throw Exception('Failed to load all illness records');
-  //   }
-  // }
 
   Future<List<PresentIllness>> fetchComplaints(
       String token, String? patientID) async {
@@ -55,7 +35,8 @@ class PresentIllnessProvider extends ChangeNotifier {
       final response = await http.get(
           Uri.parse(
               '${Env.prefix}/patient/patients/complaints/illness/${patientID}'),
-          headers: header); 
+          headers: header);
+      await Future.delayed(Duration(milliseconds: 2000));
       if (response.statusCode == 200) {
         final items = json.decode(response.body);
         List<PresentIllness> presentIllness = items.map<PresentIllness>((json) {
@@ -72,8 +53,8 @@ class PresentIllnessProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> createComplaint(
-      PresentIllness presentIllness, String token, String? patientID) async {
+  Future<bool> createComplaint(PresentIllness presentIllness, String token,
+      String? patientID, int? accountID) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       // 'Authorization': 'Bearer $token',
@@ -84,7 +65,7 @@ class PresentIllnessProvider extends ChangeNotifier {
       // print(body);
       final response = await http.post(
         Uri.parse(
-            '${Env.prefix}/patient/patients/complaints/create/${patientID}'),
+            '${Env.prefix}/patient/patients/complaints/create/${patientID}/${accountID}'),
         headers: header,
         body: jsonEncode(body),
       );
