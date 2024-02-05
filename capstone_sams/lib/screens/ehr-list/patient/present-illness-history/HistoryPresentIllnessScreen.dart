@@ -23,6 +23,7 @@ class HistoryPresentIllness extends StatefulWidget {
 }
 
 class _HistoryPresentIllnessState extends State<HistoryPresentIllness> {
+  
   @override
   Widget build(BuildContext context) {
     return ScaffoldTemplate(
@@ -32,16 +33,7 @@ class _HistoryPresentIllnessState extends State<HistoryPresentIllness> {
             patient: widget.patient,
           ),
         ],
-      ),
-      fab: FloatingActionButton(
-        onPressed: () => showDialog(
-          context: context,
-          builder: (ctx) => PresentMedHistoryForm(
-            patient: widget.patient, 
-          ),
-        ),
-        child: FaIcon(FontAwesomeIcons.pencil),
-      ),
+      ), 
     );
   }
 }
