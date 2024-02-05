@@ -12,10 +12,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class HistoryPresentIllness extends StatefulWidget {
-  final Patient patient; 
+  final Patient patient;
   const HistoryPresentIllness({
     super.key,
-    required this.patient, 
+    required this.patient,
   });
 
   @override
@@ -32,15 +32,6 @@ class _HistoryPresentIllnessState extends State<HistoryPresentIllness> {
             patient: widget.patient,
           ),
         ],
-      ),
-      fab: FloatingActionButton(
-        onPressed: () => showDialog(
-          context: context,
-          builder: (ctx) => PresentMedHistoryForm(
-            patient: widget.patient, 
-          ),
-        ),
-        child: FaIcon(FontAwesomeIcons.pencil),
       ),
     );
   }

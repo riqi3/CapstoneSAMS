@@ -1,4 +1,5 @@
 import uuid 
+from django.utils import timezone
 from django.db import models
 from api.modules.user.models import Account
 '''
@@ -45,9 +46,7 @@ class Patient(models.Model):
     weight = models.FloatField(blank= False) 
     phone = models.CharField(max_length = 11, null=True,blank = True)
     email = models.CharField(max_length = 50, null=True,blank = True) 
-    assignedPhysician = models.ForeignKey(Account, null=True, on_delete = models.CASCADE)
     isDeleted = models.BooleanField(default = False)
-
     
     def __str__(self):
         return f"{self.patientID} - {self.firstName} {self.middleInitial} {self.lastName}"
@@ -100,8 +99,8 @@ class Present_Illness(models.Model):
     findings = models.TextField(blank = False, default = None, null = False)
     diagnosis = models.TextField(blank = False, default = None, null = False)
     treatment = models.TextField(blank = False, default = None, null = False)
-    created_at = models.DateTimeField(auto_now_add=True,   null = False,blank = False,)
-    updated_at = models.DateTimeField(auto_now=True, null = False,blank = False,)
+    created_at = models.DateTimeField(auto_now=True, blank = False, null = False)
+    updated_at = models.DateTimeField(auto_now=True, blank = False, null = False)
     patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
-    assignedPhysician = models.ForeignKey(Account, null=True, on_delete = models.CASCADE)
+    created_by = models.ForeignKey(Account, null=True, on_delete = models.CASCADE)
     isDeleted = models.BooleanField(default = False)

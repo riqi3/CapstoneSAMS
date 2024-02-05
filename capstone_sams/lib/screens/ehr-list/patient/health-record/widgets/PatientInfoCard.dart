@@ -2,6 +2,7 @@ import 'package:capstone_sams/constants/Strings.dart';
 import 'package:capstone_sams/global-widgets/cards/CardSectionInfoWidget.dart';
 import 'package:capstone_sams/global-widgets/cards/CardTemplate.dart';
 import 'package:capstone_sams/global-widgets/cards/CardTitleWidget.dart';
+import 'package:capstone_sams/global-widgets/loading-indicator/CardContentLoading.dart';
 import 'package:capstone_sams/global-widgets/separators/DividerWidget.dart';
 import 'package:capstone_sams/global-widgets/cards/CardSectionTitleWidget.dart';
 import 'package:capstone_sams/global-widgets/texts/TitleValueText.dart';
@@ -9,7 +10,7 @@ import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/ContactPersonModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/ContactPersonProvider.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/crud/physician/EditPhysicianScreen.dart';
+import 'package:capstone_sams/global-widgets/forms/ChangePhysicianForm.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -77,49 +78,49 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
           CardSectionInfoWidget(widget: GeneralInfoData(context)),
           CardSectionTitleWidget(title: 'Emergency Contact Information'),
           CardSectionInfoWidget(widget: ContactInfoData(contactPersonProvider)),
-          CardSectionTitleWidget(title: 'Current Physician'),
-          CardSectionInfoWidget(
-              shader: false, widget: AssignedPhysicianData(accountProvider)),
+          // CardSectionTitleWidget(title: 'Current Physician'),
+          // CardSectionInfoWidget(
+          //     shader: false, widget: AssignedPhysicianData(accountProvider)),
         ],
       ),
     );
   }
 
-  Container AssignedPhysicianData(AccountProvider accountProvider) {
-    String middleInitial = accountProvider.middleName![0];
+  // Container AssignedPhysicianData(AccountProvider accountProvider) {
+  //   String middleInitial = accountProvider.middleName![0];
 
-    return Container(
-      child: ListView.builder(
-        physics: BouncingScrollPhysics(),
-        shrinkWrap: true,
-        itemCount: 1,
-        itemBuilder: (BuildContext context, int index) {
-          return Card(
-            child: ListTile(
-              title: Row(
-                children: [
-                  Text(
-                    '${accountProvider.firstName} ${middleInitial}. ${accountProvider.lastName}, M.D.',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'University Physician',
-                    // style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              trailing: popupActionWidget(),
-            ),
-          );
-        },
-      ),
-    );
-  }
+  //   return Container(
+  //     child: ListView.builder(
+  //       physics: BouncingScrollPhysics(),
+  //       shrinkWrap: true,
+  //       itemCount: 1,
+  //       itemBuilder: (BuildContext context, int index) {
+  //         return Card(
+  //           child: ListTile(
+  //             title: Row(
+  //               children: [
+  //                 Text(
+  //                   '${accountProvider.firstName} ${middleInitial}. ${accountProvider.lastName}, M.D.',
+  //                   style: TextStyle(fontWeight: FontWeight.bold),
+  //                 ),
+  //               ],
+  //             ),
+  //             subtitle: Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 Text(
+  //                   'University Physician',
+  //                   // style: TextStyle(fontWeight: FontWeight.bold),
+  //                 ),
+  //               ],
+  //             ),
+  //             trailing: popupActionWidget(),
+  //           ),
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
 
   PopupMenuButton<dynamic> popupActionWidget() {
     return PopupMenuButton(
@@ -161,7 +162,7 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
           Row(
             children: [
               Text(
-                '${widget.patient.firstName} ${widget.patient.middleInitial}. ${widget.patient.lastName}',
+                '${widget.patient.firstName?.toUpperCase()} ${widget.patient.middleInitial?.toUpperCase()}. ${widget.patient.lastName?.toUpperCase()}',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: Sizing.header5,
@@ -291,7 +292,7 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
           token, widget.patient.patientID),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return Center(child: CardContentLoading());
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
@@ -306,7 +307,7 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                 Row(
                   children: [
                     Text(
-                      '${contactPerson.fullName}',
+                      '${contactPerson.fullName?.toUpperCase()}',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: Sizing.header5,

@@ -1,4 +1,6 @@
+import 'package:capstone_sams/global-widgets/loading-indicator/DiagnosisCardLoading.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../../constants/theme/pallete.dart';
@@ -39,13 +41,15 @@ class SearchPatientDelegate extends SearchDelegate {
   Widget buildResults(BuildContext context) {
     return FutureBuilder<List<Patient>>(
       future: _patientList.searchPatients(
-          query: query,
-          token: context.read<AccountProvider>().token!,
-          accountID: context.read<AccountProvider>().acc!.accountID!),
+        query: query,
+        token: context.read<AccountProvider>().token!,
+        // accountID: context.read<AccountProvider>().acc!.accountID!
+      ),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return Center(
-            child: CircularProgressIndicator(),
+          return Padding(
+            padding: const EdgeInsets.all(Sizing.sectionSymmPadding),
+            child: ListCardLoading(),
           );
         }
         List<Patient>? patient = snapshot.data;
@@ -80,70 +84,39 @@ class SearchPatientDelegate extends SearchDelegate {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                      vertical: Sizing.sectionSymmPadding / 2,
+                      vertical: Sizing.sectionSymmPadding / 4,
                     ),
                     child: ListTile(
-                      title: Row(
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: Pallete.mainColor,
-                              borderRadius: BorderRadius.circular(
-                                  Sizing.borderRadius / 2),
-                            ),
-                            child: Center(
-                              child: Text(
-                                '${patient?[index].patientID}',
-                                style: TextStyle(
-                                    fontSize: Sizing.header4,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
-                                overflow: TextOverflow.clip,
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Row(
                             children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    '${patient?[index].firstName}',
-                                    style: TextStyle(
-                                      fontSize: Sizing.header5,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                              Expanded(
+                                child: Text(
+                                  "${patient?[index].firstName?.toUpperCase()} ${patient?[index].middleInitial?.toUpperCase()}. ${patient?[index].lastName?.toUpperCase()}",
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: Sizing.header4,
+                                    color: Pallete.textColor,
                                   ),
-                                  SizedBox(width: 5),
-                                  Text(
-                                    '${patient?[index].middleInitial}',
-                                    style: TextStyle(
-                                      fontSize: Sizing.header5,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  SizedBox(width: 5),
-                                  Text(
-                                    '${patient?[index].lastName}',
-                                    style: TextStyle(
-                                      fontSize: Sizing.header5,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                '${patient?[index].birthDate}',
-                                style: TextStyle(
-                                    fontSize: Sizing.header5,
-                                    fontWeight: FontWeight.normal),
+                                ),
                               ),
                             ],
                           ),
+                          Text(
+                            '${patient?[index].studNumber}',
+                            style: TextStyle(
+                                color: Pallete.greyColor,
+                                fontSize: Sizing.header5,
+                                fontWeight: FontWeight.normal),
+                          ),
                         ],
+                      ),
+                      trailing: FaIcon(
+                        FontAwesomeIcons.arrowRight,
+                        color: Pallete.greyColor,
                       ),
                     ),
                   ),
@@ -162,4 +135,6 @@ class SearchPatientDelegate extends SearchDelegate {
       child: Text('Search Patient'),
     );
   }
+
+  void setState(Null Function() param0) {}
 }

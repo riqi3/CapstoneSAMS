@@ -24,30 +24,27 @@ class PatientProvider extends ChangeNotifier {
   double? get weight => _patient?.weight;
   String? get phone => _patient?.phone;
   String? get email => _patient?.email;
-  int? get assignedPhysician => _patient?.assignedPhysician;
+  // int? get assignedPhysician => _patient?.assignedPhysician;
   var data = [];
   List<Patient> _patients = [];
 
   List<Patient> get patients => _patients;
 
-  Future<List<Patient>> fetchPatients(String token, String role, int id) async {
-    print("Role: $role, ID: $id");
+  Future<List<Patient>> fetchPatients(String token) async {
+    // print("Role: $role, ID: $id");
     try {
-      final uri = role == 'physician'
-          ? Uri.parse('${Env.prefix}/user/physician/${id}/patients/')
-          : Uri.parse('${Env.prefix}/patient/patients/');
+      // final uri = role == 'physician'
+      //     ? Uri.parse('${Env.prefix}/user/physician/${id}/patients/')
+      //     : Uri.parse('${Env.prefix}/patient/patients/');
 
       final header = <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
       };
 
-      final response = await http.get(
-          uri,
-          headers: header);
-      await Future.delayed(Duration(milliseconds: 1000));
-      print('Response Status Code: ${response.statusCode}');
-      print('Response Body: ${response.body}');
+      final response = await http
+          .get(Uri.parse('${Env.prefix}/patient/patients/'), headers: header);
+      await Future.delayed(Duration(milliseconds: 1000)); 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         List<Patient> patients = data.map<Patient>((json) {
@@ -78,9 +75,9 @@ class PatientProvider extends ChangeNotifier {
         headers: header,
         body: jsonEncode(body),
         // body: jsonEncode(data),
-      ); 
+      );
       if (response.statusCode == 201) {
-        fetchPatients(token, role, id);
+        fetchPatients(token);
         notifyListeners();
         return true;
       } else {
@@ -126,7 +123,7 @@ class PatientProvider extends ChangeNotifier {
     try {
       final response = await http.get(
           Uri.parse('${Env.prefix}/patient/patients/${index}'),
-          headers: header); 
+          headers: header);
       if (response.statusCode == 200) {
         return Patient.fromJson(jsonDecode(response.body));
       } else {
@@ -137,17 +134,15 @@ class PatientProvider extends ChangeNotifier {
     }
   }
 
-  Future<List<Patient>> searchPatients(
-      {String? query, String? token, int? accountID}) async {
+  Future<List<Patient>> searchPatients({String? query, String? token}) async {
     try {
       final header = <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
       };
-      final response = await http.get(
-          Uri.parse('${Env.prefix}/patient/patients/user/${accountID}'),
-          headers: header);
-      await Future.delayed(Duration(milliseconds: 1000));
+      final response = await http
+          .get(Uri.parse('${Env.prefix}/patient/patients/'), headers: header);
+      await Future.delayed(Duration(milliseconds: 3000));
       if (response.statusCode == 200) {
         data = json.decode(response.body);
         _patients = data.map((e) => Patient.fromJson(e)).toList();

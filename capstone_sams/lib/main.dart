@@ -1,4 +1,5 @@
 import 'package:capstone_sams/constants/theme/pallete.dart';
+import 'package:capstone_sams/global-widgets/forms/healthcheckscreen.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/ContactPersonProvider.dart';
 import 'package:capstone_sams/providers/HealthRecordProvider.dart';
@@ -9,6 +10,7 @@ import 'package:capstone_sams/providers/PatientProvider.dart';
 import 'package:capstone_sams/providers/PrescriptionProvider.dart';
 import 'package:capstone_sams/providers/PresentIllnessProvider.dart';
 import 'package:capstone_sams/providers/SymptomsFieldsProvider.dart';
+import 'package:capstone_sams/providers/healthcheckprovider.dart';
 import 'package:capstone_sams/screens/authentication/LoginScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -37,6 +39,10 @@ void main() async {
         ),
         ChangeNotifierProvider<SymptomFieldsProvider>(
           create: (context) => SymptomFieldsProvider(),
+        ),
+        ChangeNotifierProvider<HealthCheckProvider>(
+          create: (context) => HealthCheckProvider(),
+          child: HealthCheckScreen(),
         ),
         ChangeNotifierProvider<LabresultProvider>(
           create: (context) => LabresultProvider(),
