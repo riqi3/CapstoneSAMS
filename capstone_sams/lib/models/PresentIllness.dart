@@ -9,6 +9,7 @@ class PresentIllness {
   String? updated_at;
   String? patient;
   int? created_by;
+  bool? isDeleted;
 
   PresentIllness({
     this.illnessID,
@@ -21,6 +22,7 @@ class PresentIllness {
     this.updated_at,
     this.patient,
     this.created_by,
+    this.isDeleted,
   });
 
   Map<String, dynamic> toJson() {
@@ -35,6 +37,7 @@ class PresentIllness {
       'updated_at': updated_at,
       'patient': patient,
       'created_by': created_by,
+      'isDeleted': isDeleted,
     };
   }
 
@@ -49,6 +52,7 @@ class PresentIllness {
       created_at: json['created_at'],
       updated_at: json['updated_at'],
       created_by: json['created_by'],
+      isDeleted: json['isDeleted'],
     );
   }
 }

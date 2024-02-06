@@ -14,7 +14,7 @@ class ListCardLoading extends StatelessWidget {
       child: ListView.builder(
         physics: BouncingScrollPhysics(),
         shrinkWrap: true,
-        itemCount: 8,
+        itemCount: 5,
         itemBuilder: (context, index) {
           return Card(
             color: Pallete.lightGreyColor2,

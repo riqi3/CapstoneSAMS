@@ -3,6 +3,7 @@ import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/global-widgets/buttons/FormSubmitButton.dart';
 import 'package:capstone_sams/global-widgets/forms/FormTemplate.dart';
+import 'package:capstone_sams/global-widgets/forms/healthcheckscreen.dart';
 import 'package:capstone_sams/global-widgets/snackbars/Snackbars.dart';
 import 'package:capstone_sams/global-widgets/text-fields/Textfields.dart';
 import 'package:capstone_sams/global-widgets/texts/FormTitleWidget.dart';
@@ -19,32 +20,32 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
-import 'healthcheckscreen.dart';
-
 // ignore: must_be_immutable
-class PresentMedHistoryForm extends StatefulWidget {
+class EditPresentMedHistoryForm extends StatefulWidget {
   Patient patient;
-  PresentMedHistoryForm({
+  PresentIllness presentIllness;
+  EditPresentMedHistoryForm({
     Key? key,
     required this.patient,
+    required this.presentIllness,
   }) : super(key: key);
 
   @override
-  State<PresentMedHistoryForm> createState() => _PresentMedHistoryFormState();
+  State<EditPresentMedHistoryForm> createState() =>
+      _PresentMedHistoryFormState();
 }
 
-class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
+class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
   final _presIllnessInfoFormKey = GlobalKey<FormState>();
-  final _presIllnessInfo = PresentIllness();
-  final DateTime? createdAt = DateTime.now();
+  // final _presIllnessInfo = PresentIllness();
+  final DateTime? updatedAt = DateTime.now();
   int currentStep = 0;
   int? maxLines = 4;
 
   var incompleteInputs = dangerSnackbar('${Strings.incompleteInputs}');
-  var failedCreatedComplaint =
-      dangerSnackbar('${Strings.dangerAdd} diagnosis.');
-  var successfulCreatedComplaint =
-      successSnackbar('${Strings.successfulAdd} diagnosis.');
+  var failedUpdateComplaint = dangerSnackbar('${Strings.dangerAdd} diagnosis.');
+  var successfulUpdateComplaint =
+      successSnackbar('${Strings.successfulUpdate} diagnosis.');
 
   bool _isLoading = false;
 
@@ -58,23 +59,23 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
       setState(() => _isLoading = false);
 
       ScaffoldMessenger.of(context).showSnackBar(incompleteInputs);
- 
+
       return;
     } else {
       // String getDate = DateFormat.yMMMd('en_US').format(createdAt as DateTime);
 
-      String formattedDate = createdAt != null
-          ? DateFormat('yyyy-MM-dd HH:mm').format(createdAt!)
+      String formattedDate = updatedAt != null
+          ? DateFormat('yyyy-MM-dd HH:mm').format(updatedAt!)
           : '';
 
       var presentIllnessRecord = PresentIllness(
-        illnessID: Uuid().v4(),
-        illnessName: _presIllnessInfo.illnessName,
-        complaint: _presIllnessInfo.complaint,
-        findings: _presIllnessInfo.findings,
-        diagnosis: _presIllnessInfo.diagnosis,
-        treatment: _presIllnessInfo.treatment,
-        created_at: formattedDate,
+        illnessID: widget.presentIllness.illnessID,
+        illnessName: widget.presentIllness.illnessName,
+        complaint: widget.presentIllness.complaint,
+        findings: widget.presentIllness.findings,
+        diagnosis: widget.presentIllness.diagnosis,
+        treatment: widget.presentIllness.treatment,
+        created_at: widget.presentIllness.created_at,
         updated_at: formattedDate,
         patient: widget.patient.patientID,
       );
@@ -87,8 +88,8 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
       final token = context.read<AccountProvider>().token!;
 
       final presentIllnessSuccess =
-          await presentIllnessProvider.createComplaint(
-              presentIllnessRecord, token, widget.patient.patientID, accountID);
+          await presentIllnessProvider.updateComplaint(
+              presentIllnessRecord, widget.patient.patientID, accountID, token);
 
       if (presentIllnessSuccess) {
         int routesCount = 0;
@@ -105,13 +106,13 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
             }
             return true;
           },
-        ); 
-        
-        ScaffoldMessenger.of(context).showSnackBar(successfulCreatedComplaint);
+        );
+
+        ScaffoldMessenger.of(context).showSnackBar(successfulUpdateComplaint);
       } else {
         setState(() => _isLoading = false);
 
-        ScaffoldMessenger.of(context).showSnackBar(failedCreatedComplaint);
+        ScaffoldMessenger.of(context).showSnackBar(failedUpdateComplaint);
       }
     }
   }
@@ -119,10 +120,11 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
   @override
   Widget build(BuildContext context) {
     return FormTemplate(
+      onpressed: () => Navigator.pop(context),
       column: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          FormTitleWidget(title: 'Present Illness Form'),
+          FormTitleWidget(title: 'Edit Present Illness Form'),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -220,7 +222,8 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
               fontWeight: FontWeight.w600),
         ),
         content: FormTextField(
-          onchanged: (value) => _presIllnessInfo.complaint = value,
+          initialvalue: widget.presentIllness.complaint,
+          onchanged: (value) => widget.presentIllness.complaint = value,
           labeltext: '',
           validator: Strings.requiredField,
           maxlines: maxLines,
@@ -238,7 +241,8 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
               fontWeight: FontWeight.w600),
         ),
         content: FormTextField(
-          onchanged: (value) => _presIllnessInfo.findings = value,
+          initialvalue: widget.presentIllness.findings,
+          onchanged: (value) => widget.presentIllness.findings = value,
           labeltext: '',
           validator: Strings.requiredField,
           maxlines: maxLines,
@@ -272,19 +276,17 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
               },
               child: Text('Evaluation'),
             ),
-            
-            
             FormTextField(
-onchanged: (value) => _presIllnessInfo.illnessName = value,
-labeltext: 'Illness Name*',
-validator: Strings.requiredField,
-type: TextInputType.text,
-),
-SizedBox(height: Sizing.sectionSymmPadding),
-            
-            
+              initialvalue: widget.presentIllness.illnessName,
+              onchanged: (value) => widget.presentIllness.illnessName = value,
+              labeltext: 'Illness Name*',
+              validator: Strings.requiredField,
+              type: TextInputType.text,
+            ),
+            SizedBox(height: Sizing.sectionSymmPadding),
             FormTextField(
-              onchanged: (value) => _presIllnessInfo.diagnosis = value,
+              initialvalue: widget.presentIllness.diagnosis,
+              onchanged: (value) => widget.presentIllness.diagnosis = value,
               labeltext: '',
               validator: Strings.requiredField,
               maxlines: maxLines,
@@ -304,7 +306,8 @@ SizedBox(height: Sizing.sectionSymmPadding),
               fontWeight: FontWeight.w600),
         ),
         content: FormTextField(
-          onchanged: (value) => _presIllnessInfo.treatment = value,
+          initialvalue: widget.presentIllness.treatment,
+          onchanged: (value) => widget.presentIllness.treatment = value,
           labeltext: '',
           validator: Strings.requiredField,
           maxlines: maxLines,

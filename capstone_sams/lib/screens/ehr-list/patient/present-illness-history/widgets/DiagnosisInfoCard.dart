@@ -5,14 +5,18 @@ import 'package:capstone_sams/global-widgets/bottomsheet/BottomSheetTitle.dart';
 import 'package:capstone_sams/global-widgets/cards/CardSectionInfoWidget.dart';
 import 'package:capstone_sams/global-widgets/cards/CardTemplate.dart';
 import 'package:capstone_sams/global-widgets/cards/CardTitleWidget.dart';
+import 'package:capstone_sams/global-widgets/dialogs/AlertDialogTemplate.dart';
 import 'package:capstone_sams/global-widgets/loading-indicator/DiagnosisCardLoading.dart';
 import 'package:capstone_sams/global-widgets/pop-menu-buttons/pop-menu-item/PopMenuItemTemplate.dart';
+import 'package:capstone_sams/global-widgets/snackbars/Snackbars.dart';
 import 'package:capstone_sams/global-widgets/texts/NoDataTextWidget.dart';
 import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/models/PresentIllness.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/PresentIllnessProvider.dart';
+import 'package:capstone_sams/global-widgets/forms/present-illness/EditPresentIllnessForm.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/PatientTabsScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -34,6 +38,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
   late Stream<List<PresentIllness>> presentIllness;
   late String token = context.read<AccountProvider>().token!;
   Account? account = Account(isSuperuser: false);
+  var removeComplaint = dangerSnackbar('${Strings.remove} diagnosis.');
 
   @override
   void initState() {
@@ -112,68 +117,88 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                     AccountProvider accountProvider =
                         Provider.of<AccountProvider>(context);
                     String middleInitial = account.middleName![0];
-                    DateTime originalDate = DateTime.parse(illness.created_at!);
-                    String formattedDate =
-                        DateFormat('MMMM d, y | HH:mm').format(originalDate);
-                    return Card(
-                      color: Colors.white,
-                      elevation: Sizing.cardElevation,
-                      margin: EdgeInsets.symmetric(
-                        vertical: Sizing.sectionSymmPadding / 4,
-                      ),
-                      child: GestureDetector(
-                        onTap: () => viewIllnessMethod(
-                            context, illness, illnessIndex, account),
-                        child: ListTile(
-                          title: Row(
-                            children: [
-                              Text(
-                                'Dx #${illnessIndex}: ',
-                              ),
-                              Expanded(
-                                child: Text(
-                                  '${illness.illnessName?.toUpperCase()}',
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                    DateTime originalDate1 =
+                        DateTime.parse(illness.created_at!);
+                    // DateTime originalDate2 = DateTime.parse(
+                    //     illness.updated_at == null
+                    //         ? '2000-01-06 11:00:00.000000+08'
+                    //         : illness.updated_at!);
+                    String createdOn =
+                        DateFormat('MMM d, y | HH:mm').format(originalDate1);
+                    // String updatedOn =
+                    //     DateFormat('MMM d, y | HH:mm').format(originalDate2);
+                    return Visibility(
+                      visible: illness.isDeleted == true ? false : true,
+                      child: Card(
+                        color: Colors.white,
+                        elevation: Sizing.cardElevation,
+                        margin: EdgeInsets.symmetric(
+                          vertical: Sizing.sectionSymmPadding / 4,
+                        ),
+                        child: GestureDetector(
+                          onTap: () => viewIllnessMethod(
+                              context, illness, illnessIndex, account),
+                          child: ListTile(
+                            title: Row(
+                              children: [
+                                Text(
+                                  'Dx #${illnessIndex}: ',
                                 ),
-                              ),
-                            ],
-                          ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              account.accountID == accountProvider.id
-                                  ? Row(
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            '${account.firstName} ${middleInitial}. ${account.lastName}, ${account.suffixTitle}',
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                color: Pallete.greyColor,
-                                                fontWeight: FontWeight.bold),
+                                Expanded(
+                                  child: Text(
+                                    '${illness.illnessName?.toUpperCase()}',
+                                    overflow: TextOverflow.ellipsis,
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                account.accountID == accountProvider.id
+                                    ? Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              '${account.firstName} ${middleInitial}. ${account.lastName}, ${account.suffixTitle}',
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  color: Pallete.greyColor,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    )
-                                  : Text(
-                                      '${account.firstName} ${middleInitial}. ${account.lastName}, ${account.suffixTitle}',
-                                      style:
-                                          TextStyle(color: Pallete.greyColor),
-                                    ),
-                              Text(
-                                '${formattedDate}',
-                                style: TextStyle(color: Pallete.greyColor),
-                              ),
-                            ],
+                                        ],
+                                      )
+                                    : Text(
+                                        '${account.firstName} ${middleInitial}. ${account.lastName}, ${account.suffixTitle}',
+                                        style:
+                                            TextStyle(color: Pallete.greyColor),
+                                      ),
+                                Text(
+                                  '${createdOn}',
+                                  style: TextStyle(color: Pallete.greyColor),
+                                ),
+                                // Visibility(
+                                //   visible: updatedOn == 'January 6, 2000 | 03:00'
+                                //       ? false
+                                //       : true,
+                                //   child: Text(
+                                //     'Edited: ${updatedOn}',
+                                //     style: TextStyle(color: Pallete.greyColor),
+                                //   ),
+                                // ),
+                              ],
+                            ),
+                            trailing: account.accountID != accountProvider.id
+                                ? Icon(
+                                    Icons.abc,
+                                    color: Colors.transparent,
+                                  )
+                                : popupActionWidget(illness, illnessIndex,
+                                    account, accountProvider),
                           ),
-                          trailing: account.accountID != accountProvider.id
-                              ? Icon(
-                                  Icons.abc,
-                                  color: Colors.transparent,
-                                )
-                              : popupActionWidget(illness, illnessIndex,
-                                  account, accountProvider),
                         ),
                       ),
                     );
@@ -189,58 +214,88 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
 
   PopupMenuButton<dynamic> popupActionWidget(PresentIllness illness,
       String illnessIndex, Account account, AccountProvider accountProvider) {
-    // if (account.accountID != accountProvider.id) {
-    //   return PopupMenuButton(
-    //     itemBuilder: (context) => [
-    //       PopupMenuItem(
-    //         child: PopMenuItemTemplate(
-    //           icon: FontAwesomeIcons.solidEye,
-    //           color: Pallete.infoColor,
-    //           title: 'View',
-    //           ontap: () {
-    //             viewIllnessMethod(context, illness, illnessIndex, account);
-    //           },
-    //         ),
-    //       )
-    //     ],
-    //   );
-    // }
     return PopupMenuButton(
       itemBuilder: (context) => [
-        // PopupMenuItem(
-        //   child: PopMenuItemTemplate(
-        //     icon: FontAwesomeIcons.solidEye,
-        //     color: Pallete.infoColor,
-        //     title: 'View',
-        //     ontap: () {
-        //       viewIllnessMethod(context, illness, illnessIndex, account);
-        //     },
-        //   ),
-        // ),
         PopupMenuItem(
           child: PopMenuItemTemplate(
             icon: FontAwesomeIcons.pen,
             color: Pallete.successColor,
+            size: Sizing.iconAppBarSize,
             title: 'Edit',
-            ontap: () {},
+            ontap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => EditPresentMedHistoryForm(
+                    presentIllness: illness,
+                    patient: widget.patient,
+                  ),
+                ),
+              );
+            },
           ),
         ),
         PopupMenuItem(
           child: PopMenuItemTemplate(
             icon: FontAwesomeIcons.trash,
             color: Pallete.dangerColor,
+            size: Sizing.iconAppBarSize,
             title: 'Delete',
-            ontap: () {},
+            ontap: () {
+              late String token = context.read<AccountProvider>().token!;
+              final provider =
+                  Provider.of<PresentIllnessProvider>(context, listen: false);
+
+              showDialog<String>(
+                context: context,
+                builder: (BuildContext context) => AlertDiaglogTemplate(
+                  title: 'Are you sure?',
+                  content: "Deleting a patient's illness history record is irreversable and cannot be undone.",
+                  buttonTitle: 'Remove diagnosis',
+                  onpressed: () => removeComplaintMethod(
+                      provider, illness, accountProvider, token, context),
+                ),
+              );
+            },
           ),
         ),
       ],
     );
   }
 
+  void removeComplaintMethod(
+      PresentIllnessProvider provider,
+      PresentIllness illness,
+      AccountProvider accountProvider,
+      String token,
+      BuildContext context) {
+    provider.removeComplaint(
+      illness,
+      widget.patient.patientID,
+      accountProvider.id,
+      token,
+    );
+    int routesCount = 0;
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PatientTabsScreen(patient: widget.patient),
+      ),
+      (Route<dynamic> route) {
+        if (routesCount < 2) {
+          routesCount++;
+          return false;
+        }
+        return true;
+      },
+    );
+    ScaffoldMessenger.of(context).showSnackBar(removeComplaint);
+  }
+
   void viewIllnessMethod(BuildContext context, PresentIllness illness,
       String illnessIndex, Account account) {
     String middleInitial = account.middleName![0];
-    
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,

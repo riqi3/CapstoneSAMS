@@ -369,6 +369,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
   @override
   Widget build(BuildContext context) {
     return FormTemplate(
+      onpressed: () => Navigator.pop(context),
       column: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -669,6 +670,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                         FormTextField(
                           onchanged: (value) => _genInfo.phone = value,
                           labeltext: 'Contact Number',
+                          maxlength: 11,
                           type: TextInputType.phone,
                         ),
                       ],
@@ -880,7 +882,8 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
               Flexible(
                 child: FormTextField(
                   onchanged: (value) => _contactInfo.phone = value,
-                  labeltext: 'Contact Number*',
+                  labeltext: 'Contact Number*', 
+                  maxlength: 11,
                   validator: Strings.requiredField,
                   type: TextInputType.phone,
                 ),
