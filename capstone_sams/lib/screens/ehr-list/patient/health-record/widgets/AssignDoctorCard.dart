@@ -4,7 +4,7 @@ import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/crud/physician/EditPhysicianScreen.dart';
+import 'package:capstone_sams/global-widgets/forms/ChangePhysicianForm.dart';
 import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';

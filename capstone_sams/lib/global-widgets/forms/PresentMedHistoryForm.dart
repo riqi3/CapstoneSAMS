@@ -9,20 +9,24 @@ import 'package:capstone_sams/global-widgets/texts/FormTitleWidget.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/models/PresentIllness.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
+import 'package:capstone_sams/providers/HealthCheckProvider.dart';
 import 'package:capstone_sams/providers/PresentIllnessProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/PatientTabsScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/present-illness-history/HistoryPresentIllnessScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
+import 'healthcheckscreen.dart';
+
 // ignore: must_be_immutable
 class PresentMedHistoryForm extends StatefulWidget {
-  Patient patient; 
+  Patient patient;
   PresentMedHistoryForm({
     Key? key,
-    required this.patient, 
+    required this.patient,
   }) : super(key: key);
 
   @override
@@ -44,8 +48,6 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
 
   bool _isLoading = false;
 
-  DateTime? _createdAt;
-
   late bool _autoValidate = false;
 
   void _onSubmit() async {
@@ -59,10 +61,11 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
  
       return;
     } else {
-      print(createdAt);
+      // String getDate = DateFormat.yMMMd('en_US').format(createdAt as DateTime);
 
-      String formattedCreateDate =
-          _createdAt != null ? DateFormat('yyyy-MM-dd').format(createdAt!) : '';
+      String formattedDate = createdAt != null
+          ? DateFormat('yyyy-MM-dd HH:mm').format(createdAt!)
+          : '';
 
       var presentIllnessRecord = PresentIllness(
         illnessID: Uuid().v4(),
@@ -71,8 +74,8 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
         findings: _presIllnessInfo.findings,
         diagnosis: _presIllnessInfo.diagnosis,
         treatment: _presIllnessInfo.treatment,
-        created_at: formattedCreateDate,
-        updated_at: formattedCreateDate,
+        created_at: formattedDate,
+        updated_at: formattedDate,
         patient: widget.patient.patientID,
       );
 
@@ -83,23 +86,27 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
 
       final token = context.read<AccountProvider>().token!;
 
-      final presentIllnessSuccess = await presentIllnessProvider
-          .createComplaint(presentIllnessRecord, token, widget.patient.patientID
-              // , accountID
-              );
+      final presentIllnessSuccess =
+          await presentIllnessProvider.createComplaint(
+              presentIllnessRecord, token, widget.patient.patientID, accountID);
 
       if (presentIllnessSuccess) {
+        int routesCount = 0;
+
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
             builder: (context) => PatientTabsScreen(patient: widget.patient),
           ),
-          (Route<dynamic> route) => false,
-        );
-        // widget.onsubmit();
-        // Navigator.of(context).pop();
+          (Route<dynamic> route) {
+            if (routesCount < 2) {
+              routesCount++;
+              return false;
+            }
+            return true;
+          },
+        ); 
         
-
         ScaffoldMessenger.of(context).showSnackBar(successfulCreatedComplaint);
       } else {
         setState(() => _isLoading = false);
@@ -212,25 +219,12 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
               fontSize: Sizing.header4,
               fontWeight: FontWeight.w600),
         ),
-        content: Column(
-          children: [
-            FormTextField(
-              onchanged: (value) => _presIllnessInfo.illnessName = value,
-              labeltext: 'Illness Name*',
-              validator: Strings.requiredField,
-              type: TextInputType.text,
-            ),
-            SizedBox(
-              height: Sizing.sectionSymmPadding,
-            ),
-            FormTextField(
-              onchanged: (value) => _presIllnessInfo.complaint = value,
-              labeltext: '',
-              validator: Strings.requiredField,
-              maxlines: maxLines,
-              type: TextInputType.text,
-            ),
-          ],
+        content: FormTextField(
+          onchanged: (value) => _presIllnessInfo.complaint = value,
+          labeltext: '',
+          validator: Strings.requiredField,
+          maxlines: maxLines,
+          type: TextInputType.text,
         ),
       ),
       Step(
@@ -261,12 +255,42 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
               fontSize: Sizing.header4,
               fontWeight: FontWeight.w600),
         ),
-        content: FormTextField(
-          onchanged: (value) => _presIllnessInfo.diagnosis = value,
-          labeltext: '',
-          validator: Strings.requiredField,
-          maxlines: maxLines,
-          type: TextInputType.text,
+        content: Column(
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return ChangeNotifierProvider<HealthCheckProvider>(
+                        create: (context) => HealthCheckProvider(),
+                        child: HealthCheckScreen(),
+                      );
+                    },
+                  ),
+                );
+              },
+              child: Text('Evaluation'),
+            ),
+            
+            
+            FormTextField(
+onchanged: (value) => _presIllnessInfo.illnessName = value,
+labeltext: 'Illness Name*',
+validator: Strings.requiredField,
+type: TextInputType.text,
+),
+SizedBox(height: Sizing.sectionSymmPadding),
+            
+            
+            FormTextField(
+              onchanged: (value) => _presIllnessInfo.diagnosis = value,
+              labeltext: '',
+              validator: Strings.requiredField,
+              maxlines: maxLines,
+              type: TextInputType.text,
+            ),
+          ],
         ),
       ),
       Step(

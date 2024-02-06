@@ -6,6 +6,7 @@ import 'package:capstone_sams/global-widgets/cards/CardSectionInfoWidget.dart';
 import 'package:capstone_sams/global-widgets/cards/CardSectionTitleWidget.dart';
 import 'package:capstone_sams/global-widgets/cards/CardTitleWidget.dart';
 import 'package:capstone_sams/global-widgets/texts/TitleValueText.dart';
+import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/models/PresentIllness.dart';
 import 'package:flutter/material.dart';
@@ -13,8 +14,10 @@ import 'package:flutter/material.dart';
 class ViewIllnessScreen extends StatefulWidget {
   final PresentIllness presentIllness;
   final String illnessIndex;
+  final Account account;
   const ViewIllnessScreen({
     super.key,
+    required this.account,
     required this.presentIllness,
     required this.illnessIndex,
   });
@@ -58,12 +61,16 @@ class ViewIllnessScreenState extends State<ViewIllnessScreen> {
               Radius.circular(Sizing.borderRadius),
             ),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CardTitleWidget(title: 'Present Illness'),
-                CardSectionTitleWidget(
+                CardTitleWidget(
                     title:
                         'Dx #${widget.illnessIndex} ${widget.presentIllness.illnessName}'),
-                CardSectionInfoWidget( 
+                CardSectionTitleWidget(
+                  title:
+                      'Diagnosed by:${widget.illnessIndex} ${widget.presentIllness.illnessName}',
+                ),
+                CardSectionInfoWidget(
                   widget: PresentIllnessData(context),
                 ),
               ],

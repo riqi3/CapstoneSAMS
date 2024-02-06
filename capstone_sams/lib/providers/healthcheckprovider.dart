@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../constants/Env.dart';
+
 class HealthCheckProvider extends ChangeNotifier {
   String feverOption = 'No';
   String coughOption = 'No';
@@ -12,7 +14,8 @@ class HealthCheckProvider extends ChangeNotifier {
   String cholesterolLevelOption = 'Low';
 
   Future<void> sendDataToBackend() async {
-    final url = Uri.parse('url nimo');
+    final url =
+        Uri.parse('${Env.prefix}/diagnostics/create_diagnostic_record/');
     final response = await http.post(
       url,
       body: {
@@ -28,10 +31,8 @@ class HealthCheckProvider extends ChangeNotifier {
     );
 
     if (response.statusCode == 200) {
-      // Handle the response from the server if needed
       print('Response from server: ${response.body}');
     } else {
-      // Handle errors
       print('Error sending data to server: ${response.statusCode}');
     }
   }

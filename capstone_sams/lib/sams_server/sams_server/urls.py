@@ -7,4 +7,5 @@ urlpatterns = [
     path('user/', include('api.modules.user.urls')),
     path('laboratory/', include('api.modules.laboratory.urls')),
     path('cdss/', include('api.modules.disease_prediction.cdssModel.urls')),
+    path('diagnostics/', include('api.modules.disease_prediction.diagnosticModel.urls')),
 ]

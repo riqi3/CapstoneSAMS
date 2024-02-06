@@ -28,6 +28,7 @@ from api.modules.disease_prediction.cdssModel.models import HealthSymptom
 from api.modules.disease_prediction.cdssModel.views import train_disease_prediction_model
 from api.modules.disease_prediction.diagnosticModel.models import DiagnosticFields
 from api.modules.disease_prediction.diagnosticModel.forms import CsvImportDiagnosticFieldsForm
+from api.modules.disease_prediction.diagnosticModel.views import train_model
 
 '''
 This is a signal that will create a data log if a user logs in.
@@ -142,6 +143,7 @@ class UserCreationForm(forms.ModelForm):
             "firstName",
             "middleName",
             "lastName",
+            'suffixTitle',
             "accountRole",
             "is_active",
             "is_staff",
@@ -235,6 +237,7 @@ class UserChangeForm(forms.ModelForm):
             "firstName",
             "middleName",
             "lastName",
+            'suffixTitle',
             "accountRole",
             "is_active",
             "is_staff",
@@ -260,6 +263,7 @@ class UserAdmin(BaseUserAdmin):
         "firstName",
         "middleName",
         "lastName",
+        'suffixTitle',
         "accountRole",
         "is_active",
         "is_staff",
@@ -276,6 +280,7 @@ class UserAdmin(BaseUserAdmin):
                     "firstName",
                     "middleName",
                     "lastName",
+                    'suffixTitle',
                     "accountRole",
                 )
             },
@@ -294,6 +299,7 @@ class UserAdmin(BaseUserAdmin):
                     "middleName",
                     "lastName",
                     "accountRole",
+                    'suffixTitle',
                     "is_active",
                     "is_staff",
                     "is_superuser",
@@ -332,54 +338,7 @@ class UserAdmin(BaseUserAdmin):
 '''
 This represent the forms that will be shown to the admin when creating a new patient
 and updating existing patients.
-'''
-# class PatientAdminForm(forms.ModelForm):
-#     class Meta:
-#         model = Patient
-#         fields = (
-#             # "patientID",
-#             "firstName",
-#             "middleInitial",
-#             "lastName",
-#             "age",
-#             "gender",
-#             "birthDate",
-#             'department',
-#             'course',
-#             'yrLevel',
-#             'studNumber',
-#             'address',
-#             'height',
-#             'weight',
-#             "registration",
-#             "phone",
-#             "email", 
-#             'assignedPhysician',
-#         )
-
-# class HealthRecordAdminForm(forms.ModelForm):
-#     class Meta:
-#         model = Health_Record
-#         fields = (  
-#             'illnesses',
-#             'allergies',
-#             'pastDiseases',
-#             'familyHistory',
-#             'lastMensPeriod', 
-#         )
-
-# class ContactAdminForm(forms.ModelForm):
-#     class Meta:
-#         model = Contact_Person
-#         fields = (  
-#             'fullName',
-#             'contactNum',
-#             'contactAddress',
-#         )
-
-# class PatientInline(admin.TabularInline):
-#     model = Patient
- 
+'''  
 
 class MedicalRecordInline(admin.StackedInline):
     model = Medical_Record 
@@ -401,7 +360,7 @@ This represent the table that will be shown to the admin looking at the currentl
 '''
 class PatientAdmin(admin.ModelAdmin): 
     # form = PatientAdminForm, HealthRecordAdminForm, ContactAdminForm
-    inlines = [MedicalRecordInline, ContactInline]
+    inlines = [MedicalRecordInline, ContactInline] 
     list_display = (
         # "patientID",
         "firstName",
@@ -420,11 +379,13 @@ class PatientAdmin(admin.ModelAdmin):
         # "registration",
         "phone",
         "email", 
-        'assignedPhysician',
+        # 'assignedPhysician',
     )
     list_filter = (
         # "patientID", 
-        "gender",'assignedPhysician')
+        "gender",
+        # 'assignedPhysician'
+        )
     search_fields = (
         # "patientID",
         "firstName",
@@ -433,7 +394,7 @@ class PatientAdmin(admin.ModelAdmin):
         "birthDate",
         # 'department',
         "email",
-        'assignedPhysician',
+        # 'assignedPhysician',
     )
 
     def get_urls(self):
@@ -972,7 +933,7 @@ class DiagnosticFieldsAdmin(admin.ModelAdmin):
     def get_urls(self):
         urls = super().get_urls()
         new_urls = [
-            # path("retrain_model/", self.retrain_model, name="admin_retrain_model"),
+            path("retrain_model/", self.retrain_model, name="admin_retrain_model"),
             path("upload-csv/", self.upload_csv, name="upload-csv"),
         ]
         return new_urls + urls 
@@ -1009,6 +970,24 @@ class DiagnosticFieldsAdmin(admin.ModelAdmin):
         form = CsvImportDiagnosticFieldsForm()
         data = {"form": form}
         return render(request, "admin/csv_upload.html", data)
+
+    def retrain_model(self, request):
+        try:
+            if request.method == 'POST':
+                success, message = train_model()
+                if success:
+                    self.message_user(request, f"Model retraining: {message}")
+                else:
+                    self.message_user(request, f"Model retraining failed: {message}")
+            else:
+                raise ValueError("Invalid request method")
+
+        except Exception as e:
+            error_message = f"An error occurred during model retraining: {str(e)}"
+            return JsonResponse({'success': False, 'message': error_message})
+
+        context = self.admin_site.each_context(request)
+        return HttpResponseRedirect("../")   
 
     def has_add_permission(self, request, obj=None):
         return False

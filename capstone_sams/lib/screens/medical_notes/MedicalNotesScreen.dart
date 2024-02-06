@@ -7,6 +7,7 @@ import 'package:capstone_sams/screens/medical_notes/AddTodoScreen.dart';
 import 'package:capstone_sams/screens/medical_notes/widgets/CompletedListWidget.dart';
 import 'package:capstone_sams/screens/medical_notes/widgets/TodoListWidget.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import '../../constants/theme/pallete.dart';
 import '../../constants/theme/sizing.dart';
@@ -63,15 +64,7 @@ class _MedicalNotesState extends State<MedicalNotes>
           context: context,
           builder: (_) => AddTodoPage(),
         ),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 200),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.edit),
-            ],
-          ),
-        ),
+        child: FaIcon(FontAwesomeIcons.pencil),
       ),
     );
   }
