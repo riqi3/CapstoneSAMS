@@ -117,6 +117,7 @@ class FormTextField extends StatefulWidget {
   final String? validator;
   final TextEditingController? controller;
   final TextInputType type;
+  final String? initialvalue;
   final int? maxlength;
   final int? maxlines;
   final String? countertext;
@@ -126,6 +127,7 @@ class FormTextField extends StatefulWidget {
     super.key,
     required this.labeltext,
     required this.type,
+    this.initialvalue,
     this.onchanged,
     this.controller,
     this.validator,
@@ -142,6 +144,7 @@ class _FormTextFieldState extends State<FormTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      initialValue: widget.initialvalue,
       decoration: InputDecoration(
         alignLabelWithHint: true,
         labelText: '${widget.labeltext}',

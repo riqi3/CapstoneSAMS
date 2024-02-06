@@ -1,6 +1,6 @@
 import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
-import 'package:capstone_sams/global-widgets/forms/PresentMedHistoryForm.dart';
+import 'package:capstone_sams/global-widgets/forms/present-illness/PresentIllnessForm.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/present-illness-history/HistoryPresentIllnessScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/past-med-history/PastMedicalHistoryScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/treatment/Treatment.dart';
@@ -78,7 +78,7 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
         onPressed: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => PresentMedHistoryForm(
+            builder: (context) => PresentIllnessForm(
               patient: widget.patient,
             ),
           ),

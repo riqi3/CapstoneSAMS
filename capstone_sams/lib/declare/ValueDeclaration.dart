@@ -1,6 +1,7 @@
 import 'package:capstone_sams/global-widgets/Dashboard.dart';
 import 'package:capstone_sams/global-widgets/SearchAppBar.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
+import 'package:capstone_sams/screens/home/HomeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -188,7 +189,12 @@ class ValueMedNotes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TitleAppBar(
-      onpressed: () => Navigator.pop(context),
+      onpressed: () => Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomeScreen(),
+                ),
+              ),
       text: 'Your Notes',
       backgroundColor: Pallete.whiteColor,
       iconColorLeading: Pallete.greyColor,

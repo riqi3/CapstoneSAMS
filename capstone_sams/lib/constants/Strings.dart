@@ -11,6 +11,7 @@ class Strings {
   static const searchAPatient = 'Search';
   static const successfulAdd = 'Successfully added ';
   static const dangerAdd = 'Failed to add ';
+  static const successfulUpdate = 'Successfully updated ';
   static const incompleteInputs =
       'Incomplete form inputs! Please double check inputs.';
   static const checkboxSelect = 'Please select at least one';

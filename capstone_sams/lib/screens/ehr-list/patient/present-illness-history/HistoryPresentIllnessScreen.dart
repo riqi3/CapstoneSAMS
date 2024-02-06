@@ -1,7 +1,7 @@
 import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/global-widgets/scaffolds/ScaffoldTemplate.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
-import 'package:capstone_sams/global-widgets/forms/PresentMedHistoryForm.dart';
+import 'package:capstone_sams/global-widgets/forms/present-illness/PresentIllnessForm.dart';
 import 'package:capstone_sams/models/PresentIllness.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/PresentIllnessProvider.dart';

@@ -83,4 +83,68 @@ class PresentIllnessProvider extends ChangeNotifier {
       return false;
     }
   }
+
+  Future<bool> updateComplaint(PresentIllness presentIllness, String? patientID,
+      int? accountID, String token) async {
+    final header = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token',
+    };
+    try {
+      final response = await http.put(
+        Uri.parse(
+          '${Env.prefix}/patient/patients/complaints/update/${presentIllness.illnessID}/${accountID}',
+        ),
+        headers: header,
+        body: jsonEncode(presentIllness),
+      );
+
+      if (response.statusCode == 200) {
+        fetchComplaints(token, patientID);
+        notifyListeners();
+        return true;
+      } else {
+        print('Failed to update illnesss');
+        print("HTTP Response: ${response.statusCode} ${response.body}");
+        return false;
+      }
+    } on Exception catch (e) {
+      print('Failed to update illness');
+      return false;
+    }
+  }
+
+  Future<bool> removeComplaint(
+      PresentIllness presentIllness,
+      String? patientID,
+      // int? accountID,
+      String token) async {
+    final header = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token',
+    };
+
+    try {
+      final response = await http.delete(
+        Uri.parse(
+          '${Env.prefix}/patient/patients/complaints/illness/delete/${presentIllness.illnessID}',
+        ),
+        headers: header,
+        body: jsonEncode(presentIllness.toJson()),
+        // body: body,
+      );
+      if (response.statusCode == 204) {
+        fetchComplaints(token, patientID);
+        notifyListeners();
+        return true;
+      } else {
+        print('Failed to delete illness ${jsonDecode(response.body)}');
+        print("HTTP Response: ${response.statusCode} ${response.body}");
+        return false;
+      }
+    } on Exception catch (e) {
+      print('Failed to delete illness. Error: $e');
+      return false;
+    }
+  }
 }

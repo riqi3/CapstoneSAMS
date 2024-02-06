@@ -305,20 +305,19 @@ class PresentIllnessView(viewsets.ViewSet):
             return Response({"message": "Failed to create complaint.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
     @api_view(['PUT'])
-    def update_complaint(request, illnessID):
+    def update_complaint(request, illnessID, accountID):
         try:
             present_illness = Present_Illness.objects.get(pk = illnessID)
             illness_data = json.loads(request.body)
-            present_illness.complaint = illness_data['illnessName'],
-            present_illness.complaint = illness_data['complain']
+            present_illness.illnessName = illness_data['illnessName']
+            present_illness.complaint = illness_data['complaint']
             present_illness.findings = illness_data['findings']
             present_illness.diagnosis = illness_data['diagnosis']
             present_illness.treatment = illness_data['treatment']
             present_illness.created_at = illness_data['created_at']
-            present_illness.updated_at = illness_data['updated_at']
+            present_illness.updated_at = illness_data['updated_at'] 
             present_illness.save()
-            accountID = present_illness['account']
-            account = Account.object.get(pk=accountID)
+            account = Account.objects.get(pk=accountID) 
             return Response({"message": "Complaint updated successfully."}, status=status.HTTP_200_OK)
         except Present_Illness.DoesNotExist:
             return Response({"message": "Complaint does not exist."}, status=status.HTTP_404_NOT_FOUND)

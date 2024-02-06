@@ -13,6 +13,7 @@ import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/models/PresentIllness.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/PresentIllnessProvider.dart';
+import 'package:capstone_sams/global-widgets/forms/present-illness/EditPresentIllnessForm.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -112,9 +113,16 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                     AccountProvider accountProvider =
                         Provider.of<AccountProvider>(context);
                     String middleInitial = account.middleName![0];
-                    DateTime originalDate = DateTime.parse(illness.created_at!);
-                    String formattedDate =
-                        DateFormat('MMMM d, y | HH:mm').format(originalDate);
+                    DateTime originalDate1 =
+                        DateTime.parse(illness.created_at!);
+                    // DateTime originalDate2 = DateTime.parse(
+                    //     illness.updated_at == null
+                    //         ? '2000-01-06 11:00:00.000000+08'
+                    //         : illness.updated_at!);
+                    String createdOn =
+                        DateFormat('MMM d, y | HH:mm').format(originalDate1);
+                    // String updatedOn =
+                    //     DateFormat('MMM d, y | HH:mm').format(originalDate2);
                     return Card(
                       color: Colors.white,
                       elevation: Sizing.cardElevation,
@@ -162,9 +170,18 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                           TextStyle(color: Pallete.greyColor),
                                     ),
                               Text(
-                                '${formattedDate}',
+                                '${createdOn}',
                                 style: TextStyle(color: Pallete.greyColor),
                               ),
+                              // Visibility(
+                              //   visible: updatedOn == 'January 6, 2000 | 03:00'
+                              //       ? false
+                              //       : true,
+                              //   child: Text(
+                              //     'Edited: ${updatedOn}',
+                              //     style: TextStyle(color: Pallete.greyColor),
+                              //   ),
+                              // ),
                             ],
                           ),
                           trailing: account.accountID != accountProvider.id
@@ -189,48 +206,43 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
 
   PopupMenuButton<dynamic> popupActionWidget(PresentIllness illness,
       String illnessIndex, Account account, AccountProvider accountProvider) {
-    // if (account.accountID != accountProvider.id) {
-    //   return PopupMenuButton(
-    //     itemBuilder: (context) => [
-    //       PopupMenuItem(
-    //         child: PopMenuItemTemplate(
-    //           icon: FontAwesomeIcons.solidEye,
-    //           color: Pallete.infoColor,
-    //           title: 'View',
-    //           ontap: () {
-    //             viewIllnessMethod(context, illness, illnessIndex, account);
-    //           },
-    //         ),
-    //       )
-    //     ],
-    //   );
-    // }
     return PopupMenuButton(
       itemBuilder: (context) => [
-        // PopupMenuItem(
-        //   child: PopMenuItemTemplate(
-        //     icon: FontAwesomeIcons.solidEye,
-        //     color: Pallete.infoColor,
-        //     title: 'View',
-        //     ontap: () {
-        //       viewIllnessMethod(context, illness, illnessIndex, account);
-        //     },
-        //   ),
-        // ),
         PopupMenuItem(
           child: PopMenuItemTemplate(
             icon: FontAwesomeIcons.pen,
             color: Pallete.successColor,
+            size: Sizing.iconAppBarSize,
             title: 'Edit',
-            ontap: () {},
+            ontap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => EditPresentMedHistoryForm(
+                    presentIllness: illness,
+                    patient: widget.patient,
+                  ),
+                ),
+              );
+            },
           ),
         ),
         PopupMenuItem(
           child: PopMenuItemTemplate(
             icon: FontAwesomeIcons.trash,
             color: Pallete.dangerColor,
+            size: Sizing.iconAppBarSize,
             title: 'Delete',
-            ontap: () {},
+            ontap: () {
+              late String token = context.read<AccountProvider>().token!;
+              final provider =
+                  Provider.of<PresentIllnessProvider>(context, listen: false);
+              provider.removeComplaint(
+                illness,
+                widget.patient.patientID,
+                // account.accountID,
+                token,
+              );
+            },
           ),
         ),
       ],
@@ -240,7 +252,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
   void viewIllnessMethod(BuildContext context, PresentIllness illness,
       String illnessIndex, Account account) {
     String middleInitial = account.middleName![0];
-    
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
