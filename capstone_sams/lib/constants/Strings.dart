@@ -10,6 +10,7 @@ class Strings {
   static const noRecordedIllnesses = 'No recorded illnesses to show...';
   static const searchAPatient = 'Search';
   static const successfulAdd = 'Successfully added ';
+  static const remove = 'Removed ';
   static const dangerAdd = 'Failed to add ';
   static const successfulUpdate = 'Successfully updated ';
   static const incompleteInputs =

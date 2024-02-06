@@ -19,7 +19,7 @@ class PresentIllnessProvider extends ChangeNotifier {
   String? get updated_at => _presentIllness?.updated_at;
   String? get patient => _presentIllness?.patient;
   int? get created_by => _presentIllness?.created_by;
-
+  bool? get isDeleted => _presentIllness?.isDeleted;
   List<PresentIllness> _presentIllnessList = [];
 
   Future<List<PresentIllness>> get presentIllnesses =>
@@ -114,24 +114,25 @@ class PresentIllnessProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> removeComplaint(
-      PresentIllness presentIllness,
-      String? patientID,
-      // int? accountID,
-      String token) async {
+  Future<bool> removeComplaint(PresentIllness presentIllness, String? patientID,
+      int? accountID, String token) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',
     };
 
+    // final body = jsonEncode({"accountID": accountID});
+    final body = jsonEncode(
+        {'accountID': accountID!, 'illnessID': presentIllness.illnessID});
+
     try {
-      final response = await http.delete(
+      final response = await http.post(
         Uri.parse(
-          '${Env.prefix}/patient/patients/complaints/illness/delete/${presentIllness.illnessID}',
+          '${Env.prefix}/patient/patients/complaints/illness/delete/',
         ),
         headers: header,
-        body: jsonEncode(presentIllness.toJson()),
-        // body: body,
+        // body: jsonEncode(presentIllness.toJson()),
+        body: body,
       );
       if (response.statusCode == 204) {
         fetchComplaints(token, patientID);

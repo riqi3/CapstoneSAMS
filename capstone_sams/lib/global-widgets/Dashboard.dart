@@ -1,4 +1,5 @@
 import 'package:capstone_sams/constants/theme/pallete.dart';
+import 'package:capstone_sams/global-widgets/dialogs/AlertDialogTemplate.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/MedicalNotesProvider.dart';
 import 'package:capstone_sams/screens/authentication/LoginScreen.dart';
@@ -30,52 +31,28 @@ class _DashboardState extends State<Dashboard> {
   var _isLoading = false;
 
   void _onSubmit() async {
-    showDialog<String>(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.0),
-        ),
-        title: const Text(
-          'Are you sure?',
-          style: TextStyle(
-              color: Pallete.dangerColor, fontWeight: FontWeight.bold),
-        ),
-        content: const Text('Please confirm if you want to logout.'),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context, 'Cancel'),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(
-                color: Pallete.greyColor,
-              ),
-            ),
-          ),
-          TextButton(
-            onPressed: () async {
-              setState(() => _isLoading = true);
-              var success = await context.read<AccountProvider>().logout();
+    setState(() => _isLoading = true);
+    var success = await context.read<AccountProvider>().logout();
 
-              if (success) {
-                context.read<TodosProvider>().setEmpty();
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()),
-                  (route) => false,
-                );
-              }
-            },
-            child: Text(
-              'Log me out',
-              style: TextStyle(
-                color: Pallete.dangerColor,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+    if (success) {
+      context.read<TodosProvider>().setEmpty();
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+        (route) => false,
+      );
+    }
+    // showDialog<String>(
+    //   context: context,
+    //   builder: (BuildContext context) => AlertDiaglogTemplate(
+    //     title: 'Are you sure?',
+    //     content: 'Please confirm if you want to logout.',
+    //     onpressed: () async {
+
+    //     },
+    //     buttonTitle: 'Log me out',
+    //   ),
+    // );
   }
 
   @override
