@@ -9,11 +9,13 @@ class FormTemplate extends StatefulWidget {
   Column? column;
   Widget? widget;
   bool? listviewForm;
+  late final dynamic onpressed;
   FormTemplate({
     super.key,
     this.column,
     this.listviewForm,
     this.widget,
+    required this.onpressed,
   });
 
   @override
@@ -58,6 +60,7 @@ class _FormTemplateState extends State<FormTemplate> {
           iconColorLeading: Pallete.whiteColor,
           iconColorTrailing: Pallete.whiteColor,
           backgroundColor: Pallete.mainColor,
+          onpressed: widget.onpressed,
         ),
         preferredSize: Size.fromHeight(kToolbarHeight),
       ),

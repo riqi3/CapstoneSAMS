@@ -125,17 +125,17 @@ class _EhrListScreenState extends State<EhrListScreen> {
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => PatientRegistrationForm(),
-          ),
-        ),
-        child: FaIcon(
-          FontAwesomeIcons.pencil,
-        ),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () => Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //       builder: (context) => PatientRegistrationForm(),
+      //     ),
+      //   ),
+      //   child: FaIcon(
+      //     FontAwesomeIcons.pencil,
+      //   ),
+      // ),
       bottomNavigationBar: Padding(
         padding: EdgeInsets.symmetric(vertical: Sizing.spacing),
         child: Row(

@@ -1,4 +1,3 @@
- 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -6,14 +5,14 @@ import '../../../constants/theme/pallete.dart';
 import '../../../constants/theme/sizing.dart';
 
 class EHRSection extends StatelessWidget {
-  const EHRSection({
+   EHRSection({
     super.key,
     required this.title,
     required this.press,
   });
 
   final String title;
-  final VoidCallback press;
+  late final dynamic press;
 
   @override
   Widget build(BuildContext context) {

@@ -49,6 +49,7 @@ class _EditPhysicianScreenState extends State<EditPhysicianScreen> {
   @override
   Widget build(BuildContext context) {
     return FormTemplate(
+      onpressed: (){},
       column: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

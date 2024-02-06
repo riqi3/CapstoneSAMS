@@ -7,12 +7,14 @@ class PopMenuItemTemplate extends StatelessWidget {
   IconData icon;
   Color color;
   String title;
+  double? size;
   late final dynamic ontap;
   PopMenuItemTemplate({
     super.key,
     required this.icon,
     required this.color,
     required this.title,
+    this.size,
     required this.ontap,
   });
 
@@ -21,6 +23,7 @@ class PopMenuItemTemplate extends StatelessWidget {
     return ListTile(
       leading: FaIcon(
         icon,
+        size: size,
         color: color,
       ),
       title: Text(

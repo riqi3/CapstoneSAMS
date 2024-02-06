@@ -58,7 +58,7 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
       setState(() => _isLoading = false);
 
       ScaffoldMessenger.of(context).showSnackBar(incompleteInputs);
- 
+
       return;
     } else {
       // String getDate = DateFormat.yMMMd('en_US').format(createdAt as DateTime);
@@ -105,8 +105,8 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
             }
             return true;
           },
-        ); 
-        
+        );
+
         ScaffoldMessenger.of(context).showSnackBar(successfulCreatedComplaint);
       } else {
         setState(() => _isLoading = false);
@@ -119,6 +119,7 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
   @override
   Widget build(BuildContext context) {
     return FormTemplate(
+      onpressed: () => Navigator.pop(context),
       column: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -272,17 +273,13 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
               },
               child: Text('Evaluation'),
             ),
-            
-            
             FormTextField(
-onchanged: (value) => _presIllnessInfo.illnessName = value,
-labeltext: 'Illness Name*',
-validator: Strings.requiredField,
-type: TextInputType.text,
-),
-SizedBox(height: Sizing.sectionSymmPadding),
-            
-            
+              onchanged: (value) => _presIllnessInfo.illnessName = value,
+              labeltext: 'Illness Name*',
+              validator: Strings.requiredField,
+              type: TextInputType.text,
+            ),
+            SizedBox(height: Sizing.sectionSymmPadding),
             FormTextField(
               onchanged: (value) => _presIllnessInfo.diagnosis = value,
               labeltext: '',

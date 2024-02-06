@@ -18,7 +18,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
   Widget build(BuildContext context) {
     final currentWidth = MediaQuery.of(context).size.width;
     final double minWidth = 150;
-    final double maxWidth = 300;
+    final double maxWidth = 600;
     return Container(
       alignment: Alignment.center,
       child: GestureDetector(

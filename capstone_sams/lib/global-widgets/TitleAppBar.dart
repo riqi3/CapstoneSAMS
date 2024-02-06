@@ -6,19 +6,21 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../constants/theme/pallete.dart';
 import '../constants/theme/sizing.dart';
 
+// ignore: must_be_immutable
 class TitleAppBar extends StatelessWidget {
-  const TitleAppBar({
+  final Color backgroundColor, iconColorLeading, iconColorTrailing;
+  final PreferredSize? bottom;
+  final String text;
+  late final dynamic onpressed;
+  TitleAppBar({
     super.key,
     required this.text,
     required this.iconColorLeading,
     required this.iconColorTrailing,
     required this.backgroundColor,
+    required this.onpressed,
     this.bottom,
   });
-
-  final Color backgroundColor, iconColorLeading, iconColorTrailing;
-  final PreferredSize? bottom;
-  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -35,14 +37,17 @@ class TitleAppBar extends StatelessWidget {
             left: 20.0,
           ),
           child: IconButton(
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HomeScreen(),
-                ),
-              );
-            },
+            onPressed: onpressed,
+
+            // () {
+            //   Navigator.pop(context);
+            //   // Navigator.pushReplacement(
+            //   //   context,
+            //   //   MaterialPageRoute(
+            //   //     builder: (context) => HomeScreen(),
+            //   //   ),
+            //   // );
+            // },
             icon: FaIcon(
               FontAwesomeIcons.arrowLeft,
               color: iconColorLeading,

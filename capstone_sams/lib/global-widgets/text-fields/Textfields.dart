@@ -120,7 +120,7 @@ class FormTextField extends StatefulWidget {
   final int? maxlength;
   final int? maxlines;
   final String? countertext;
-  late final dynamic? onchanged;
+  late final dynamic onchanged;
 
   FormTextField({
     super.key,
@@ -162,14 +162,7 @@ class _FormTextFieldState extends State<FormTextField> {
       controller: widget.controller,
       onChanged: (value) {
         widget.onchanged?.call(value);
-      },
-      // onSaved: (value) {
-      //   if (widget.onsaved != null) {
-      //     widget.onsaved!(value);
-      //   } else {
-      //     widget.onsaved = value;
-      //   }
-      // },
+      }, 
     );
   }
 }
