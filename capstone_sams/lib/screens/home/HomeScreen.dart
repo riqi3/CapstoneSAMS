@@ -5,7 +5,7 @@ import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/MedicalNotesProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/EhrListScreen.dart';
 import 'package:capstone_sams/screens/home/widgets/EhrSection.dart';
-import 'package:flutter/material.dart'; 
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../constants/theme/sizing.dart';
 import '../medical_notes/MedicalNotesScreen.dart';
@@ -87,14 +87,13 @@ class _HomeScreenState extends State<HomeScreen> {
         Center(
           child: EHRSection(
             title: ehrTitle,
-            press: () => Navigator.pushNamed(context, '/ehr_list'), 
+            press: () => Navigator.pushNamed(context, '/ehr_list'),
           ),
         ),
         Center(
           child: NotesSection(
             title: medNotesTitle,
-            press: () => Navigator.pushNamed(context, '/med_notes'), 
-
+            press: () => Navigator.pushNamed(context, '/med_notes'),
             todosPreview: todosPreview,
           ),
         ),
@@ -110,11 +109,11 @@ class _HomeScreenState extends State<HomeScreen> {
       children: <Widget>[
         EHRSection(
           title: ehrTitle,
-          press: () => Navigator.pushNamed(context, '/ehr_list'), 
+          press: () => Navigator.pushNamed(context, '/ehr_list'),
         ),
         NotesSection(
           title: medNotesTitle,
-          press: () => Navigator.pushNamed(context, '/med_notes'), 
+          press: () => Navigator.pushNamed(context, '/med_notes'),
           todosPreview: todosPreview,
         ),
       ],
