@@ -144,15 +144,16 @@ class PatientView(viewsets.ModelViewSet):
         except Exception as e:
             return Response({"message": "Failed to update patient.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST) 
     
-    @api_view(['DELETE'])
+    @api_view(['POST'])
     # @permission_classes([IsAuthenticated])
     def delete_patient(request, patientID):
         try:
             patient = Patient.objects.get(pk=patientID)
-            data = json.loads(request)
+            data = json.loads(request.body)
             accountID = data['accountID']
             patient.isDeleted = True
-            account = Account.object.get(pk=accountID)
+            patient.save()
+            account = Account.objects.get(pk=accountID)
             data_log = Data_Log.objects.create(
                 event = f"{account.username} deleted patient id {patient.patientID}",
                 type = "User Soft Delete Patient Data",
@@ -324,17 +325,37 @@ class PresentIllnessView(viewsets.ViewSet):
         except Exception as e:
             return Response({"message": "Failed to update complaint.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+    # @api_view(['POST'])
+    # # @permission_classes([IsAuthenticated])
+    # def delete_complaint(request):
+    #     try:
+    #         data = json.loads(request)
+    #         illnessID = data['illnessID']
+    #         accountID = data['accountID']
+    #         complaint = Present_Illness.objects.get(pk=illnessID)
+    #         complaint.isDeleted = True
+    #         complaint.save()
+    #         account = Account.object.get(pk=accountID)
+    #         data_log = Data_Log.objects.create(
+    #             event = f"{account.username} deleted complaint id {complaint.illnessID}",
+    #             type = "User Soft Delete Complaint Data",
+    #             account = account
+    #         )
+    #         return Response({"message": "Complaint deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+    #     except Exception as e:
+    #         return Response({"message": "Failed to delete complaint.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
     @api_view(['POST'])
     # @permission_classes([IsAuthenticated])
     def delete_complaint(request):
         try:
-            data = json.loads(request)
+            data = json.loads(request.body)
             illnessID = data['illnessID']
             accountID = data['accountID']
             complaint = Present_Illness.objects.get(pk=illnessID)
             complaint.isDeleted = True
             complaint.save()
-            account = Account.object.get(pk=accountID)
+            account = Account.objects.get(pk=accountID)
             data_log = Data_Log.objects.create(
                 event = f"{account.username} deleted complaint id {complaint.illnessID}",
                 type = "User Soft Delete Complaint Data",
@@ -343,22 +364,3 @@ class PresentIllnessView(viewsets.ViewSet):
             return Response({"message": "Complaint deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
             return Response({"message": "Failed to delete complaint.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-    # @api_view(['DELETE'])
-    # @permission_classes([IsAuthenticated])
-    # def delete_complaint(request, illnessID ):
-    #     try:
-    #         complaint = Present_Illness.objects.get(pk=illnessID)
-    #         # data = json.loads(request)
-    #         # accountID = data['accountID']
-    #         complaint.isDeleted = True
-    #         complaint.save()
-    #         # account = Account.object.get(pk=accountID)
-    #         # data_log = Data_Log.objects.create(
-    #         #     event = f"{account.username} deleted complaint id {complaint.illnessID}",
-    #         #     type = "User Soft Delete Complaint Data",
-    #         #     account = account
-    #         # )
-    #         return Response({"message": "Complaint deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
-    #     except Exception as e:
-    #         return Response({"message": "Failed to delete complaint.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

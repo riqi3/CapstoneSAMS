@@ -4,8 +4,7 @@ import 'package:capstone_sams/global-widgets/pop-menu-buttons/pop-menu-item/PopM
 import 'package:capstone_sams/global-widgets/search-bar/widgets/SearchBarWidget.dart';
 import 'package:capstone_sams/screens/medical_notes/MedicalNotesScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go_router/go_router.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart'; 
 import '../constants/theme/pallete.dart';
 import '../constants/theme/sizing.dart';
 
@@ -30,14 +29,12 @@ class SearchAppBar extends StatelessWidget {
           size: 30,
         ),
         backgroundColor: backgroundColor,
-        // elevation: 8,
-        // shadowColor: Pallete.greyColor,
         leading: Padding(
           padding: const EdgeInsets.only(
             left: 20.0,
           ),
           child: IconButton(
-            onPressed: () => context.pop(),
+            onPressed: () => Navigator.pop(context),
             icon: FaIcon(
               FontAwesomeIcons.arrowLeft,
               color: iconColorLeading,
@@ -90,15 +87,6 @@ class SearchAppBar extends StatelessWidget {
                     ),
                   ]),
             ),
-            // GestureDetector(
-            //   onTap: () {
-            //     print('object');
-            //   },
-            //   child: FaIcon(
-            //     FontAwesomeIcons.circlePlus,
-            //     size: Sizing.iconAppBarSize,
-            //   ),
-            // ),
           ],
         ),
         bottom: bottom,
