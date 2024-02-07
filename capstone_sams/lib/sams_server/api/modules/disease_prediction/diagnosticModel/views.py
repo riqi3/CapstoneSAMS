@@ -15,7 +15,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import accuracy_score
 
-def train_model(request):
+def train_model():
     try:
         # Folder Directory
         pickle_folder = 'api/modules/disease_prediction/diagnosticModel'
@@ -39,7 +39,7 @@ def train_model(request):
         df = df[df.groupby('disease')['disease'].transform('size') >= 10]
 
         # Data preprocessing
-        label_columns = ['fever', 'cough', 'fatigue', 'difficulty_breathing', 'gender', 'blood_pressure', 'cholesterol_level', 'outcome_variable', 'disease']
+        label_columns = ['fever', 'cough', 'fatigue', 'difficulty_breathing', 'gender', 'blood_pressure', 'cholesterol_level','age', 'outcome_variable', 'disease']
         LE = LabelEncoder()
         for col in label_columns:
             df[col] = LE.fit_transform(df[col])
@@ -77,6 +77,13 @@ def train_model(request):
         # Save the encoder
         pickle.dump(LE, open(os.path.join(pickle_folder, 'encoder.pkl'), 'wb'))
 
+                # Load the encoder with explicit casting
+        LE = pickle.load(open(os.path.join(pickle_folder, 'encoder.pkl'), 'rb'))
+
+        # Check if loaded encoder is a LabelEncoder
+        if not isinstance(LE, LabelEncoder):
+            raise ValueError("Encoder (LE) is not of type LabelEncoder.")
+
         # Predicting and calculating accuracy on training data
         train_predictions = RNF.predict(X_train)
         train_accuracy = accuracy_score(y_train, train_predictions)
@@ -101,35 +108,61 @@ class TrainModelView(APIView):
         except ValueError as e:
             return Response({"message": str(e)}, status=400)
         
+@api_view(['POST'])
 def create_diagnostic_record(request):
-        # Load the model and encoder
-        pickle_folder = 'api/modules/disease_prediction/diagnosticModel'
-        RNF = pickle.load(open(os.path.join(pickle_folder, 'final_rf_model.pkl'), 'rb'))
-        LE = pickle.load(open(os.path.join(pickle_folder, 'encoder.pkl'), 'rb'))
+            # Load the model and encoder
+    pickle_folder = 'api/modules/disease_prediction/diagnosticModel'
+    RNF = pickle.load(open(os.path.join(pickle_folder, 'final_rf_model.pkl'), 'rb'))
+    LE = pickle.load(open(os.path.join(pickle_folder, 'encoder.pkl'), 'rb'))
 
-        if request.method == 'POST':
-            # Get user input from the form
-            user_input = {
-                'Fever': request.POST.get('fever'),
-                'Cough': request.POST.get('cough'),
-                'Fatigue': request.POST.get('fatigue'),
-                'Difficulty Breathing': request.POST.get('difficulty_breathing'),
-                'Age': int(request.POST.get('age')),
-                'Gender': request.POST.get('gender'),
-                'Blood Pressure': request.POST.get('blood_pressure'),
-                'Cholesterol Level': request.POST.get('cholesterol_level'),
-            }
+        # Debugging: Load encoder separately to inspect its type
+    try:
+        with open(os.path.join(pickle_folder, 'encoder.pkl'), 'rb') as f:
+            LE = pickle.load(f)
+    except Exception as e:
+        return JsonResponse({'error_message': f"Error loading encoder: {str(e)}"}, status=500)
 
-            # Check for missing or empty fields
-            required_fields = ['Fever', 'Cough', 'Fatigue', 'Difficulty Breathing', 'Age', 'Gender', 'Blood Pressure', 'Cholesterol Level']
-            for field in required_fields:
-                if not user_input[field]:
-                    return JsonResponse({'error_message': f"Missing or empty value for {field}"}, status=400)
-                
-            # Encode user input
-            encoded_input = {}
-            for col in user_input:
-                encoded_input[col] = LE.transform([user_input[col]])[0]
+    if not isinstance(LE, LabelEncoder):
+        return JsonResponse({'error_message': "Encoder (LE) is not of type LabelEncoder."}, status=500)
+    
+    if request.method == 'POST':
+        # Get user input from the form
+        user_input = {
+            'Fever': request.data.get('fever'),  # Adjusted to use request.data.get
+            'Cough': request.data.get('cough'),  # Adjusted to use request.data.get
+            'Fatigue': request.data.get('fatigue'),  # Adjusted to use request.data.get
+            'Difficulty Breathing': request.data.get('difficulty_breathing'),  # Adjusted to use request.data.get
+            'Age': request.data.get('age'),  # Adjusted to use request.data.get
+            'Gender': request.data.get('gender'),  # Adjusted to use request.data.get
+            'Blood Pressure': request.data.get('blood_pressure'),  # Adjusted to use request.data.get
+            'Cholesterol Level': request.data.get('cholesterol_level'),  # Adjusted to use request.data.get
+        }
+
+        # Check for missing or empty fields
+        required_fields = ['Fever', 'Cough', 'Fatigue', 'Difficulty Breathing', 'Age', 'Gender', 'Blood Pressure', 'Cholesterol Level']
+        for field in required_fields:
+            if not user_input[field]:
+                return JsonResponse({'error_message': f"Missing or empty value for {field}"}, status=400)
+        
+        # Convert 'Age' to integer if it's not None
+        if user_input['Age'] is not None:
+            try:
+                user_input['Age'] = int(user_input['Age'])
+            except ValueError:
+                return JsonResponse({'error_message': "Invalid value for Age. Must be a valid integer."}, status=400)
+        
+        # Encode user input
+        encoded_input = {}
+        for col in user_input:
+            if col == 'Age':  # Skip Age, since it's numerical
+                encoded_input[col] = user_input[col]
+            else:
+                if isinstance(LE, LabelEncoder):
+                    encoded_input[col] = LE.transform([user_input[col]])[0]
+                else:
+                    return JsonResponse({'error_message': f"Encoder (LE) is not of type LabelEncoder."}, status=500)
+
+
 
             # Create a DataFrame with the user input
             user_df = pd.DataFrame(encoded_input, index=[0])

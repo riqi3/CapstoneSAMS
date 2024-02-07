@@ -2,11 +2,14 @@ import 'package:capstone_sams/providers/healthcheckprovider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../providers/AccountProvider.dart';
 import 'widgets/buildwidgets.dart';
 
 class HealthCheckScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final accountProvider = Provider.of<AccountProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Health Check'),
@@ -80,7 +83,12 @@ class HealthCheckScreen extends StatelessWidget {
                       SizedBox(height: 16),
                       ElevatedButton(
                         onPressed: () async {
-                          await provider.sendDataToBackend();
+                          String? token = accountProvider.token;
+                          if (token != null) {
+                            await provider.sendDataToBackend(token);
+                          } else {
+                            print('Token is null');
+                          }
                         },
                         child: Container(
                           padding: EdgeInsets.symmetric(vertical: 12),
