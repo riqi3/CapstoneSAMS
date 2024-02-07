@@ -14,13 +14,6 @@ import '../../../../constants/theme/sizing.dart';
 import '../../../../models/PatientModel.dart';
 
 class CpoeAnalyzeScreen extends StatefulWidget {
-  final String? index;
-  final Patient patient;
-  CpoeAnalyzeScreen({
-    required this.patient,
-    required this.index,
-  });
-
   @override
   _CpoeAnalyzeScreenState createState() => _CpoeAnalyzeScreenState();
 }
