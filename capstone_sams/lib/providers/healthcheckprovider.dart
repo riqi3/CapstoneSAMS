@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
+import 'dart:convert';
 import '../constants/Env.dart';
 
 class HealthCheckProvider extends ChangeNotifier {
@@ -31,7 +31,13 @@ class HealthCheckProvider extends ChangeNotifier {
     );
 
     if (response.statusCode == 200) {
-      print('Response from server: ${response.body}');
+      final responseData = json.decode(response.body);
+      final top3Predictions = responseData['top3_predictions'];
+
+      for (var prediction in top3Predictions) {
+        print(
+            'Disease: ${prediction['disease']}, Probability: ${prediction['probability']}');
+      }
     } else {
       print('Error sending data to server: ${response.statusCode}');
     }
