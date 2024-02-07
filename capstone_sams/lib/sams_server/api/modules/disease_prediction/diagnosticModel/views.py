@@ -13,7 +13,6 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import cross_val_score
-from hyperopt import fmin, Trials, tpe, hp, STATUS_OK #need to pip install hyperopt
 from sklearn.metrics import accuracy_score
 
 def train_model(request):
