@@ -272,22 +272,20 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
       accountProvider.id,
       token,
     );
-    // int routesCount = 0;
-    Navigator.of(context).pop();
-    Navigator.of(context).pop();
-    // Navigator.pushAndRemoveUntil(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => PatientTabsScreen(patient: widget.patient),
-    //   ),
-    //   (Route<dynamic> route) {
-    //     if (routesCount < 2) {
-    //       routesCount++;
-    //       return false;
-    //     }
-    //     return true;
-    //   },
-    // );
+    int routesCount = 0; 
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PatientTabsScreen(patient: widget.patient),
+      ),
+      (Route<dynamic> route) {
+        if (routesCount < 2) {
+          routesCount++;
+          return false;
+        }
+        return true;
+      },
+    );
     ScaffoldMessenger.of(context).showSnackBar(removeComplaint);
   }
 
