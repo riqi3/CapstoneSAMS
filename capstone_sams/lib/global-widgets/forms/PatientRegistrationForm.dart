@@ -51,7 +51,6 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
   final _contactInfo = ContactPerson();
 
   var incompleteInputs = dangerSnackbar('${Strings.incompleteInputs}');
-  var failedRegisterPatient = dangerSnackbar('${Strings.dangerAdd} patient.');
   var successfulRegisterPatient =
       successSnackbar('${Strings.successfulAdd} patient.');
 
@@ -212,7 +211,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
         token,
       );
 
-      if (patientSuccess || medicalRecordSuccess || contactSuccess) {
+      if (patientSuccess == true || medicalRecordSuccess || contactSuccess) {
         int routesCount = 0;
         Navigator.pushAndRemoveUntil(
           context,
@@ -230,9 +229,10 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
 
         ScaffoldMessenger.of(context).showSnackBar(successfulRegisterPatient);
       } else {
-        setState(() => _isLoading = false);
+        setState(() => _isLoading = false); 
 
-        ScaffoldMessenger.of(context).showSnackBar(failedRegisterPatient);
+        ScaffoldMessenger.of(context)
+            .showSnackBar(dangerSnackbar('${patientSuccess.errorMessage}'));
       }
     }
   }
@@ -882,7 +882,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
               Flexible(
                 child: FormTextField(
                   onchanged: (value) => _contactInfo.phone = value,
-                  labeltext: 'Contact Number*', 
+                  labeltext: 'Contact Number*',
                   maxlength: 11,
                   validator: Strings.requiredField,
                   type: TextInputType.phone,

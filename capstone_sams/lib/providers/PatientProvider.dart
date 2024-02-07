@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:capstone_sams/constants/Env.dart';
+import 'package:capstone_sams/models/ProviderResponseModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
@@ -44,7 +45,7 @@ class PatientProvider extends ChangeNotifier {
 
       final response = await http
           .get(Uri.parse('${Env.prefix}/patient/patients/'), headers: header);
-      await Future.delayed(Duration(milliseconds: 1000)); 
+      await Future.delayed(Duration(milliseconds: 1000));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         List<Patient> patients = data.map<Patient>((json) {
@@ -60,7 +61,7 @@ class PatientProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> createPatientRecord(Patient patient, String token,
+  Future<ProviderResponse<bool>> createPatientRecord(Patient patient, String token,
       int? accountID, String role, int id) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
@@ -79,41 +80,21 @@ class PatientProvider extends ChangeNotifier {
       if (response.statusCode == 201) {
         fetchPatients(token);
         notifyListeners();
-        return true;
+        // return true;
+        return ProviderResponse(success: true, data: true);
       } else {
         print('cannot add patient record!');
         print("HTTP Response: ${response.statusCode} ${response.body}");
-        return false;
+
+        // return false;
+        return ProviderResponse(success: false, data: false, errorMessage: 'Failed to create patient record: ${response.body}');
       }
     } on Exception catch (e) {
       print(e);
-      return false;
+      // return false;
+      return ProviderResponse(success: false, data: false, errorMessage: 'Failed to create patient record: ${e}');
     }
   }
-
-  // Future<List<Patient>> fetchPatients(String token) async {
-  //   final header = <String, String>{
-  //     'Content-Type': 'application/json; charset=UTF-8',
-  //     'Authorization': 'Bearer $token',
-  //   };
-  //   try {
-  //     final response = await http
-  //         .get(Uri.parse('${Env.prefix}/patient/patients/'), headers: header);
-  //     await Future.delayed(Duration(milliseconds: 3000));
-  //     if (response.statusCode == 200) {
-  //       final data = json.decode(response.body);
-  //       List<Patient> patients = data.map<Patient>((json) {
-  //         return Patient.fromJson(json);
-  //       }).toList();
-  //       patients = patients.reversed.toList();
-  //       return patients;
-  //     } else {
-  //       return [];
-  //     }
-  //   } on Exception catch (e) {
-  //     return [];
-  //   }
-  // }
 
   Future<Patient?> fetchPatient(String? index, String token) async {
     final header = <String, String>{
