@@ -270,8 +270,8 @@ class PersonalNotesView(viewsets.ModelViewSet):
     number.
     Certain to exception handlers were coded to ensure continued operations.
     '''
-    @api_view(['DELETE'])
-    @permission_classes([IsAuthenticated])
+    @api_view(['POST'])
+    # @permission_classes([IsAuthenticated])
     def delete_personal_note(request, noteNum):
         try:
             note = Personal_Note.objects.get(noteNum = noteNum)
