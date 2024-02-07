@@ -38,7 +38,7 @@ class ContactPersonProvider extends ChangeNotifier {
         return throw Exception('Failed to load contact');
       }
     } on Exception catch (e) {
-      return throw Exception('Failed to load contact');
+      return throw Exception('Failed to load contact: ${e}');
     }
   }
 

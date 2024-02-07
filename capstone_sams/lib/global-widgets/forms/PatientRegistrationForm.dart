@@ -1,8 +1,6 @@
-import 'package:capstone_sams/constants/Env.dart';
 import 'package:capstone_sams/constants/Strings.dart';
 import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/constants/theme/sizing.dart';
-import 'package:capstone_sams/global-widgets/TitleAppBar.dart';
 import 'package:capstone_sams/global-widgets/buttons/CancelButton.dart';
 import 'package:capstone_sams/global-widgets/buttons/RadioTileButton.dart';
 import 'package:capstone_sams/global-widgets/buttons/FormSubmitButton.dart';
@@ -13,7 +11,6 @@ import 'package:capstone_sams/global-widgets/snackbars/Snackbars.dart';
 import 'package:capstone_sams/global-widgets/text-fields/Textfields.dart';
 import 'package:capstone_sams/global-widgets/texts/FormSectionTitleWidget.dart';
 import 'package:capstone_sams/global-widgets/texts/FormTitleWidget.dart';
-import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/ContactPersonModel.dart';
 import 'package:capstone_sams/models/MedicalRecordModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
@@ -23,8 +20,6 @@ import 'package:capstone_sams/providers/MedicalRecordProvider.dart';
 import 'package:capstone_sams/providers/PatientProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/EhrListScreen.dart';
 import 'package:capstone_sams/global-widgets/dropdown/MultiSelect.dart';
-import 'package:dio/dio.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -73,10 +68,8 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
   bool _isIllnessInvalid = false;
   bool _isGenderInvalid = false;
   bool _isBirthdateInvalid = false;
-  bool _isPhysicianInvalid = false;
   bool _isLoading = false;
 
-  var _account = Account(isSuperuser: false);
   late bool _autoValidate = false;
   // late int? getAccountID = 0;
   late String tokena = context.read<AccountProvider>().token!;
@@ -229,7 +222,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
 
         ScaffoldMessenger.of(context).showSnackBar(successfulRegisterPatient);
       } else {
-        setState(() => _isLoading = false); 
+        setState(() => _isLoading = false);
 
         ScaffoldMessenger.of(context)
             .showSnackBar(dangerSnackbar('${patientSuccess.errorMessage}'));

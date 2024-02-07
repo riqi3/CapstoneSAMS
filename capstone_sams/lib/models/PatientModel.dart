@@ -1,4 +1,3 @@
-import 'package:capstone_sams/models/AccountModel.dart';
 
 class Patient {
   String? patientID;

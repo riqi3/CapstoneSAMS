@@ -12,7 +12,12 @@ import 'package:capstone_sams/providers/PresentIllnessProvider.dart';
 import 'package:capstone_sams/providers/SymptomsFieldsProvider.dart';
 import 'package:capstone_sams/providers/healthcheckprovider.dart';
 import 'package:capstone_sams/screens/authentication/LoginScreen.dart';
+import 'package:capstone_sams/screens/ehr-list/EHRListScreen.dart';
+import 'package:capstone_sams/screens/ehr-list/widgets/PatientCard.dart';
+import 'package:capstone_sams/screens/home/HomeScreen.dart';
+import 'package:capstone_sams/screens/medical_notes/MedicalNotesScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'providers/MedicalNotesProvider.dart';
 
@@ -68,12 +73,57 @@ void main() async {
   );
 }
 
+final GoRouter _router = GoRouter(
+  routes: <RouteBase>[
+    GoRoute(
+      path: '/',
+      builder: (BuildContext context, GoRouterState state) {
+        return const LoginScreen();
+      },
+      routes: <RouteBase>[
+        GoRoute(
+          path: 'home',
+          builder: (BuildContext context, GoRouterState state) {
+            return const HomeScreen();
+          },
+          routes: <RouteBase>[
+            GoRoute(
+              path: 'ehr_list',
+              builder: (BuildContext context, GoRouterState state) {
+                return EhrListScreen();
+              },
+            ),
+            GoRoute(
+              path: 'med_notes',
+              builder: (BuildContext context, GoRouterState state) {
+                return MedicalNotes();
+              },
+            ),
+          ],
+        ),
+        GoRoute(
+          path: 'ehr_list',
+          builder: (BuildContext context, GoRouterState state) {
+            return EhrListScreen();
+          },
+        ),
+        GoRoute(
+          path: 'med_notes',
+          builder: (BuildContext context, GoRouterState state) {
+            return MedicalNotes();
+          },
+        ),
+      ],
+    ),
+  ],
+);
+
 class SAMSApp extends StatelessWidget {
   const SAMSApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'Capstone S.A.M.S. Prototype',
       theme: ThemeData(
@@ -104,7 +154,8 @@ class SAMSApp extends StatelessWidget {
           foregroundColor: Pallete.whiteColor,
         ),
       ),
-      home: const LoginScreen(),
+      // home: const LoginScreen(),
+      routerConfig: _router,
     );
   }
 }

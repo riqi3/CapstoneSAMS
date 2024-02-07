@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:capstone_sams/constants/Env.dart';
 import 'package:capstone_sams/models/ProviderResponseModel.dart';
-import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import '../models/PatientModel.dart';

@@ -1,5 +1,6 @@
 import 'package:capstone_sams/global-widgets/buttons/FormSubmitButton.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../constants/theme/pallete.dart';
 import '../../constants/theme/sizing.dart';
@@ -69,12 +70,13 @@ class _LoginScreenState extends State<LoginScreen> {
       usernameController.clear();
       passwordController.clear();
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomeScreen(),
-        ),
-      );
+      context.go('/home');
+      // Navigator.pushReplacement(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => HomeScreen(),
+      //   ),
+      // );
     } else {
       showFailure(context);
       Future.delayed(

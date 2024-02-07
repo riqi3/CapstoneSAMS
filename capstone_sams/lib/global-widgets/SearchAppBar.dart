@@ -5,6 +5,7 @@ import 'package:capstone_sams/global-widgets/search-bar/widgets/SearchBarWidget.
 import 'package:capstone_sams/screens/medical_notes/MedicalNotesScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import '../constants/theme/pallete.dart';
 import '../constants/theme/sizing.dart';
 
@@ -36,9 +37,7 @@ class SearchAppBar extends StatelessWidget {
             left: 20.0,
           ),
           child: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+            onPressed: () => context.pop(),
             icon: FaIcon(
               FontAwesomeIcons.arrowLeft,
               color: iconColorLeading,
