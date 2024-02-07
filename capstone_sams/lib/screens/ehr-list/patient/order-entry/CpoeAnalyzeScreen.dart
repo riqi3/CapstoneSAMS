@@ -1,6 +1,8 @@
 import 'package:capstone_sams/models/SymptomsModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/SymptomsFieldsProvider.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/order-entry/api/api_service.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/PrognosisUpdateDialog.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/info.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +12,6 @@ import '../../../../constants/Env.dart';
 import '../../../../constants/theme/pallete.dart';
 import '../../../../constants/theme/sizing.dart';
 import '../../../../models/PatientModel.dart';
-import 'CpoeFormScreen.dart';
 
 class CpoeAnalyzeScreen extends StatefulWidget {
   final String? index;
@@ -25,6 +26,9 @@ class CpoeAnalyzeScreen extends StatefulWidget {
 }
 
 class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
+  late String finalPrediction;
+  late double finalConfidence;
+
   @override
   void initState() {
     super.initState();
@@ -50,24 +54,39 @@ class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
         var prediction = jsonDecode(response.body) as Map<String, dynamic>;
 
         // Extract the final prediction and confidence
-        var finalPrediction = prediction['final_prediction'].toString();
-        var finalConfidence = prediction['final_confidence'] as double;
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => CpoeFormScreen(
-              patient: widget.patient,
-              index: widget.index,
-              initialPrediction: finalPrediction,
-              initialConfidence: finalConfidence,
-            ),
-          ),
-        );
+        finalPrediction = prediction['final_prediction'].toString();
+        finalConfidence = prediction['final_confidence'] as double;
+        setState(() {}); // Trigger a rebuild to reflect changes in UI
       } else {
         throw Exception('Failed to load predictions');
       }
     } catch (error) {
       print('Caught an error: $error');
+    }
+  }
+
+  Future<void> _handleAnalyzeAgain(BuildContext context) async {
+    try {
+      await ApiService.deleteLatestRecord();
+
+      Provider.of<SymptomFieldsProvider>(context, listen: false).reset();
+      Navigator.pop(context);
+    } catch (error) {
+      print('Failed to delete the latest record: $error');
+    }
+  }
+
+  void _showPrognosisUpdateDialog(BuildContext context) async {
+    final newPrognosis = await showDialog<String>(
+      context: context,
+      builder: (context) => PrognosisUpdateDialog(),
+    );
+
+    if (newPrognosis != null && newPrognosis.isNotEmpty) {
+      setState(() {
+        finalPrediction = newPrognosis;
+        finalConfidence = 0;
+      });
     }
   }
 
@@ -275,6 +294,84 @@ class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
                     ],
                   ),
                   SizedBox(height: 20),
+                  Container(
+                    margin: EdgeInsets.all(20),
+                    padding: EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: <Widget>[
+                        Text(
+                          'Diagnosis',
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 15),
+                        Text(
+                          'Suspected Disease: \n $finalPrediction',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          'Confidence score: ${finalConfidence.toStringAsFixed(2)}',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: ElevatedButton.icon(
+                                onPressed: () => _handleAnalyzeAgain(context),
+                                icon: Icon(Icons.search),
+                                label: Text(
+                                  'Analyze Again',
+                                  style: TextStyle(
+                                    fontSize: 12.5,
+                                  ),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Pallete.mainColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Expanded(
+                              child: ElevatedButton.icon(
+                                onPressed: () =>
+                                    _showPrognosisUpdateDialog(context),
+                                icon: Icon(Icons.edit),
+                                label: Text(
+                                  'Change Value',
+                                  style: TextStyle(
+                                    fontSize: 12.5,
+                                  ),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Pallete.mainColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ],
