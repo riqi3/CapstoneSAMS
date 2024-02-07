@@ -1,13 +1,9 @@
-import 'package:capstone_sams/global-widgets/separators/DividerWidget.dart';
 import 'package:capstone_sams/global-widgets/texts/TitleValueText.dart';
 import 'package:capstone_sams/models/AccountModel.dart';
-import 'package:capstone_sams/models/ContactPersonModel.dart';
 import 'package:capstone_sams/models/PresentIllness.dart';
 import 'package:capstone_sams/providers/PresentIllnessProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/PatientTabsScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../../constants/theme/pallete.dart';
 import '../../../constants/theme/sizing.dart';

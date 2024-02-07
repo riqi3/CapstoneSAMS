@@ -1,5 +1,4 @@
 import 'package:capstone_sams/constants/theme/pallete.dart';
-import 'package:capstone_sams/global-widgets/dialogs/AlertDialogTemplate.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/MedicalNotesProvider.dart';
 import 'package:capstone_sams/screens/authentication/LoginScreen.dart';
@@ -9,6 +8,7 @@ import 'package:capstone_sams/screens/medical_notes/MedicalNotesScreen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../constants/theme/sizing.dart';
@@ -100,36 +100,21 @@ class _DashboardState extends State<Dashboard> {
             leading: FaIcon(FontAwesomeIcons.houseMedical),
             title: const Text('Home'),
             onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HomeScreen(),
-                ),
-              );
+              context.go('/home'); 
             },
           ),
           ListTile(
             leading: FaIcon(FontAwesomeIcons.solidAddressCard),
             title: const Text('Health Records'),
             onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EhrListScreen(),
-                ),
-              );
+              context.go('/home/ehr_list'); 
             },
           ),
           ListTile(
             leading: FaIcon(FontAwesomeIcons.notesMedical),
             title: const Text('Medical Notes'),
             onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MedicalNotes(),
-                ),
-              );
+              context.go('/home/med_notes'); 
             },
           ),
           SizedBox(

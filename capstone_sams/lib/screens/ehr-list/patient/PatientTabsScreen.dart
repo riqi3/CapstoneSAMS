@@ -1,9 +1,7 @@
-import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/global-widgets/forms/present-illness/PresentIllnessForm.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/present-illness-history/HistoryPresentIllnessScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/past-med-history/PastMedicalHistoryScreen.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/treatment/Treatment.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../constants/theme/sizing.dart';

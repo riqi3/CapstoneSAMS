@@ -1,4 +1,3 @@
-import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:flutter/material.dart';
 import '../../constants/theme/pallete.dart';
 

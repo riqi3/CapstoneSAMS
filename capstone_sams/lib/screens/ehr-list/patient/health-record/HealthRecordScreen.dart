@@ -1,8 +1,6 @@
 import 'package:capstone_sams/global-widgets/scaffolds/ScaffoldTemplate.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/AssignDoctorCard.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/PatientInfoCard.dart';
 import 'package:flutter/material.dart';
-import '../../../../constants/theme/sizing.dart';
 import '../../../../models/PatientModel.dart';
 
 class HealthRecordsScreen extends StatefulWidget {

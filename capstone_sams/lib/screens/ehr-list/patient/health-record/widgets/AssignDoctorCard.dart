@@ -1,12 +1,9 @@
-import 'package:capstone_sams/constants/Env.dart';
 import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/global-widgets/forms/ChangePhysicianForm.dart';
-import 'package:dio/dio.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';

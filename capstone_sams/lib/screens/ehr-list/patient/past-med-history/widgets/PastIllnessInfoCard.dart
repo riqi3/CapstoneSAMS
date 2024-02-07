@@ -1,21 +1,14 @@
-import 'package:capstone_sams/constants/Strings.dart';
 import 'package:capstone_sams/global-widgets/cards/CardSectionInfoWidget.dart';
 import 'package:capstone_sams/global-widgets/cards/CardTemplate.dart';
 import 'package:capstone_sams/global-widgets/cards/CardTitleWidget.dart';
 import 'package:capstone_sams/global-widgets/loading-indicator/CardContentLoading.dart';
-import 'package:capstone_sams/global-widgets/separators/DividerWidget.dart';
 import 'package:capstone_sams/global-widgets/cards/CardSectionTitleWidget.dart';
 import 'package:capstone_sams/global-widgets/texts/TitleValueText.dart';
-import 'package:capstone_sams/models/ContactPersonModel.dart';
 import 'package:capstone_sams/models/MedicalRecordModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
-import 'package:capstone_sams/providers/ContactPersonProvider.dart';
 import 'package:capstone_sams/providers/MedicalRecordProvider.dart';
-import 'package:capstone_sams/providers/PatientProvider.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import '../../../../../../constants/theme/pallete.dart';
 import '../../../../../../constants/theme/sizing.dart';
 import '../../../../../../models/PatientModel.dart';
 
