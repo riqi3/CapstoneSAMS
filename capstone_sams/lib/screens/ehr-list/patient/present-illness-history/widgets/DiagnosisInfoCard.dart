@@ -54,10 +54,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
     return CardTemplate(
       column: Column(
         children: [
-          CardTitleWidget(title: "History of Illnesses"
-              // title:
-              //     'Dr. ${accountProvider.firstName} ${middleInitial}. ${accountProvider.lastName}'
-              ),
+          CardTitleWidget(title: "History of Illnesses"),
           SizedBox(height: Sizing.sectionSymmPadding),
           // CardSectionTitleWidget(title: "Patient's Present Illnesses"),
           CardSectionInfoWidget(
@@ -249,7 +246,8 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                 context: context,
                 builder: (BuildContext context) => AlertDiaglogTemplate(
                   title: 'Are you sure?',
-                  content: "Deleting a patient's illness history record is irreversable and cannot be undone.",
+                  content:
+                      "Deleting a patient's illness history record is irreversable and cannot be undone.",
                   buttonTitle: 'Remove diagnosis',
                   onpressed: () => removeComplaintMethod(
                       provider, illness, accountProvider, token, context),
@@ -274,21 +272,22 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
       accountProvider.id,
       token,
     );
-    int routesCount = 0;
-
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(
-        builder: (context) => PatientTabsScreen(patient: widget.patient),
-      ),
-      (Route<dynamic> route) {
-        if (routesCount < 2) {
-          routesCount++;
-          return false;
-        }
-        return true;
-      },
-    );
+    // int routesCount = 0;
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
+    // Navigator.pushAndRemoveUntil(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => PatientTabsScreen(patient: widget.patient),
+    //   ),
+    //   (Route<dynamic> route) {
+    //     if (routesCount < 2) {
+    //       routesCount++;
+    //       return false;
+    //     }
+    //     return true;
+    //   },
+    // );
     ScaffoldMessenger.of(context).showSnackBar(removeComplaint);
   }
 

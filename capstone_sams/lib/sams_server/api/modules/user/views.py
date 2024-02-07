@@ -276,6 +276,7 @@ class PersonalNotesView(viewsets.ModelViewSet):
         try:
             note = Personal_Note.objects.get(noteNum = noteNum)
             note.isDeleted = True
+            note.save()
             data_log = Data_Log.objects.create(
                 event = f"{note.account.username} deleted personal note code {noteNum}",
                 type = "User Deleted Personal Note",

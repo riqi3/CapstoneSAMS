@@ -42,17 +42,6 @@ class _DashboardState extends State<Dashboard> {
         (route) => false,
       );
     }
-    // showDialog<String>(
-    //   context: context,
-    //   builder: (BuildContext context) => AlertDiaglogTemplate(
-    //     title: 'Are you sure?',
-    //     content: 'Please confirm if you want to logout.',
-    //     onpressed: () async {
-
-    //     },
-    //     buttonTitle: 'Log me out',
-    //   ),
-    // );
   }
 
   @override
@@ -100,21 +89,21 @@ class _DashboardState extends State<Dashboard> {
             leading: FaIcon(FontAwesomeIcons.houseMedical),
             title: const Text('Home'),
             onTap: () {
-              context.go('/home'); 
+              context.go('/home');
             },
           ),
           ListTile(
             leading: FaIcon(FontAwesomeIcons.solidAddressCard),
             title: const Text('Health Records'),
             onTap: () {
-              context.go('/home/ehr_list'); 
+              (context).go('/home/ehr_list');
             },
           ),
           ListTile(
             leading: FaIcon(FontAwesomeIcons.notesMedical),
             title: const Text('Medical Notes'),
             onTap: () {
-              context.go('/home/med_notes'); 
+              context.go('/home/med_notes');
             },
           ),
           SizedBox(

@@ -10,10 +10,11 @@ import 'health-record/HealthRecordScreen.dart';
 
 class PatientTabsScreen extends StatefulWidget {
   final Patient patient;
-  final GlobalKey<_PatientTabsScreenState>? patientTabsScreenKey; // Add this line
+  final GlobalKey<_PatientTabsScreenState>?
+      patientTabsScreenKey; // Add this line
 
   // final int? index;
-const PatientTabsScreen({
+  const PatientTabsScreen({
     Key? key,
     required this.patient,
     this.patientTabsScreenKey, // Add this line
@@ -27,7 +28,6 @@ const PatientTabsScreen({
   @override
   State<PatientTabsScreen> createState() => _PatientTabsScreenState();
 }
- 
 
 class _PatientTabsScreenState extends State<PatientTabsScreen>
     with SingleTickerProviderStateMixin {

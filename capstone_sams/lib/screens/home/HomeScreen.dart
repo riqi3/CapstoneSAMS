@@ -6,6 +6,7 @@ import 'package:capstone_sams/providers/MedicalNotesProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/EhrListScreen.dart';
 import 'package:capstone_sams/screens/home/widgets/EhrSection.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../constants/theme/sizing.dart';
 import '../medical_notes/MedicalNotesScreen.dart';
@@ -74,7 +75,6 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
         ),
-        
       ),
     );
   }
@@ -89,12 +89,13 @@ class _HomeScreenState extends State<HomeScreen> {
           child: EHRSection(
             title: ehrTitle,
             press: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EhrListScreen(),
-                ),
-              );
+              GoRouter.of(context).go("/home/ehr_list");
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => EhrListScreen(),
+              //   ),
+              // );
             },
           ),
         ),
@@ -102,12 +103,13 @@ class _HomeScreenState extends State<HomeScreen> {
           child: NotesSection(
             title: medNotesTitle,
             press: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MedicalNotes(),
-                ),
-              );
+              GoRouter.of(context).go("/home/med_notes");
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => MedicalNotes(),
+              //   ),
+              // );
             },
             todosPreview: todosPreview,
           ),
