@@ -13,6 +13,8 @@ class HealthCheckProvider extends ChangeNotifier {
   String bloodPressureOption = 'Low';
   String cholesterolLevelOption = 'Low';
 
+  List<Map<String, dynamic>> top3Predictions = [];
+
   Future<void> sendDataToBackend() async {
     final url =
         Uri.parse('${Env.prefix}/diagnostics/create_diagnostic_record/');
@@ -32,12 +34,9 @@ class HealthCheckProvider extends ChangeNotifier {
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
-      final top3Predictions = responseData['top3_predictions'];
-
-      for (var prediction in top3Predictions) {
-        print(
-            'Disease: ${prediction['disease']}, Probability: ${prediction['probability']}');
-      }
+      top3Predictions =
+          List<Map<String, dynamic>>.from(responseData['top3_predictions']);
+      notifyListeners();
     } else {
       print('Error sending data to server: ${response.statusCode}');
     }
