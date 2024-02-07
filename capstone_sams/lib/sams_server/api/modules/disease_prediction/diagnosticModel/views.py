@@ -134,27 +134,29 @@ def create_diagnostic_record(request):
             # Create a DataFrame with the user input
             user_df = pd.DataFrame(encoded_input, index=[0])
             
-            # Make predictions with probabilities
-            prediction_proba = RNF.predict_proba(user_df)
+        # Make predictions with probabilities
+        prediction_proba = RNF.predict_proba(user_df)
 
-            # Get the predicted class label
-            predicted_class = RNF.classes_[prediction_proba.argmax()]
+        # Get the top 3 predicted classes and their probabilities
+        top3_classes = RNF.classes_[prediction_proba.argsort()[0][-3:]][::-1]
+        top3_probabilities = prediction_proba[0][prediction_proba.argsort()[0][-3:]][::-1]
 
-            # Save the diagnostic record to the database
-            diagnostic_record = DiagnosticFields(
-                disease=predicted_class, 
-                fever=user_input['Fever'],
-                cough=user_input['Cough'],
-                fatigue=user_input['Fatigue'],
-                difficulty_breathing=user_input['Difficulty Breathing'],
-                age=user_input['Age'],
-                gender=user_input['Gender'],
-                blood_pressure=user_input['Blood Pressure'],
-                cholesterol_level=user_input['Cholesterol Level'],
-            )
-            diagnostic_record.save()
+        # Save the diagnostic record to the database with the disease having the highest probability
+        predicted_class = top3_classes[0]
+        diagnostic_record = DiagnosticFields(
+            disease=predicted_class, 
+            fever=user_input['Fever'],
+            cough=user_input['Cough'],
+            fatigue=user_input['Fatigue'],
+            difficulty_breathing=user_input['Difficulty Breathing'],
+            age=user_input['Age'],
+            gender=user_input['Gender'],
+            blood_pressure=user_input['Blood Pressure'],
+            cholesterol_level=user_input['Cholesterol Level'],
+        )
+        diagnostic_record.save()
 
-            return JsonResponse({'prediction': predicted_class, 'confidence': max(prediction_proba[0])})
+        return JsonResponse({'top3_predictions': [{'disease': disease, 'probability': probability} for disease, probability in zip(top3_classes, top3_probabilities)]})
 
         
 def get_latest_record_id(request):
