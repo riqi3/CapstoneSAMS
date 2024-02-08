@@ -1,3 +1,4 @@
+import csv
 from django import forms
 from django.contrib import admin, messages
 from django.contrib.admin.models import LogEntry
@@ -945,25 +946,26 @@ class DiagnosticFieldsAdmin(admin.ModelAdmin):
                 messages.warning(request, "The wrong file type was uploaded")
                 return HttpResponseRedirect(request.path_info)
             file_data = csv_file.read().decode("utf-8")
-            csv_data = file_data.split("\n")
-            for x in csv_data[1:]:
-                if not x.strip():
-                    continue
-                fields = x.split(",")
+            csv_data = csv.reader(file_data.splitlines())
+            next(csv_data)
+            for row in csv_data:
                 try:
+                    disease, fever, cough, fatigue, difficulty_breathing, age, gender, blood_pressure, cholesterol_level, outcome_variable = row
+                    age = int(age)
                     created = DiagnosticFields.objects.update_or_create(
-                        disease=fields[0], 
-                        fever=fields[1], 
-                        cough=fields[2], 
-                        fatigue=fields[3], 
-                        difficulty_breathing=fields[4], 
-                        age=fields[5], 
-                        gender=fields[6], 
-                        blood_pressure=fields[7], 
-                        cholesterol_level=fields[8], 
-                        outcome_variable=fields[9], 
+                        disease=disease, 
+                        fever=fever, 
+                        cough=cough, 
+                        fatigue=fatigue, 
+                        difficulty_breathing=difficulty_breathing, 
+                        age=age, 
+                        gender=gender, 
+                        blood_pressure=blood_pressure, 
+                        cholesterol_level=cholesterol_level, 
+                        outcome_variable=outcome_variable.strip()
                     )
-                except IndexError:
+                except (ValueError, IndexError) as e:
+                    print(f"Error: {e}")
                     continue
             url = reverse("admin:index")
             return HttpResponseRedirect(url)
