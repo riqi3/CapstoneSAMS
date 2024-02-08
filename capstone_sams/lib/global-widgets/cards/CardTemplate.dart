@@ -8,7 +8,7 @@ class CardTemplate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Container( 
       margin: EdgeInsets.symmetric(vertical: Sizing.sectionSymmPadding),
       child: Material(
         elevation: Sizing.cardElevation,

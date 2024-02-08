@@ -21,6 +21,7 @@ class TitleValueText extends StatelessWidget {
         ),
         Text(
           value,
+          overflow: TextOverflow.ellipsis,
         ),
       ],
     );

@@ -3,6 +3,7 @@ import 'package:capstone_sams/global-widgets/cards/CardTemplate.dart';
 import 'package:capstone_sams/global-widgets/cards/CardTitleWidget.dart';
 import 'package:capstone_sams/global-widgets/loading-indicator/CardContentLoading.dart';
 import 'package:capstone_sams/global-widgets/cards/CardSectionTitleWidget.dart';
+import 'package:capstone_sams/global-widgets/texts/RichTextTemplate.dart';
 import 'package:capstone_sams/global-widgets/texts/TitleValueText.dart';
 import 'package:capstone_sams/models/MedicalRecordModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
@@ -64,20 +65,33 @@ class _PastIllnesInfoCardState extends State<PastIllnesInfoCard> {
           return SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             scrollDirection: Axis.horizontal,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    PastDiseasesData(context, medicalRecord),
-                    FamilyHistoryData(context, medicalRecord),
-                    AllergiesData(context, medicalRecord),
-                    IllnessesData(context, medicalRecord),
-                    LMPData(medicalRecord),
-                  ],
-                ),
-              ],
+            child: Container(
+              width: MediaQuery.of(context).size.width + 10,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  RichTextTemplate(
+                    title: 'Past Diseases: ',
+                    content: '${medicalRecord.pastDiseases}',
+                  ),
+                  SizedBox(height: Sizing.formSpacing),
+                  RichTextTemplate(
+                    title: 'Family History: ',
+                    content: '${medicalRecord.familyHistory}',
+                  ),
+                  SizedBox(height: Sizing.formSpacing),
+                  RichTextTemplate(
+                    title: 'Allergies: ',
+                    content: '${medicalRecord.allergies}',
+                  ),
+                  SizedBox(height: Sizing.formSpacing),
+                  RichTextTemplate(
+                    title: 'Illnesses: ',
+                    content: '${medicalRecord.illnesses}',
+                  ),
+                  LMPData(medicalRecord),
+                ],
+              ),
             ),
           );
         }

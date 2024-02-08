@@ -3,6 +3,7 @@ import 'package:capstone_sams/global-widgets/cards/CardTemplate.dart';
 import 'package:capstone_sams/global-widgets/cards/CardTitleWidget.dart';
 import 'package:capstone_sams/global-widgets/loading-indicator/CardContentLoading.dart';
 import 'package:capstone_sams/global-widgets/cards/CardSectionTitleWidget.dart';
+import 'package:capstone_sams/global-widgets/texts/RichTextTemplate.dart';
 import 'package:capstone_sams/global-widgets/texts/TitleValueText.dart';
 import 'package:capstone_sams/models/ContactPersonModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
@@ -10,6 +11,7 @@ import 'package:capstone_sams/providers/ContactPersonProvider.dart';
 import 'package:capstone_sams/global-widgets/forms/ChangePhysicianForm.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../../../../constants/theme/pallete.dart';
 import '../../../../../constants/theme/sizing.dart';
@@ -149,6 +151,8 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
   }
 
   SingleChildScrollView GeneralInfoData(BuildContext context) {
+    DateTime originalDate1 = DateTime.parse(widget.patient.birthDate!);
+    String birthDate = DateFormat('MMM d, y').format(originalDate1);
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       scrollDirection: Axis.horizontal,
@@ -174,12 +178,9 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
             children: [
               TableRow(
                 children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.only(right: Sizing.formSpacing),
-                    child: TitleValueText(
-                      title: 'Student No#: ',
-                      value: '${widget.patient.studNumber}',
-                    ),
+                  RichTextTemplate(
+                    title: 'Student No#: ',
+                    content: '${widget.patient.studNumber}',
                   ),
                   TitleValueText(
                     title: 'Course/Year: ',
@@ -202,7 +203,7 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                     padding: EdgeInsets.only(right: Sizing.formSpacing),
                     child: TitleValueText(
                       title: 'Birthdate: ',
-                      value: '${widget.patient.birthDate}',
+                      value: '${birthDate}',
                     ),
                   ),
                   TitleValueText(
@@ -245,37 +246,41 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                     title: 'Contact No#: ',
                     value: '${widget.patient.phone}',
                   ),
-                  Container(
-                    padding: EdgeInsets.only(right: Sizing.formSpacing),
-                    child: TitleValueText(
-                      title: 'Email: ',
-                      value: '${widget.patient.email}',
-                    ),
+                  RichTextTemplate(
+                    title: 'Email: ',
+                    content: '${widget.patient.email}',
                   ),
                 ],
               ),
             ],
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Address: ',
-                    style: TextStyle(fontWeight: FontWeight.w500),
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width / 1,
-                    child: Text(
-                      '${widget.patient.address}',
-                    ),
-                  ),
-                ],
-              ),
-            ],
+          Container(
+            width: MediaQuery.of(context).size.width,
+            child: RichTextTemplate(
+              title: 'Address: ',
+              content: '${widget.patient.address}',
+            ),
           ),
+          // Row(
+          //   crossAxisAlignment: CrossAxisAlignment.start,
+          //   children: [
+          //     Row(
+          //       crossAxisAlignment: CrossAxisAlignment.start,
+          //       children: [
+          //         Text(
+          //           'Address: ',
+          //           style: TextStyle(fontWeight: FontWeight.w500),
+          //         ),
+          //         Container(
+          //           width: MediaQuery.of(context).size.width / 1,
+          //           child: Text(
+          //             '${widget.patient.address}',
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   ],
+          // ),
         ],
       ),
     );
@@ -326,25 +331,12 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                     ),
                   ],
                 ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Address: ',
-                          style: TextStyle(fontWeight: FontWeight.w500),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width / 1,
-                          child: Text(
-                            '${contactPerson.address}',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: RichTextTemplate(
+                    title: 'Address: ',
+                    content: '${contactPerson.address}',
+                  ),
                 ),
               ],
             ),
