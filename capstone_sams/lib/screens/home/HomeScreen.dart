@@ -54,25 +54,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        endDrawer: ValueDashboard(),
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(Sizing.headerHeight),
-          child: ValueHomeAppBar(),
-        ),
-        body: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          physics: BouncingScrollPhysics(),
-          child: LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
-              if (constraints.maxWidth >= Dimensions.mobileWidth) {
-                return _tabletView(context, ehrTitle, medNotesTitle);
-              } else {
-                return _mobileView(context, ehrTitle, medNotesTitle);
-              }
-            },
-          ),
+    return Scaffold(
+      endDrawer: ValueDashboard(),
+      appBar: PreferredSize(
+        child: ValueHomeAppBar(),
+        preferredSize: Size.fromHeight(kToolbarHeight),
+      ),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        physics: BouncingScrollPhysics(),
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            if (constraints.maxWidth >= Dimensions.mobileWidth) {
+              return _tabletView(context, ehrTitle, medNotesTitle);
+            } else {
+              return _mobileView(context, ehrTitle, medNotesTitle);
+            }
+          },
         ),
       ),
     );
@@ -84,18 +82,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Column(
       children: [
-        Center(
-          child: EHRSection(
-            title: ehrTitle,
-            press: () => Navigator.pushNamed(context, '/ehr_list'),
-          ),
+        EHRSection(
+          title: ehrTitle,
+          press: () => Navigator.pushNamed(context, '/ehr_list'),
         ),
-        Center(
-          child: NotesSection(
-            title: medNotesTitle,
-            press: () => Navigator.pushNamed(context, '/med_notes'),
-            todosPreview: todosPreview,
-          ),
+        NotesSection(
+          title: medNotesTitle,
+          press: () => Navigator.pushNamed(context, '/med_notes'),
+          todosPreview: todosPreview,
         ),
       ],
     );

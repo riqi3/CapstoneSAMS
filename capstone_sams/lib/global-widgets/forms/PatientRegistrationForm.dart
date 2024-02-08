@@ -835,14 +835,14 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                 controller: otherIllnesses,
               ),
             SizedBox(height: Sizing.formSpacing),
-            if (_selectedGender == 'F')
-              Flexible(
-                child: FormTextField(
-                  labeltext: 'LMP (Last Menstrual Period)',
-                  type: TextInputType.text,
-                  controller: lmp,
-                ),
-              ),
+            // if (_selectedGender == 'F')
+            //   Flexible(
+            //     child: FormTextField(
+            //       labeltext: 'LMP (Last Menstrual Period)',
+            //       type: TextInputType.text,
+            //       controller: lmp,
+            //     ),
+            //   ),
           ],
         ),
       ],

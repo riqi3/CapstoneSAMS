@@ -67,52 +67,14 @@ class _PastIllnesInfoCardState extends State<PastIllnesInfoCard> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Row(
-                  children: [
-                    if (widget.patient.gender == 'F')
-                      Text('${medicalRecord.lastMensPeriod}'),
-                    Text(
-                      '${medicalRecord.allergies}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Sizing.header5,
-                      ),
-                    ),
-                  ],
-                ),
-                Table(
-                  columnWidths: <int, TableColumnWidth>{
-                    0: FixedColumnWidth(Sizing.columnWidth4),
-                  },
-                  children: [
-                    TableRow(
-                      children: <Widget>[
-                        TitleValueText(
-                          title: 'Contact No#: ',
-                          value: '${medicalRecord.familyHistory}',
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Row(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Address: ',
-                          style: TextStyle(fontWeight: FontWeight.w500),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width / 1,
-                          child: Text(
-                            '${medicalRecord.illnesses}',
-                          ),
-                        ),
-                      ],
-                    ),
+                    PastDiseasesData(context, medicalRecord),
+                    FamilyHistoryData(context, medicalRecord),
+                    AllergiesData(context, medicalRecord),
+                    IllnessesData(context, medicalRecord),
+                    LMPData(medicalRecord),
                   ],
                 ),
               ],
@@ -120,6 +82,91 @@ class _PastIllnesInfoCardState extends State<PastIllnesInfoCard> {
           );
         }
       },
+    );
+  }
+
+  Row PastDiseasesData(BuildContext context, MedicalRecord medicalRecord) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Past Diseases: ',
+          style: TextStyle(fontWeight: FontWeight.w500),
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width / 1,
+          child: Text(
+            '${medicalRecord.pastDiseases}',
+          ),
+        ),
+      ],
+    );
+  }
+
+  Row FamilyHistoryData(BuildContext context, MedicalRecord medicalRecord) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Family History: ',
+          style: TextStyle(fontWeight: FontWeight.w500),
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width / 1,
+          child: Text(
+            '${medicalRecord.familyHistory}',
+          ),
+        ),
+      ],
+    );
+  }
+
+  Row AllergiesData(BuildContext context, MedicalRecord medicalRecord) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Allergies: ',
+          style: TextStyle(fontWeight: FontWeight.w500),
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width / 1,
+          child: Text(
+            '${medicalRecord.allergies}',
+          ),
+        ),
+      ],
+    );
+  }
+
+  Row IllnessesData(BuildContext context, MedicalRecord medicalRecord) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Illnesses: ',
+          style: TextStyle(fontWeight: FontWeight.w500),
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width / 1,
+          child: Text(
+            '${medicalRecord.illnesses}',
+          ),
+        ),
+      ],
+    );
+  }
+
+  Row LMPData(MedicalRecord medicalRecord) {
+    return Row(
+      children: [
+        Text(
+          'Last Menstrual Period: ',
+          style: TextStyle(fontWeight: FontWeight.w500),
+        ),
+        if (widget.patient.gender == 'F')
+          Text('${medicalRecord.lastMensPeriod}'),
+      ],
     );
   }
 }

@@ -272,7 +272,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
       accountProvider.id,
       token,
     );
-    int routesCount = 0; 
+    int routesCount = 0;
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
@@ -297,30 +297,30 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * .85,
-        decoration: new BoxDecoration(
-          color: Colors.white,
-          borderRadius: new BorderRadius.only(
-            topLeft: const Radius.circular(Sizing.borderRadius),
-            topRight: const Radius.circular(Sizing.borderRadius),
-          ),
-        ),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                bottom: Sizing.sectionSymmPadding,
-              ),
-              child: BottomSheetTitle(title: 'Dx #${illnessIndex}'),
+      builder: (context) => SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        physics: BouncingScrollPhysics(),
+        child: Container(
+          height: MediaQuery.of(context).size.height * .85,
+          decoration: new BoxDecoration(
+            color: Colors.white,
+            borderRadius: new BorderRadius.only(
+              topLeft: const Radius.circular(Sizing.borderRadius),
+              topRight: const Radius.circular(Sizing.borderRadius),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: Sizing.sectionSymmPadding),
-              child: Column(
+          ),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                  bottom: Sizing.sectionSymmPadding,
+                ),
+                child: BottomSheetTitle(title: 'Dx #${illnessIndex}'),
+              ),
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Row(
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
@@ -328,14 +328,14 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                         style: TextStyle(fontWeight: FontWeight.w500),
                       ),
                       Container(
-                        // width: MediaQuery.of(context).size.width / 1.5,
+                        width: MediaQuery.of(context).size.width,
                         child: Text(
                           '${illness.complaint}',
                         ),
                       ),
                     ],
                   ),
-                  Row(
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
@@ -343,14 +343,14 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                         style: TextStyle(fontWeight: FontWeight.w500),
                       ),
                       Container(
-                        // width: MediaQuery.of(context).size.width / 1,
+                        width: MediaQuery.of(context).size.width,
                         child: Text(
                           '${illness.findings}',
                         ),
                       ),
                     ],
                   ),
-                  Row(
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
@@ -358,14 +358,14 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                         style: TextStyle(fontWeight: FontWeight.w500),
                       ),
                       Container(
-                        // width: MediaQuery.of(context).size.width / 1,
+                        width: MediaQuery.of(context).size.width,
                         child: Text(
                           '${illness.diagnosis}',
                         ),
                       ),
                     ],
                   ),
-                  Row(
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
@@ -373,7 +373,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                         style: TextStyle(fontWeight: FontWeight.w500),
                       ),
                       Container(
-                        // width: MediaQuery.of(context).size.width / 1,
+                        width: MediaQuery.of(context).size.width,
                         child: Text(
                           '${illness.treatment}',
                         ),
@@ -382,8 +382,8 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                   ),
                 ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
