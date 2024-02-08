@@ -14,6 +14,7 @@ from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import accuracy_score
+from sklearn.preprocessing import OneHotEncoder
 
 def train_model():
     try:
@@ -44,13 +45,11 @@ def train_model():
         for col in label_columns:
             df[col] = LE.fit_transform(df[col])
 
-
         # Split the data
         X = df.drop(['disease'], axis=1).values
         y = df['disease'].values
         X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.4, shuffle=True, stratify=y, random_state=30)
         X_val, X_test, y_val, y_test = train_test_split(X_val, y_val, test_size=0.5, shuffle=True, stratify=y_val, random_state=30)
-
 
         # Build and train the RandomForest model
         param_grid_rf = {
@@ -66,18 +65,18 @@ def train_model():
         grid_search_rf.fit(X_train, y_train)
 
         # Get the best RandomForest model
-        RNF = grid_search_rf.best_estimator_
+        best_rf_clf = grid_search_rf.best_estimator_
 
         # Save the model and encoder using pickle
         os.makedirs(pickle_folder, exist_ok=True)
 
         # Save the model
-        pickle.dump(RNF, open(os.path.join(pickle_folder, 'final_rf_model.pkl'), 'wb'))
+        pickle.dump(best_rf_clf, open(os.path.join(pickle_folder, 'final_rf_model.pkl'), 'wb'))
 
         # Save the encoder
         pickle.dump(LE, open(os.path.join(pickle_folder, 'encoder.pkl'), 'wb'))
 
-                # Load the encoder with explicit casting
+        # Load the encoder with explicit casting
         LE = pickle.load(open(os.path.join(pickle_folder, 'encoder.pkl'), 'rb'))
 
         # Check if loaded encoder is a LabelEncoder
@@ -85,18 +84,18 @@ def train_model():
             raise ValueError("Encoder (LE) is not of type LabelEncoder.")
 
         # Predicting and calculating accuracy on training data
-        train_predictions = RNF.predict(X_train)
+        train_predictions = best_rf_clf.predict(X_train)
         train_accuracy = accuracy_score(y_train, train_predictions)
 
         # Predicting and calculating accuracy on testing data
-        test_predictions = RNF.predict(X_test)
+        test_predictions = best_rf_clf.predict(X_test)
         test_accuracy = accuracy_score(y_test, test_predictions)
 
         # Printing the accuracy scores
         print(f"Training Data Accuracy: {train_accuracy}")
         print(f"Testing Data Accuracy: {test_accuracy}")
 
-        return True, "Model training completed successfully."
+        return True, f"Model training completed successfully. Training Data Accuracy: {train_accuracy}, Testing Data Accuracy: {test_accuracy}"
     except Exception as e:
         return False, str(e)
 
@@ -110,86 +109,86 @@ class TrainModelView(APIView):
         
 @api_view(['POST'])
 def create_diagnostic_record(request):
-            # Load the model and encoder
-    pickle_folder = 'api/modules/disease_prediction/diagnosticModel'
-    RNF = pickle.load(open(os.path.join(pickle_folder, 'final_rf_model.pkl'), 'rb'))
-    LE = pickle.load(open(os.path.join(pickle_folder, 'encoder.pkl'), 'rb'))
-
-        # Debugging: Load encoder separately to inspect its type
     try:
-        with open(os.path.join(pickle_folder, 'encoder.pkl'), 'rb') as f:
-            LE = pickle.load(f)
-    except Exception as e:
-        return JsonResponse({'error_message': f"Error loading encoder: {str(e)}"}, status=500)
+        # Load the model and encoder
+        pickle_folder = 'api/modules/disease_prediction/diagnosticModel'
+        RNF = pickle.load(open(os.path.join(pickle_folder, 'final_rf_model.pkl'), 'rb'))
+        LE = pickle.load(open(os.path.join(pickle_folder, 'encoder.pkl'), 'rb'))
 
-    if not isinstance(LE, LabelEncoder):
-        return JsonResponse({'error_message': "Encoder (LE) is not of type LabelEncoder."}, status=500)
-    
-    if request.method == 'POST':
-        # Get user input from the form
-        user_input = {
-            'Fever': request.data.get('fever'),  # Adjusted to use request.data.get
-            'Cough': request.data.get('cough'),  # Adjusted to use request.data.get
-            'Fatigue': request.data.get('fatigue'),  # Adjusted to use request.data.get
-            'Difficulty Breathing': request.data.get('difficulty_breathing'),  # Adjusted to use request.data.get
-            'Age': request.data.get('age'),  # Adjusted to use request.data.get
-            'Gender': request.data.get('gender'),  # Adjusted to use request.data.get
-            'Blood Pressure': request.data.get('blood_pressure'),  # Adjusted to use request.data.get
-            'Cholesterol Level': request.data.get('cholesterol_level'),  # Adjusted to use request.data.get
-        }
+        # Check if loaded encoder is a LabelEncoder
+        if not isinstance(LE, LabelEncoder):
+            return JsonResponse({'error_message': "Encoder (LE) is not of type LabelEncoder."}, status=500)
 
-        # Check for missing or empty fields
-        required_fields = ['Fever', 'Cough', 'Fatigue', 'Difficulty Breathing', 'Age', 'Gender', 'Blood Pressure', 'Cholesterol Level']
-        for field in required_fields:
-            if not user_input[field]:
-                return JsonResponse({'error_message': f"Missing or empty value for {field}"}, status=400)
-        
-        # Convert 'Age' to integer if it's not None
-        if user_input['Age'] is not None:
-            try:
-                user_input['Age'] = int(user_input['Age'])
-            except ValueError:
-                return JsonResponse({'error_message': "Invalid value for Age. Must be a valid integer."}, status=400)
-        
-        # Encode user input
-        encoded_input = {}
-        for col in user_input:
-            if col == 'Age':  # Skip Age, since it's numerical
-                encoded_input[col] = user_input[col]
-            else:
-                if isinstance(LE, LabelEncoder):
-                    encoded_input[col] = LE.transform([user_input[col]])[0]
+        if request.method == 'POST':
+            # Get user input from the form
+            user_input = {
+                'Fever': request.data.get('fever'),
+                'Cough': request.data.get('cough'),
+                'Fatigue': request.data.get('fatigue'),
+                'Difficulty Breathing': request.data.get('difficulty_breathing'),
+                'Age': request.data.get('age'),
+                'Gender': request.data.get('gender'),
+                'Blood Pressure': request.data.get('blood_pressure'),
+                'Cholesterol Level': request.data.get('cholesterol_level'),
+                'Outcome Variable': request.data.get('outcome_variable'),
+            }
+
+            # Check for missing or empty fields
+            required_fields = ['Fever', 'Cough', 'Fatigue', 'Difficulty Breathing', 'Age', 'Gender', 'Blood Pressure', 'Cholesterol Level']
+            for field in required_fields:
+                if not user_input[field]:
+                    return JsonResponse({'error_message': f"Missing or empty value for {field}"}, status=400)
+
+            # Convert 'Age' to integer if it's not None
+            if user_input['Age'] is not None:
+                try:
+                    user_input['Age'] = int(user_input['Age'])
+                except ValueError:
+                    return JsonResponse({'error_message': "Invalid value for Age. Must be a valid integer."}, status=400)
+
+            # Encode user input
+            encoded_input = {}
+            for col in user_input:
+                if col == 'Age':  # Skip Age, since it's numerical
+                    encoded_input[col] = user_input[col]
                 else:
-                    return JsonResponse({'error_message': f"Encoder (LE) is not of type LabelEncoder."}, status=500)
-
-
+                    if col in ['Gender', 'Blood Pressure', 'Cholesterol Level']:  # Check if the column is categorical
+                        # One-hot encode categorical variables
+                        encoded_vals = pd.get_dummies([user_input[col]], prefix=col, drop_first=True)
+                        for enc_col in encoded_vals.columns:
+                            encoded_input[enc_col] = encoded_vals[enc_col].values[0]
+                    else:
+                        # For non-categorical variables, use Label Encoding
+                        encoded_input[col] = LE.transform([user_input[col]])[0]
 
             # Create a DataFrame with the user input
             user_df = pd.DataFrame(encoded_input, index=[0])
-            
-        # Make predictions with probabilities
-        prediction_proba = RNF.predict_proba(user_df)
 
-        # Get the top 3 predicted classes and their probabilities
-        top3_classes = RNF.classes_[prediction_proba.argsort()[0][-3:]][::-1]
-        top3_probabilities = prediction_proba[0][prediction_proba.argsort()[0][-3:]][::-1]
+            # Make predictions with probabilities
+            prediction_proba = RNF.predict_proba(user_df)
 
-        # Save the diagnostic record to the database with the disease having the highest probability
-        predicted_class = top3_classes[0]
-        diagnostic_record = DiagnosticFields(
-            disease=predicted_class, 
-            fever=user_input['Fever'],
-            cough=user_input['Cough'],
-            fatigue=user_input['Fatigue'],
-            difficulty_breathing=user_input['Difficulty Breathing'],
-            age=user_input['Age'],
-            gender=user_input['Gender'],
-            blood_pressure=user_input['Blood Pressure'],
-            cholesterol_level=user_input['Cholesterol Level'],
-        )
-        diagnostic_record.save()
+            # Get the top 3 predicted classes and their probabilities
+            top3_classes = RNF.classes_[prediction_proba.argsort()[0][-3:]][::-1]
+            top3_probabilities = prediction_proba[0][prediction_proba.argsort()[0][-3:]][::-1]
 
-        return JsonResponse({'top3_predictions': [{'disease': disease, 'probability': probability} for disease, probability in zip(top3_classes, top3_probabilities)]})
+            # Save the diagnostic record to the database with the disease having the highest probability
+            predicted_class = top3_classes[0]
+            diagnostic_record = DiagnosticFields(
+                disease=predicted_class,
+                fever=user_input['Fever'],
+                cough=user_input['Cough'],
+                fatigue=user_input['Fatigue'],
+                difficulty_breathing=user_input['Difficulty Breathing'],
+                age=user_input['Age'],
+                gender=user_input['Gender'],
+                blood_pressure=user_input['Blood Pressure'],
+                cholesterol_level=user_input['Cholesterol Level'],
+            )
+            diagnostic_record.save()
+
+            return JsonResponse({'top3_predictions': [{'disease': disease, 'probability': probability} for disease, probability in zip(top3_classes, top3_probabilities)]})
+    except Exception as e:
+        return JsonResponse({'error_message': str(e)}, status=500)
 
         
 def get_latest_record_id(request):
