@@ -175,7 +175,7 @@ def create_diagnostic_record(request):
             encoded_input['blood_pressure'] = valid_blood_pressure_values.index(user_input['Blood Pressure'].lower())
 
             # Handle Cholesterol Level separately
-            valid_cholesterol_levels = ['normal', 'high', 'very high']  # Define valid categories for Cholesterol Level
+            valid_cholesterol_levels = ['normal', 'high', 'low']  # Define valid categories for Cholesterol Level
             if user_input['Cholesterol Level'].lower() not in valid_cholesterol_levels:
                 return JsonResponse({'error_message': f"Invalid value for Cholesterol Level. Must be one of: {', '.join(valid_cholesterol_levels)}."}, status=400)
 
@@ -212,15 +212,15 @@ def create_diagnostic_record(request):
             predicted_class = top3_classes[0]
             diagnostic_record = DiagnosticFields(
                 disease=predicted_class,
-                fever=user_input['Fever'],
-                cough=user_input['Cough'],
-                fatigue=user_input['Fatigue'],
-                difficulty_breathing=user_input['Difficulty Breathing'],
+                fever=user_input['Fever'].title(),
+                cough=user_input['Cough'].title(),
+                fatigue=user_input['Fatigue'].title(),
+                difficulty_breathing=user_input['Difficulty Breathing'].title(),
                 age=user_input['Age'],
-                gender=user_input['Gender'],
-                blood_pressure=user_input['Blood Pressure'],
-                cholesterol_level=user_input['Cholesterol Level'],
-                outcome_variable=user_input['Outcome Variable'],
+                gender=user_input['Gender'].title(),
+                blood_pressure=user_input['Blood Pressure'].title(),
+                cholesterol_level=user_input['Cholesterol Level'].title(),
+                outcome_variable=user_input['Outcome Variable'].title(),
             )
             diagnostic_record.save()
 

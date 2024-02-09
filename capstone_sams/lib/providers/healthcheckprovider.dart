@@ -32,6 +32,7 @@ class HealthCheckProvider extends ChangeNotifier {
         'gender': genderOption,
         'blood_pressure': bloodPressureOption,
         'cholesterol_level': cholesterolLevelOption,
+        'outcome_variable': 'Negative',
       });
       final response = await http.post(
         url,
