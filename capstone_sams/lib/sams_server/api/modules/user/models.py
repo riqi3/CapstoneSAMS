@@ -38,7 +38,6 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     ACCOUNT_ROLE_CHOICES = [
         ('physician', 'Physician'),
-        ('medtech', 'MedTech'),
         ('nurse', 'Nurse'),
         ('admin', 'Admin'),
     ]
@@ -52,7 +51,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     middleName = models.CharField(max_length=100, blank = False)
     lastName = models.CharField(max_length=100, blank = False)
     suffixTitle = models.CharField(max_length=10, blank = False)
-    accountRole = models.CharField(max_length=100, choices=ACCOUNT_ROLE_CHOICES)
+    accountRole = models.CharField(max_length=100, choices=ACCOUNT_ROLE_CHOICES, blank=True)
     token = models.CharField(max_length=255, blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
