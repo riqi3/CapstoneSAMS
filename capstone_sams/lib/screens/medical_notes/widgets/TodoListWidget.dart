@@ -33,7 +33,7 @@ class TodoListWidget extends StatelessWidget {
             itemCount: todos.length,
             separatorBuilder: (BuildContext context, int index) {
               return Container(
-                height: 8,
+                height: Sizing.formSpacing / 2,
               );
             },
           );

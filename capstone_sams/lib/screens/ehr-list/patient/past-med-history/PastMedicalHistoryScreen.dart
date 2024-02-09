@@ -1,9 +1,5 @@
-import 'package:capstone_sams/constants/Strings.dart';
-import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/global-widgets/scaffolds/ScaffoldTemplate.dart';
-import 'package:capstone_sams/models/MedicalRecordModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
-import 'package:capstone_sams/providers/MedicalRecordProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/past-med-history/widgets/PastIllnessInfoCard.dart';
 import 'package:flutter/material.dart';
 

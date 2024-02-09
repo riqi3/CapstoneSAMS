@@ -30,52 +30,14 @@ class _DashboardState extends State<Dashboard> {
   var _isLoading = false;
 
   void _onSubmit() async {
-    showDialog<String>(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.0),
-        ),
-        title: const Text(
-          'Are you sure?',
-          style: TextStyle(
-              color: Pallete.dangerColor, fontWeight: FontWeight.bold),
-        ),
-        content: const Text('Please confirm if you want to logout.'),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context, 'Cancel'),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(
-                color: Pallete.greyColor,
-              ),
-            ),
-          ),
-          TextButton(
-            onPressed: () async {
-              setState(() => _isLoading = true);
-              var success = await context.read<AccountProvider>().logout();
+    setState(() => _isLoading = true);
+    var success = await context.read<AccountProvider>().logout();
 
-              if (success) {
-                context.read<TodosProvider>().setEmpty();
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()),
-                  (route) => false,
-                );
-              }
-            },
-            child: Text(
-              'Log me out',
-              style: TextStyle(
-                color: Pallete.dangerColor,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+    if (success) {
+      context.read<TodosProvider>().setEmpty();
+      Navigator.pushNamedAndRemoveUntil(
+          context, "/", (Route<dynamic> route) => false);
+    }
   }
 
   @override
@@ -123,36 +85,28 @@ class _DashboardState extends State<Dashboard> {
             leading: FaIcon(FontAwesomeIcons.houseMedical),
             title: const Text('Home'),
             onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HomeScreen(),
-                ),
-              );
+              // Navigator.pushNamed(context, '/home');
+              if (ModalRoute.of(context)!.settings.name != '/home') {
+                Navigator.pushNamed(context, '/home');
+              }
             },
           ),
           ListTile(
-            leading: FaIcon(FontAwesomeIcons.solidAddressCard),
+            leading: FaIcon(FontAwesomeIcons.solidClipboard),
             title: const Text('Health Records'),
             onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EhrListScreen(),
-                ),
-              );
+              if (ModalRoute.of(context)!.settings.name != '/ehr_list') {
+                Navigator.pushNamed(context, '/ehr_list');
+              }
             },
           ),
           ListTile(
             leading: FaIcon(FontAwesomeIcons.notesMedical),
             title: const Text('Medical Notes'),
             onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MedicalNotes(),
-                ),
-              );
+              if (ModalRoute.of(context)!.settings.name != '/med_notes') {
+                Navigator.pushNamed(context, '/med_notes');
+              }
             },
           ),
           SizedBox(

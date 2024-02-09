@@ -6,10 +6,7 @@ import 'package:capstone_sams/global-widgets/SearchAppBar.dart';
 import 'package:capstone_sams/global-widgets/loading-indicator/PatientCardLoading.dart';
 import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
-import 'package:capstone_sams/models/PresentIllness.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
-import 'package:capstone_sams/global-widgets/forms/PatientRegistrationForm.dart';
-import 'package:capstone_sams/providers/PresentIllnessProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/widgets/PatientCard.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -100,10 +97,6 @@ class _EhrListScreenState extends State<EhrListScreen> {
                   }
                 },
               );
-
-              // Center(
-              //   child: const CircularProgressIndicator(),
-              // );
             } else if (snapshot.data!.isEmpty) {
               return Center(
                 child: Text(Strings.noPatientResults),
@@ -125,17 +118,17 @@ class _EhrListScreenState extends State<EhrListScreen> {
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => PatientRegistrationForm(),
-          ),
-        ),
-        child: FaIcon(
-          FontAwesomeIcons.pencil,
-        ),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () => Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //       builder: (context) => PatientRegistrationForm(),
+      //     ),
+      //   ),
+      //   child: FaIcon(
+      //     FontAwesomeIcons.pencil,
+      //   ),
+      // ),
       bottomNavigationBar: Padding(
         padding: EdgeInsets.symmetric(vertical: Sizing.spacing),
         child: Row(
@@ -172,7 +165,6 @@ class _EhrListScreenState extends State<EhrListScreen> {
           },
           // labresult: labresult,
         );
- 
       },
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 1,
@@ -208,7 +200,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
         crossAxisCount: 2,
         mainAxisSpacing: 10,
         crossAxisSpacing: 10,
-        childAspectRatio: 16 / 10,
+        childAspectRatio: 16 / 8,
       ),
     );
   }

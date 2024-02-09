@@ -4,10 +4,8 @@ import 'package:capstone_sams/models/MedicalNotesModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/MedicalNotesProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/EhrListScreen.dart';
-import 'package:capstone_sams/screens/home/widgets/CourseDialog.dart';
 import 'package:capstone_sams/screens/home/widgets/EhrSection.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import '../../constants/theme/sizing.dart';
 import '../medical_notes/MedicalNotesScreen.dart';
@@ -56,27 +54,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        endDrawer: ValueDashboard(),
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(Sizing.headerHeight),
-          child: ValueHomeAppBar(),
+    return Scaffold(
+      endDrawer: ValueDashboard(),
+      appBar: PreferredSize(
+        child: ValueHomeAppBar(),
+        preferredSize: Size.fromHeight(kToolbarHeight),
+      ),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        physics: BouncingScrollPhysics(),
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            if (constraints.maxWidth >= Dimensions.mobileWidth) {
+              return _tabletView(context, ehrTitle, medNotesTitle);
+            } else {
+              return _mobileView(context, ehrTitle, medNotesTitle);
+            }
+          },
         ),
-        body: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          physics: BouncingScrollPhysics(),
-          child: LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
-              if (constraints.maxWidth >= Dimensions.mobileWidth) {
-                return _tabletView(context, ehrTitle, medNotesTitle);
-              } else {
-                return _mobileView(context, ehrTitle, medNotesTitle);
-              }
-            },
-          ),
-        ),
-        
       ),
     );
   }
@@ -87,32 +82,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Column(
       children: [
-        Center(
-          child: EHRSection(
-            title: ehrTitle,
-            press: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EhrListScreen(),
-                ),
-              );
-            },
-          ),
+        EHRSection(
+          title: ehrTitle,
+          press: () => Navigator.pushNamed(context, '/ehr_list'),
         ),
-        Center(
-          child: NotesSection(
-            title: medNotesTitle,
-            press: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MedicalNotes(),
-                ),
-              );
-            },
-            todosPreview: todosPreview,
-          ),
+        NotesSection(
+          title: medNotesTitle,
+          press: () => Navigator.pushNamed(context, '/med_notes'),
+          todosPreview: todosPreview,
         ),
       ],
     );
@@ -124,32 +101,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Column(
       children: <Widget>[
-        Center(
-          child: EHRSection(
-            title: ehrTitle,
-            press: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EhrListScreen(),
-                ),
-              );
-            },
-          ),
+        EHRSection(
+          title: ehrTitle,
+          press: () => Navigator.pushNamed(context, '/ehr_list'),
         ),
-        Center(
-          child: NotesSection(
-            title: medNotesTitle,
-            press: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MedicalNotes(),
-                ),
-              );
-            },
-            todosPreview: todosPreview,
-          ),
+        NotesSection(
+          title: medNotesTitle,
+          press: () => Navigator.pushNamed(context, '/med_notes'),
+          todosPreview: todosPreview,
         ),
       ],
     );

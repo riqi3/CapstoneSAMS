@@ -1,8 +1,6 @@
-import 'package:capstone_sams/constants/Env.dart';
 import 'package:capstone_sams/constants/Strings.dart';
 import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/constants/theme/sizing.dart';
-import 'package:capstone_sams/global-widgets/TitleAppBar.dart';
 import 'package:capstone_sams/global-widgets/buttons/CancelButton.dart';
 import 'package:capstone_sams/global-widgets/buttons/RadioTileButton.dart';
 import 'package:capstone_sams/global-widgets/buttons/FormSubmitButton.dart';
@@ -13,7 +11,6 @@ import 'package:capstone_sams/global-widgets/snackbars/Snackbars.dart';
 import 'package:capstone_sams/global-widgets/text-fields/Textfields.dart';
 import 'package:capstone_sams/global-widgets/texts/FormSectionTitleWidget.dart';
 import 'package:capstone_sams/global-widgets/texts/FormTitleWidget.dart';
-import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/ContactPersonModel.dart';
 import 'package:capstone_sams/models/MedicalRecordModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
@@ -23,8 +20,6 @@ import 'package:capstone_sams/providers/MedicalRecordProvider.dart';
 import 'package:capstone_sams/providers/PatientProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/EhrListScreen.dart';
 import 'package:capstone_sams/global-widgets/dropdown/MultiSelect.dart';
-import 'package:dio/dio.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -51,7 +46,6 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
   final _contactInfo = ContactPerson();
 
   var incompleteInputs = dangerSnackbar('${Strings.incompleteInputs}');
-  var failedRegisterPatient = dangerSnackbar('${Strings.dangerAdd} patient.');
   var successfulRegisterPatient =
       successSnackbar('${Strings.successfulAdd} patient.');
 
@@ -74,15 +68,14 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
   bool _isIllnessInvalid = false;
   bool _isGenderInvalid = false;
   bool _isBirthdateInvalid = false;
-  bool _isPhysicianInvalid = false;
   bool _isLoading = false;
 
-  var _account = Account(isSuperuser: false);
   late bool _autoValidate = false;
   // late int? getAccountID = 0;
   late String tokena = context.read<AccountProvider>().token!;
 
   DateTime? _birthDate;
+  final currentDate = DateTime.now();
   String? _selectedGender = '';
   List<String> statusList = [
     'Single',
@@ -143,6 +136,8 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
           ? _genInfo.phone = 'None'
           : _genInfo.phone.toString();
 
+      var age = calculateAge(currentDate, _birthDate!);
+
       _appendToTextList(otherPastDiseases, _selectedPastDiseases);
       _appendToTextList(otherFamHistory, _selectedFamHistory);
       _appendToTextList(otherAllergies, _selectedAllergy);
@@ -153,7 +148,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
         firstName: _genInfo.firstName,
         middleInitial: _genInfo.middleInitial,
         lastName: _genInfo.lastName,
-        age: _genInfo.age,
+        age: age['years'],
         gender: _selectedGender,
         patientStatus: statustValue,
         birthDate: formattedDate,
@@ -212,7 +207,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
         token,
       );
 
-      if (patientSuccess || medicalRecordSuccess || contactSuccess) {
+      if (patientSuccess == true || medicalRecordSuccess || contactSuccess) {
         int routesCount = 0;
         Navigator.pushAndRemoveUntil(
           context,
@@ -232,7 +227,8 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
       } else {
         setState(() => _isLoading = false);
 
-        ScaffoldMessenger.of(context).showSnackBar(failedRegisterPatient);
+        ScaffoldMessenger.of(context)
+            .showSnackBar(dangerSnackbar('${patientSuccess.errorMessage}'));
       }
     }
   }
@@ -351,6 +347,26 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
     }
   }
 
+  Map<String, int> calculateAge(DateTime currentDate, DateTime birthDate) {
+    int years = currentDate.year - birthDate.year;
+    int months = currentDate.month - birthDate.month;
+    int days = currentDate.day - birthDate.day;
+
+    if (months < 0 || (months == 0 && days < 0)) {
+      years--;
+      months += (months < 0 ? 12 : 0);
+    }
+
+    if (days < 0) {
+      final daysInPreviousMonth =
+          DateTime(currentDate.year, currentDate.month - 1, 0).day;
+      days += daysInPreviousMonth;
+      months--;
+    }
+
+    return {'years': years, 'months': months, 'days': days};
+  }
+
   late String statustValue = statusList.first;
 
   @override
@@ -369,6 +385,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
   @override
   Widget build(BuildContext context) {
     return FormTemplate(
+      onpressed: () => Navigator.pop(context),
       column: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -455,17 +472,48 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
               SizedBox(height: Sizing.formSpacing),
               Row(
                 children: <Widget>[
-                  Flexible(
-                    child: FormTextField(
-                      onchanged: (value) {
-                        _genInfo.age = int.tryParse(value);
-                      },
-                      labeltext: 'Age*',
-                      validator: Strings.requiredField,
-                      type: TextInputType.number,
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text(
+                        'Status*',
+                        style: TextStyle(
+                          color: Pallete.greyColor,
+                        ),
+                      ),
+                      Flexible(
+                        child: DropdownMenu<String>(
+                          hintText: 'Status*',
+                          initialSelection: statustValue,
+                          onSelected: (String? value) {
+                            setState(() {
+                              statustValue = value!;
+                            });
+                          },
+                          dropdownMenuEntries: statusList
+                              .map<DropdownMenuEntry<String>>((String value) {
+                            return DropdownMenuEntry<String>(
+                              value: value,
+                              label: value,
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(width: Sizing.formSpacing),
+                  // Flexible(
+                  //   child: FormTextField(
+                  //     onchanged: (value) {
+                  //       _genInfo.age = int.tryParse(value);
+                  //     },
+                  //     labeltext: 'Age*',
+                  //     validator: Strings.requiredField,
+                  //     type: TextInputType.number,
+                  //   ),
+                  // ),
+                  // SizedBox(width: Sizing.formSpacing),
                   Flexible(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -507,36 +555,6 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                         ),
                         // if (_selectedGender == null) Text('Select a gender'),
                       ],
-                    ),
-                  ),
-                ],
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Text(
-                    'Status*',
-                    style: TextStyle(
-                      color: Pallete.greyColor,
-                    ),
-                  ),
-                  Flexible(
-                    child: DropdownMenu<String>(
-                      hintText: 'Status*',
-                      initialSelection: statustValue,
-                      onSelected: (String? value) {
-                        setState(() {
-                          statustValue = value!;
-                        });
-                      },
-                      dropdownMenuEntries: statusList
-                          .map<DropdownMenuEntry<String>>((String value) {
-                        return DropdownMenuEntry<String>(
-                          value: value,
-                          label: value,
-                        );
-                      }).toList(),
                     ),
                   ),
                 ],
@@ -629,7 +647,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                       onchanged: (value) {
                         _genInfo.height = double.tryParse(value);
                       },
-                      labeltext: 'Height*',
+                      labeltext: 'Height* (cm)',
                       validator: Strings.requiredField,
                       type: TextInputType.number,
                     ),
@@ -640,7 +658,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                       onchanged: (value) {
                         _genInfo.weight = double.tryParse(value);
                       },
-                      labeltext: 'Weight*',
+                      labeltext: 'Weight* (kg)',
                       validator: Strings.requiredField,
                       type: TextInputType.number,
                     ),
@@ -669,6 +687,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                         FormTextField(
                           onchanged: (value) => _genInfo.phone = value,
                           labeltext: 'Contact Number',
+                          maxlength: 11,
                           type: TextInputType.phone,
                         ),
                       ],
@@ -840,14 +859,14 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                 controller: otherIllnesses,
               ),
             SizedBox(height: Sizing.formSpacing),
-            if (_selectedGender == 'F')
-              Flexible(
-                child: FormTextField(
-                  labeltext: 'LMP (Last Menstrual Period)',
-                  type: TextInputType.text,
-                  controller: lmp,
-                ),
-              ),
+            // if (_selectedGender == 'F')
+            //   Flexible(
+            //     child: FormTextField(
+            //       labeltext: 'LMP (Last Menstrual Period)',
+            //       type: TextInputType.text,
+            //       controller: lmp,
+            //     ),
+            //   ),
           ],
         ),
       ],
@@ -881,6 +900,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                 child: FormTextField(
                   onchanged: (value) => _contactInfo.phone = value,
                   labeltext: 'Contact Number*',
+                  maxlength: 11,
                   validator: Strings.requiredField,
                   type: TextInputType.phone,
                 ),

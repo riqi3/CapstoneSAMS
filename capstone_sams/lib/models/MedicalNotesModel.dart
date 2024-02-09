@@ -4,6 +4,7 @@ class Todo {
   String content;
   int account;
   bool isDone;
+  bool? isDeleted;
 
   Todo({
     required this.noteNum,
@@ -11,6 +12,7 @@ class Todo {
     required this.content,
     required this.account,
     this.isDone = false,
+    this.isDeleted,
   });
 
   Map<String, dynamic> toJson() {
@@ -20,6 +22,7 @@ class Todo {
       'content': content,
       'isDone': isDone,
       'account': account,
+      'isDeleted': isDeleted,
     };
   }
 
@@ -30,6 +33,7 @@ class Todo {
       content: json['content'],
       isDone: json['isDone'],
       account: json['account'],
+      isDeleted: json['isDeleted'],
     );
   }
 }

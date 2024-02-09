@@ -1,7 +1,11 @@
 //dynamic appbar
+import 'package:capstone_sams/global-widgets/forms/PatientRegistrationForm.dart';
+import 'package:capstone_sams/global-widgets/pop-menu-buttons/FormCreationPopup.dart';
+import 'package:capstone_sams/global-widgets/pop-menu-buttons/pop-menu-item/PopMenuItemTemplate.dart';
 import 'package:capstone_sams/global-widgets/search-bar/widgets/SearchBarWidget.dart';
+import 'package:capstone_sams/screens/medical_notes/MedicalNotesScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart'; 
 import '../constants/theme/pallete.dart';
 import '../constants/theme/sizing.dart';
 
@@ -26,16 +30,12 @@ class SearchAppBar extends StatelessWidget {
           size: 30,
         ),
         backgroundColor: backgroundColor,
-        // elevation: 8,
-        // shadowColor: Pallete.greyColor,
         leading: Padding(
           padding: const EdgeInsets.only(
             left: 20.0,
           ),
           child: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+            onPressed: () => Navigator.pop(context),
             icon: FaIcon(
               FontAwesomeIcons.arrowLeft,
               color: iconColorLeading,
@@ -46,7 +46,9 @@ class SearchAppBar extends StatelessWidget {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SearchBarWidget(),
+            Expanded(child: SearchBarWidget()),
+            SizedBox(width: Sizing.sectionSymmPadding),
+            FormCreationPopup(),
           ],
         ),
         bottom: bottom,

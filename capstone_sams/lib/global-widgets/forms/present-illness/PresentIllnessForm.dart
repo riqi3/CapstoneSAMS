@@ -12,28 +12,27 @@ import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/HealthCheckProvider.dart';
 import 'package:capstone_sams/providers/PresentIllnessProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/PatientTabsScreen.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/present-illness-history/HistoryPresentIllnessScreen.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/order-entry/CpoeAnalyzeScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
-import 'healthcheckscreen.dart';
+import '../healthcheckscreen.dart';
 
 // ignore: must_be_immutable
-class PresentMedHistoryForm extends StatefulWidget {
+class PresentIllnessForm extends StatefulWidget {
   Patient patient;
-  PresentMedHistoryForm({
+  PresentIllnessForm({
     Key? key,
     required this.patient,
   }) : super(key: key);
 
   @override
-  State<PresentMedHistoryForm> createState() => _PresentMedHistoryFormState();
+  State<PresentIllnessForm> createState() => _PresentMedHistoryFormState();
 }
 
-class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
+class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
   final _presIllnessInfoFormKey = GlobalKey<FormState>();
   final _presIllnessInfo = PresentIllness();
   final DateTime? createdAt = DateTime.now();
@@ -58,7 +57,7 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
       setState(() => _isLoading = false);
 
       ScaffoldMessenger.of(context).showSnackBar(incompleteInputs);
- 
+
       return;
     } else {
       // String getDate = DateFormat.yMMMd('en_US').format(createdAt as DateTime);
@@ -75,7 +74,7 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
         diagnosis: _presIllnessInfo.diagnosis,
         treatment: _presIllnessInfo.treatment,
         created_at: formattedDate,
-        updated_at: formattedDate,
+        // updated_at: formattedDate,
         patient: widget.patient.patientID,
       );
 
@@ -105,8 +104,8 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
             }
             return true;
           },
-        ); 
-        
+        );
+
         ScaffoldMessenger.of(context).showSnackBar(successfulCreatedComplaint);
       } else {
         setState(() => _isLoading = false);
@@ -119,6 +118,7 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
   @override
   Widget build(BuildContext context) {
     return FormTemplate(
+      onpressed: () => Navigator.pop(context),
       column: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -257,32 +257,45 @@ class _PresentMedHistoryFormState extends State<PresentMedHistoryForm> {
         ),
         content: Column(
           children: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return ChangeNotifierProvider<HealthCheckProvider>(
-                        create: (context) => HealthCheckProvider(),
-                        child: HealthCheckScreen(),
-                      );
-                    },
-                  ),
-                );
-              },
-              child: Text('Evaluation'),
+            Row(
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return ChangeNotifierProvider<HealthCheckProvider>(
+                            create: (context) => HealthCheckProvider(),
+                            child: HealthCheckScreen(),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                  child: Text('EDP'),
+                ),
+                SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return CpoeAnalyzeScreen();
+                        },
+                      ),
+                    );
+                  },
+                  child: Text('SDP'),
+                ),
+              ],
             ),
-            
-            
             FormTextField(
-onchanged: (value) => _presIllnessInfo.illnessName = value,
-labeltext: 'Illness Name*',
-validator: Strings.requiredField,
-type: TextInputType.text,
-),
-SizedBox(height: Sizing.sectionSymmPadding),
-            
-            
+              onchanged: (value) => _presIllnessInfo.illnessName = value,
+              labeltext: 'Illness Name*',
+              validator: Strings.requiredField,
+              type: TextInputType.text,
+            ),
+            SizedBox(height: Sizing.sectionSymmPadding),
             FormTextField(
               onchanged: (value) => _presIllnessInfo.diagnosis = value,
               labeltext: '',

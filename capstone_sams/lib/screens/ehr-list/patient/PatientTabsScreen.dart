@@ -1,9 +1,7 @@
-import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
-import 'package:capstone_sams/global-widgets/forms/PresentMedHistoryForm.dart';
+import 'package:capstone_sams/global-widgets/forms/present-illness/PresentIllnessForm.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/present-illness-history/HistoryPresentIllnessScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/past-med-history/PastMedicalHistoryScreen.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/treatment/Treatment.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../constants/theme/sizing.dart';
@@ -12,10 +10,11 @@ import 'health-record/HealthRecordScreen.dart';
 
 class PatientTabsScreen extends StatefulWidget {
   final Patient patient;
-  final GlobalKey<_PatientTabsScreenState>? patientTabsScreenKey; // Add this line
+  final GlobalKey<_PatientTabsScreenState>?
+      patientTabsScreenKey; // Add this line
 
   // final int? index;
-const PatientTabsScreen({
+  const PatientTabsScreen({
     Key? key,
     required this.patient,
     this.patientTabsScreenKey, // Add this line
@@ -29,7 +28,6 @@ const PatientTabsScreen({
   @override
   State<PatientTabsScreen> createState() => _PatientTabsScreenState();
 }
- 
 
 class _PatientTabsScreenState extends State<PatientTabsScreen>
     with SingleTickerProviderStateMixin {
@@ -78,7 +76,7 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
         onPressed: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => PresentMedHistoryForm(
+            builder: (context) => PresentIllnessForm(
               patient: widget.patient,
             ),
           ),

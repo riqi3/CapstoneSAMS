@@ -1,4 +1,3 @@
-import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:flutter/material.dart';
 import '../../constants/theme/pallete.dart';
 
@@ -117,15 +116,17 @@ class FormTextField extends StatefulWidget {
   final String? validator;
   final TextEditingController? controller;
   final TextInputType type;
+  final String? initialvalue;
   final int? maxlength;
   final int? maxlines;
   final String? countertext;
-  late final dynamic? onchanged;
+  late final dynamic onchanged;
 
   FormTextField({
     super.key,
     required this.labeltext,
     required this.type,
+    this.initialvalue,
     this.onchanged,
     this.controller,
     this.validator,
@@ -142,6 +143,7 @@ class _FormTextFieldState extends State<FormTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      initialValue: widget.initialvalue,
       decoration: InputDecoration(
         alignLabelWithHint: true,
         labelText: '${widget.labeltext}',
@@ -162,14 +164,7 @@ class _FormTextFieldState extends State<FormTextField> {
       controller: widget.controller,
       onChanged: (value) {
         widget.onchanged?.call(value);
-      },
-      // onSaved: (value) {
-      //   if (widget.onsaved != null) {
-      //     widget.onsaved!(value);
-      //   } else {
-      //     widget.onsaved = value;
-      //   }
-      // },
+      }, 
     );
   }
 }

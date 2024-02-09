@@ -1,21 +1,15 @@
-import 'package:capstone_sams/constants/Strings.dart';
 import 'package:capstone_sams/global-widgets/cards/CardSectionInfoWidget.dart';
 import 'package:capstone_sams/global-widgets/cards/CardTemplate.dart';
 import 'package:capstone_sams/global-widgets/cards/CardTitleWidget.dart';
 import 'package:capstone_sams/global-widgets/loading-indicator/CardContentLoading.dart';
-import 'package:capstone_sams/global-widgets/separators/DividerWidget.dart';
 import 'package:capstone_sams/global-widgets/cards/CardSectionTitleWidget.dart';
+import 'package:capstone_sams/global-widgets/texts/RichTextTemplate.dart';
 import 'package:capstone_sams/global-widgets/texts/TitleValueText.dart';
-import 'package:capstone_sams/models/ContactPersonModel.dart';
 import 'package:capstone_sams/models/MedicalRecordModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
-import 'package:capstone_sams/providers/ContactPersonProvider.dart';
 import 'package:capstone_sams/providers/MedicalRecordProvider.dart';
-import 'package:capstone_sams/providers/PatientProvider.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import '../../../../../../constants/theme/pallete.dart';
 import '../../../../../../constants/theme/sizing.dart';
 import '../../../../../../models/PatientModel.dart';
 
@@ -30,6 +24,12 @@ class PastIllnesInfoCard extends StatefulWidget {
 class _PastIllnesInfoCardState extends State<PastIllnesInfoCard> {
   late Stream<List<MedicalRecord>> medicalRecord;
   late String token = context.read<AccountProvider>().token!;
+
+  String removeBracket(List<dynamic>? lista) {
+    var list = lista.toString();
+    String replace = list.replaceAll(RegExp(r'[\[\]]'), '');
+    return replace;
+  }
 
   @override
   void initState() {
@@ -68,60 +68,37 @@ class _PastIllnesInfoCardState extends State<PastIllnesInfoCard> {
         } else {
           final MedicalRecord medicalRecord = snapshot.data!;
 
-          return SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            scrollDirection: Axis.horizontal,
+          return Container(
+            width: MediaQuery.of(context).size.width + 10,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  children: [
-                    if (widget.patient.gender == 'F')
-                      Text('${medicalRecord.lastMensPeriod}'),
-                    Text(
-                      '${medicalRecord.allergies}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Sizing.header5,
-                      ),
-                    ),
-                  ],
+              children: [
+                RichTextTemplate(
+                  title: 'Past Diseases: ',
+                  content: '${removeBracket(medicalRecord.pastDiseases)}',
                 ),
-                Table(
-                  columnWidths: <int, TableColumnWidth>{
-                    0: FixedColumnWidth(Sizing.columnWidth4),
-                  },
-                  children: [
-                    TableRow(
-                      children: <Widget>[
-                        TitleValueText(
-                          title: 'Contact No#: ',
-                          value: '${medicalRecord.familyHistory}',
-                        ),
-                      ],
-                    ),
-                  ],
+                SizedBox(height: Sizing.formSpacing),
+                RichTextTemplate(
+                  title: 'Family History: ',
+                  content: '${removeBracket(medicalRecord.familyHistory)}',
                 ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Address: ',
-                          style: TextStyle(fontWeight: FontWeight.w500),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width / 1,
-                          child: Text(
-                            '${medicalRecord.illnesses}',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                SizedBox(height: Sizing.formSpacing),
+                RichTextTemplate(
+                  title: 'Allergies: ',
+                  content: '${removeBracket(medicalRecord.allergies)}',
                 ),
+                SizedBox(height: Sizing.formSpacing),
+                RichTextTemplate(
+                  title: 'Illnesses: ',
+                  content: '${removeBracket(medicalRecord.illnesses)}',
+                ),
+                if (widget.patient.gender == 'F')
+                  RichTextTemplate(
+                    title: 'Last Menstrual Period: ',
+                    content: medicalRecord.lastMensPeriod == ''
+                        ? 'None'
+                        : '${medicalRecord.lastMensPeriod}',
+                  ),
               ],
             ),
           );

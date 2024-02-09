@@ -11,7 +11,7 @@ import '../../../constants/theme/pallete.dart';
 import '../../../constants/theme/sizing.dart';
 
 class NotesSection extends StatelessWidget {
-  const NotesSection({
+    NotesSection({
     Key? key,
     required this.title,
     required this.press,
@@ -19,7 +19,7 @@ class NotesSection extends StatelessWidget {
   }) : super(key: key);
 
   final String title;
-  final VoidCallback press;
+  late final dynamic press;
   final List<Todo> todosPreview;
 
   @override

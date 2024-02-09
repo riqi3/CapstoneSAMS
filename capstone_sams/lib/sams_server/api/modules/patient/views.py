@@ -31,7 +31,7 @@ class PatientView(viewsets.ModelViewSet):
             patient_data = json.loads(request.body) 
             studentNumber = patient_data['studNumber']
             if studentNumber and Patient.objects.filter(studNumber=studentNumber):
-                return Response({"message": "Patient with this student number already exists."}, status=status.HTTP_400_BAD_REQUEST)
+                return Response("Patient with this student number already exists.", status=status.HTTP_400_BAD_REQUEST)
             patient = Patient.objects.create(
                 patientID=patient_data['patientID'], 
                 firstName=patient_data['firstName'],
@@ -144,15 +144,16 @@ class PatientView(viewsets.ModelViewSet):
         except Exception as e:
             return Response({"message": "Failed to update patient.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST) 
     
-    @api_view(['DELETE'])
+    @api_view(['POST'])
     # @permission_classes([IsAuthenticated])
     def delete_patient(request, patientID):
         try:
             patient = Patient.objects.get(pk=patientID)
-            data = json.loads(request)
+            data = json.loads(request.body)
             accountID = data['accountID']
             patient.isDeleted = True
-            account = Account.object.get(pk=accountID)
+            patient.save()
+            account = Account.objects.get(pk=accountID)
             data_log = Data_Log.objects.create(
                 event = f"{account.username} deleted patient id {patient.patientID}",
                 type = "User Soft Delete Patient Data",
@@ -305,35 +306,56 @@ class PresentIllnessView(viewsets.ViewSet):
             return Response({"message": "Failed to create complaint.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
     @api_view(['PUT'])
-    def update_complaint(request, illnessID):
+    def update_complaint(request, illnessID, accountID):
         try:
             present_illness = Present_Illness.objects.get(pk = illnessID)
             illness_data = json.loads(request.body)
-            present_illness.complaint = illness_data['illnessName'],
-            present_illness.complaint = illness_data['complain']
+            present_illness.illnessName = illness_data['illnessName']
+            present_illness.complaint = illness_data['complaint']
             present_illness.findings = illness_data['findings']
             present_illness.diagnosis = illness_data['diagnosis']
             present_illness.treatment = illness_data['treatment']
             present_illness.created_at = illness_data['created_at']
-            present_illness.updated_at = illness_data['updated_at']
+            present_illness.updated_at = illness_data['updated_at'] 
             present_illness.save()
-            accountID = present_illness['account']
-            account = Account.object.get(pk=accountID)
+            account = Account.objects.get(pk=accountID) 
             return Response({"message": "Complaint updated successfully."}, status=status.HTTP_200_OK)
         except Present_Illness.DoesNotExist:
             return Response({"message": "Complaint does not exist."}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"message": "Failed to update complaint.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        
-    @api_view(['DELETE'])
+
+    # @api_view(['POST'])
+    # # @permission_classes([IsAuthenticated])
+    # def delete_complaint(request):
+    #     try:
+    #         data = json.loads(request)
+    #         illnessID = data['illnessID']
+    #         accountID = data['accountID']
+    #         complaint = Present_Illness.objects.get(pk=illnessID)
+    #         complaint.isDeleted = True
+    #         complaint.save()
+    #         account = Account.object.get(pk=accountID)
+    #         data_log = Data_Log.objects.create(
+    #             event = f"{account.username} deleted complaint id {complaint.illnessID}",
+    #             type = "User Soft Delete Complaint Data",
+    #             account = account
+    #         )
+    #         return Response({"message": "Complaint deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+    #     except Exception as e:
+    #         return Response({"message": "Failed to delete complaint.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    @api_view(['POST'])
     # @permission_classes([IsAuthenticated])
-    def delete_complaint(request, illnessID):
+    def delete_complaint(request):
         try:
-            complaint = Present_Illness.objects.get(pk=illnessID)
-            data = json.loads(request)
+            data = json.loads(request.body)
+            illnessID = data['illnessID']
             accountID = data['accountID']
+            complaint = Present_Illness.objects.get(pk=illnessID)
             complaint.isDeleted = True
-            account = Account.object.get(pk=accountID)
+            complaint.save()
+            account = Account.objects.get(pk=accountID)
             data_log = Data_Log.objects.create(
                 event = f"{account.username} deleted complaint id {complaint.illnessID}",
                 type = "User Soft Delete Complaint Data",

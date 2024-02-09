@@ -270,12 +270,13 @@ class PersonalNotesView(viewsets.ModelViewSet):
     number.
     Certain to exception handlers were coded to ensure continued operations.
     '''
-    @api_view(['DELETE'])
-    @permission_classes([IsAuthenticated])
+    @api_view(['POST'])
+    # @permission_classes([IsAuthenticated])
     def delete_personal_note(request, noteNum):
         try:
             note = Personal_Note.objects.get(noteNum = noteNum)
             note.isDeleted = True
+            note.save()
             data_log = Data_Log.objects.create(
                 event = f"{note.account.username} deleted personal note code {noteNum}",
                 type = "User Deleted Personal Note",

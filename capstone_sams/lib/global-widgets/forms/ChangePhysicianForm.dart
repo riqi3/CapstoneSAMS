@@ -2,9 +2,6 @@ import 'package:capstone_sams/constants/Env.dart';
 import 'package:capstone_sams/constants/Strings.dart';
 import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/constants/theme/sizing.dart';
-import 'package:capstone_sams/declare/ValueDeclaration.dart';
-import 'package:capstone_sams/global-widgets/SearchAppBar.dart';
-import 'package:capstone_sams/global-widgets/TitleAppBar.dart';
 import 'package:capstone_sams/global-widgets/buttons/CancelButton.dart';
 import 'package:capstone_sams/global-widgets/buttons/FormSubmitButton.dart';
 import 'package:capstone_sams/global-widgets/forms/FormTemplate.dart';
@@ -49,6 +46,7 @@ class _EditPhysicianScreenState extends State<EditPhysicianScreen> {
   @override
   Widget build(BuildContext context) {
     return FormTemplate(
+      onpressed: (){},
       column: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
