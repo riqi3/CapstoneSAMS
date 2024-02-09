@@ -5,7 +5,7 @@ import '../../../constants/theme/pallete.dart';
 import '../../../constants/theme/sizing.dart';
 
 class EHRSection extends StatelessWidget {
-   EHRSection({
+  EHRSection({
     super.key,
     required this.title,
     required this.press,
@@ -53,7 +53,8 @@ class EHRSection extends StatelessWidget {
         GestureDetector(
           onTap: press,
           child: Padding(
-            padding: const EdgeInsets.all(Sizing.sectionSymmPadding),
+            padding: const EdgeInsets.symmetric(
+                horizontal: Sizing.sectionSymmPadding),
             child: Card(
               elevation: Sizing.cardElevation,
               shape: RoundedRectangleBorder(
@@ -63,7 +64,7 @@ class EHRSection extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: Sizing.sectionSymmPadding * 1.5,
-                  vertical: Sizing.sectionSymmPadding * 2,
+                  vertical: Sizing.sectionSymmPadding * 1.5,
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
