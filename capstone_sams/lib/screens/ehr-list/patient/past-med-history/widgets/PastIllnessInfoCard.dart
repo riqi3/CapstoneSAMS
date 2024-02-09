@@ -25,6 +25,12 @@ class _PastIllnesInfoCardState extends State<PastIllnesInfoCard> {
   late Stream<List<MedicalRecord>> medicalRecord;
   late String token = context.read<AccountProvider>().token!;
 
+  String removeBracket(List<dynamic>? lista) {
+    var list = lista.toString();
+    String replace = list.replaceAll(RegExp(r'[\[\]]'), '');
+    return replace;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -72,24 +78,24 @@ class _PastIllnesInfoCardState extends State<PastIllnesInfoCard> {
                 children: [
                   RichTextTemplate(
                     title: 'Past Diseases: ',
-                    content: '${medicalRecord.pastDiseases}',
+                    content: '${removeBracket(medicalRecord.pastDiseases)}',
                   ),
                   SizedBox(height: Sizing.formSpacing),
                   RichTextTemplate(
                     title: 'Family History: ',
-                    content: '${medicalRecord.familyHistory}',
+                    content: '${removeBracket(medicalRecord.familyHistory)}',
                   ),
                   SizedBox(height: Sizing.formSpacing),
                   RichTextTemplate(
                     title: 'Allergies: ',
-                    content: '${medicalRecord.allergies}',
+                    content: '${removeBracket(medicalRecord.allergies)}',
                   ),
                   SizedBox(height: Sizing.formSpacing),
                   RichTextTemplate(
                     title: 'Illnesses: ',
-                    content: '${medicalRecord.illnesses}',
+                    content: '${removeBracket(medicalRecord.illnesses)}',
                   ),
-                  LMPData(medicalRecord),
+                  if (widget.patient.gender == 'F') LMPData(medicalRecord),
                 ],
               ),
             ),
@@ -174,12 +180,12 @@ class _PastIllnesInfoCardState extends State<PastIllnesInfoCard> {
   Row LMPData(MedicalRecord medicalRecord) {
     return Row(
       children: [
+        SizedBox(height: Sizing.formSpacing * 3),
         Text(
           'Last Menstrual Period: ',
           style: TextStyle(fontWeight: FontWeight.w500),
         ),
-        if (widget.patient.gender == 'F')
-          Text('${medicalRecord.lastMensPeriod}'),
+        Text('${medicalRecord.lastMensPeriod}'),
       ],
     );
   }

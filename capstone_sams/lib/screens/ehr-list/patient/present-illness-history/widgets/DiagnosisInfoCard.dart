@@ -318,23 +318,21 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 1.0,
-        minChildSize: 0.5,
-        maxChildSize: 1.0,
+        initialChildSize: .85,
+        minChildSize: .2,
+        maxChildSize: 1,
         shouldCloseOnMinExtent: true,
-        expand: true,
         snap: true,
         builder: (BuildContext context, ScrollController scrollController) {
-          return SingleChildScrollView(
-            controller: scrollController,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(Sizing.borderRadius),
+          return Container(
+            decoration: BoxDecoration(
+              color: Pallete.whiteColor,
+              borderRadius: BorderRadius.only(
                   topRight: Radius.circular(Sizing.borderRadius),
-                ),
-              ),
+                  topLeft: Radius.circular(Sizing.borderRadius)),
+            ),
+            child: SingleChildScrollView(
+              controller: scrollController,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
