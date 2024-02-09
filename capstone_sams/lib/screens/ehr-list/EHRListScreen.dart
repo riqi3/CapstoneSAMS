@@ -97,10 +97,6 @@ class _EhrListScreenState extends State<EhrListScreen> {
                   }
                 },
               );
-
-              // Center(
-              //   child: const CircularProgressIndicator(),
-              // );
             } else if (snapshot.data!.isEmpty) {
               return Center(
                 child: Text(Strings.noPatientResults),

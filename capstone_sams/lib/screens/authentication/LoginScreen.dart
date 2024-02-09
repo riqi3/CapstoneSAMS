@@ -1,5 +1,5 @@
 import 'package:capstone_sams/global-widgets/buttons/FormSubmitButton.dart';
-import 'package:flutter/material.dart'; 
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../constants/theme/pallete.dart';
 import '../../constants/theme/sizing.dart';
@@ -68,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
       profile.isAuthentificated = true;
       usernameController.clear();
       passwordController.clear();
- 
+
       Navigator.pushNamed(context, '/home');
       // Navigator.pushReplacement(
       //   context,
