@@ -7,6 +7,7 @@ class FormSubmitButton extends StatelessWidget {
   String title;
   IconData icon;
   bool isLoading;
+  double? buttonsize;
   late final dynamic onpressed;
   FormSubmitButton({
     super.key,
@@ -14,13 +15,14 @@ class FormSubmitButton extends StatelessWidget {
     required this.icon,
     required this.isLoading,
     required this.onpressed,
+    this.buttonsize,
   });
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
       onPressed: onpressed,
-      style: ElevatedButton.styleFrom(
+      style: ElevatedButton.styleFrom( 
         backgroundColor: Pallete.mainColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(Sizing.borderRadius),

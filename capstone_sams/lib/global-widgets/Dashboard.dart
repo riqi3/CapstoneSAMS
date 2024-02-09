@@ -7,7 +7,7 @@ import 'package:capstone_sams/screens/home/HomeScreen.dart';
 import 'package:capstone_sams/screens/medical_notes/MedicalNotesScreen.dart';
 
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart'; 
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../constants/theme/sizing.dart';
@@ -34,9 +34,9 @@ class _DashboardState extends State<Dashboard> {
     var success = await context.read<AccountProvider>().logout();
 
     if (success) {
-      context.read<TodosProvider>().setEmpty(); 
+      context.read<TodosProvider>().setEmpty();
       Navigator.pushNamedAndRemoveUntil(
-          context, "/", (Route<dynamic> route) => false); 
+          context, "/", (Route<dynamic> route) => false);
     }
   }
 
@@ -92,7 +92,7 @@ class _DashboardState extends State<Dashboard> {
             },
           ),
           ListTile(
-            leading: FaIcon(FontAwesomeIcons.solidAddressCard),
+            leading: FaIcon(FontAwesomeIcons.solidClipboard),
             title: const Text('Health Records'),
             onTap: () {
               if (ModalRoute.of(context)!.settings.name != '/ehr_list') {

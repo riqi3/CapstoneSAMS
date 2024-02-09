@@ -1,5 +1,6 @@
 //dynamic appbar
 import 'package:capstone_sams/global-widgets/forms/PatientRegistrationForm.dart';
+import 'package:capstone_sams/global-widgets/pop-menu-buttons/FormCreationPopup.dart';
 import 'package:capstone_sams/global-widgets/pop-menu-buttons/pop-menu-item/PopMenuItemTemplate.dart';
 import 'package:capstone_sams/global-widgets/search-bar/widgets/SearchBarWidget.dart';
 import 'package:capstone_sams/screens/medical_notes/MedicalNotesScreen.dart';
@@ -47,46 +48,7 @@ class SearchAppBar extends StatelessWidget {
           children: <Widget>[
             Expanded(child: SearchBarWidget()),
             SizedBox(width: Sizing.sectionSymmPadding),
-            PopupMenuButton(
-              icon: FaIcon(
-                FontAwesomeIcons.circlePlus,
-                size: Sizing.iconAppBarSize,
-              ),
-              itemBuilder: ((context) => [
-                    PopupMenuItem(
-                      child: PopMenuItemTemplate(
-                        icon: FontAwesomeIcons.personCirclePlus,
-                        color: Pallete.infoColor,
-                        size: Sizing.sectionSymmPadding,
-                        title: 'Register Patient',
-                        ontap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => PatientRegistrationForm(),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    PopupMenuItem(
-                      child: PopMenuItemTemplate(
-                        icon: FontAwesomeIcons.pen,
-                        color: Pallete.infoColor,
-                        size: Sizing.sectionSymmPadding,
-                        title: 'Notes',
-                        ontap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => MedicalNotes(),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ]),
-            ),
+            FormCreationPopup(),
           ],
         ),
         bottom: bottom,

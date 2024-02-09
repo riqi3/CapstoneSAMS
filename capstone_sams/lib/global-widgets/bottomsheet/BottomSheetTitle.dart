@@ -1,13 +1,55 @@
 import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class BottomSheetTitle extends StatelessWidget {
+// ignore: must_be_immutable
+class BottomSheetTitle extends StatefulWidget {
   final String title;
-  const BottomSheetTitle({
+  bool? owner;
+  Widget popup;
+  BottomSheetTitle({
     super.key,
     required this.title,
+    this.owner,
+    required this.popup,
   });
+
+  @override
+  State<BottomSheetTitle> createState() => _BottomSheetTitleState();
+}
+
+class _BottomSheetTitleState extends State<BottomSheetTitle> {
+  Widget diagnosisOwner(owner) {
+    if (owner == false) {
+      return Text(
+        widget.title,
+        overflow: TextOverflow.ellipsis,
+        maxLines: 2,
+        style: TextStyle(
+          color: Pallete.whiteColor,
+          fontSize: Sizing.header3,
+          fontWeight: FontWeight.w600,
+        ),
+      );
+    }
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          widget.title,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 2,
+          style: TextStyle(
+            color: Pallete.whiteColor,
+            fontSize: Sizing.header3,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        widget.popup,
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,15 +64,17 @@ class BottomSheetTitle extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: Sizing.sectionSymmPadding),
       width: MediaQuery.of(context).size.width,
       height: Sizing.cardContainerHeight,
-      child: Text(
-        title,
-        overflow: TextOverflow.ellipsis,
-        maxLines: 2,
-        style: TextStyle(
-            color: Pallete.whiteColor,
-            fontSize: Sizing.header3,
-            fontWeight: FontWeight.w600),
-      ),
+      child: diagnosisOwner(widget.owner),
+
+      // Text(
+      //   widget.title,
+      //   overflow: TextOverflow.ellipsis,
+      //   maxLines: 2,
+      //   style: TextStyle(
+      //       color: Pallete.whiteColor,
+      //       fontSize: Sizing.header3,
+      //       fontWeight: FontWeight.w600),
+      // ),
     );
   }
 }

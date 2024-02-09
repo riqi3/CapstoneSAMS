@@ -10,6 +10,7 @@ import 'package:capstone_sams/global-widgets/loading-indicator/DiagnosisCardLoad
 import 'package:capstone_sams/global-widgets/pop-menu-buttons/pop-menu-item/PopMenuItemTemplate.dart';
 import 'package:capstone_sams/global-widgets/snackbars/Snackbars.dart';
 import 'package:capstone_sams/global-widgets/texts/NoDataTextWidget.dart';
+import 'package:capstone_sams/global-widgets/texts/RichTextTemplate.dart';
 import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/models/PresentIllness.dart';
@@ -58,7 +59,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
           SizedBox(height: Sizing.sectionSymmPadding),
           // CardSectionTitleWidget(title: "Patient's Present Illnesses"),
           CardSectionInfoWidget(
-            shader: false,
+            // shader: false,
             widget: PresentIllnessData(),
           ),
         ],
@@ -114,14 +115,12 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                     AccountProvider accountProvider =
                         Provider.of<AccountProvider>(context);
                     String middleInitial = account.middleName![0];
-                    DateTime originalDate1 =
-                        DateTime.parse(illness.created_at!);
+                    String createdAt = dateFormatter(illness);
                     // DateTime originalDate2 = DateTime.parse(
                     //     illness.updated_at == null
                     //         ? '2000-01-06 11:00:00.000000+08'
                     //         : illness.updated_at!);
-                    String createdOn =
-                        DateFormat('MMM d, y | HH:mm').format(originalDate1);
+
                     // String updatedOn =
                     //     DateFormat('MMM d, y | HH:mm').format(originalDate2);
                     return Visibility(
@@ -134,7 +133,12 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                         ),
                         child: GestureDetector(
                           onTap: () => viewIllnessMethod(
-                              context, illness, illnessIndex, account),
+                            context,
+                            illness,
+                            illnessIndex,
+                            account,
+                            accountProvider,
+                          ),
                           child: ListTile(
                             title: Row(
                               children: [
@@ -174,7 +178,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                             TextStyle(color: Pallete.greyColor),
                                       ),
                                 Text(
-                                  '${createdOn}',
+                                  '${createdAt}',
                                   style: TextStyle(color: Pallete.greyColor),
                                 ),
                                 // Visibility(
@@ -193,8 +197,12 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                     Icons.abc,
                                     color: Colors.transparent,
                                   )
-                                : popupActionWidget(illness, illnessIndex,
-                                    account, accountProvider),
+                                : popupActionWidget(
+                                    illness,
+                                    illnessIndex,
+                                    account,
+                                    accountProvider,
+                                    Pallete.greyColor),
                           ),
                         ),
                       ),
@@ -209,9 +217,20 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
     );
   }
 
-  PopupMenuButton<dynamic> popupActionWidget(PresentIllness illness,
-      String illnessIndex, Account account, AccountProvider accountProvider) {
+  String dateFormatter(PresentIllness illness) {
+    DateTime originalDate1 = DateTime.parse(illness.created_at!);
+    String createdAt = DateFormat('MMM d, y | HH:mm').format(originalDate1);
+    return createdAt;
+  }
+
+  PopupMenuButton<dynamic> popupActionWidget(
+      PresentIllness illness,
+      String illnessIndex,
+      Account account,
+      AccountProvider accountProvider,
+      Color? color) {
     return PopupMenuButton(
+      iconColor: color,
       itemBuilder: (context) => [
         PopupMenuItem(
           child: PopMenuItemTemplate(
@@ -272,7 +291,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
       accountProvider.id,
       token,
     );
-    int routesCount = 0; 
+    int routesCount = 0;
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
@@ -290,101 +309,113 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
   }
 
   void viewIllnessMethod(BuildContext context, PresentIllness illness,
-      String illnessIndex, Account account) {
+      String illnessIndex, Account account, AccountProvider accountProvider) {
     String middleInitial = account.middleName![0];
+    String createdAt = dateFormatter(illness);
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * .85,
-        decoration: new BoxDecoration(
-          color: Colors.white,
-          borderRadius: new BorderRadius.only(
-            topLeft: const Radius.circular(Sizing.borderRadius),
-            topRight: const Radius.circular(Sizing.borderRadius),
-          ),
-        ),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                bottom: Sizing.sectionSymmPadding,
-              ),
-              child: BottomSheetTitle(title: 'Dx #${illnessIndex}'),
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: .85,
+        minChildSize: .2,
+        maxChildSize: 1,
+        shouldCloseOnMinExtent: true,
+        snap: true,
+        builder: (BuildContext context, ScrollController scrollController) {
+          return Container(
+            decoration: BoxDecoration(
+              color: Pallete.whiteColor,
+              borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(Sizing.borderRadius),
+                  topLeft: Radius.circular(Sizing.borderRadius)),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: Sizing.sectionSymmPadding),
+            child: SingleChildScrollView(
+              controller: scrollController,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Chief Complaint: ',
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                      Container(
-                        // width: MediaQuery.of(context).size.width / 1.5,
-                        child: Text(
-                          '${illness.complaint}',
-                        ),
-                      ),
-                    ],
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: Sizing.sectionSymmPadding,
+                    ),
+                    child: BottomSheetTitle(
+                      owner: account.accountID != accountProvider.id
+                          ? false
+                          : true,
+                      title: 'Dx #${illnessIndex}',
+                      popup: popupActionWidget(illness, illnessIndex, account,
+                          accountProvider, Pallete.whiteColor),
+                    ),
                   ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Findings: ',
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                      Container(
-                        // width: MediaQuery.of(context).size.width / 1,
-                        child: Text(
-                          '${illness.findings}',
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: Sizing.sectionSymmPadding,
+                      right: Sizing.sectionSymmPadding,
+                      bottom: Sizing.sectionSymmPadding * 4,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          '${illness.illnessName!.toUpperCase()}',
+                          style: TextStyle(
+                            fontSize: Sizing.header4,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Diagnosis: ',
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                      Container(
-                        // width: MediaQuery.of(context).size.width / 1,
-                        child: Text(
-                          '${illness.diagnosis}',
+                        SizedBox(height: Sizing.formSpacing / 2),
+                        account.accountID == accountProvider.id
+                            ? Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      '${account.firstName} ${middleInitial}. ${account.lastName}, ${account.suffixTitle}',
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          color: Pallete.greyColor,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : Text(
+                                '${account.firstName} ${middleInitial}. ${account.lastName}, ${account.suffixTitle}',
+                                style: TextStyle(color: Pallete.greyColor),
+                              ),
+                        Text(
+                          '${createdAt}',
+                          style: TextStyle(color: Pallete.greyColor),
                         ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Treatment: ',
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                      Container(
-                        // width: MediaQuery.of(context).size.width / 1,
-                        child: Text(
-                          '${illness.treatment}',
+                        SizedBox(height: Sizing.formSpacing * 2),
+                        RichTextTemplate(
+                          title: 'Chief Complaint: ',
+                          content: '${illness.complaint}',
                         ),
-                      ),
-                    ],
+                        SizedBox(height: Sizing.formSpacing),
+                        RichTextTemplate(
+                          title: 'Findings: ',
+                          content: '${illness.findings}',
+                        ),
+                        SizedBox(height: Sizing.formSpacing),
+                        RichTextTemplate(
+                          title: 'Diagnosis: ',
+                          content: '${illness.diagnosis}',
+                        ),
+                        SizedBox(height: Sizing.formSpacing),
+                        RichTextTemplate(
+                          title: 'Treatment: ',
+                          content: '${illness.treatment}',
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

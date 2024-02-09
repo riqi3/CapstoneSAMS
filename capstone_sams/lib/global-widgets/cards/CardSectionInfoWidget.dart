@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 // ignore: must_be_immutable
 class CardSectionInfoWidget extends StatefulWidget {
   final Widget widget;
-  bool? shader;
+  // bool? shader;
   CardSectionInfoWidget({
     super.key,
     required this.widget,
-    this.shader,
+    // this.shader,
   });
 
   @override
@@ -17,20 +17,20 @@ class CardSectionInfoWidget extends StatefulWidget {
 }
 
 class _CardSectionInfoWidgetState extends State<CardSectionInfoWidget> {
-  Widget widgetEffects(shader) {
-    if (shader == false) {
-      return widget.widget;
-    }
-    return ShaderMask(
-      shaderCallback: (Rect bounds) {
-        return LinearGradient(
-          colors: [Colors.white, Colors.transparent],
-          stops: [0.95, 1],
-        ).createShader(bounds);
-      },
-      child: widget.widget,
-    );
-  }
+  // Widget widgetEffects(shader) {
+  //   if (shader == false) {
+  //     return widget.widget;
+  //   }
+  //   return ShaderMask(
+  //     shaderCallback: (Rect bounds) {
+  //       return LinearGradient(
+  //         colors: [Colors.white, Colors.transparent],
+  //         stops: [0.95, 1],
+  //       ).createShader(bounds);
+  //     },
+  //     child: widget.widget,
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +51,8 @@ class _CardSectionInfoWidgetState extends State<CardSectionInfoWidget> {
           right: Sizing.sectionSymmPadding,
           bottom: Sizing.sectionSymmPadding,
         ),
-        child: widgetEffects(widget.shader),
+        child: widget.widget,
+        // child: widgetEffects(widget.shader),
       ),
     );
   }

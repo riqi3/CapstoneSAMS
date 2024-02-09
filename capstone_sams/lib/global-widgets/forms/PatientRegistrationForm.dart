@@ -75,6 +75,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
   late String tokena = context.read<AccountProvider>().token!;
 
   DateTime? _birthDate;
+  final currentDate = DateTime.now();
   String? _selectedGender = '';
   List<String> statusList = [
     'Single',
@@ -135,6 +136,8 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
           ? _genInfo.phone = 'None'
           : _genInfo.phone.toString();
 
+      var age = calculateAge(currentDate, _birthDate!);
+
       _appendToTextList(otherPastDiseases, _selectedPastDiseases);
       _appendToTextList(otherFamHistory, _selectedFamHistory);
       _appendToTextList(otherAllergies, _selectedAllergy);
@@ -145,7 +148,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
         firstName: _genInfo.firstName,
         middleInitial: _genInfo.middleInitial,
         lastName: _genInfo.lastName,
-        age: _genInfo.age,
+        age: age['years'],
         gender: _selectedGender,
         patientStatus: statustValue,
         birthDate: formattedDate,
@@ -344,6 +347,26 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
     }
   }
 
+  Map<String, int> calculateAge(DateTime currentDate, DateTime birthDate) {
+    int years = currentDate.year - birthDate.year;
+    int months = currentDate.month - birthDate.month;
+    int days = currentDate.day - birthDate.day;
+
+    if (months < 0 || (months == 0 && days < 0)) {
+      years--;
+      months += (months < 0 ? 12 : 0);
+    }
+
+    if (days < 0) {
+      final daysInPreviousMonth =
+          DateTime(currentDate.year, currentDate.month - 1, 0).day;
+      days += daysInPreviousMonth;
+      months--;
+    }
+
+    return {'years': years, 'months': months, 'days': days};
+  }
+
   late String statustValue = statusList.first;
 
   @override
@@ -449,17 +472,48 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
               SizedBox(height: Sizing.formSpacing),
               Row(
                 children: <Widget>[
-                  Flexible(
-                    child: FormTextField(
-                      onchanged: (value) {
-                        _genInfo.age = int.tryParse(value);
-                      },
-                      labeltext: 'Age*',
-                      validator: Strings.requiredField,
-                      type: TextInputType.number,
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text(
+                        'Status*',
+                        style: TextStyle(
+                          color: Pallete.greyColor,
+                        ),
+                      ),
+                      Flexible(
+                        child: DropdownMenu<String>(
+                          hintText: 'Status*',
+                          initialSelection: statustValue,
+                          onSelected: (String? value) {
+                            setState(() {
+                              statustValue = value!;
+                            });
+                          },
+                          dropdownMenuEntries: statusList
+                              .map<DropdownMenuEntry<String>>((String value) {
+                            return DropdownMenuEntry<String>(
+                              value: value,
+                              label: value,
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(width: Sizing.formSpacing),
+                  // Flexible(
+                  //   child: FormTextField(
+                  //     onchanged: (value) {
+                  //       _genInfo.age = int.tryParse(value);
+                  //     },
+                  //     labeltext: 'Age*',
+                  //     validator: Strings.requiredField,
+                  //     type: TextInputType.number,
+                  //   ),
+                  // ),
+                  // SizedBox(width: Sizing.formSpacing),
                   Flexible(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -501,36 +555,6 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                         ),
                         // if (_selectedGender == null) Text('Select a gender'),
                       ],
-                    ),
-                  ),
-                ],
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Text(
-                    'Status*',
-                    style: TextStyle(
-                      color: Pallete.greyColor,
-                    ),
-                  ),
-                  Flexible(
-                    child: DropdownMenu<String>(
-                      hintText: 'Status*',
-                      initialSelection: statustValue,
-                      onSelected: (String? value) {
-                        setState(() {
-                          statustValue = value!;
-                        });
-                      },
-                      dropdownMenuEntries: statusList
-                          .map<DropdownMenuEntry<String>>((String value) {
-                        return DropdownMenuEntry<String>(
-                          value: value,
-                          label: value,
-                        );
-                      }).toList(),
                     ),
                   ),
                 ],
@@ -623,7 +647,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                       onchanged: (value) {
                         _genInfo.height = double.tryParse(value);
                       },
-                      labeltext: 'Height*',
+                      labeltext: 'Height* (cm)',
                       validator: Strings.requiredField,
                       type: TextInputType.number,
                     ),
@@ -634,7 +658,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                       onchanged: (value) {
                         _genInfo.weight = double.tryParse(value);
                       },
-                      labeltext: 'Weight*',
+                      labeltext: 'Weight* (kg)',
                       validator: Strings.requiredField,
                       type: TextInputType.number,
                     ),
@@ -835,14 +859,14 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                 controller: otherIllnesses,
               ),
             SizedBox(height: Sizing.formSpacing),
-            if (_selectedGender == 'F')
-              Flexible(
-                child: FormTextField(
-                  labeltext: 'LMP (Last Menstrual Period)',
-                  type: TextInputType.text,
-                  controller: lmp,
-                ),
-              ),
+            // if (_selectedGender == 'F')
+            //   Flexible(
+            //     child: FormTextField(
+            //       labeltext: 'LMP (Last Menstrual Period)',
+            //       type: TextInputType.text,
+            //       controller: lmp,
+            //     ),
+            //   ),
           ],
         ),
       ],
