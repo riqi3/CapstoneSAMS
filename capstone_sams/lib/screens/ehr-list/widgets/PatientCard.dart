@@ -60,9 +60,31 @@ class _PatientCardState extends State<PatientCard> {
     return course;
   }
 
+  Map<String, int> calculateAge(DateTime currentDate, DateTime birthDate) {
+    int years = currentDate.year - birthDate.year;
+    int months = currentDate.month - birthDate.month;
+    int days = currentDate.day - birthDate.day;
+
+    if (months < 0 || (months == 0 && days < 0)) {
+      years--;
+      months += (months < 0 ? 12 : 0);
+    }
+
+    if (days < 0) {
+      final daysInPreviousMonth =
+          DateTime(currentDate.year, currentDate.month - 1, 0).day;
+      days += daysInPreviousMonth;
+      months--;
+    }
+
+    return {'years': years, 'months': months, 'days': days};
+  }
+
   @override
   Widget build(BuildContext context) {
+    final currentDate = DateTime.now();
     DateTime originalDate1 = DateTime.parse(widget.patient.birthDate!);
+    final age = calculateAge(currentDate, originalDate1);
     String birthDate = DateFormat('MMM d, y').format(originalDate1);
 
     return GestureDetector(
@@ -155,7 +177,7 @@ class _PatientCardState extends State<PatientCard> {
                       SizedBox(width: Sizing.textSizeAppBar),
                       TitleValueText(
                         title: 'Age: ',
-                        value: '${widget.patient.age}',
+                        value: '${age['years']}y',
                       ),
                     ],
                   ),

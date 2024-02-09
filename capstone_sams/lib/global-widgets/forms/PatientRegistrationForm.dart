@@ -623,7 +623,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                       onchanged: (value) {
                         _genInfo.height = double.tryParse(value);
                       },
-                      labeltext: 'Height*',
+                      labeltext: 'Height* (cm)',
                       validator: Strings.requiredField,
                       type: TextInputType.number,
                     ),
@@ -634,7 +634,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                       onchanged: (value) {
                         _genInfo.weight = double.tryParse(value);
                       },
-                      labeltext: 'Weight*',
+                      labeltext: 'Weight* (kg)',
                       validator: Strings.requiredField,
                       type: TextInputType.number,
                     ),

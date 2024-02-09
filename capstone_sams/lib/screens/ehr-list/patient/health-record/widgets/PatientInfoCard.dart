@@ -62,8 +62,29 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
     return course;
   }
 
+  Map<String, int> calculateAge(DateTime currentDate, DateTime birthDate) {
+    int years = currentDate.year - birthDate.year;
+    int months = currentDate.month - birthDate.month;
+    int days = currentDate.day - birthDate.day;
+
+    if (months < 0 || (months == 0 && days < 0)) {
+      years--;
+      months += (months < 0 ? 12 : 0);
+    }
+
+    if (days < 0) {
+      final daysInPreviousMonth =
+          DateTime(currentDate.year, currentDate.month - 1, 0).day;
+      days += daysInPreviousMonth;
+      months--;
+    }
+
+    return {'years': years, 'months': months, 'days': days};
+  }
+
   @override
   Widget build(BuildContext context) {
+    
     ContactPersonProvider contactPersonProvider =
         Provider.of<ContactPersonProvider>(context);
     AccountProvider accountProvider = Provider.of<AccountProvider>(context);
@@ -150,139 +171,134 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
     );
   }
 
-  SingleChildScrollView GeneralInfoData(BuildContext context) {
+  Column GeneralInfoData(BuildContext context) {
+    final currentDate = DateTime.now();
     DateTime originalDate1 = DateTime.parse(widget.patient.birthDate!);
+    final age = calculateAge(currentDate, originalDate1); 
     String birthDate = DateFormat('MMM d, y').format(originalDate1);
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      scrollDirection: Axis.horizontal,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Row(
-            children: [
-              Text(
-                '${widget.patient.firstName?.toUpperCase()} ${widget.patient.middleInitial?.toUpperCase()}. ${widget.patient.lastName?.toUpperCase()}',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: Sizing.header5,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        RichTextTemplate(
+          title: '',
+          content:
+              '${widget.patient.firstName?.toUpperCase()} ${widget.patient.middleInitial?.toUpperCase()}. ${widget.patient.lastName?.toUpperCase()}',
+          fontsize: Sizing.header5,
+          fontweight: FontWeight.bold,
+        ),
+        Table(
+          columnWidths: <int, TableColumnWidth>{
+            0: FixedColumnWidth(Sizing.columnWidth4),
+            1: FixedColumnWidth(Sizing.columnWidth3),
+          },
+          children: [
+            TableRow(
+              children: <Widget>[
+                RichTextTemplate(
+                  title: 'Student No#: ',
+                  content: '${widget.patient.studNumber}',
                 ),
-              ),
-            ],
-          ),
-          Table(
-            columnWidths: <int, TableColumnWidth>{
-              0: FixedColumnWidth(Sizing.columnWidth4),
-              1: FixedColumnWidth(Sizing.columnWidth3),
-            },
-            children: [
-              TableRow(
-                children: <Widget>[
-                  RichTextTemplate(
-                    title: 'Student No#: ',
-                    content: '${widget.patient.studNumber}',
-                  ),
-                  TitleValueText(
-                    title: 'Course/Year: ',
-                    value: '${course()} ${widget.patient.yrLevel}',
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Table(
-            columnWidths: <int, TableColumnWidth>{
-              0: FixedColumnWidth(Sizing.columnWidth4),
-              1: FixedColumnWidth(Sizing.columnWidth2),
-              2: FixedColumnWidth(Sizing.columnWidth2),
-            },
-            children: [
-              TableRow(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.only(right: Sizing.formSpacing),
-                    child: TitleValueText(
-                      title: 'Birthdate: ',
-                      value: '${birthDate}',
-                    ),
-                  ),
-                  TitleValueText(
-                    title: 'Age: ',
-                    value: '${widget.patient.age}',
-                  ),
-                  TitleValueText(
-                    title: 'Sex: ',
-                    value: '${widget.patient.gender}',
-                  ),
-                ],
-              ),
-              TableRow(
-                children: <Widget>[
-                  TitleValueText(
-                    title: 'Height: ',
-                    value: '${widget.patient.height}',
-                  ),
-                  TitleValueText(
-                    title: 'Weight: ',
-                    value: '${widget.patient.weight}',
-                  ),
-                  TitleValueText(
-                    title: 'Status: ',
-                    value: '${widget.patient.patientStatus}',
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Table(
-            columnWidths: <int, TableColumnWidth>{
-              0: FixedColumnWidth(Sizing.columnWidth4),
-              1: FixedColumnWidth(Sizing.columnWidth5),
-            },
-            children: [
-              TableRow(
-                children: <Widget>[
-                  TitleValueText(
-                    title: 'Contact No#: ',
-                    value: '${widget.patient.phone}',
-                  ),
-                  RichTextTemplate(
-                    title: 'Email: ',
-                    content: '${widget.patient.email}',
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            child: RichTextTemplate(
-              title: 'Address: ',
-              content: '${widget.patient.address}',
+                TitleValueText(
+                  title: 'Course/Year: ',
+                  value: '${course()} ${widget.patient.yrLevel}',
+                ),
+              ],
             ),
+          ],
+        ),
+        Table(
+          columnWidths: <int, TableColumnWidth>{
+            0: FixedColumnWidth(Sizing.columnWidth4),
+            1: FixedColumnWidth(Sizing.columnWidth2),
+            2: FixedColumnWidth(Sizing.columnWidth2),
+          },
+          children: [
+            TableRow(
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(right: Sizing.formSpacing),
+                  child: TitleValueText(
+                    title: 'Birthdate: ',
+                    value: '${birthDate}',
+                  ),
+                ),
+                TitleValueText(
+                  title: 'Age: ',
+                  value:
+                      '${age['years']}y ${age['months']}m ${age['days']}d',
+                ),
+                TitleValueText(
+                  title: 'Sex: ',
+                  value: '${widget.patient.gender}',
+                ),
+              ],
+            ),
+            TableRow(
+              children: <Widget>[
+                TitleValueText(
+                  title: 'Height (cm): ',
+                  value: '${widget.patient.height}',
+                ),
+                TitleValueText(
+                  title: 'Weight (kg): ',
+                  value: '${widget.patient.weight}',
+                ),
+                TitleValueText(
+                  title: 'Status: ',
+                  value: '${widget.patient.patientStatus}',
+                ),
+              ],
+            ),
+          ],
+        ),
+        Table(
+          columnWidths: <int, TableColumnWidth>{
+            0: FixedColumnWidth(Sizing.columnWidth4),
+            1: FixedColumnWidth(Sizing.columnWidth3),
+          },
+          children: [
+            TableRow(
+              children: <Widget>[
+                RichTextTemplate(
+                  title: 'Email: ',
+                  content: '${widget.patient.email}',
+                ),
+                TitleValueText(
+                  title: 'Contact No#: ',
+                  value: '${widget.patient.phone}',
+                ),
+              ],
+            ),
+          ],
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width,
+          child: RichTextTemplate(
+            title: 'Address: ',
+            content: '${widget.patient.address}',
           ),
-          // Row(
-          //   crossAxisAlignment: CrossAxisAlignment.start,
-          //   children: [
-          //     Row(
-          //       crossAxisAlignment: CrossAxisAlignment.start,
-          //       children: [
-          //         Text(
-          //           'Address: ',
-          //           style: TextStyle(fontWeight: FontWeight.w500),
-          //         ),
-          //         Container(
-          //           width: MediaQuery.of(context).size.width / 1,
-          //           child: Text(
-          //             '${widget.patient.address}',
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //   ],
-          // ),
-        ],
-      ),
+        ),
+        // Row(
+        //   crossAxisAlignment: CrossAxisAlignment.start,
+        //   children: [
+        //     Row(
+        //       crossAxisAlignment: CrossAxisAlignment.start,
+        //       children: [
+        //         Text(
+        //           'Address: ',
+        //           style: TextStyle(fontWeight: FontWeight.w500),
+        //         ),
+        //         Container(
+        //           width: MediaQuery.of(context).size.width / 1,
+        //           child: Text(
+        //             '${widget.patient.address}',
+        //           ),
+        //         ),
+        //       ],
+        //     ),
+        //   ],
+        // ),
+      ],
     );
   }
 
@@ -299,47 +315,38 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
         } else {
           final ContactPerson contactPerson = snapshot.data!;
 
-          return SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            scrollDirection: Axis.horizontal,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  children: [
-                    Text(
-                      '${contactPerson.fullName?.toUpperCase()}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Sizing.header5,
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              RichTextTemplate(
+                title: '',
+                content: '${contactPerson.fullName?.toUpperCase()}',
+                fontsize: Sizing.header5,
+                fontweight: FontWeight.bold,
+              ),
+              Table(
+                columnWidths: <int, TableColumnWidth>{
+                  0: FixedColumnWidth(Sizing.columnWidth4),
+                },
+                children: [
+                  TableRow(
+                    children: <Widget>[
+                      TitleValueText(
+                        title: 'Contact No#: ',
+                        value: '${contactPerson.phone}',
                       ),
-                    ),
-                  ],
-                ),
-                Table(
-                  columnWidths: <int, TableColumnWidth>{
-                    0: FixedColumnWidth(Sizing.columnWidth4),
-                  },
-                  children: [
-                    TableRow(
-                      children: <Widget>[
-                        TitleValueText(
-                          title: 'Contact No#: ',
-                          value: '${contactPerson.phone}',
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  child: RichTextTemplate(
-                    title: 'Address: ',
-                    content: '${contactPerson.address}',
+                    ],
                   ),
+                ],
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                child: RichTextTemplate(
+                  title: 'Address: ',
+                  content: '${contactPerson.address}',
                 ),
-              ],
-            ),
+              ),
+            ],
           );
         }
       },

@@ -59,7 +59,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
           SizedBox(height: Sizing.sectionSymmPadding),
           // CardSectionTitleWidget(title: "Patient's Present Illnesses"),
           CardSectionInfoWidget(
-            shader: false,
+            // shader: false,
             widget: PresentIllnessData(),
           ),
         ],

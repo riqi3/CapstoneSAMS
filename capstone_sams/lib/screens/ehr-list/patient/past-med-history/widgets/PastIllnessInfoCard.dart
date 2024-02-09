@@ -68,125 +68,42 @@ class _PastIllnesInfoCardState extends State<PastIllnesInfoCard> {
         } else {
           final MedicalRecord medicalRecord = snapshot.data!;
 
-          return SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            scrollDirection: Axis.horizontal,
-            child: Container(
-              width: MediaQuery.of(context).size.width + 10,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+          return Container(
+            width: MediaQuery.of(context).size.width + 10,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                RichTextTemplate(
+                  title: 'Past Diseases: ',
+                  content: '${removeBracket(medicalRecord.pastDiseases)}',
+                ),
+                SizedBox(height: Sizing.formSpacing),
+                RichTextTemplate(
+                  title: 'Family History: ',
+                  content: '${removeBracket(medicalRecord.familyHistory)}',
+                ),
+                SizedBox(height: Sizing.formSpacing),
+                RichTextTemplate(
+                  title: 'Allergies: ',
+                  content: '${removeBracket(medicalRecord.allergies)}',
+                ),
+                SizedBox(height: Sizing.formSpacing),
+                RichTextTemplate(
+                  title: 'Illnesses: ',
+                  content: '${removeBracket(medicalRecord.illnesses)}',
+                ),
+                if (widget.patient.gender == 'F')
                   RichTextTemplate(
-                    title: 'Past Diseases: ',
-                    content: '${removeBracket(medicalRecord.pastDiseases)}',
+                    title: 'Last Menstrual Period: ',
+                    content: medicalRecord.lastMensPeriod == ''
+                        ? 'None'
+                        : '${medicalRecord.lastMensPeriod}',
                   ),
-                  SizedBox(height: Sizing.formSpacing),
-                  RichTextTemplate(
-                    title: 'Family History: ',
-                    content: '${removeBracket(medicalRecord.familyHistory)}',
-                  ),
-                  SizedBox(height: Sizing.formSpacing),
-                  RichTextTemplate(
-                    title: 'Allergies: ',
-                    content: '${removeBracket(medicalRecord.allergies)}',
-                  ),
-                  SizedBox(height: Sizing.formSpacing),
-                  RichTextTemplate(
-                    title: 'Illnesses: ',
-                    content: '${removeBracket(medicalRecord.illnesses)}',
-                  ),
-                  if (widget.patient.gender == 'F') LMPData(medicalRecord),
-                ],
-              ),
+              ],
             ),
           );
         }
       },
-    );
-  }
-
-  Row PastDiseasesData(BuildContext context, MedicalRecord medicalRecord) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Past Diseases: ',
-          style: TextStyle(fontWeight: FontWeight.w500),
-        ),
-        Container(
-          width: MediaQuery.of(context).size.width / 1,
-          child: Text(
-            '${medicalRecord.pastDiseases}',
-          ),
-        ),
-      ],
-    );
-  }
-
-  Row FamilyHistoryData(BuildContext context, MedicalRecord medicalRecord) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Family History: ',
-          style: TextStyle(fontWeight: FontWeight.w500),
-        ),
-        Container(
-          width: MediaQuery.of(context).size.width / 1,
-          child: Text(
-            '${medicalRecord.familyHistory}',
-          ),
-        ),
-      ],
-    );
-  }
-
-  Row AllergiesData(BuildContext context, MedicalRecord medicalRecord) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Allergies: ',
-          style: TextStyle(fontWeight: FontWeight.w500),
-        ),
-        Container(
-          width: MediaQuery.of(context).size.width / 1,
-          child: Text(
-            '${medicalRecord.allergies}',
-          ),
-        ),
-      ],
-    );
-  }
-
-  Row IllnessesData(BuildContext context, MedicalRecord medicalRecord) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Illnesses: ',
-          style: TextStyle(fontWeight: FontWeight.w500),
-        ),
-        Container(
-          width: MediaQuery.of(context).size.width / 1,
-          child: Text(
-            '${medicalRecord.illnesses}',
-          ),
-        ),
-      ],
-    );
-  }
-
-  Row LMPData(MedicalRecord medicalRecord) {
-    return Row(
-      children: [
-        SizedBox(height: Sizing.formSpacing * 3),
-        Text(
-          'Last Menstrual Period: ',
-          style: TextStyle(fontWeight: FontWeight.w500),
-        ),
-        Text('${medicalRecord.lastMensPeriod}'),
-      ],
     );
   }
 }

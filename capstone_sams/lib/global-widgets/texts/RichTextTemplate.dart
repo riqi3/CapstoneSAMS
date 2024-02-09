@@ -6,10 +6,14 @@ import 'package:flutter/material.dart';
 class RichTextTemplate extends StatelessWidget {
   String title;
   String content;
+  double? fontsize;
+  FontWeight? fontweight;
   RichTextTemplate({
     super.key,
     required this.title,
     required this.content,
+    this.fontsize,
+    this.fontweight,
   });
 
   @override
@@ -18,12 +22,19 @@ class RichTextTemplate extends StatelessWidget {
       text: TextSpan(
         style: TextStyle(
           height: 1.25,
-          fontSize: Sizing.header6,
+          fontSize: fontsize == 0 ? Sizing.header6 : fontsize,
           color: Pallete.textColor,
         ),
         children: <TextSpan>[
           TextSpan(text: title, style: TextStyle(fontWeight: FontWeight.bold)),
-          TextSpan(text: content),
+          TextSpan(
+            text: content,
+            style: TextStyle(
+              fontWeight: fontweight == FontWeight.bold
+                  ? FontWeight.bold
+                  : FontWeight.normal,
+            ),
+          ),
         ],
       ),
     );
