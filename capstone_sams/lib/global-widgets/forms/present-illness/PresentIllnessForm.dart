@@ -12,6 +12,7 @@ import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/HealthCheckProvider.dart';
 import 'package:capstone_sams/providers/PresentIllnessProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/PatientTabsScreen.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/order-entry/CpoeAnalyzeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -256,20 +257,37 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
         ),
         content: Column(
           children: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return ChangeNotifierProvider<HealthCheckProvider>(
-                        create: (context) => HealthCheckProvider(),
-                        child: HealthCheckScreen(),
-                      );
-                    },
-                  ),
-                );
-              },
-              child: Text('Evaluation'),
+            Row(
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return ChangeNotifierProvider<HealthCheckProvider>(
+                            create: (context) => HealthCheckProvider(),
+                            child: HealthCheckScreen(),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                  child: Text('EDP'),
+                ),
+                SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return CpoeAnalyzeScreen();
+                        },
+                      ),
+                    );
+                  },
+                  child: Text('SDP'),
+                ),
+              ],
             ),
             FormTextField(
               onchanged: (value) => _presIllnessInfo.illnessName = value,

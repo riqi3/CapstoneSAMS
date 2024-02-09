@@ -1,12 +1,15 @@
-import 'package:capstone_sams/providers/HealthCheckProvider.dart';
+import 'package:capstone_sams/providers/healthcheckprovider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../providers/AccountProvider.dart';
 import 'widgets/buildwidgets.dart';
 
 class HealthCheckScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final accountProvider = Provider.of<AccountProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Health Check'),
@@ -80,7 +83,12 @@ class HealthCheckScreen extends StatelessWidget {
                       SizedBox(height: 16),
                       ElevatedButton(
                         onPressed: () async {
-                          await provider.sendDataToBackend();
+                          String? token = accountProvider.token;
+                          if (token != null) {
+                            await provider.sendDataToBackend(token);
+                          } else {
+                            print('Token is null');
+                          }
                         },
                         child: Container(
                           padding: EdgeInsets.symmetric(vertical: 12),
@@ -116,6 +124,7 @@ class HealthCheckScreen extends StatelessWidget {
               ),
               child: Consumer<HealthCheckProvider>(
                 builder: (context, provider, _) {
+                  final top3Predictions = provider.top3Predictions;
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -127,15 +136,10 @@ class HealthCheckScreen extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 8),
-                      Text('Fever: ${provider.feverOption}'),
-                      Text('Cough: ${provider.coughOption}'),
-                      Text('Fatigue: ${provider.fatigueOption}'),
-                      Text(
-                          'Difficulty Breathing: ${provider.difficultyBreathingOption}'),
-                      Text('Age: ${provider.age}'),
-                      Text('Blood Pressure: ${provider.bloodPressureOption}'),
-                      Text(
-                          'Cholesterol Level: ${provider.cholesterolLevelOption}'),
+                      for (var prediction in top3Predictions)
+                        Text(
+                          '${prediction['disease']}: ${prediction['probability']}',
+                        ),
                       SizedBox(height: 16),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
