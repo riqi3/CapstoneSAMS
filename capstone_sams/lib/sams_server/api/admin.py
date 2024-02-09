@@ -134,6 +134,7 @@ class UserCreationForm(forms.ModelForm):
     password2 = forms.CharField(
         label="Password confirmation", widget=forms.PasswordInput
     )
+    suffixTitle = forms.CharField(max_length=10, required=False)
 
     class Meta:
         model = Account
@@ -171,6 +172,13 @@ class UserCreationForm(forms.ModelForm):
         user = super(UserCreationForm, self).save(commit=False)
         user.set_password(self.cleaned_data["password1"]) 
         user.accountID = Account.objects.latest('accountID').accountID + 1 if Account.objects.exists() else 1
+        if user.accountRole == 'physician':
+            user.suffixTitle = 'Dr.'
+        if user.accountRole == 'admin':
+            user.is_staff = True
+            user.is_superuser = True
+        elif user.accountRole == 'nurse':
+            user.is_staff = True
         print(user.accountID)
         photo = self.photo_generator(user)
         user.profile_photo = os.path.basename(photo)
@@ -286,7 +294,7 @@ class UserAdmin(BaseUserAdmin):
             },
         ),
         ("Permissions", {"fields": ("is_active", "is_staff", "is_superuser")}),
-    )
+    )   
     add_fieldsets = (
         (
             None,
@@ -300,9 +308,9 @@ class UserAdmin(BaseUserAdmin):
                     "lastName",
                     "accountRole",
                     'suffixTitle',
-                    "is_active",
-                    "is_staff",
-                    "is_superuser",
+                    # "is_active",
+                    # "is_staff",
+                    # "is_superuser",
                     "password1",
                     "password2", 
                 ),
