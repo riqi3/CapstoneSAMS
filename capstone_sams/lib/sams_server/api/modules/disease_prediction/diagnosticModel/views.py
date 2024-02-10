@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework.response import Response
+from api.modules.disease_prediction.diagnosticModel.serializers import DiagnosticFieldsSerializer
 from .models import DiagnosticFields
 from rest_framework.decorators import api_view
 import pandas as pd
@@ -240,10 +241,10 @@ def get_latest_record_id(request):
         return JsonResponse({'error': 'No records found'}, status=404)
     
 @api_view(['DELETE'])
-def delete_symptom_record(request, record_id):
+def delete_diagnostic_record(request, record_id):
     try:
-        health_symptom = DiagnosticFields.objects.get(pk=record_id)
-        health_symptom.delete()
+        disease_record = DiagnosticFields.objects.get(pk=record_id)
+        disease_record.delete()
         return JsonResponse({}, status=204)
     except DiagnosticFields.DoesNotExist:
         return JsonResponse(
@@ -251,3 +252,22 @@ def delete_symptom_record(request, record_id):
             status=404
         )
 
+@api_view(['POST'])
+def update_disease(request, record_id):
+    try:
+        
+        disease = DiagnosticFields.objects.get(id=record_id)
+
+        
+        new_disease = request.data.get('new_disease')
+
+        
+        disease.disease = new_disease
+        disease.save()
+
+        
+        serializer = DiagnosticFieldsSerializer(disease)
+        return Response(serializer.data, status=200)
+
+    except DiagnosticFields.DoesNotExist:
+        return Response({'error': 'Diagnosticfield record not found'}, status=404)
