@@ -1,3 +1,4 @@
+import 'package:capstone_sams/global-widgets/forms/present-illness/PresentIllnessForm.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/api/api_service.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/PrognosisUpdateDialog.dart';
 import 'package:flutter/material.dart';
@@ -53,6 +54,15 @@ class CpoeFormScreen extends StatelessWidget {
       }
     }
 
+    // void _onUseThisPressed(BuildContext context) {
+    //   Navigator.push(
+    //     context,
+    //     MaterialPageRoute(
+    //       builder: (context) => PresentIllnessForm(finalPrediction, patient: ,),
+    //     ),
+    //   );
+    // }
+
     return ListView(
       shrinkWrap: true,
       children: <Widget>[
@@ -87,6 +97,22 @@ class CpoeFormScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 16),
               ),
               SizedBox(height: 10),
+              ElevatedButton.icon(
+                onPressed: () => _showPrognosisUpdateDialog(context),
+                icon: Icon(Icons.edit),
+                label: Text(
+                  'Change Value',
+                  style: TextStyle(
+                    fontSize: 12.5,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Pallete.mainColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                ),
+              ),
               Row(
                 children: <Widget>[
                   Expanded(
@@ -108,24 +134,24 @@ class CpoeFormScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(width: 10),
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: () => _showPrognosisUpdateDialog(context),
-                      icon: Icon(Icons.edit),
-                      label: Text(
-                        'Change Value',
-                        style: TextStyle(
-                          fontSize: 12.5,
-                        ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Pallete.mainColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                      ),
-                    ),
-                  ),
+                  // Expanded(
+                  //   child: ElevatedButton.icon(
+                  //     onPressed: () => _onUseThisPressed(context),
+                  //     icon: Icon(Icons.check),
+                  //     label: Text(
+                  //       'Use this',
+                  //       style: TextStyle(
+                  //         fontSize: 12.5,
+                  //       ),
+                  //     ),
+                  //     style: ElevatedButton.styleFrom(
+                  //       backgroundColor: Pallete.mainColor,
+                  //       shape: RoundedRectangleBorder(
+                  //         borderRadius: BorderRadius.circular(15.0),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               )
             ],

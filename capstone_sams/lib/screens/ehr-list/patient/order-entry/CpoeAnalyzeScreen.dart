@@ -61,7 +61,7 @@ class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
             },
           );
         }
-        setState(() {});
+        setState(() {}); // Trigger a rebuild to reflect changes in UI
       } else {
         throw Exception('Failed to load predictions');
       }
