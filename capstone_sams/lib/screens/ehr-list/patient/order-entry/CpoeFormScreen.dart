@@ -1,322 +1,138 @@
-import 'package:capstone_sams/constants/theme/sizing.dart';
-import 'package:capstone_sams/providers/PatientProvider.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/PatientTabsScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/api/api_service.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/AddMedicineDialog.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/MedicineCard.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/PrognosisUpdateDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:capstone_sams/providers/SymptomsFieldsProvider.dart';
 import '../../../../constants/theme/pallete.dart';
-import '../../../../models/PatientModel.dart';
-import '../../../../providers/AccountProvider.dart';
-import '../../../../providers/MedicineProvider.dart';
 
-class CpoeFormScreen extends StatefulWidget {
+class CpoeFormScreen extends StatelessWidget {
   final String initialPrediction;
   final double initialConfidence;
-  final String? index;
-  final Patient patient;
+
   CpoeFormScreen({
-    required this.patient,
-    required this.index,
     required this.initialPrediction,
     required this.initialConfidence,
   });
 
   @override
-  _CpoeFormScreenState createState() => _CpoeFormScreenState();
-}
-
-class _CpoeFormScreenState extends State<CpoeFormScreen> {
-  late String finalPrediction;
-  late double finalConfidence;
-  late String token;
-
-  var _isLoading = false;
-
-  void _onSubmit() async {
-    setState(() => _isLoading = true);
-
-    var accountID = context.read<AccountProvider>().id;
-
-    var patient = await context
-        .read<PatientProvider>()
-        .fetchPatient(widget.index.toString(), token);
-
-    final medicineProvider = context.read<MedicineProvider>();
-
-    var medicines = medicineProvider.medicines;
-
-    if (patient != null && medicines.isNotEmpty) {
-      
-      final medicineProvider = context.read<MedicineProvider>();
-      final patientID = patient.patientID;
-      final success = await medicineProvider.saveToPrescription(
-          accountID, patientID, finalPrediction, token);
-
-
-      if (success) {
-        int routesCount = 0;
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-              builder: (context) => PatientTabsScreen(
-                  patient: widget.patient, 
-                  // index: widget.index,
-                  )),
-          (Route<dynamic> route) {
-            if (routesCount < 2) {
-              routesCount++;
-              return false;
-            }
-            return true;
-          },
-        );
-        const snackBar = SnackBar(
-          backgroundColor: Pallete.successColor,
-          content: Text(
-            'Successfully added prescription',
-            style: TextStyle(fontWeight: FontWeight.w700),
-          ),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      }
-    } else {
-      setState(() {
-        _isLoading = false;
-      });
-      const snackBar = SnackBar(
-        backgroundColor: Pallete.dangerColor,
-        content: Text(
-          'Failed to add prescription',
-          style: TextStyle(fontWeight: FontWeight.w700),
-        ),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    token = context.read<AccountProvider>().token!;
-    finalPrediction = widget.initialPrediction;
-    finalConfidence = widget.initialConfidence;
-    Provider.of<MedicineProvider>(context, listen: false).resetState();
-  }
-
-  Future<void> _handleAnalyzeAgain(BuildContext context) async {
-    try {
-      await ApiService.deleteLatestRecord();
-
-      Provider.of<SymptomFieldsProvider>(context, listen: false).reset();
-      Navigator.pop(context);
-    } catch (error) {
-      print('Failed to delete the latest record: $error');
-    }
-  }
-
-  void _showPrognosisUpdateDialog(BuildContext context) async {
-    final newPrognosis = await showDialog<String>(
-      context: context,
-      builder: (context) => PrognosisUpdateDialog(),
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      child: _buildDialogContent(context),
     );
+  }
 
-    if (newPrognosis != null && newPrognosis.isNotEmpty) {
-      setState(() {
+  Widget _buildDialogContent(BuildContext context) {
+    String finalPrediction = initialPrediction;
+    double finalConfidence = initialConfidence;
+
+    Future<void> _handleAnalyzeAgain(BuildContext context) async {
+      try {
+        await ApiService.deleteLatestRecord();
+
+        Provider.of<SymptomFieldsProvider>(context, listen: false).reset();
+        Navigator.pop(context);
+      } catch (error) {
+        print('Failed to delete the latest record: $error');
+      }
+    }
+
+    void _showPrognosisUpdateDialog(BuildContext context) async {
+      final newPrognosis = await showDialog<String>(
+        context: context,
+        builder: (context) => PrognosisUpdateDialog(),
+      );
+
+      if (newPrognosis != null && newPrognosis.isNotEmpty) {
         finalPrediction = newPrognosis;
         finalConfidence = 0;
-      });
+      }
     }
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    final medicineProvider = Provider.of<MedicineProvider>(context);
-
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text(
-          'Computerized Physician Order Entry',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-      ),
-      body: ListView(
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.all(20),
-            padding: EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: Offset(0, 3),
-                ),
-              ],
-            ),
-            child: Column(
-              children: <Widget>[
-                Text(
-                  'Diagnosis',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 15),
-                Text(
-                  'Suspected Disease: \n $finalPrediction',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  'Confidence score: ${finalConfidence.toStringAsFixed(2)}',
-                  style: TextStyle(fontSize: 16),
-                ),
-                SizedBox(height: 10),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        onPressed: () => _handleAnalyzeAgain(context),
-                        icon: Icon(Icons.search),
-                        label: Text(
-                          'Analyze Again',
-                          style: TextStyle(
-                            fontSize: 12.5,
-                          ),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Pallete.mainColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        onPressed: () => _showPrognosisUpdateDialog(context),
-                        icon: Icon(Icons.edit),
-                        label: Text(
-                          'Change Value',
-                          style: TextStyle(
-                            fontSize: 12.5,
-                          ),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Pallete.mainColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            ),
+    return ListView(
+      shrinkWrap: true,
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.all(20),
+          padding: EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: Offset(0, 3),
+              ),
+            ],
           ),
-          SizedBox(height: 10),
-          Container(
-            margin: EdgeInsets.all(20),
-            padding: EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: Offset(0, 3),
-                ),
-              ],
-            ),
-            child: Column(
-              children: <Widget>[
-                Text(
-                  'Physician Order',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                if (medicineProvider.medicines.isEmpty)
-                  Text(
-                    '\n\nNo current orders\n\n',
-                    style: TextStyle(color: Pallete.greyColor),
-                  )
-                else
-                  Column(
-                    children: [
-                      ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: medicineProvider.medicines.length,
-                        itemBuilder: (ctx, index) => MedicineCard(
-                          medicine: medicineProvider.medicines[index],
-                          patient: widget.patient,
-                          index: index,
+          child: Column(
+            children: <Widget>[
+              Text(
+                'Result:',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 15),
+              Text(
+                'Suspected Disease: \n $finalPrediction',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                'Confidence score: ${finalConfidence.toStringAsFixed(2)}',
+                style: TextStyle(fontSize: 16),
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () => _handleAnalyzeAgain(context),
+                      icon: Icon(Icons.search),
+                      label: Text(
+                        'Analyze Again',
+                        style: TextStyle(
+                          fontSize: 12.5,
                         ),
                       ),
-                    ],
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Pallete.mainColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                      ),
+                    ),
                   ),
-                SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        onPressed: _isLoading ? null : _onSubmit,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Pallete.mainColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(Sizing.borderRadius),
-                          ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () => _showPrognosisUpdateDialog(context),
+                      icon: Icon(Icons.edit),
+                      label: Text(
+                        'Change Value',
+                        style: TextStyle(
+                          fontSize: 12.5,
                         ),
-                        icon: _isLoading
-                            ? Container(
-                                width: 24,
-                                height: 24,
-                                padding: const EdgeInsets.all(4),
-                                child: const CircularProgressIndicator(
-                                  color: Pallete.mainColor,
-                                  strokeWidth: 3,
-                                ),
-                              )
-                            : const Icon(
-                                Icons.upload,
-                              ),
-                        label: const Text('Submit'),
                       ),
-                    ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        onPressed: () => showDialog(
-                          context: context,
-                          builder: (ctx) => AddMedicineDialog(),
-                        ),
-                        icon: Icon(Icons.edit),
-                        label: Text('Write Rx'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Pallete.mainColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(Sizing.borderRadius),
-                          ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Pallete.mainColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              )
+            ],
           ),
-        ],
-      ),
+        ),
+        SizedBox(height: 10),
+      ],
     );
   }
 }
