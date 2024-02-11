@@ -274,7 +274,7 @@ class PersonalNotesView(viewsets.ModelViewSet):
     # @permission_classes([IsAuthenticated])
     def delete_personal_note(request, noteNum):
         try:
-            note = Personal_Note.objects.get(noteNum = noteNum)
+            note = Personal_Note.objects.get(pk = noteNum)
             note.isDeleted = True
             note.save()
             data_log = Data_Log.objects.create(
