@@ -1,3 +1,5 @@
+import 'package:capstone_sams/constants/theme/pallete.dart';
+import 'package:capstone_sams/global-widgets/forms/widgets/changevaluedialog.dart';
 import 'package:capstone_sams/providers/healthcheckprovider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +14,8 @@ class HealthCheckScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Health Check'),
+        title: Text('Evaluation Disease Predictor'),
+        backgroundColor: Pallete.mainColor,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -60,7 +63,9 @@ class HealthCheckScreen extends StatelessWidget {
                                   .setDifficultyBreathingOption(value))),
                       buildQuestion(
                           'What is the gender of the patient?',
-                          buildDropdown(['M', 'F'], provider.genderOption,
+                          buildDropdown(
+                              ['Male', 'Female'],
+                              provider.genderOption,
                               (value) => provider.setGenderOption(value))),
                       buildQuestion(
                           'What is the age of the patient?',
@@ -69,14 +74,14 @@ class HealthCheckScreen extends StatelessWidget {
                       buildQuestion(
                           'What is the blood pressure of the patient?',
                           buildDropdown(
-                              ['Low', 'Medium', 'High'],
+                              ['Low', 'Normal', 'High'],
                               provider.bloodPressureOption,
                               (value) =>
                                   provider.setBloodPressureOption(value))),
                       buildQuestion(
                           'What is the cholesterol level of the patient?',
                           buildDropdown(
-                              ['Low', 'Medium', 'High'],
+                              ['Low', 'Normal', 'High'],
                               provider.cholesterolLevelOption,
                               (value) =>
                                   provider.setCholesterolLevelOption(value))),
@@ -86,6 +91,7 @@ class HealthCheckScreen extends StatelessWidget {
                           String? token = accountProvider.token;
                           if (token != null) {
                             await provider.sendDataToBackend(token);
+                            _showResultPopup(context, provider);
                           } else {
                             print('Token is null');
                           }
@@ -106,79 +112,139 @@ class HealthCheckScreen extends StatelessWidget {
                 },
               ),
             ),
-            SizedBox(height: 16),
-            Container(
-              padding: EdgeInsets.all(16),
-              margin: EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 3,
-                    blurRadius: 7,
-                    offset: Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: Consumer<HealthCheckProvider>(
-                builder: (context, provider, _) {
-                  final top3Predictions = provider.top3Predictions;
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        'Results:',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      for (var prediction in top3Predictions)
-                        Text(
-                          '${prediction['disease']}: ${prediction['probability']}',
-                        ),
-                      SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              print('Cancel button pressed');
-                            },
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.red,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            child: Text('Analyze Again'),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              // Handle Use button
-                              print('Use button pressed');
-                            },
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.green,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            child: Text('Use this'),
-                          ),
-                        ],
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
           ],
         ),
       ),
     );
+  }
+
+  String? firstResultDisease;
+
+  void _showResultPopup(BuildContext context, HealthCheckProvider provider) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          title: Text(
+            'Result:',
+            textAlign: TextAlign.center,
+          ),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              for (int i = 0; i < provider.top3Predictions.length; i++)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            '${i == 0 && firstResultDisease != null ? firstResultDisease! : provider.top3Predictions[i]['disease']}: ${(provider.top3Predictions[i]['probability'] * 100).toInt()}%',
+                            textAlign: TextAlign.center,
+                            style: i == 0
+                                ? TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 30,
+                                    color: Colors.black,
+                                  )
+                                : TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                  ],
+                ),
+              SizedBox(height: 25),
+              ElevatedButton(
+                onPressed: () {
+                  _showChangeValueDialog(context, provider);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Pallete.mainColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                ),
+                child: Text(
+                  'Change Value',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              SizedBox(height: 4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Pallete.mainColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    ),
+                    child: Text('Use this',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        )),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Pallete.mainColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    ),
+                    child: Text('Cancel',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        )),
+                  ),
+                ],
+              ),
+              SizedBox(height: 6),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showChangeValueDialog(
+      BuildContext context, HealthCheckProvider provider) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return ChangeValueDialog(
+          initialDisease: firstResultDisease ?? '',
+        );
+      },
+    ).then((newDisease) {
+      if (newDisease != null && newDisease != firstResultDisease) {
+        // Update the first result disease if it's not null and changed
+        firstResultDisease = newDisease;
+        Navigator.of(context).pop();
+        _showResultPopup(context, provider);
+      }
+    });
   }
 }
