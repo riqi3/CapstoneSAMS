@@ -8,7 +8,7 @@ class HealthCheckProvider extends ChangeNotifier {
   String coughOption = 'No';
   String fatigueOption = 'No';
   String difficultyBreathingOption = 'No';
-  String genderOption = 'M';
+  String genderOption = 'Male';
   int age = 1;
   String bloodPressureOption = 'Low';
   String cholesterolLevelOption = 'Low';
@@ -24,15 +24,17 @@ class HealthCheckProvider extends ChangeNotifier {
         'Authorization': 'Bearer $token',
       };
       final body = json.encode({
-        'fever': feverOption,
-        'cough': coughOption,
-        'fatigue': fatigueOption,
-        'difficulty_breathing': difficultyBreathingOption,
+        'fever': feverOption.toLowerCase(),
+        'cough': coughOption.toLowerCase(),
+        'fatigue': fatigueOption.toLowerCase(),
+        'difficulty_breathing': difficultyBreathingOption.toLowerCase(),
         'age': age.toString(),
-        'gender': genderOption,
-        'blood_pressure': bloodPressureOption,
-        'cholesterol_level': cholesterolLevelOption,
+        'gender': genderOption.toLowerCase(),
+        'blood_pressure': bloodPressureOption.toLowerCase(),
+        'cholesterol_level': cholesterolLevelOption.toLowerCase(),
+        'outcome_variable': 'negative',
       });
+      print('Request Body: $body');
       final response = await http.post(
         url,
         headers: header,
@@ -54,7 +56,13 @@ class HealthCheckProvider extends ChangeNotifier {
   }
 
   void setGenderOption(String? value) {
-    genderOption = value ?? 'M';
+    if (value == 'Male') {
+      genderOption = 'Male';
+    } else if (value == 'Female') {
+      genderOption = 'Female';
+    } else {
+      genderOption = 'Male';
+    }
     notifyListeners();
   }
 

@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework.response import Response
+from api.modules.disease_prediction.diagnosticModel.serializers import DiagnosticFieldsSerializer
 from .models import DiagnosticFields
 from rest_framework.decorators import api_view
 import pandas as pd
@@ -175,7 +176,7 @@ def create_diagnostic_record(request):
             encoded_input['blood_pressure'] = valid_blood_pressure_values.index(user_input['Blood Pressure'].lower())
 
             # Handle Cholesterol Level separately
-            valid_cholesterol_levels = ['normal', 'high', 'very high']  # Define valid categories for Cholesterol Level
+            valid_cholesterol_levels = ['normal', 'high', 'low']  # Define valid categories for Cholesterol Level
             if user_input['Cholesterol Level'].lower() not in valid_cholesterol_levels:
                 return JsonResponse({'error_message': f"Invalid value for Cholesterol Level. Must be one of: {', '.join(valid_cholesterol_levels)}."}, status=400)
 
@@ -212,15 +213,15 @@ def create_diagnostic_record(request):
             predicted_class = top3_classes[0]
             diagnostic_record = DiagnosticFields(
                 disease=predicted_class,
-                fever=user_input['Fever'],
-                cough=user_input['Cough'],
-                fatigue=user_input['Fatigue'],
-                difficulty_breathing=user_input['Difficulty Breathing'],
+                fever=user_input['Fever'].title(),
+                cough=user_input['Cough'].title(),
+                fatigue=user_input['Fatigue'].title(),
+                difficulty_breathing=user_input['Difficulty Breathing'].title(),
                 age=user_input['Age'],
-                gender=user_input['Gender'],
-                blood_pressure=user_input['Blood Pressure'],
-                cholesterol_level=user_input['Cholesterol Level'],
-                outcome_variable=user_input['Outcome Variable'],
+                gender=user_input['Gender'].title(),
+                blood_pressure=user_input['Blood Pressure'].title(),
+                cholesterol_level=user_input['Cholesterol Level'].title(),
+                outcome_variable=user_input['Outcome Variable'].title(),
             )
             diagnostic_record.save()
 
@@ -240,10 +241,10 @@ def get_latest_record_id(request):
         return JsonResponse({'error': 'No records found'}, status=404)
     
 @api_view(['DELETE'])
-def delete_symptom_record(request, record_id):
+def delete_diagnostic_record(request, record_id):
     try:
-        health_symptom = DiagnosticFields.objects.get(pk=record_id)
-        health_symptom.delete()
+        disease_record = DiagnosticFields.objects.get(pk=record_id)
+        disease_record.delete()
         return JsonResponse({}, status=204)
     except DiagnosticFields.DoesNotExist:
         return JsonResponse(
@@ -251,3 +252,22 @@ def delete_symptom_record(request, record_id):
             status=404
         )
 
+@api_view(['POST'])
+def update_disease(request, record_id):
+    try:
+        
+        disease = DiagnosticFields.objects.get(id=record_id)
+
+        
+        new_disease = request.data.get('new_disease')
+
+        
+        disease.disease = new_disease
+        disease.save()
+
+        
+        serializer = DiagnosticFieldsSerializer(disease)
+        return Response(serializer.data, status=200)
+
+    except DiagnosticFields.DoesNotExist:
+        return Response({'error': 'Diagnosticfield record not found'}, status=404)

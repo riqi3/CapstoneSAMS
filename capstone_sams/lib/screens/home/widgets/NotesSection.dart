@@ -11,7 +11,7 @@ import '../../../constants/theme/pallete.dart';
 import '../../../constants/theme/sizing.dart';
 
 class NotesSection extends StatelessWidget {
-    NotesSection({
+  NotesSection({
     Key? key,
     required this.title,
     required this.press,
@@ -24,7 +24,7 @@ class NotesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final username = context.watch<AccountProvider>().username; 
+    final username = context.watch<AccountProvider>().username;
     final totalTodos = context.watch<TodosProvider>().todos.length;
     int numTodos = todosPreview.length;
     return Column(
@@ -64,7 +64,8 @@ class NotesSection extends StatelessWidget {
         GestureDetector(
           onTap: press,
           child: Padding(
-            padding: const EdgeInsets.all(Sizing.sectionSymmPadding),
+            padding: const EdgeInsets.symmetric(
+                horizontal: Sizing.sectionSymmPadding),
             child: Card(
               elevation: Sizing.cardElevation,
               shape: RoundedRectangleBorder(
