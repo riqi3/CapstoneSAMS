@@ -1,10 +1,14 @@
 import 'package:capstone_sams/constants/theme/pallete.dart';
+import 'package:capstone_sams/global-widgets/forms/present-illness/PresentIllnessForm.dart';
+import 'package:capstone_sams/models/PatientModel.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/order-entry/api/api_diagnosticservice.dart';
 import 'package:flutter/material.dart';
 
 class ChangeValueDialog extends StatefulWidget {
   final String initialDisease;
+  final Patient patient;
 
-  ChangeValueDialog({required this.initialDisease});
+  ChangeValueDialog({required this.initialDisease, required this.patient});
 
   @override
   _ChangeValueDialogState createState() => _ChangeValueDialogState();
@@ -24,7 +28,7 @@ class _ChangeValueDialogState extends State<ChangeValueDialog> {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
       title: Text(
-        'Change Value',
+        'Edit Suspected Disease',
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
@@ -54,9 +58,23 @@ class _ChangeValueDialogState extends State<ChangeValueDialog> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   final newDisease = _controller.text;
-                  Navigator.of(context).pop(newDisease);
+                  final isSuccess =
+                      await ApiService.updateDisease(context, newDisease);
+
+                  if (isSuccess) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PresentIllnessForm(
+                            patient: widget.patient,
+                            initialDisease: newDisease),
+                      ),
+                    );
+                  } else {
+                    print('Failed to update diagnosis.');
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Pallete.mainColor,
@@ -64,7 +82,7 @@ class _ChangeValueDialogState extends State<ChangeValueDialog> {
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                 ),
-                child: Text('Submit'),
+                child: Text('Submit and Use'),
               ),
               ElevatedButton(
                 onPressed: () {

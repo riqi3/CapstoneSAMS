@@ -78,6 +78,10 @@ class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
     bool isAnalyzeButtonEnabled = symptomFieldsProvider.symptoms.length >= 3;
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Symptom Disease Predictor'),
+        backgroundColor: Pallete.mainColor,
+      ),
       body: Center(
         child: SingleChildScrollView(
           padding: EdgeInsets.only(

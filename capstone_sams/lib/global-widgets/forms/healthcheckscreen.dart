@@ -1,14 +1,20 @@
 import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/global-widgets/forms/widgets/changevaluedialog.dart';
+import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/providers/healthcheckprovider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/AccountProvider.dart';
+import 'present-illness/PresentIllnessForm.dart';
 import 'widgets/buildwidgets.dart';
 
+// ignore: must_be_immutable
 class HealthCheckScreen extends StatelessWidget {
-  void Function(String)? onDiseaseSelected;
+  final void Function(String)? onDiseaseSelected;
+  final Patient patient;
+
+  HealthCheckScreen({required this.patient, this.onDiseaseSelected});
   @override
   Widget build(BuildContext context) {
     final accountProvider = Provider.of<AccountProvider>(context);
@@ -188,7 +194,20 @@ class HealthCheckScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      String selectedDisease =
+                          provider.top3Predictions.first['disease'];
+                      onDiseaseSelected?.call(selectedDisease);
+                      provider.setFirstResultDisease(selectedDisease);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PresentIllnessForm(
+                              patient: patient,
+                              initialDisease: selectedDisease),
+                        ),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Pallete.mainColor,
                       shape: RoundedRectangleBorder(
@@ -237,6 +256,7 @@ class HealthCheckScreen extends StatelessWidget {
       context: context,
       builder: (context) {
         return ChangeValueDialog(
+          patient: patient,
           initialDisease: firstResultDisease ?? '',
         );
       },

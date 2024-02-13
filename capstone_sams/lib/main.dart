@@ -16,7 +16,7 @@ import 'package:capstone_sams/screens/ehr-list/EHRListScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/widgets/PatientCard.dart';
 import 'package:capstone_sams/screens/home/HomeScreen.dart';
 import 'package:capstone_sams/screens/medical_notes/MedicalNotesScreen.dart';
-import 'package:flutter/material.dart'; 
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/MedicalNotesProvider.dart';
 
@@ -46,7 +46,6 @@ void main() async {
         ),
         ChangeNotifierProvider<HealthCheckProvider>(
           create: (context) => HealthCheckProvider(),
-          child: HealthCheckScreen(),
         ),
         ChangeNotifierProvider<LabresultProvider>(
           create: (context) => LabresultProvider(),

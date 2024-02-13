@@ -22,10 +22,12 @@ import '../healthcheckscreen.dart';
 
 // ignore: must_be_immutable
 class PresentIllnessForm extends StatefulWidget {
+  final String? initialDisease;
   Patient patient;
   PresentIllnessForm({
     Key? key,
     required this.patient,
+    this.initialDisease,
   }) : super(key: key);
 
   @override
@@ -33,6 +35,7 @@ class PresentIllnessForm extends StatefulWidget {
 }
 
 class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
+  String? selectedDisease;
   final _presIllnessInfoFormKey = GlobalKey<FormState>();
   final _presIllnessInfo = PresentIllness();
   final DateTime? createdAt = DateTime.now();
@@ -113,6 +116,12 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
         ScaffoldMessenger.of(context).showSnackBar(failedCreatedComplaint);
       }
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    selectedDisease = widget.initialDisease;
   }
 
   @override
@@ -266,7 +275,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
                         builder: (context) {
                           return ChangeNotifierProvider<HealthCheckProvider>(
                             create: (context) => HealthCheckProvider(),
-                            child: HealthCheckScreen(),
+                            child: HealthCheckScreen(patient: widget.patient),
                           );
                         },
                       ),
@@ -292,6 +301,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
             FormTextField(
               onchanged: (value) => _presIllnessInfo.illnessName = value,
               labeltext: 'Illness Name*',
+              initialvalue: selectedDisease,
               validator: Strings.requiredField,
               type: TextInputType.text,
             ),
