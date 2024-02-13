@@ -265,8 +265,30 @@ def update_disease(request, record_id):
         disease.disease = new_disease
         disease.save()
 
+        outcome = DiagnosticFields.objects.get(id=record_id)
+
+        outcome.outcome_variable = 'Positive'
+        outcome.save()
         
+        serializer = DiagnosticFieldsSerializer(outcome)
         serializer = DiagnosticFieldsSerializer(disease)
+        return Response(serializer.data, status=200)
+
+    except DiagnosticFields.DoesNotExist:
+        return Response({'error': 'Diagnosticfield record not found'}, status=404)
+    
+@api_view(['POST'])
+def update_outcome(request, record_id):
+    try:
+        
+        outcome = DiagnosticFields.objects.get(id=record_id)
+
+        
+        outcome.outcome_variable = 'Positive'
+        outcome.save()
+
+        
+        serializer = DiagnosticFieldsSerializer(outcome)
         return Response(serializer.data, status=200)
 
     except DiagnosticFields.DoesNotExist:

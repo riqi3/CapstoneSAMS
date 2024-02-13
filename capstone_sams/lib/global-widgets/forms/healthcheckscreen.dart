@@ -8,6 +8,7 @@ import '../../providers/AccountProvider.dart';
 import 'widgets/buildwidgets.dart';
 
 class HealthCheckScreen extends StatelessWidget {
+  void Function(String)? onDiseaseSelected;
   @override
   Widget build(BuildContext context) {
     final accountProvider = Provider.of<AccountProvider>(context);
@@ -121,6 +122,7 @@ class HealthCheckScreen extends StatelessWidget {
   String? firstResultDisease;
 
   void _showResultPopup(BuildContext context, HealthCheckProvider provider) {
+    onDiseaseSelected?.call('Selected Disease');
     showDialog(
       context: context,
       builder: (context) {
