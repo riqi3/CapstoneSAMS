@@ -1,10 +1,14 @@
 import 'package:capstone_sams/constants/theme/pallete.dart';
+import 'package:capstone_sams/global-widgets/forms/present-illness/PresentIllnessForm.dart';
+import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:flutter/material.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/api/api_service.dart';
 
 class PrognosisUpdateDialog extends StatelessWidget {
   final TextEditingController controller = TextEditingController();
+  final Patient patient;
 
+  PrognosisUpdateDialog({required this.patient});
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -46,7 +50,13 @@ class PrognosisUpdateDialog extends StatelessWidget {
                       await ApiService.updatePrognosis(context, newPrognosis);
 
                   if (isSuccess) {
-                    Navigator.of(context).pop(newPrognosis);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PresentIllnessForm(
+                            patient: patient, initialDisease: newPrognosis),
+                      ),
+                    );
                   } else {
                     print('Failed to update diagnosis.');
                   }
@@ -57,7 +67,7 @@ class PrognosisUpdateDialog extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                 ),
-                child: Text('Submit'),
+                child: Text('Submit and Use'),
               ),
               ElevatedButton(
                 onPressed: () {

@@ -289,7 +289,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) {
-                          return CpoeAnalyzeScreen();
+                          return CpoeAnalyzeScreen(patient: widget.patient);
                         },
                       ),
                     );
