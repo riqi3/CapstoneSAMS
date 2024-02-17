@@ -140,18 +140,30 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                             accountProvider,
                           ),
                           child: ListTile(
-                            title: Row(
+                            title: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Dx #${illnessIndex}: ',
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    '${illness.illnessName?.toUpperCase()}',
-                                    overflow: TextOverflow.ellipsis,
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                                  '${createdAt}',
+                                  style: TextStyle(
+                                    color: Pallete.greyColor,
+                                    fontSize: Sizing.header6,
                                   ),
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      'Dx #${illnessIndex}: ',
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        '${illness.illnessName?.toUpperCase()}',
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
@@ -178,8 +190,10 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                             TextStyle(color: Pallete.greyColor),
                                       ),
                                 Text(
-                                  '${createdAt}',
-                                  style: TextStyle(color: Pallete.greyColor),
+                                  'University Physician',
+                                  style: TextStyle(
+                                    color: Pallete.greyColor,
+                                  ),
                                 ),
                                 // Visibility(
                                 //   visible: updatedOn == 'January 6, 2000 | 03:00'
@@ -359,6 +373,11 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
+                          '${createdAt}',
+                          style: TextStyle(color: Pallete.greyColor),
+                        ),
+                        SizedBox(height: Sizing.formSpacing / 2),
+                        Text(
                           '${illness.illnessName!.toUpperCase()}',
                           style: TextStyle(
                             fontSize: Sizing.header4,
@@ -385,7 +404,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                 style: TextStyle(color: Pallete.greyColor),
                               ),
                         Text(
-                          '${createdAt}',
+                          'University Physician',
                           style: TextStyle(color: Pallete.greyColor),
                         ),
                         SizedBox(height: Sizing.formSpacing * 2),

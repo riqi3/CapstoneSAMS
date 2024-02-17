@@ -259,36 +259,41 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
           children: [
             Row(
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return ChangeNotifierProvider<HealthCheckProvider>(
-                            create: (context) => HealthCheckProvider(),
-                            child: HealthCheckScreen(),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                  child: Text('EDP'),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return ChangeNotifierProvider<HealthCheckProvider>(
+                              create: (context) => HealthCheckProvider(),
+                              child: HealthCheckScreen(),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                    child: Text('EDP'),
+                  ),
                 ),
-                SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return CpoeAnalyzeScreen();
-                        },
-                      ),
-                    );
-                  },
-                  child: Text('SDP'),
+                SizedBox(width: Sizing.formSpacing),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return CpoeAnalyzeScreen();
+                          },
+                        ),
+                      );
+                    },
+                    child: Text('SDP'),
+                  ),
                 ),
               ],
             ),
+            SizedBox(height: Sizing.formSpacing),
             FormTextField(
               onchanged: (value) => _presIllnessInfo.illnessName = value,
               labeltext: 'Illness Name*',
