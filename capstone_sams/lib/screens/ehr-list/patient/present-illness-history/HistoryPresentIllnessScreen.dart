@@ -15,9 +15,12 @@ class HistoryPresentIllness extends StatefulWidget {
 }
 
 class _HistoryPresentIllnessState extends State<HistoryPresentIllness> {
+  ScrollController _scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return ScaffoldTemplate(
+      scrollcontroller: _scrollController,
       column: Column(
         children: [
           DiagnosisInfoCard(
@@ -25,6 +28,17 @@ class _HistoryPresentIllnessState extends State<HistoryPresentIllness> {
           ),
         ],
       ),
+      // fablocation: FloatingActionButtonLocation.centerFloat,
+      // fab: FloatingActionButton(
+      //   onPressed: () {
+      //     _scrollController.animateTo(
+      //       0,
+      //       duration: Duration(seconds: 1),
+      //       curve: Curves.easeInOut,
+      //     );
+      //   },
+      //   child: Text('test'),
+      // ),
     );
   }
 }

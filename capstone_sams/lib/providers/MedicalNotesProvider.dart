@@ -134,8 +134,9 @@ class TodosProvider extends ChangeNotifier {
       'Authorization': 'Bearer $token',
     };
     final body = jsonEncode({'account': todo.account});
+
     try {
-      final response = await http.delete(
+      final response = await http.post(
         Uri.parse(_getUrl('user/notes/delete/${todo.noteNum}')),
         headers: headers,
         body: body,
@@ -143,6 +144,7 @@ class TodosProvider extends ChangeNotifier {
       // await Future.delayed(Duration(milliseconds: 3000));
       if (response.statusCode == 204) {
         fetchTodos(todo.account, token);
+        notifyListeners();
       } else {
         print('Failed to delete todo ${jsonDecode(response.body)}');
       }
