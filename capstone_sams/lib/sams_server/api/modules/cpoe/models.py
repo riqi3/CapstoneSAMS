@@ -24,7 +24,7 @@ class Prescription(models.Model):
     presNum = models.AutoField(primary_key = True)
     medicines = models.JSONField(blank = True, default=None)
     account = models.ForeignKey(Account, on_delete = models.CASCADE)
-    health_record = models.ForeignKey(Health_Record, on_delete = models.CASCADE)
+    # health_record = models.ForeignKey(Health_Record, on_delete = models.CASCADE)
     patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
     # disease = models.CharField(max_length=255, null=True, blank=True)
 

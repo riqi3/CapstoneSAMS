@@ -137,13 +137,13 @@ class PrescriptionView(viewsets.ViewSet):
             accountID = prescription_data['account']
             patientID = prescription_data['patient'] 
             account = Account.objects.get(pk=accountID)
-            record = Health_Record.objects.get(patient=patientID)
+            # record = Health_Record.objects.get(patient=patientID)
             patient = Patient.objects.get(pk=patientID)
             # disease = prescription_data.get('disease')
             prescription = Prescription.objects.create(
                 medicines=prescription_data['medicines'],
                 account=account,
-                health_record = record,
+                # health_record = record,
                 patient = patient,
                 # disease=disease
             )
