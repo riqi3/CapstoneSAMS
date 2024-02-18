@@ -1,3 +1,4 @@
+import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/models/MedicineModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/providers/MedicineProvider.dart';
@@ -26,7 +27,7 @@ class MedicineCard extends StatelessWidget {
         Provider.of<MedicineProvider>(context, listen: false);
 
     return Container(
-      margin: EdgeInsets.all(10),
+      margin: EdgeInsets.only(top: Sizing.sectionSymmPadding),
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -47,14 +48,14 @@ class MedicineCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  '${_formatDate(medicine.startDate)} - ${_formatDate(medicine.endDate)}',
-                  style: TextStyle(
-                      color: Pallete.mainColor,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 5),
+                // Text(
+                //   '${_formatDate(medicine.startDate)} - ${_formatDate(medicine.endDate)}',
+                //   style: TextStyle(
+                //       color: Pallete.mainColor,
+                //       fontSize: 12,
+                //       fontWeight: FontWeight.bold),
+                // ),
+                // SizedBox(height: 5),
                 Text(
                   '${medicine.drugName.toString()}',
                   style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),

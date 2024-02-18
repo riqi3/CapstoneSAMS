@@ -68,8 +68,11 @@ class MedicineProvider with ChangeNotifier {
     return _medicines;
   }
 
-  Future<bool> saveToPrescription(int? accountId, String? patientId,
-      String? finalPrediction, String token) async {
+  Future<bool> saveToPrescription(
+      int? accountId,
+      String? patientId,
+      // String? finalPrediction,
+      String token) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',
@@ -81,15 +84,17 @@ class MedicineProvider with ChangeNotifier {
       'medicines': medicinesJson,
       'account': accountId,
       'patient': patientId,
-      'disease': finalPrediction,
+      // 'disease': finalPrediction,
     };
+    print(patientId);
+    print(accountId);
     try {
       final response = await http.post(
         Uri.parse('${Env.prefix}/cpoe/prescription/save/'),
         headers: header,
         body: jsonEncode(data),
       );
-      await Future.delayed(Duration(milliseconds: 3000));
+      // await Future.delayed(Duration(milliseconds: 1000));
       if (response.statusCode == 200) {
         return true;
       } else {

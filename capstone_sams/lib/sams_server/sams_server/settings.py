@@ -23,6 +23,9 @@ ALLOWED_HOSTS = ['*','192.168.76.61','192.168.36.61', '192.168.1.9', '192.168.25
 
 # Application definition
 
+#disable the timezone
+# USE_TZ = False
+
 INSTALLED_APPS = [
     'jazzmin',
     'django.contrib.admin',
@@ -98,8 +101,7 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-
-
+ 
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

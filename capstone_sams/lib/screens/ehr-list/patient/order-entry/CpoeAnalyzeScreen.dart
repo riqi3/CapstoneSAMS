@@ -15,6 +15,9 @@ import '../../../../constants/theme/sizing.dart';
 import '../../../../models/PatientModel.dart';
 
 class CpoeAnalyzeScreen extends StatefulWidget {
+  final Patient patient;
+  CpoeAnalyzeScreen({required this.patient});
+
   @override
   _CpoeAnalyzeScreenState createState() => _CpoeAnalyzeScreenState();
 }
@@ -55,6 +58,7 @@ class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
             context: context,
             builder: (BuildContext context) {
               return CpoeFormScreen(
+                patient: widget.patient,
                 initialPrediction: finalPrediction,
                 initialConfidence: finalConfidence,
               );
@@ -78,6 +82,10 @@ class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
     bool isAnalyzeButtonEnabled = symptomFieldsProvider.symptoms.length >= 3;
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Symptom Disease Predictor'),
+        backgroundColor: Pallete.mainColor,
+      ),
       body: Center(
         child: SingleChildScrollView(
           padding: EdgeInsets.only(

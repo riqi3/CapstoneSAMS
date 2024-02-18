@@ -98,7 +98,7 @@ class CommentView(viewsets.ModelViewSet):
 class MedicineView(viewsets.ModelViewSet):
     
     @api_view(['GET'])
-    @permission_classes([IsAuthenticated])
+    # @permission_classes([IsAuthenticated])
     def fetch_medicine(request):
         try:
             queryset = Medicine.objects.all()
@@ -130,22 +130,22 @@ class MedicineView(viewsets.ModelViewSet):
 
 class PrescriptionView(viewsets.ViewSet):
     @api_view(['POST'])
-    @permission_classes([IsAuthenticated])
+    # @permission_classes([IsAuthenticated])
     def save_prescription(request):
         try:
             prescription_data = json.loads(request.body)
             accountID = prescription_data['account']
-            patientID = prescription_data['patient']
+            patientID = prescription_data['patient'] 
             account = Account.objects.get(pk=accountID)
             record = Health_Record.objects.get(patient=patientID)
-            patiente = Patient.objects.get(pk=patientID)
-            disease = prescription_data.get('disease')
+            patient = Patient.objects.get(pk=patientID)
+            # disease = prescription_data.get('disease')
             prescription = Prescription.objects.create(
                 medicines=prescription_data['medicines'],
                 account=account,
                 health_record = record,
-                patient = patiente,
-                disease=disease
+                patient = patient,
+                # disease=disease
             )
             data_log = Data_Log.objects.create(
                 event = f"{account.username} created prescription",
@@ -158,7 +158,7 @@ class PrescriptionView(viewsets.ViewSet):
             return Response({"message": "Failed to save prescription", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
     @api_view(['PUT'])
-    @permission_classes([IsAuthenticated])
+    # @permission_classes([IsAuthenticated])
     def update_prescription_amount(request, presNum):
         try:
             prescription_data = json.loads(request.body)
@@ -185,7 +185,7 @@ class PrescriptionView(viewsets.ViewSet):
 
 
     @api_view(['PUT'])
-    @permission_classes([IsAuthenticated])
+    # @permission_classes([IsAuthenticated])
     def update_prescription(request, presNum):
         try:
             prescription_data = json.loads(request.body)
@@ -212,7 +212,7 @@ class PrescriptionView(viewsets.ViewSet):
 
 
     @api_view(['DELETE'])
-    @permission_classes([IsAuthenticated])
+    # @permission_classes([IsAuthenticated])
     def delete_prescription(request, presNum):
         try:
             prescription = Prescription.objects.get(presNum = presNum)
@@ -227,7 +227,7 @@ class PrescriptionView(viewsets.ViewSet):
              return Response({"message": "Failed to delete prescription", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     @api_view(['DELETE'])
-    @permission_classes([IsAuthenticated])
+    # @permission_classes([IsAuthenticated])
     def delete_medicine(request, presNum, drugId):
         try:
             prescription = Prescription.objects.get(presNum = presNum)
@@ -251,7 +251,7 @@ class PrescriptionView(viewsets.ViewSet):
             return Response({"message": "Failed to delete medicine", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     @api_view(['GET'])
-    @permission_classes([IsAuthenticated])
+    # @permission_classes([IsAuthenticated])
     def fetch_prescription_by_patientIds(request, patientID):
         try: 
             patient = Patient.objects.get(pk=patientID) 

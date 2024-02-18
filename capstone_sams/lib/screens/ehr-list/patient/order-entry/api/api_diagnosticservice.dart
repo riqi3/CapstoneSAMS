@@ -53,22 +53,21 @@ class ApiService {
     }
   }
 
-  static Future<bool> updatePrognosis(
-      BuildContext context, String newPrognosis) async {
+  static Future<bool> updateDisease(
+      BuildContext context, String newDisease) async {
     try {
       final latestRecordId = await getLatestRecordId();
       if (latestRecordId != null) {
-        if (newPrognosis.isNotEmpty) {
-          newPrognosis =
-              newPrognosis[0].toUpperCase() + newPrognosis.substring(1);
+        if (newDisease.isNotEmpty) {
+          newDisease = newDisease[0].toUpperCase() + newDisease.substring(1);
         }
 
         final response = await http.post(
-          Uri.parse('$apiUrl/update_prognosis/$latestRecordId/'),
+          Uri.parse('$apiUrl/update_disease/$latestRecordId/'),
           headers: {
             'Content-Type': 'application/json',
           },
-          body: jsonEncode({'new_prognosis': newPrognosis}),
+          body: jsonEncode({'new_disease': newDisease}),
         );
 
         if (response.statusCode == 200) {

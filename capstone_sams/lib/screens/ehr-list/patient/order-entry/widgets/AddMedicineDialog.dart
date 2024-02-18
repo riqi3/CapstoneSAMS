@@ -117,92 +117,92 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                           onSaved: (value) => _medicine.instructions = value,
                         ),
                       ),
-                      SizedBox(height: 10),
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'Start Date',
-                                border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Pallete.primaryColor,
-                                  ),
-                                ),
-                                filled: true,
-                                fillColor: Pallete.palegrayColor,
-                                suffixIcon: Icon(Icons.calendar_today),
-                              ),
-                              readOnly: true,
-                              onTap: () {
-                                showDatePicker(
-                                  context: context,
-                                  initialDate: DateTime.now(),
-                                  firstDate: DateTime.now(),
-                                  lastDate:
-                                      DateTime.now().add(Duration(days: 365)),
-                                ).then((selectedDate) {
-                                  if (selectedDate != null) {
-                                    setState(() {
-                                      _selectedStartDate = selectedDate;
-                                    });
-                                  }
-                                });
-                              },
-                              controller: TextEditingController(
-                                text: _selectedStartDate != null
-                                    ? _selectedStartDate!
-                                        .toLocal()
-                                        .toString()
-                                        .split(' ')[0]
-                                    : '',
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                          Expanded(
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'End Date',
-                                border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Pallete.primaryColor,
-                                  ),
-                                ),
-                                filled: true,
-                                fillColor: Pallete.palegrayColor,
-                                suffixIcon: Icon(Icons.calendar_today),
-                              ),
-                              readOnly: true,
-                              onTap: () {
-                                showDatePicker(
-                                  context: context,
-                                  initialDate:
-                                      _selectedStartDate ?? DateTime.now(),
-                                  firstDate:
-                                      _selectedStartDate ?? DateTime.now(),
-                                  lastDate:
-                                      DateTime.now().add(Duration(days: 365)),
-                                ).then((selectedDate) {
-                                  if (selectedDate != null) {
-                                    setState(() {
-                                      _selectedEndDate = selectedDate;
-                                    });
-                                  }
-                                });
-                              },
-                              controller: TextEditingController(
-                                text: _selectedEndDate != null
-                                    ? _selectedEndDate!
-                                        .toLocal()
-                                        .toString()
-                                        .split(' ')[0]
-                                    : '',
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      // SizedBox(height: 10),
+                      // Row(
+                      //   children: <Widget>[
+                      //     Expanded(
+                      //       child: TextFormField(
+                      //         decoration: InputDecoration(
+                      //           labelText: 'Start Date',
+                      //           border: OutlineInputBorder(
+                      //             borderSide: BorderSide(
+                      //               color: Pallete.primaryColor,
+                      //             ),
+                      //           ),
+                      //           filled: true,
+                      //           fillColor: Pallete.palegrayColor,
+                      //           suffixIcon: Icon(Icons.calendar_today),
+                      //         ),
+                      //         readOnly: true,
+                      //         onTap: () {
+                      //           showDatePicker(
+                      //             context: context,
+                      //             initialDate: DateTime.now(),
+                      //             firstDate: DateTime.now(),
+                      //             lastDate:
+                      //                 DateTime.now().add(Duration(days: 365)),
+                      //           ).then((selectedDate) {
+                      //             if (selectedDate != null) {
+                      //               setState(() {
+                      //                 _selectedStartDate = selectedDate;
+                      //               });
+                      //             }
+                      //           });
+                      //         },
+                      //         controller: TextEditingController(
+                      //           text: _selectedStartDate != null
+                      //               ? _selectedStartDate!
+                      //                   .toLocal()
+                      //                   .toString()
+                      //                   .split(' ')[0]
+                      //               : '',
+                      //         ),
+                      //       ),
+                      //     ),
+                      //     SizedBox(width: 10),
+                      //     Expanded(
+                      //       child: TextFormField(
+                      //         decoration: InputDecoration(
+                      //           labelText: 'End Date',
+                      //           border: OutlineInputBorder(
+                      //             borderSide: BorderSide(
+                      //               color: Pallete.primaryColor,
+                      //             ),
+                      //           ),
+                      //           filled: true,
+                      //           fillColor: Pallete.palegrayColor,
+                      //           suffixIcon: Icon(Icons.calendar_today),
+                      //         ),
+                      //         readOnly: true,
+                      //         onTap: () {
+                      //           showDatePicker(
+                      //             context: context,
+                      //             initialDate:
+                      //                 _selectedStartDate ?? DateTime.now(),
+                      //             firstDate:
+                      //                 _selectedStartDate ?? DateTime.now(),
+                      //             lastDate:
+                      //                 DateTime.now().add(Duration(days: 365)),
+                      //           ).then((selectedDate) {
+                      //             if (selectedDate != null) {
+                      //               setState(() {
+                      //                 _selectedEndDate = selectedDate;
+                      //               });
+                      //             }
+                      //           });
+                      //         },
+                      //         controller: TextEditingController(
+                      //           text: _selectedEndDate != null
+                      //               ? _selectedEndDate!
+                      //                   .toLocal()
+                      //                   .toString()
+                      //                   .split(' ')[0]
+                      //               : '',
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
                       SizedBox(height: 10),
                       TextFormField(
                         decoration: InputDecoration(
