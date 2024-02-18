@@ -25,10 +25,12 @@ import '../healthcheckscreen.dart';
 
 // ignore: must_be_immutable
 class PresentIllnessForm extends StatefulWidget {
+  final String? initialDisease;
   Patient patient;
   PresentIllnessForm({
     Key? key,
     required this.patient,
+    this.initialDisease,
   }) : super(key: key);
 
   @override
@@ -36,6 +38,7 @@ class PresentIllnessForm extends StatefulWidget {
 }
 
 class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
+  String? selectedDisease;
   final _presIllnessInfoFormKey = GlobalKey<FormState>();
   final _presIllnessInfo = PresentIllness();
   final DateTime? createdAt = DateTime.now();
@@ -134,9 +137,10 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
     super.initState();
     token = context.read<AccountProvider>().token!;
     Provider.of<MedicineProvider>(context, listen: false).resetState();
+    selectedDisease = widget.initialDisease;
   }
 
-  @override
+    
   Widget build(BuildContext context) {
     return FormTemplate(
       onpressed: () => Navigator.pop(context),
@@ -284,37 +288,33 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
           children: [
             Row(
               children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return ChangeNotifierProvider<HealthCheckProvider>(
-                              create: (context) => HealthCheckProvider(),
-                              child: HealthCheckScreen(),
-                            );
-                          },
-                        ),
-                      );
-                    },
-                    child: Text('EDP'),
-                  ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return ChangeNotifierProvider<HealthCheckProvider>(
+                            create: (context) => HealthCheckProvider(),
+                            child: HealthCheckScreen(patient: widget.patient),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                  child: Text('EDP'),
                 ),
-                SizedBox(width: Sizing.formSpacing),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return CpoeAnalyzeScreen();
-                          },
-                        ),
-                      );
-                    },
-                    child: Text('SDP'),
-                  ),
+                SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return CpoeAnalyzeScreen(patient: widget.patient);
+                        },
+                      ),
+                    );
+                  },
+                  child: Text('SDP'),
                 ),
               ],
             ),
@@ -322,6 +322,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
             FormTextField(
               onchanged: (value) => _presIllnessInfo.illnessName = value,
               labeltext: 'Illness Name*',
+              initialvalue: selectedDisease,
               validator: Strings.requiredField,
               type: TextInputType.text,
             ),

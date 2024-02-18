@@ -1,4 +1,5 @@
 import 'package:capstone_sams/global-widgets/forms/present-illness/PresentIllnessForm.dart';
+import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/api/api_service.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/PrognosisUpdateDialog.dart';
 import 'package:flutter/material.dart';
@@ -9,11 +10,12 @@ import '../../../../constants/theme/pallete.dart';
 class CpoeFormScreen extends StatelessWidget {
   final String initialPrediction;
   final double initialConfidence;
+  final Patient patient;
 
-  CpoeFormScreen({
-    required this.initialPrediction,
-    required this.initialConfidence,
-  });
+  CpoeFormScreen(
+      {required this.initialPrediction,
+      required this.initialConfidence,
+      required this.patient});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +47,9 @@ class CpoeFormScreen extends StatelessWidget {
     void _showPrognosisUpdateDialog(BuildContext context) async {
       final newPrognosis = await showDialog<String>(
         context: context,
-        builder: (context) => PrognosisUpdateDialog(),
+        builder: (context) => PrognosisUpdateDialog(
+          patient: patient,
+        ),
       );
 
       if (newPrognosis != null && newPrognosis.isNotEmpty) {
@@ -53,15 +57,6 @@ class CpoeFormScreen extends StatelessWidget {
         finalConfidence = 0;
       }
     }
-
-    // void _onUseThisPressed(BuildContext context) {
-    //   Navigator.push(
-    //     context,
-    //     MaterialPageRoute(
-    //       builder: (context) => PresentIllnessForm(finalPrediction, patient: ,),
-    //     ),
-    //   );
-    // }
 
     return ListView(
       shrinkWrap: true,
@@ -134,24 +129,33 @@ class CpoeFormScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(width: 10),
-                  // Expanded(
-                  //   child: ElevatedButton.icon(
-                  //     onPressed: () => _onUseThisPressed(context),
-                  //     icon: Icon(Icons.check),
-                  //     label: Text(
-                  //       'Use this',
-                  //       style: TextStyle(
-                  //         fontSize: 12.5,
-                  //       ),
-                  //     ),
-                  //     style: ElevatedButton.styleFrom(
-                  //       backgroundColor: Pallete.mainColor,
-                  //       shape: RoundedRectangleBorder(
-                  //         borderRadius: BorderRadius.circular(15.0),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PresentIllnessForm(
+                                patient: patient,
+                                initialDisease: finalPrediction),
+                          ),
+                        );
+                      },
+                      icon: Icon(Icons.check),
+                      label: Text(
+                        'Use this',
+                        style: TextStyle(
+                          fontSize: 12.5,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Pallete.mainColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               )
             ],

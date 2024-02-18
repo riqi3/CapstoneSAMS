@@ -265,7 +265,7 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
                     builder: (context) {
                       return ChangeNotifierProvider<HealthCheckProvider>(
                         create: (context) => HealthCheckProvider(),
-                        child: HealthCheckScreen(),
+                        child: HealthCheckScreen(patient: widget.patient),
                       );
                     },
                   ),

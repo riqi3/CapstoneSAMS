@@ -14,7 +14,7 @@ class HealthCheckProvider extends ChangeNotifier {
   String cholesterolLevelOption = 'Low';
 
   List<Map<String, dynamic>> top3Predictions = [];
-
+  String? firstResultDisease;
   Future<void> sendDataToBackend(String token) async {
     try {
       final url =
@@ -63,6 +63,11 @@ class HealthCheckProvider extends ChangeNotifier {
     } else {
       genderOption = 'Male';
     }
+    notifyListeners();
+  }
+
+  void setFirstResultDisease(String? disease) {
+    firstResultDisease = disease;
     notifyListeners();
   }
 
