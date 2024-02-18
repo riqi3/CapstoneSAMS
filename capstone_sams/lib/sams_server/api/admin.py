@@ -174,7 +174,7 @@ class UserCreationForm(forms.ModelForm):
         user.set_password(self.cleaned_data["password1"]) 
         user.accountID = Account.objects.latest('accountID').accountID + 1 if Account.objects.exists() else 1
         if user.accountRole == 'physician':
-            user.suffixTitle = 'Dr.'
+            user.suffixTitle = 'MD'
         if user.accountRole == 'admin':
             user.is_staff = True
             user.is_superuser = True
@@ -569,7 +569,7 @@ class PrescriptionAdmin(admin.ModelAdmin):
     autocomplete_fields = ["patient"]
     list_display = (
         "presNum",
-        "disease",
+        # "disease",
         "medicines",
         "account",
         "patient",

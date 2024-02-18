@@ -87,6 +87,9 @@ class Medical_Record(models.Model):
 
 
 class Health_Record(models.Model):
+    recordNum = models.UUIDField(primary_key = True, default = uuid.uuid4)
+    patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
+    
     class Meta:
         verbose_name = "Health Record"
         verbose_name_plural = "Health Record"
@@ -104,3 +107,4 @@ class Present_Illness(models.Model):
     patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
     created_by = models.ForeignKey(Account, null=True, on_delete = models.CASCADE)
     isDeleted = models.BooleanField(default = False)
+ 

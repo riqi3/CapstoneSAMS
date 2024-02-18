@@ -18,6 +18,8 @@ import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/PresentIllnessProvider.dart';
 import 'package:capstone_sams/global-widgets/forms/present-illness/EditPresentIllnessForm.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/PatientTabsScreen.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/PhysicianCard.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/crud/medicine/MedicationOrderSection.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -360,7 +362,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                           : true,
                       title: 'Dx #${illnessIndex}',
                       popup: popupActionWidget(illness, illnessIndex, account,
-                          accountProvider, Pallete.whiteColor),
+                          accountProvider, Pallete.lightGreyColor2),
                     ),
                   ),
                   Padding(
@@ -370,62 +372,79 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                       bottom: Sizing.sectionSymmPadding * 4,
                     ),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(
-                          '${createdAt}',
-                          style: TextStyle(color: Pallete.greyColor),
-                        ),
-                        SizedBox(height: Sizing.formSpacing / 2),
-                        Text(
-                          '${illness.illnessName!.toUpperCase()}',
-                          style: TextStyle(
-                            fontSize: Sizing.header4,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: Sizing.formSpacing / 2),
-                        account.accountID == accountProvider.id
-                            ? Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      '${account.firstName} ${middleInitial}. ${account.lastName}, ${account.suffixTitle}',
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                          color: Pallete.greyColor,
-                                          fontWeight: FontWeight.bold),
-                                    ),
+                        Card(
+                          color: const Color.fromARGB(255, 253, 253, 253),
+                          elevation: Sizing.cardElevation,
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.all(Sizing.sectionSymmPadding),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  '${createdAt}',
+                                  style: TextStyle(color: Pallete.greyColor),
+                                ),
+                                SizedBox(height: Sizing.formSpacing / 2),
+                                Text(
+                                  '${illness.illnessName!.toUpperCase()}',
+                                  style: TextStyle(
+                                    fontSize: Sizing.header4,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                ],
-                              )
-                            : Text(
-                                '${account.firstName} ${middleInitial}. ${account.lastName}, ${account.suffixTitle}',
-                                style: TextStyle(color: Pallete.greyColor),
-                              ),
-                        Text(
-                          'University Physician',
-                          style: TextStyle(color: Pallete.greyColor),
-                        ),
-                        SizedBox(height: Sizing.formSpacing * 2),
-                        RichTextTemplate(
-                          title: 'Chief Complaint: ',
-                          content: '${illness.complaint}',
-                        ),
-                        SizedBox(height: Sizing.formSpacing),
-                        RichTextTemplate(
-                          title: 'Findings: ',
-                          content: '${illness.findings}',
-                        ),
-                        SizedBox(height: Sizing.formSpacing),
-                        RichTextTemplate(
-                          title: 'Diagnosis: ',
-                          content: '${illness.diagnosis}',
-                        ),
-                        SizedBox(height: Sizing.formSpacing),
-                        RichTextTemplate(
-                          title: 'Treatment: ',
-                          content: '${illness.treatment}',
+                                ),
+                                SizedBox(height: Sizing.formSpacing / 2),
+                                account.accountID == accountProvider.id
+                                    ? Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              '${account.firstName} ${middleInitial}. ${account.lastName}, ${account.suffixTitle}',
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  color: Pallete.greyColor,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    : Text(
+                                        '${account.firstName} ${middleInitial}. ${account.lastName}, ${account.suffixTitle}',
+                                        style:
+                                            TextStyle(color: Pallete.greyColor),
+                                      ),
+                                Text(
+                                  'University Physician',
+                                  style: TextStyle(color: Pallete.greyColor),
+                                ),
+                                SizedBox(height: Sizing.formSpacing * 2),
+                                RichTextTemplate(
+                                  title: 'Chief Complaint: ',
+                                  content: '${illness.complaint}',
+                                ),
+                                SizedBox(height: Sizing.formSpacing),
+                                RichTextTemplate(
+                                  title: 'Findings: ',
+                                  content: '${illness.findings}',
+                                ),
+                                SizedBox(height: Sizing.formSpacing),
+                                RichTextTemplate(
+                                  title: 'Diagnosis: ',
+                                  content: '${illness.diagnosis}',
+                                ),
+                                SizedBox(height: Sizing.formSpacing),
+                                RichTextTemplate(
+                                  title: 'Treatment: ',
+                                  content: '${illness.treatment}',
+                                ),
+                                SizedBox(height: Sizing.formSpacing),
+                                PhysicianCard(
+                                  patient: widget.patient,
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ],
                     ),

@@ -15,12 +15,12 @@ class HistoryPresentIllness extends StatefulWidget {
 }
 
 class _HistoryPresentIllnessState extends State<HistoryPresentIllness> {
-  ScrollController _scrollController = ScrollController();
+  // ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
     return ScaffoldTemplate(
-      scrollcontroller: _scrollController,
+      // scrollcontroller: _scrollController,
       column: Column(
         children: [
           DiagnosisInfoCard(
