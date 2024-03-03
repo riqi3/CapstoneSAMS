@@ -49,9 +49,7 @@ class _EditMedicineScreenState extends State<EditMedicineScreen> {
     name = widget.medicine.drugName;
     drugId = widget.medicine.drugId;
     drugCode = widget.medicine.drugCode;
-    instructions = widget.medicine.instructions;
-    selectedStartDate = widget.medicine.startDate;
-    selectedEndDate = widget.medicine.endDate;
+    instructions = widget.medicine.instructions; 
     quantity = widget.medicine.quantity;
     medicines = widget.prescription?.medicines;
   }

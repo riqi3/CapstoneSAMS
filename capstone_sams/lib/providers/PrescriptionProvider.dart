@@ -7,22 +7,23 @@ import '../constants/Env.dart';
 
 class PrescriptionProvider with ChangeNotifier {
   List<Prescription> _prescriptions = [];
-  List<Account> _physicians = [];
+  // List<Account> _physicians = [];
   Prescription? _prescription;
   Prescription? get prescription => _prescription;
-  List<Prescription> get prescripts => _prescriptions;
+  List<Prescription> get prescriptions => _prescriptions;
   int? get presNum => _prescription?.presNum;
-  String? get acc => _prescription?.account;
+  int? get acc => _prescription?.account;
   String? get patientID => _prescription?.patientID;
 
-  Future<List<Prescription>> get prescriptions => Future.value(_prescriptions);
-  Future<List<Account>> get physicians => Future.value(_physicians);
+  // Future<List<Prescription>> get prescriptions => Future.value(_prescriptions);
+  // Future<List<Account>> get physicians => Future.value(_physicians);
 
   String _getUrl(String endpoint) {
     return '${Env.prefix}/$endpoint';
   }
 
-  Future<void> fetchPrescriptions(String? patientID, String token) async {
+  Future<List<Prescription>> fetchPrescriptions(
+      String? patientID, String token) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',
@@ -33,28 +34,19 @@ class PrescriptionProvider with ChangeNotifier {
           _getUrl('cpoe/prescription/get-patient/${patientID}/'),
         ),
         headers: header,
-      ); 
+      );
       if (response.statusCode == 200) {
-        final items = json.decode(response.body);
-        List<Prescription> newPrescriptions = items["prescriptions"]
-            .map<Prescription>((json) => Prescription.fromJson(json))
-            .toList();
-        List<Account> newAccounts = items["accounts"]
-            .map<Account>((json) => Account.fromJson(json))
-            .toList();
+        final List<dynamic> jsonList = jsonDecode(response.body);
 
-        if (!listEquals(_prescriptions, newPrescriptions) ||
-            !listEquals(_physicians, newAccounts)) {
-          _prescriptions = newPrescriptions;
-          _physicians = newAccounts;
-          notifyListeners();
-        }
+        return jsonList.map((json) => Prescription.fromJson(json)).toList();
       } else {
         print(
             'Failed to fetch patient prescriptions ${jsonDecode(response.body)}');
+        return [];
       }
     } on Exception catch (e) {
       print('Failed to fetch patient prescriptions. Error: $e');
+      return [];
     }
   }
 
@@ -72,7 +64,7 @@ class PrescriptionProvider with ChangeNotifier {
         ),
         headers: header,
         body: jsonEncode(prescription),
-      ); 
+      );
 
       if (response.statusCode == 200) {
         fetchPrescriptions(patientID, token);
@@ -99,7 +91,7 @@ class PrescriptionProvider with ChangeNotifier {
         ),
         headers: header,
         body: jsonEncode(prescription),
-      ); 
+      );
       if (response.statusCode == 200) {
         fetchPrescriptions(patientID, token);
         notifyListeners();
@@ -124,7 +116,7 @@ class PrescriptionProvider with ChangeNotifier {
             'cpoe/prescription/get-prescription/delete/${prescription.presNum}')),
         headers: header,
         body: body,
-      ); 
+      );
       if (response.statusCode == 204) {
         fetchPrescriptions(patientID, token);
       } else {
@@ -148,7 +140,7 @@ class PrescriptionProvider with ChangeNotifier {
             'cpoe/prescription/get-prescription-${prescription.presNum}/delete-medicine/${drugId}')),
         headers: header,
         body: body,
-      ); 
+      );
       if (response.statusCode == 204) {
         fetchPrescriptions(patientID, token);
       } else {

@@ -75,12 +75,10 @@ class _CounterScreenState extends State<CounterScreen> {
     if (selectedMedicineIndex >= 0 &&
         selectedMedicineIndex < medicines!.length) {
       Medicine modifiedMedicine = Medicine(
-        drugId: drugId,
-        endDate: endDate,
+        drugId: drugId, 
         drugCode: drugCode,
         drugName: name,
-        quantity: updateQuantity,
-        startDate: startDate,
+        quantity: updateQuantity, 
         instructions: instructions,
       );
 
@@ -94,8 +92,8 @@ class _CounterScreenState extends State<CounterScreen> {
           medicines: updatedMedicines,
           account: widget.prescription.account,
           patientID: widget.prescription.patientID,
-          health_record: widget.prescription.health_record,
-          disease: widget.prescription.disease,
+          // health_record: widget.prescription.health_record,
+          // disease: widget.prescription.disease,
         ),
         widget.patient.patientID,
         token,

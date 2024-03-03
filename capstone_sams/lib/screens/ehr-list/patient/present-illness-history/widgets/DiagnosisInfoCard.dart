@@ -13,12 +13,15 @@ import 'package:capstone_sams/global-widgets/texts/NoDataTextWidget.dart';
 import 'package:capstone_sams/global-widgets/texts/RichTextTemplate.dart';
 import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
+import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/models/PresentIllness.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
+import 'package:capstone_sams/providers/PrescriptionProvider.dart';
 import 'package:capstone_sams/providers/PresentIllnessProvider.dart';
 import 'package:capstone_sams/global-widgets/forms/present-illness/EditPresentIllnessForm.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/PatientTabsScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/PhysicianCard.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/crud/medicine/Info.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/health-record/widgets/crud/medicine/MedicationOrderSection.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -39,6 +42,8 @@ class DiagnosisInfoCard extends StatefulWidget {
 
 class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
   late Stream<List<PresentIllness>> presentIllness;
+  late Future<List<Prescription>> prescriptions;
+  // late Future<List<Account>> physicians;
   late String token = context.read<AccountProvider>().token!;
   Account? account = Account(isSuperuser: false);
   var removeComplaint = dangerSnackbar('${Strings.remove} diagnosis.');
@@ -50,7 +55,37 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
     presentIllness = Stream.fromFuture(context
         .read<PresentIllnessProvider>()
         .fetchComplaints(token, widget.patient.patientID));
+    final provider = Provider.of<PrescriptionProvider>(context, listen: false);
+    prescriptions =
+        provider.fetchPrescriptions(widget.patient.patientID, token);
+    // physicians = fetchPhysicians();
   }
+
+  // Future<List<Prescription>> fetchPrescriptions() async {
+  //   try {
+
+  //     await provider.fetchPrescriptions(widget.patient.patientID, token);
+  //     return provider.prescriptions;
+  //   } catch (error, stackTrace) {
+  //     print("Error fetching data: $error");
+  //     print(stackTrace);
+  //     return [];
+  //   }
+  // }
+
+  // Future<List<Account>> fetchPhysicians() async {
+  //   try {
+  //     final provider =
+  //         Provider.of<PrescriptionProvider>(context, listen: false);
+  //     await provider.fetchPrescriptions(
+  //         widget.patient.patientID, context.read<AccountProvider>().token!);
+  //     return provider.physicians;
+  //   } catch (error, stackTrace) {
+  //     print("Error fetching data: $error");
+  //     print(stackTrace);
+  //     return [];
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -59,11 +94,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
         children: [
           CardTitleWidget(title: "History of Illnesses"),
           SizedBox(height: Sizing.sectionSymmPadding),
-          // CardSectionTitleWidget(title: "Patient's Present Illnesses"),
-          CardSectionInfoWidget(
-            // shader: false,
-            widget: PresentIllnessData(),
-          ),
+          CardSectionInfoWidget(widget: PresentIllnessData()),
         ],
       ),
     );
@@ -118,13 +149,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                         Provider.of<AccountProvider>(context);
                     String middleInitial = account.middleName![0];
                     String createdAt = dateFormatter(illness);
-                    // DateTime originalDate2 = DateTime.parse(
-                    //     illness.updated_at == null
-                    //         ? '2000-01-06 11:00:00.000000+08'
-                    //         : illness.updated_at!);
 
-                    // String updatedOn =
-                    //     DateFormat('MMM d, y | HH:mm').format(originalDate2);
                     return Visibility(
                       visible: illness.isDeleted == true ? false : true,
                       child: Card(
@@ -329,6 +354,12 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
     String middleInitial = account.middleName![0];
     String createdAt = dateFormatter(illness);
 
+    final prescriptionProvider =
+        Provider.of<PrescriptionProvider>(context, listen: false);
+
+    prescriptionProvider.fetchPrescriptions(widget.patient.patientID, token);
+
+    // print('diagnosis info card ${prescriptionProvider}');
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -439,8 +470,46 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                   content: '${illness.treatment}',
                                 ),
                                 SizedBox(height: Sizing.formSpacing),
-                                PhysicianCard(
-                                  patient: widget.patient,
+                                Container(
+                                  height:
+                                      MediaQuery.of(context).size.height / 4,
+                                  child: FutureBuilder<List<Prescription>>(
+                                    future: prescriptions,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return CircularProgressIndicator();
+                                      } else if (snapshot.hasError) {
+                                        return Text('Error: ${snapshot.error}');
+                                      } else {
+                                        final prescriptions = snapshot.data!;
+                                        return ListView.builder(
+                                          itemCount: prescriptions.length,
+                                          itemBuilder: (context, index) {
+                                            final prescription =
+                                                prescriptions[index];
+                                            if (widget.patient.patientID !=
+                                                prescription.patientID) {
+                                              return null;
+                                            }
+                                            return ListTile(
+                                              title: Text(
+                                                  'Prescription ${prescription.presNum}'),
+                                              subtitle: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: prescription
+                                                    .medicines!
+                                                    .map((medicine) => Text(
+                                                        '${medicine.quantity} x ${medicine.drugName}: ${medicine.instructions}'))
+                                                    .toList(),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      }
+                                    },
+                                  ),
                                 ),
                               ],
                             ),

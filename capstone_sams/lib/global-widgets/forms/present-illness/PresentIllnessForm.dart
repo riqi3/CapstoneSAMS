@@ -140,7 +140,6 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
     selectedDisease = widget.initialDisease;
   }
 
-    
   Widget build(BuildContext context) {
     return FormTemplate(
       onpressed: () => Navigator.pop(context),
@@ -348,67 +347,68 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
               fontWeight: FontWeight.w600),
         ),
         content: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              // margin: EdgeInsets.all(20),
-              // padding: EdgeInsets.all(20),
-              // decoration: BoxDecoration(
-              //   color: Colors.white,
-              //   borderRadius: BorderRadius.circular(15),
-              //   boxShadow: [
-              //     BoxShadow(
-              //       color: Colors.grey.withOpacity(0.5),
-              //       spreadRadius: 5,
-              //       blurRadius: 7,
-              //       offset: Offset(0, 3),
-              //     ),
-              //   ],
-              // ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  // Text(
-                  //   'Medication Order',
-                  //   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  // ),
-                  ElevatedButton.icon(
-                    onPressed: () => showDialog(
-                      context: context,
-                      builder: (ctx) => AddMedicineDialog(),
-                    ),
-                    icon: Icon(Icons.edit),
-                    label: Text('Write Rx'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Pallete.mainColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(Sizing.borderRadius),
-                      ),
-                    ),
+                  Text(
+                    'Medication Order',
+                    style: TextStyle(
+                        fontSize: Sizing.header4, fontWeight: FontWeight.bold),
                   ),
-                  if (medicineProvider.medicines.isEmpty)
-                    Text(
-                      '\n\nNo current orders\n\n',
-                      style: TextStyle(color: Pallete.greyColor),
-                    )
-                  else
-                    Column(
+                  Container(
+                    padding: EdgeInsets.all(Sizing.sectionSymmPadding),
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      color: Pallete.lightGreyColor2,
+                      borderRadius:
+                          BorderRadius.circular(Sizing.borderRadius / 3),
+                    ),
+                    child: Column(
                       children: [
-                        ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: medicineProvider.medicines.length,
-                          itemBuilder: (ctx, index) => MedicineCard(
-                            medicine: medicineProvider.medicines[index],
-                            patient: widget.patient,
-                            index: index,
+                        ElevatedButton.icon(
+                          onPressed: () => showDialog(
+                            context: context,
+                            builder: (ctx) => AddMedicineDialog(),
+                          ),
+                          icon: Icon(Icons.edit),
+                          label: Text('Write Rx'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Pallete.mainColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(Sizing.borderRadius),
+                            ),
                           ),
                         ),
+                        if (medicineProvider.medicines.isEmpty)
+                          Text(
+                            '\n\nNo current orders\n\n',
+                            style: TextStyle(color: Pallete.greyColor),
+                          )
+                        else
+                          Column(
+                            children: [
+                              ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: medicineProvider.medicines.length,
+                                itemBuilder: (ctx, index) => MedicineCard(
+                                  medicine: medicineProvider.medicines[index],
+                                  patient: widget.patient,
+                                  index: index,
+                                ),
+                              ),
+                            ],
+                          ),
                       ],
                     ),
-                  SizedBox(height: 10),
+                  ),
                 ],
               ),
             ),
+            SizedBox(height: Sizing.formSpacing),
             FormTextField(
               onchanged: (value) => _presIllnessInfo.treatment = value,
               labeltext: '',

@@ -29,9 +29,7 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
   @override
   void initState() {
     super.initState();
-    _editedMedicine = Medicine.copy(widget.medicine);
-    _selectedStartDate = _editedMedicine.startDate;
-    _selectedEndDate = _editedMedicine.endDate;
+    _editedMedicine = Medicine.copy(widget.medicine); 
   }
 
   @override
@@ -251,9 +249,7 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                             child: Text('Submit'),
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
-                                _formKey.currentState!.save();
-                                _editedMedicine.startDate = _selectedStartDate;
-                                _editedMedicine.endDate = _selectedEndDate;
+                                _formKey.currentState!.save(); 
                                 Provider.of<MedicineProvider>(context,
                                         listen: false)
                                     .editMedicine(

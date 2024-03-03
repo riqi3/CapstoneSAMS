@@ -257,27 +257,27 @@ class PrescriptionView(viewsets.ViewSet):
             patient = Patient.objects.get(pk=patientID) 
             prescriptions = Prescription.objects.filter(patient=patient) 
             prescriptionData = PrescriptionSerializer(prescriptions, many=True) 
-            accountData = [] 
-            for prescription in prescriptions:
-                account = Account.objects.get(pk=prescription.account_id)
-                accountSerializer = AccountSerializer(account)
-                accountData.append(accountSerializer.data)
+            # accountData = [] 
+            # for prescription in prescriptions:
+            #     account = Account.objects.get(pk=prescription.account_id)
+            #     accountSerializer = AccountSerializer(account)
+            #     accountData.append(accountSerializer.data)
         
-            data = {
-                "prescriptions": prescriptionData.data,
-                "accounts": accountData
-            }
-            unique_accounts = {}
-            new_accounts = []
-            for account in data['accounts']:
-                account_id = account['accountID']
-                if account_id not in unique_accounts:
-                    unique_accounts[account_id] = True
-                    new_accounts.append(account)
-            data['accounts'] = new_accounts
-            updated_json_data = json.dumps(data)
-            data_clean = json.loads(updated_json_data)
-        
-            return Response(data_clean, status=status.HTTP_200_OK)
+            # data = {
+            #     "prescriptions": prescriptionData.data,
+            #     "accounts": accountData
+            # }
+            # unique_accounts = {}
+            # new_accounts = []
+            # for account in data['accounts']:
+            #     account_id = account['accountID']
+            #     if account_id not in unique_accounts:
+            #         unique_accounts[account_id] = True
+            #         new_accounts.append(account)
+            # data['accounts'] = new_accounts
+            # updated_json_data = json.dumps(data)
+            # data_clean = json.loads(updated_json_data)
+            return Response(prescriptionData.data, status=status.HTTP_200_OK)
+            # return Response(data_clean, status=status.HTTP_200_OK)
         except Exception as e:
-            return Response({"message": "Failed to fetch prescriptions", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "Failed to fetch prescriptioddns", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

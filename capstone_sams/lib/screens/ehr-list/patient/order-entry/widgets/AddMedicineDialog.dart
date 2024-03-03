@@ -239,9 +239,7 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
-                                if (_medicine.drugName!.isNotEmpty) {
-                                  _medicine.startDate = _selectedStartDate;
-                                  _medicine.endDate = _selectedEndDate;
+                                if (_medicine.drugName!.isNotEmpty) { 
                                   Provider.of<MedicineProvider>(context,
                                           listen: false)
                                       .addMedicine(_medicine);
