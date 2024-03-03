@@ -4,13 +4,13 @@ class Prescription {
   final int? presNum;
   final List<dynamic>? medicines;
   final int? account;
-  final String? patientID;
+  final String? patientID; 
 
   Prescription({
     required this.presNum,
     required this.medicines,
     required this.account,
-    required this.patientID,
+    required this.patientID, 
   });
 
   Map<String, dynamic> toJson() {
@@ -18,7 +18,7 @@ class Prescription {
       'presNum': presNum,
       'medicines': medicines,
       'account': account,
-      'patient': patientID,
+      'patient': patientID, 
     };
   }
 
@@ -35,7 +35,7 @@ class Prescription {
           .map((medicineJson) => Medicine.fromJson(medicineJson))
           .toList(),
       account: json['account'],
-      patientID: json['patient'],
+      patientID: json['patient'], 
     );
   }
 }

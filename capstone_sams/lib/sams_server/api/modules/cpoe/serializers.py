@@ -17,7 +17,7 @@ class PrescriptionSerializer(serializers.ModelSerializer):
         model = Prescription
         fields = ['presNum', 'medicines', 'account', 
                 #   'health_record', 
-                  'patient'
+                  'patient', 
                 #   , 'disease'
                   ]
 

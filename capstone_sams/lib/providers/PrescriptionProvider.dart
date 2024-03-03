@@ -23,7 +23,7 @@ class PrescriptionProvider with ChangeNotifier {
   }
 
   Future<List<Prescription>> fetchPrescriptions(
-      String? patientID, String token) async {
+      String? patientID,  String token) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',
@@ -50,104 +50,104 @@ class PrescriptionProvider with ChangeNotifier {
     }
   }
 
-  Future updatePrescription(
-      Prescription prescription, String? patientID, String token) async {
-    final header = <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization': 'Bearer $token',
-    };
-    try {
-      final response = await http.put(
-        Uri.parse(
-          _getUrl(
-              'cpoe/prescription/get-prescription/update/${prescription.presNum}'),
-        ),
-        headers: header,
-        body: jsonEncode(prescription),
-      );
+  // Future updatePrescription(
+  //     Prescription prescription, String? patientID, String token) async {
+  //   final header = <String, String>{
+  //     'Content-Type': 'application/json; charset=UTF-8',
+  //     'Authorization': 'Bearer $token',
+  //   };
+  //   try {
+  //     final response = await http.put(
+  //       Uri.parse(
+  //         _getUrl(
+  //             'cpoe/prescription/get-prescription/update/${prescription.presNum}'),
+  //       ),
+  //       headers: header,
+  //       body: jsonEncode(prescription),
+  //     );
 
-      if (response.statusCode == 200) {
-        fetchPrescriptions(patientID, token);
-        notifyListeners();
-      } else {
-        print('Failed to update prescription');
-      }
-    } on Exception catch (e) {
-      print('Failed to update prescription');
-    }
-  }
+  //     if (response.statusCode == 200) {
+  //       fetchPrescriptions(patientID, token);
+  //       notifyListeners();
+  //     } else {
+  //       print('Failed to update prescription');
+  //     }
+  //   } on Exception catch (e) {
+  //     print('Failed to update prescription');
+  //   }
+  // }
 
-  Future updatePrescriptionAmount(
-      Prescription prescription, String? patientID, String token) async {
-    final header = <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization': 'Bearer $token',
-    };
-    try {
-      final response = await http.put(
-        Uri.parse(
-          _getUrl(
-              'cpoe/prescription/get-prescription/update-amount/${prescription.presNum}'),
-        ),
-        headers: header,
-        body: jsonEncode(prescription),
-      );
-      if (response.statusCode == 200) {
-        fetchPrescriptions(patientID, token);
-        notifyListeners();
-      } else {
-        print('Failed to update prescription amount');
-      }
-    } on Exception catch (e) {
-      print('Failed to update prescription amount');
-    }
-  }
+  // Future updatePrescriptionAmount(
+  //     Prescription prescription, String? patientID, String token) async {
+  //   final header = <String, String>{
+  //     'Content-Type': 'application/json; charset=UTF-8',
+  //     'Authorization': 'Bearer $token',
+  //   };
+  //   try {
+  //     final response = await http.put(
+  //       Uri.parse(
+  //         _getUrl(
+  //             'cpoe/prescription/get-prescription/update-amount/${prescription.presNum}'),
+  //       ),
+  //       headers: header,
+  //       body: jsonEncode(prescription),
+  //     );
+  //     if (response.statusCode == 200) {
+  //       fetchPrescriptions(patientID, token);
+  //       notifyListeners();
+  //     } else {
+  //       print('Failed to update prescription amount');
+  //     }
+  //   } on Exception catch (e) {
+  //     print('Failed to update prescription amount');
+  //   }
+  // }
 
-  Future removePrescription(
-      Prescription prescription, String? patientID, String token) async {
-    final header = <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization': 'Bearer $token',
-    };
-    final body = jsonEncode({'account': prescription.account});
-    try {
-      final response = await http.delete(
-        Uri.parse(_getUrl(
-            'cpoe/prescription/get-prescription/delete/${prescription.presNum}')),
-        headers: header,
-        body: body,
-      );
-      if (response.statusCode == 204) {
-        fetchPrescriptions(patientID, token);
-      } else {
-        print('Failed to delete prescription ${jsonDecode(response.body)}');
-      }
-    } on Exception catch (e) {
-      print('Failed to delete prescription. Error: $e');
-    }
-  }
+  // Future removePrescription(
+  //     Prescription prescription, String? patientID, String token) async {
+  //   final header = <String, String>{
+  //     'Content-Type': 'application/json; charset=UTF-8',
+  //     'Authorization': 'Bearer $token',
+  //   };
+  //   final body = jsonEncode({'account': prescription.account});
+  //   try {
+  //     final response = await http.delete(
+  //       Uri.parse(_getUrl(
+  //           'cpoe/prescription/get-prescription/delete/${prescription.presNum}')),
+  //       headers: header,
+  //       body: body,
+  //     );
+  //     if (response.statusCode == 204) {
+  //       fetchPrescriptions(patientID, token);
+  //     } else {
+  //       print('Failed to delete prescription ${jsonDecode(response.body)}');
+  //     }
+  //   } on Exception catch (e) {
+  //     print('Failed to delete prescription. Error: $e');
+  //   }
+  // }
 
-  Future removeMedicine(Prescription prescription, String? patientID,
-      String? drugId, String token) async {
-    final header = <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization': 'Bearer $token',
-    };
-    final body = jsonEncode({'account': prescription.account});
-    try {
-      final response = await http.delete(
-        Uri.parse(_getUrl(
-            'cpoe/prescription/get-prescription-${prescription.presNum}/delete-medicine/${drugId}')),
-        headers: header,
-        body: body,
-      );
-      if (response.statusCode == 204) {
-        fetchPrescriptions(patientID, token);
-      } else {
-        print('Failed to delete medicine ${jsonDecode(response.body)}');
-      }
-    } on Exception catch (e) {
-      print('Failed to delete medicine. Error: $e');
-    }
-  }
+  // Future removeMedicine(Prescription prescription, String? patientID,
+  //     String? drugId, String token) async {
+  //   final header = <String, String>{
+  //     'Content-Type': 'application/json; charset=UTF-8',
+  //     'Authorization': 'Bearer $token',
+  //   };
+  //   final body = jsonEncode({'account': prescription.account});
+  //   try {
+  //     final response = await http.delete(
+  //       Uri.parse(_getUrl(
+  //           'cpoe/prescription/get-prescription-${prescription.presNum}/delete-medicine/${drugId}')),
+  //       headers: header,
+  //       body: body,
+  //     );
+  //     if (response.statusCode == 204) {
+  //       fetchPrescriptions(patientID, token);
+  //     } else {
+  //       print('Failed to delete medicine ${jsonDecode(response.body)}');
+  //     }
+  //   } on Exception catch (e) {
+  //     print('Failed to delete medicine. Error: $e');
+  //   }
+  // }
 }

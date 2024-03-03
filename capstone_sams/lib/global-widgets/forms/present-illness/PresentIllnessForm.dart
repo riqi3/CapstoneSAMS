@@ -106,7 +106,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
           await presentIllnessProvider.createComplaint(
               presentIllnessRecord, token, widget.patient.patientID, accountID);
 
-      if (presentIllnessSuccess && recipeSuccess && medicines.isNotEmpty) {
+      if (presentIllnessSuccess == true || recipeSuccess == true || medicines.isNotEmpty) {
         int routesCount = 0;
 
         Navigator.pushAndRemoveUntil(

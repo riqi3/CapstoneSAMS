@@ -7,7 +7,7 @@ import json
 from rest_framework import status
 from api.modules.user.models import Account, Data_Log
 from api.modules.user.serializers import AccountSerializer
-from api.modules.patient.models import Health_Record, Patient
+from api.modules.patient.models import Health_Record, Patient,Present_Illness
 from api.modules.cpoe.models import Comment, Medicine, Prescription
 from api.modules.cpoe.serializers import CommentSerializer, MedicineSerializer, PrescriptionSerializer
 from api.modules.disease_prediction.cdssModel.models import HealthSymptom
@@ -241,8 +241,7 @@ class PrescriptionView(viewsets.ViewSet):
                 event = f"{prescription.account.username} deleted medicine code {prescription}",
                 type = "User Deleted Medicine",
                 account = prescription.account 
-            )
-            
+            ) 
             return Response({"message": "Medicine with given drugId not found"}, status=status.HTTP_404_NOT_FOUND)
 
         except Prescription.DoesNotExist:
@@ -252,31 +251,11 @@ class PrescriptionView(viewsets.ViewSet):
 
     @api_view(['GET'])
     # @permission_classes([IsAuthenticated])
-    def fetch_prescription_by_patientIds(request, patientID):
+    def fetch_prescription_by_patientIds(request, patientID ):
         try: 
-            patient = Patient.objects.get(pk=patientID) 
-            prescriptions = Prescription.objects.filter(patient=patient) 
-            prescriptionData = PrescriptionSerializer(prescriptions, many=True) 
-            # accountData = [] 
-            # for prescription in prescriptions:
-            #     account = Account.objects.get(pk=prescription.account_id)
-            #     accountSerializer = AccountSerializer(account)
-            #     accountData.append(accountSerializer.data)
-        
-            # data = {
-            #     "prescriptions": prescriptionData.data,
-            #     "accounts": accountData
-            # }
-            # unique_accounts = {}
-            # new_accounts = []
-            # for account in data['accounts']:
-            #     account_id = account['accountID']
-            #     if account_id not in unique_accounts:
-            #         unique_accounts[account_id] = True
-            #         new_accounts.append(account)
-            # data['accounts'] = new_accounts
-            # updated_json_data = json.dumps(data)
-            # data_clean = json.loads(updated_json_data)
+            patient = Patient.objects.get(pk=patientID)    
+            prescriptions = Prescription.objects.filter(patient=patient )  
+            prescriptionData = PrescriptionSerializer(prescriptions, many=True)  
             return Response(prescriptionData.data, status=status.HTTP_200_OK)
             # return Response(data_clean, status=status.HTTP_200_OK)
         except Exception as e:

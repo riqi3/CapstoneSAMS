@@ -284,11 +284,11 @@ class PresentIllnessView(viewsets.ViewSet):
             return Response({"message": "Complaint does not exist."}, status=status.HTTP_404_NOT_FOUND)
     
     @api_view(['POST'])
-    def create_complaint(request, patientID, accountID):
+    def create_complaint(request, patientID, accountID ):
         try:
             patient = Patient.objects.get(pk=patientID)
             # accountID = account.accountID
-            account = Account.objects.get(pk=accountID)
+            account = Account.objects.get(pk=accountID) 
             illness_data = json.loads(request.body)
             illness = Present_Illness.objects.create(
                 illnessName = illness_data['illnessName'],
@@ -299,7 +299,7 @@ class PresentIllnessView(viewsets.ViewSet):
                 created_at = illness_data['created_at'],
                 updated_at = illness_data['updated_at'],
                 patient = patient,
-                created_by = account
+                created_by = account, 
             )
             return Response({"message": "Complaint created successfully."}, status=status.HTTP_201_CREATED)
         except Exception as e:

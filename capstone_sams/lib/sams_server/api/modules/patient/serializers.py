@@ -26,7 +26,7 @@ class PatientSerializer(serializers.ModelSerializer):
             'weight', 
             "phone",
             "email",  
-            'isDeleted',
+            'isDeleted', 
         ]
 
 
@@ -73,5 +73,5 @@ class PresentIllnessSerializer(serializers.ModelSerializer):
             'updated_at',
             'patient',
             'created_by',
-            'isDeleted',
+            'isDeleted', 
         ]

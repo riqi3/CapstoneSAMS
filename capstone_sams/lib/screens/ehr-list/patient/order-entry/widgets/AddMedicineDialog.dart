@@ -17,9 +17,7 @@ class AddMedicineDialog extends StatefulWidget {
 
 class _AddMedicineDialogState extends State<AddMedicineDialog> {
   final _formKey = GlobalKey<FormState>();
-  final _medicine = Medicine();
-  DateTime? _selectedStartDate;
-  DateTime? _selectedEndDate;
+  final _medicine = Medicine(); 
   late String token = context.read<AccountProvider>().token!;
 
   late Future<List<Medicine>> medicines;

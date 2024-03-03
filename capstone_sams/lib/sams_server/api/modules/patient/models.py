@@ -1,7 +1,7 @@
 import uuid 
 from django.utils import timezone
 from django.db import models
-from api.modules.user.models import Account
+from api.modules.user.models import Account  
 '''
 This model represent the patients
 inputted and stored into the system.
