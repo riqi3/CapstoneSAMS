@@ -14,6 +14,7 @@ class PrescriptionProvider with ChangeNotifier {
   int? get presNum => _prescription?.presNum;
   int? get acc => _prescription?.account;
   String? get patientID => _prescription?.patientID;
+  String? get illnessID => _prescription?.illnessID;
 
   // Future<List<Prescription>> get prescriptions => Future.value(_prescriptions);
   // Future<List<Account>> get physicians => Future.value(_physicians);

@@ -19,6 +19,7 @@ class PrescriptionSerializer(serializers.ModelSerializer):
                 #   'health_record', 
                   'patient', 
                 #   , 'disease'
+                'illness',
                   ]
 
 '''

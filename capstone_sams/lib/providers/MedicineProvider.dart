@@ -69,36 +69,44 @@ class MedicineProvider with ChangeNotifier {
   }
 
   Future<bool> saveToPrescription(
-      int? accountId,
-      String? patientId,
-      // String? finalPrediction,
-      String token) async {
+    int? accountId,
+    String? patientId,
+    // String? finalPrediction,
+    String token,
+    String? illnessId,
+  ) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',
     };
     final medicinesJson =
         _medicines.map((medicine) => medicine.toJson()).toList();
-
+ 
     final data = <String, dynamic>{
       'medicines': medicinesJson,
       'account': accountId,
       'patient': patientId,
+      'illness': illnessId,
       // 'disease': finalPrediction,
     };
     print(patientId);
     print(accountId);
+    
+      print('illnes provuider ${illnessId}');
     try {
       final response = await http.post(
         Uri.parse('${Env.prefix}/cpoe/prescription/save/'),
         headers: header,
         body: jsonEncode(data),
       );
-      // await Future.delayed(Duration(milliseconds: 1000));
+      await Future.delayed(Duration(milliseconds: 1000));
       if (response.statusCode == 200) {
         return true;
       } else {
         print('cannot add medicine!');
+        print(response.statusCode);
+        print(response.reasonPhrase);
+        print(response.body);
         return false;
       }
     } on Exception catch (e) {

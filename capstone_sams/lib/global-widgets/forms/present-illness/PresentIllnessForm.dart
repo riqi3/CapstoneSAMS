@@ -38,6 +38,8 @@ class PresentIllnessForm extends StatefulWidget {
 }
 
 class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
+  final findings = TextEditingController();
+  String displayFindings = '';
   String? selectedDisease;
   final _presIllnessInfoFormKey = GlobalKey<FormState>();
   final _presIllnessInfo = PresentIllness();
@@ -45,13 +47,15 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
   int currentStep = 0;
   int? maxLines = 4;
   late String token;
-
+  final illness_id = Uuid().v4();
+  var getID = '';
   var incompleteInputs = dangerSnackbar('${Strings.incompleteInputs}');
   var failedCreatedComplaint =
       dangerSnackbar('${Strings.dangerAdd} diagnosis.');
   var successfulCreatedComplaint =
       successSnackbar('${Strings.successfulAdd} diagnosis.');
 
+  bool checkboxValue1 = false;
   bool _isLoading = false;
 
   late bool _autoValidate = false;
@@ -67,46 +71,20 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
 
       return;
     } else {
-      // String getDate = DateFormat.yMMMd('en_US').format(createdAt as DateTime);
-
-      String formattedDate = createdAt != null
-          ? DateFormat('yyyy-MM-dd HH:mm').format(createdAt!)
-          : '';
-
-      var presentIllnessRecord = PresentIllness(
-        illnessID: Uuid().v4(),
-        illnessName: _presIllnessInfo.illnessName,
-        complaint: _presIllnessInfo.complaint,
-        findings: _presIllnessInfo.findings,
-        diagnosis: _presIllnessInfo.diagnosis,
-        treatment: _presIllnessInfo.treatment,
-        created_at: formattedDate,
-        // updated_at: formattedDate,
-        patient: widget.patient.patientID,
-      );
-
-      final presentIllnessProvider =
-          Provider.of<PresentIllnessProvider>(context, listen: false);
-
       final token = context.read<AccountProvider>().token!;
-
       final accountID = context.read<AccountProvider>().id;
       final medicineProvider = context.read<MedicineProvider>();
-      var medicines = medicineProvider.medicines;
 
+      final illnessProvider = context.read<PresentIllnessProvider>();
+      final s = await illnessProvider.fetchComplaint(token, illness_id);
+      var medicines = medicineProvider.medicines;
       final patientID = widget.patient.patientID;
 
+      print('illnes form ${illness_id}');
       final recipeSuccess = await medicineProvider.saveToPrescription(
-          accountID,
-          patientID,
-          // finalPrediction,
-          token);
+          accountID, patientID, token, s.illnessID);
 
-      final presentIllnessSuccess =
-          await presentIllnessProvider.createComplaint(
-              presentIllnessRecord, token, widget.patient.patientID, accountID);
-
-      if (presentIllnessSuccess == true || recipeSuccess == true || medicines.isNotEmpty) {
+      if (recipeSuccess || medicines.isEmpty) {
         int routesCount = 0;
 
         Navigator.pushAndRemoveUntil(
@@ -122,7 +100,6 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
             return true;
           },
         );
-
         ScaffoldMessenger.of(context).showSnackBar(successfulCreatedComplaint);
       } else {
         setState(() => _isLoading = false);
@@ -138,6 +115,12 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
     token = context.read<AccountProvider>().token!;
     Provider.of<MedicineProvider>(context, listen: false).resetState();
     selectedDisease = widget.initialDisease;
+  }
+
+  @override
+  void dispose() {
+    findings.dispose();
+    super.dispose();
   }
 
   Widget build(BuildContext context) {
@@ -205,18 +188,72 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
                                 ),
                               ),
                             SizedBox(width: Sizing.formSpacing),
-                            Expanded(
-                              child: FormSubmitButton(
-                                title: isLastStep ? 'Submit' : 'Next',
-                                icon: Icons.upload,
-                                isLoading: _isLoading,
-                                onpressed: isLastStep
-                                    ? _isLoading
-                                        ? null
-                                        : _onSubmit
-                                    : details.onStepContinue,
-                              ),
-                            ),
+                            currentStep == 3
+                                ? Expanded(
+                                    child: FormSubmitButton(
+                                      title: currentStep == 3 ? 'woah' : 'Next',
+                                      icon: isLastStep
+                                          ? Icons.upload
+                                          : Icons.chevron_right,
+                                      isLoading: _isLoading,
+                                      onpressed: () {
+                                        String formattedDate = createdAt != null
+                                            ? DateFormat('yyyy-MM-dd HH:mm')
+                                                .format(createdAt!)
+                                            : '';
+
+                                        print(
+                                            'create illnes form ${illness_id}');
+
+                                        var presentIllnessRecord =
+                                            PresentIllness(
+                                          illnessID: illness_id,
+                                          illnessName:
+                                              _presIllnessInfo.illnessName,
+                                          complaint: _presIllnessInfo.complaint,
+                                          findings: _presIllnessInfo.findings,
+                                          diagnosis: _presIllnessInfo.diagnosis,
+                                          treatment: _presIllnessInfo.treatment,
+                                          created_at: formattedDate,
+                                          // updated_at: formattedDate,
+                                          patient: widget.patient.patientID,
+                                        );
+                                        final accountID =
+                                            context.read<AccountProvider>().id;
+                                        final presentIllnessProvider =
+                                            Provider.of<PresentIllnessProvider>(
+                                                context,
+                                                listen: false);
+                                        final presentIllnessSuccess =
+                                            presentIllnessProvider
+                                                .createComplaint(
+                                                    presentIllnessRecord,
+                                                    token,
+                                                    widget.patient.patientID,
+                                                    accountID);
+                                        getID = presentIllnessRecord.illnessID!;
+                                        print('GET THE ID ${getID}');
+                                        setState(() {
+                                          currentStep += 1;
+                                          details.onStepContinue;
+                                        });
+                                      },
+                                    ),
+                                  )
+                                : Expanded(
+                                    child: FormSubmitButton(
+                                      title: isLastStep ? 'Submit' : 'Next',
+                                      icon: isLastStep
+                                          ? Icons.upload
+                                          : Icons.chevron_right,
+                                      isLoading: _isLoading,
+                                      onpressed: isLastStep
+                                          ? _isLoading
+                                              ? null
+                                              : _onSubmit
+                                          : details.onStepContinue,
+                                    ),
+                                  ),
                           ],
                         );
                       },
@@ -268,6 +305,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
           onchanged: (value) => _presIllnessInfo.findings = value,
           labeltext: '',
           validator: Strings.requiredField,
+          controller: findings,
           maxlines: maxLines,
           type: TextInputType.text,
         ),
@@ -349,66 +387,72 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    'Medication Order',
-                    style: TextStyle(
-                        fontSize: Sizing.header4, fontWeight: FontWeight.bold),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(Sizing.sectionSymmPadding),
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      color: Pallete.lightGreyColor2,
-                      borderRadius:
-                          BorderRadius.circular(Sizing.borderRadius / 3),
-                    ),
-                    child: Column(
-                      children: [
-                        ElevatedButton.icon(
-                          onPressed: () => showDialog(
-                            context: context,
-                            builder: (ctx) => AddMedicineDialog(),
-                          ),
-                          icon: Icon(Icons.edit),
-                          label: Text('Write Rx'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Pallete.mainColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(Sizing.borderRadius),
-                            ),
-                          ),
+            CheckboxListTile(
+              value: checkboxValue1,
+              onChanged: (bool? value) {
+                setState(() {
+                  checkboxValue1 = value!;
+                });
+              },
+              title: const Text('Create Medication Order'),
+            ),
+            checkboxValue1 == true
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(Sizing.sectionSymmPadding),
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          color: Pallete.lightGreyColor2,
+                          borderRadius:
+                              BorderRadius.circular(Sizing.borderRadius / 3),
                         ),
-                        if (medicineProvider.medicines.isEmpty)
-                          Text(
-                            '\n\nNo current orders\n\n',
-                            style: TextStyle(color: Pallete.greyColor),
-                          )
-                        else
-                          Column(
-                            children: [
-                              ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: medicineProvider.medicines.length,
-                                itemBuilder: (ctx, index) => MedicineCard(
-                                  medicine: medicineProvider.medicines[index],
-                                  patient: widget.patient,
-                                  index: index,
+                        child: Column(
+                          children: [
+                            ElevatedButton.icon(
+                              onPressed: () => showDialog(
+                                context: context,
+                                builder: (ctx) => AddMedicineDialog(),
+                              ),
+                              icon: Icon(Icons.edit),
+                              label: Text('Write Rx'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Pallete.mainColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      Sizing.borderRadius),
                                 ),
                               ),
-                            ],
-                          ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: Sizing.formSpacing),
+                            ),
+                            if (medicineProvider.medicines.isEmpty)
+                              Text(
+                                '\n\nNo current orders\n\n',
+                                style: TextStyle(color: Pallete.greyColor),
+                              )
+                            else
+                              Column(
+                                children: [
+                                  ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount:
+                                        medicineProvider.medicines.length,
+                                    itemBuilder: (ctx, index) => MedicineCard(
+                                      medicine:
+                                          medicineProvider.medicines[index],
+                                      patient: widget.patient,
+                                      index: index,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
+                : SizedBox(width: Sizing.spacing),
+            SizedBox(height: Sizing.spacing),
             FormTextField(
               onchanged: (value) => _presIllnessInfo.treatment = value,
               labeltext: '',
@@ -416,6 +460,28 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
               maxlines: maxLines,
               type: TextInputType.text,
             ),
+          ],
+        ),
+      ),
+      Step(
+        state: currentStep > 4 ? StepState.complete : StepState.indexed,
+        isActive: currentStep >= 4,
+        title: Text(
+          'Summary',
+          style: TextStyle(
+            color: Pallete.mainColor,
+            fontSize: Sizing.header4,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        content: Column(
+          children: [
+            SizedBox(height: Sizing.formSpacing),
+            Text(
+              'Findings: $displayFindings',
+              style: TextStyle(fontSize: 20),
+            ),
+            SizedBox(height: Sizing.sectionSymmPadding),
           ],
         ),
       ),

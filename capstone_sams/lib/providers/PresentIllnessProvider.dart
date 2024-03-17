@@ -25,6 +25,29 @@ class PresentIllnessProvider extends ChangeNotifier {
   Future<List<PresentIllness>> get presentIllnesses =>
       Future.value(_presentIllnessList);
 
+  Future<PresentIllness> fetchComplaint(String token, String? illnessID) async {
+    final header = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token',
+    };
+    try {
+      final response = await http.get(
+          Uri.parse(
+              '${Env.prefix}/patient/patients/complaint/illness/${illnessID}'),
+          headers: header);
+      await Future.delayed(Duration(milliseconds: 1000));
+      if (response.statusCode == 200) {
+        return PresentIllness.fromJson(
+            jsonDecode(response.body) as Map<String, dynamic>);
+      } else {
+        return throw Exception('Failed to load complaint');
+      }
+    } catch (e) {
+      print('WHY COMPLAINT ${e}');
+      return throw Exception('Failed to load complaint');
+    }
+  }
+
   Future<List<PresentIllness>> fetchComplaints(
       String token, String? patientID) async {
     final header = <String, String>{
@@ -59,6 +82,7 @@ class PresentIllnessProvider extends ChangeNotifier {
       'Content-Type': 'application/json; charset=UTF-8',
       // 'Authorization': 'Bearer $token',
     };
+
     try {
       var body = presentIllness.toJson();
       // body['account'] = accountID;
@@ -69,6 +93,7 @@ class PresentIllnessProvider extends ChangeNotifier {
         headers: header,
         body: jsonEncode(body),
       );
+      await Future.delayed(Duration(milliseconds: 1000));
       if (response.statusCode == 201) {
         fetchComplaints(token, patientID);
         notifyListeners();

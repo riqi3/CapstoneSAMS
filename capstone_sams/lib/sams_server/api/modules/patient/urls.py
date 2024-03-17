@@ -17,6 +17,7 @@ urlpatterns = [
     path('patients/complaints/create/<str:patientID>/<str:accountID>', PresentIllnessView.create_complaint, name='create_complaint'),
     path('patients/complaints/update/<str:illnessID>/<str:accountID>', PresentIllnessView.update_complaint, name='update_complaint'),
     path('patients/complaints/', PresentIllnessView.fetch_complaints, name='fetch_complaints'),
-    path('patients/complaints/illness/<str:patientID>', PresentIllnessView.fetch_complaint_by_id, name='fetch_complaint_by_id'),
+    path('patients/complaints/illness/<str:patientID>', PresentIllnessView.fetch_allcomplaint_by_patientid, name='fetch_allcomplaint_by_patientid'),
+    path('patients/complaint/illness/<str:illnessID>', PresentIllnessView.fetch_complaint_by_id, name='fetch_complaint_by_id'),
     path('patients/complaints/illness/delete/', PresentIllnessView.delete_complaint, name='delete_complaint'),
 ]

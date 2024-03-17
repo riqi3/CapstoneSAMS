@@ -492,6 +492,11 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                                 prescription.patientID) {
                                               return null;
                                             }
+                                            print(
+                                                'prescription illness ${prescription.illnessID}');
+
+                                            print(
+                                                'illness ${illness.illnessID}');
                                             return ListTile(
                                               title: Text(
                                                   'Prescription ${prescription.presNum}'),

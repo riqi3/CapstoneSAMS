@@ -135,16 +135,19 @@ class PrescriptionView(viewsets.ViewSet):
         try:
             prescription_data = json.loads(request.body)
             accountID = prescription_data['account']
-            patientID = prescription_data['patient'] 
+            patientID = prescription_data['patient']             
+            illnessID = prescription_data['illness'] 
             account = Account.objects.get(pk=accountID)
             # record = Health_Record.objects.get(patient=patientID)
-            patient = Patient.objects.get(pk=patientID)
+            patient = Patient.objects.get(pk=patientID) 
+            illness = Present_Illness.objects.get(pk=illnessID)
             # disease = prescription_data.get('disease')
             prescription = Prescription.objects.create(
                 medicines=prescription_data['medicines'],
                 account=account,
                 # health_record = record,
                 patient = patient,
+                illness = illness,
                 # disease=disease
             )
             data_log = Data_Log.objects.create(
