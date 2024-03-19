@@ -13,8 +13,18 @@ import 'widgets/buildwidgets.dart';
 class HealthCheckScreen extends StatelessWidget {
   final void Function(String)? onDiseaseSelected;
   final Patient patient;
-
-  HealthCheckScreen({required this.patient, this.onDiseaseSelected});
+  final String? initialComplaint;
+  final String? initialFindings;
+  final String? initialDiagnosis;
+  final String? initialTreatment;
+  HealthCheckScreen({
+    required this.patient,
+    this.onDiseaseSelected,
+    this.initialComplaint,
+    this.initialFindings,
+    this.initialDiagnosis,
+    this.initialTreatment,
+  });
   @override
   Widget build(BuildContext context) {
     final accountProvider = Provider.of<AccountProvider>(context);
@@ -203,8 +213,13 @@ class HealthCheckScreen extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => PresentIllnessForm(
-                              patient: patient,
-                              initialDisease: selectedDisease),
+                            patient: patient,
+                            initialDisease: selectedDisease,
+                            initialComplaint: initialComplaint,
+                            initialFindings: initialFindings,
+                            initialDiagnosis: initialDiagnosis,
+                            initialTreatment: initialTreatment,
+                          ),
                         ),
                       );
                     },
@@ -258,6 +273,10 @@ class HealthCheckScreen extends StatelessWidget {
         return ChangeValueDialog(
           patient: patient,
           initialDisease: firstResultDisease ?? '',
+          initialComplaint: initialComplaint ?? '',
+          initialFindings: initialFindings ?? '',
+          initialTreatment: initialTreatment,
+          initialDiagnosis: initialDiagnosis,
         );
       },
     ).then((newDisease) {

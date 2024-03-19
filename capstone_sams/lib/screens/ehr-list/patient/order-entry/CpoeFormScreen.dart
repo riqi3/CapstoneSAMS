@@ -10,12 +10,21 @@ import '../../../../constants/theme/pallete.dart';
 class CpoeFormScreen extends StatelessWidget {
   final String initialPrediction;
   final double initialConfidence;
+  final String? initialComplaint;
+  final String? initialFindings;
+  final String? initialDiagnosis;
+  final String? initialTreatment;
   final Patient patient;
 
-  CpoeFormScreen(
-      {required this.initialPrediction,
-      required this.initialConfidence,
-      required this.patient});
+  CpoeFormScreen({
+    required this.initialPrediction,
+    required this.initialConfidence,
+    required this.patient,
+    this.initialComplaint,
+    this.initialFindings,
+    this.initialDiagnosis,
+    this.initialTreatment,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +58,10 @@ class CpoeFormScreen extends StatelessWidget {
         context: context,
         builder: (context) => PrognosisUpdateDialog(
           patient: patient,
+          initialComplaint: initialComplaint,
+          initialFindings: initialFindings,
+          initialTreatment: initialTreatment,
+          initialDiagnosis: initialDiagnosis,
         ),
       );
 
@@ -136,8 +149,13 @@ class CpoeFormScreen extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) => PresentIllnessForm(
-                                patient: patient,
-                                initialDisease: finalPrediction),
+                              patient: patient,
+                              initialDisease: finalPrediction,
+                              initialComplaint: initialComplaint,
+                              initialFindings: initialFindings,
+                              initialDiagnosis: initialDiagnosis,
+                              initialTreatment: initialTreatment,
+                            ),
                           ),
                         );
                       },

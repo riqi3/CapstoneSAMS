@@ -22,11 +22,20 @@ import '../healthcheckscreen.dart';
 
 // ignore: must_be_immutable
 class PresentIllnessForm extends StatefulWidget {
+  final String? initialComplaint;
+  final String? initialFindings;
+  final String? initialTreatment;
+  final String? initialDiagnosis;
+
   final String? initialDisease;
   Patient patient;
   PresentIllnessForm({
     Key? key,
     required this.patient,
+    this.initialComplaint,
+    this.initialFindings,
+    this.initialTreatment,
+    this.initialDiagnosis,
     this.initialDisease,
   }) : super(key: key);
 
@@ -118,10 +127,28 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
     }
   }
 
+  TextEditingController _complaintController = TextEditingController();
+  TextEditingController _findingsController = TextEditingController();
+  TextEditingController _treatmentController = TextEditingController();
+  TextEditingController _diagnosisController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     selectedDisease = widget.initialDisease;
+
+    _complaintController.text = widget.initialComplaint ?? '';
+    _findingsController.text = widget.initialFindings ?? '';
+    _treatmentController.text = widget.initialTreatment ?? '';
+    _diagnosisController.text = widget.initialTreatment ?? '';
+  }
+
+  @override
+  void dispose() {
+    _complaintController.dispose();
+    _findingsController.dispose();
+    _treatmentController.dispose();
+    super.dispose();
   }
 
   @override
@@ -229,6 +256,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
               fontWeight: FontWeight.w600),
         ),
         content: FormTextField(
+          controller: _complaintController,
           onchanged: (value) => _presIllnessInfo.complaint = value,
           labeltext: '',
           validator: Strings.requiredField,
@@ -247,6 +275,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
               fontWeight: FontWeight.w600),
         ),
         content: FormTextField(
+          controller: _findingsController,
           onchanged: (value) => _presIllnessInfo.findings = value,
           labeltext: '',
           validator: Strings.requiredField,
@@ -275,7 +304,13 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
                         builder: (context) {
                           return ChangeNotifierProvider<HealthCheckProvider>(
                             create: (context) => HealthCheckProvider(),
-                            child: HealthCheckScreen(patient: widget.patient),
+                            child: HealthCheckScreen(
+                              patient: widget.patient,
+                              initialComplaint: _presIllnessInfo.complaint,
+                              initialFindings: _presIllnessInfo.findings,
+                              initialDiagnosis: _presIllnessInfo.diagnosis,
+                              initialTreatment: _presIllnessInfo.treatment,
+                            ),
                           );
                         },
                       ),
@@ -289,7 +324,13 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) {
-                          return CpoeAnalyzeScreen(patient: widget.patient);
+                          return CpoeAnalyzeScreen(
+                            patient: widget.patient,
+                            initialComplaint: _presIllnessInfo.complaint,
+                            initialFindings: _presIllnessInfo.findings,
+                            initialDiagnosis: _presIllnessInfo.diagnosis,
+                            initialTreatment: _presIllnessInfo.treatment,
+                          );
                         },
                       ),
                     );
@@ -307,6 +348,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
             ),
             SizedBox(height: Sizing.sectionSymmPadding),
             FormTextField(
+              controller: _diagnosisController,
               onchanged: (value) => _presIllnessInfo.diagnosis = value,
               labeltext: '',
               validator: Strings.requiredField,
@@ -327,6 +369,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
               fontWeight: FontWeight.w600),
         ),
         content: FormTextField(
+          controller: _findingsController,
           onchanged: (value) => _presIllnessInfo.treatment = value,
           labeltext: '',
           validator: Strings.requiredField,

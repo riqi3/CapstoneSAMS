@@ -1,5 +1,6 @@
 import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/global-widgets/forms/healthcheckscreen.dart';
+import 'package:capstone_sams/global-widgets/forms/present-illness/PresentIllnessForm.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/ContactPersonProvider.dart';
 import 'package:capstone_sams/providers/HealthRecordProvider.dart';
@@ -159,7 +160,6 @@ class SAMSApp extends StatelessWidget {
         '/home': (context) => HomeScreen(),
         '/ehr_list': (context) => EhrListScreen(),
         '/med_notes': (context) => MedicalNotes(),
-
         // 'home': (context) => HomeScreen(),
       },
       // routerConfig: _router,
