@@ -99,7 +99,8 @@ class _PhysicianCardState extends State<PhysicianCard> {
                             ),
                           ),
                           Text(
-                            ' | ${physician.firstName} ${physician.lastName}, ${physician.suffixTitle}',
+                            // ' | ${physician.firstName} ${physician.lastName}, ${physician.suffixTitle}',
+                             ' | ${physician.firstName} ${physician.lastName}',
                           ),
                         ],
                       ),
