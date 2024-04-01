@@ -90,7 +90,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
-            builder: (context) => PatientTabsScreen(patient: widget.patient),
+            builder: (context) => PatientTabsScreen(patient: widget.patient, index: '',),
           ),
           (Route<dynamic> route) {
             if (routesCount < 2) {

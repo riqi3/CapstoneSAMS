@@ -153,8 +153,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
       itemCount: dataToShow.length,
       itemBuilder: (context, index) {
         final patient = dataToShow[index];
-        // assignedPhysician = patient.assignedPhysician;
-        // final labresult = int.parse('${patient.patientID}');
+        // assignedPhysician = patient.assignedPhysician; 
         return PatientCard(
           patient: patient,
           account: account,
@@ -163,7 +162,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
               selectedPatientId = patientId;
             });
           },
-          // labresult: labresult,
+          labresult: patient.patientID,
         );
       },
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -182,10 +181,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
       physics: const BouncingScrollPhysics(),
       itemCount: dataToShow.length,
       itemBuilder: (context, index) {
-        final patient = dataToShow[index];
-        // final labresult = int.parse(
-        //   patient.patientID as String,
-        // );
+        final patient = dataToShow[index];  
         return PatientCard(
           patient: patient,
           onSelect: (patientId) {
@@ -193,7 +189,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
               selectedPatientId = patientId;
             });
           },
-          // labresult: labresult,
+          labresult: patient.patientID,
         );
       },
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

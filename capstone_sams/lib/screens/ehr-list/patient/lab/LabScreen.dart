@@ -9,8 +9,11 @@ import '../../../../constants/theme/sizing.dart';
 import '../../../../models/LabResultModel.dart';
 
 class LaboratoriesScreen extends StatefulWidget {
-  final int index;
-  const LaboratoriesScreen({Key? key, required this.index}) : super(key: key);
+  final String? index;
+  const LaboratoriesScreen({
+    Key? key,
+    required this.index,
+  }) : super(key: key);
 
   @override
   State<LaboratoriesScreen> createState() => _LaboratoriesScreenState();
