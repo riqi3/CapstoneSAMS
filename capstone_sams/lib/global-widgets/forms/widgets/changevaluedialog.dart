@@ -7,8 +7,17 @@ import 'package:flutter/material.dart';
 class ChangeValueDialog extends StatefulWidget {
   final String initialDisease;
   final Patient patient;
-
-  ChangeValueDialog({required this.initialDisease, required this.patient});
+  final String? initialComplaint;
+  final String? initialFindings;
+  final String? initialTreatment;
+  final String? initialDiagnosis;
+  ChangeValueDialog(
+      {required this.initialDisease,
+      required this.patient,
+      this.initialComplaint,
+      this.initialFindings,
+      this.initialTreatment,
+      this.initialDiagnosis});
 
   @override
   _ChangeValueDialogState createState() => _ChangeValueDialogState();
@@ -68,8 +77,13 @@ class _ChangeValueDialogState extends State<ChangeValueDialog> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => PresentIllnessForm(
-                            patient: widget.patient,
-                            initialDisease: newDisease),
+                          patient: widget.patient,
+                          initialDisease: newDisease,
+                          initialComplaint: widget.initialComplaint,
+                          initialFindings: widget.initialFindings,
+                          initialDiagnosis: widget.initialDiagnosis,
+                          initialTreatment: widget.initialTreatment,
+                        ),
                       ),
                     );
                   } else {
