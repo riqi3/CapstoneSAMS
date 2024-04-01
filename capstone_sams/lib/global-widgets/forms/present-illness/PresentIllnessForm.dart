@@ -143,12 +143,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
     _treatmentController.dispose();
     super.dispose();
   }
-
-  @override
-  void dispose() {
-    findings.dispose();
-    super.dispose();
-  }
+ 
 
   Widget build(BuildContext context) {
     return FormTemplate(
@@ -333,8 +328,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
           controller: _findingsController,
           onchanged: (value) => _presIllnessInfo.findings = value,
           labeltext: '',
-          validator: Strings.requiredField,
-          controller: findings,
+          validator: Strings.requiredField, 
           maxlines: maxLines,
           type: TextInputType.text,
         ),
@@ -496,6 +490,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
                 : SizedBox(width: Sizing.spacing),
             SizedBox(height: Sizing.spacing),
             FormTextField(
+              controller: _findingsController,
               onchanged: (value) => _presIllnessInfo.treatment = value,
               labeltext: '',
               validator: Strings.requiredField,
@@ -503,7 +498,6 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
               type: TextInputType.text,
             ),
           ],
-          controller: _findingsController,
         ),
       ),
       Step(
