@@ -57,35 +57,9 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
         .fetchComplaints(token, widget.patient.patientID));
     final provider = Provider.of<PrescriptionProvider>(context, listen: false);
     prescriptions =
-        provider.fetchPrescriptions(widget.patient.patientID, token);
-    // physicians = fetchPhysicians();
+        provider.fetchPrescriptions(widget.patient.patientID, token); 
   }
-
-  // Future<List<Prescription>> fetchPrescriptions() async {
-  //   try {
-
-  //     await provider.fetchPrescriptions(widget.patient.patientID, token);
-  //     return provider.prescriptions;
-  //   } catch (error, stackTrace) {
-  //     print("Error fetching data: $error");
-  //     print(stackTrace);
-  //     return [];
-  //   }
-  // }
-
-  // Future<List<Account>> fetchPhysicians() async {
-  //   try {
-  //     final provider =
-  //         Provider.of<PrescriptionProvider>(context, listen: false);
-  //     await provider.fetchPrescriptions(
-  //         widget.patient.patientID, context.read<AccountProvider>().token!);
-  //     return provider.physicians;
-  //   } catch (error, stackTrace) {
-  //     print("Error fetching data: $error");
-  //     print(stackTrace);
-  //     return [];
-  //   }
-  // }
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -215,7 +189,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                     : Text(
                                         '${account.firstName} ${middleInitial}. ${account.lastName}',
                                         // , ${account.suffixTitle}
-                                        
+
                                         style:
                                             TextStyle(color: Pallete.greyColor),
                                       ),
@@ -339,7 +313,10 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
-        builder: (context) => PatientTabsScreen(patient: widget.patient, index: widget.patient.patientID,),
+        builder: (context) => PatientTabsScreen(
+          patient: widget.patient,
+          index: widget.patient.patientID,
+        ),
       ),
       (Route<dynamic> route) {
         if (routesCount < 2) {
@@ -493,28 +470,24 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                           itemBuilder: (context, index) {
                                             final prescription =
                                                 prescriptions[index];
-                                            if (widget.patient.patientID !=
-                                                prescription.patientID) {
-                                              return null;
+                                            if (prescription.illnessID ==
+                                                illness.illnessID) {
+                                              return ListTile(
+                                                title: Text(
+                                                    'Prescription ${prescription.presNum}'),
+                                                subtitle: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: prescription
+                                                      .medicines!
+                                                      .map((medicine) => Text(
+                                                          '${medicine.quantity} x ${medicine.drugName}: ${medicine.instructions}'))
+                                                      .toList(),
+                                                ),
+                                              ); // Skip rendering if illnessID doesn't match
                                             }
-                                            print(
-                                                'prescription illness ${prescription.illnessID}');
-
-                                            print(
-                                                'illness ${illness.illnessID}');
-                                            return ListTile(
-                                              title: Text(
-                                                  'Prescription ${prescription.presNum}'),
-                                              subtitle: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: prescription
-                                                    .medicines!
-                                                    .map((medicine) => Text(
-                                                        '${medicine.quantity} x ${medicine.drugName}: ${medicine.instructions}'))
-                                                    .toList(),
-                                              ),
-                                            );
+                                            // Render ListTile only for prescriptions matching the illnessID
+                                            return SizedBox.shrink();
                                           },
                                         );
                                       }

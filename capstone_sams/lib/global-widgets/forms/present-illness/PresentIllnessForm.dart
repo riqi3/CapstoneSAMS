@@ -56,7 +56,8 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
   int currentStep = 0;
   int? maxLines = 4;
   late String token;
-  final illness_id = Uuid().v4();
+  late String illness_id;
+  // final illness_id = Uuid().v4();
   var getID = '';
   var incompleteInputs = dangerSnackbar('${Strings.incompleteInputs}');
   var failedCreatedComplaint =
@@ -99,7 +100,10 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
-            builder: (context) => PatientTabsScreen(patient: widget.patient, index: '',),
+            builder: (context) => PatientTabsScreen(
+              patient: widget.patient,
+              index: '',
+            ),
           ),
           (Route<dynamic> route) {
             if (routesCount < 2) {
@@ -130,6 +134,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
     Provider.of<MedicineProvider>(context, listen: false).resetState();
     selectedDisease = widget.initialDisease;
 
+    illness_id = Uuid().v4();
     _complaintController.text = widget.initialComplaint ?? '';
     _findingsController.text = widget.initialFindings ?? '';
     _treatmentController.text = widget.initialTreatment ?? '';
@@ -143,7 +148,6 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
     _treatmentController.dispose();
     super.dispose();
   }
- 
 
   Widget build(BuildContext context) {
     return FormTemplate(
@@ -328,7 +332,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
           controller: _findingsController,
           onchanged: (value) => _presIllnessInfo.findings = value,
           labeltext: '',
-          validator: Strings.requiredField, 
+          validator: Strings.requiredField,
           maxlines: maxLines,
           type: TextInputType.text,
         ),
@@ -490,7 +494,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
                 : SizedBox(width: Sizing.spacing),
             SizedBox(height: Sizing.spacing),
             FormTextField(
-              controller: _findingsController,
+              controller: _treatmentController,
               onchanged: (value) => _presIllnessInfo.treatment = value,
               labeltext: '',
               validator: Strings.requiredField,
