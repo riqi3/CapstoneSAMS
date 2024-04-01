@@ -7,8 +7,16 @@ import 'package:capstone_sams/screens/ehr-list/patient/order-entry/api/api_servi
 class PrognosisUpdateDialog extends StatelessWidget {
   final TextEditingController controller = TextEditingController();
   final Patient patient;
-
-  PrognosisUpdateDialog({required this.patient});
+  final String? initialComplaint;
+  final String? initialFindings;
+  final String? initialDiagnosis;
+  final String? initialTreatment;
+  PrognosisUpdateDialog(
+      {required this.patient,
+      this.initialComplaint,
+      this.initialFindings,
+      this.initialTreatment,
+      this.initialDiagnosis});
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -54,7 +62,13 @@ class PrognosisUpdateDialog extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) => PresentIllnessForm(
-                            patient: patient, initialDisease: newPrognosis),
+                          patient: patient,
+                          initialDisease: newPrognosis,
+                          initialComplaint: initialComplaint,
+                          initialFindings: initialFindings,
+                          initialDiagnosis: initialDiagnosis,
+                          initialTreatment: initialTreatment,
+                        ),
                       ),
                     );
                   } else {

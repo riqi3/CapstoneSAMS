@@ -274,23 +274,35 @@ class PresentIllnessView(viewsets.ViewSet):
             return Response({"message": "Failed to fetch complaints.", "error": str(e)}, status=status.HTTP_404_NOT_FOUND)
 
     @api_view(['GET'])
-    def fetch_complaint_by_id(request, patientID):
+    def fetch_allcomplaint_by_patientid(request, patientID):
         try:
             patient = Patient.objects.get(pk=patientID)
             complaint = Present_Illness.objects.filter(patient=patient)
             serializer = PresentIllnessSerializer(complaint, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        except PresentIllnessSerializer.DoesNotExist:
+        except Present_Illness.DoesNotExist:
+            return Response({"message": "Complaints does not exist."}, status=status.HTTP_404_NOT_FOUND)
+    
+    @api_view(['GET'])
+    def fetch_complaint_by_id(request, illnessID):
+        try:
+            complaintID = Present_Illness.objects.get(pk=illnessID)
+            # complaint = Present_Illness.objects.filter(patient=patient)
+            serializer = PresentIllnessSerializer(complaintID)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Present_Illness.DoesNotExist:
             return Response({"message": "Complaint does not exist."}, status=status.HTTP_404_NOT_FOUND)
     
+
     @api_view(['POST'])
-    def create_complaint(request, patientID, accountID):
+    def create_complaint(request, patientID, accountID ):
         try:
             patient = Patient.objects.get(pk=patientID)
             # accountID = account.accountID
-            account = Account.objects.get(pk=accountID)
+            account = Account.objects.get(pk=accountID) 
             illness_data = json.loads(request.body)
             illness = Present_Illness.objects.create(
+                illnessID = illness_data['illnessID'],
                 illnessName = illness_data['illnessName'],
                 complaint = illness_data['complaint'],
                 findings = illness_data['findings'],
@@ -299,7 +311,7 @@ class PresentIllnessView(viewsets.ViewSet):
                 created_at = illness_data['created_at'],
                 updated_at = illness_data['updated_at'],
                 patient = patient,
-                created_by = account
+                created_by = account, 
             )
             return Response({"message": "Complaint created successfully."}, status=status.HTTP_201_CREATED)
         except Exception as e:

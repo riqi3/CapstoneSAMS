@@ -15,7 +15,7 @@ class Account {
   final bool? isActive;
   final bool? isStaff;
   final bool isSuperuser;
-  final String? suffixTitle;
+  // final String? suffixTitle;
 
   Account({
     this.accountID,
@@ -25,7 +25,7 @@ class Account {
     this.firstName,
     this.middleName,
     this.lastName,
-    this.suffixTitle,
+    // this.suffixTitle,
     this.accountRole,
     this.token,
     this.isActive,
@@ -41,7 +41,7 @@ class Account {
         'firstName': firstName,
         'middleName': middleName,
         'lastName': lastName,
-        'suffixTitle': suffixTitle,
+        // 'suffixTitle': suffixTitle,
         'accountRole': accountRole,
         'token': token,
         'is_active': isActive,
@@ -58,7 +58,7 @@ class Account {
       firstName: json['firstName'],
       middleName: json['middleName'],
       lastName: json['lastName'],
-      suffixTitle: json['suffixTitle'],
+      // suffixTitle: json['suffixTitle'],
       accountRole: json['accountRole'],
       token: json['token'],
       isActive: json['is_active'],

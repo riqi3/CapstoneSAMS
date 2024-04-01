@@ -1,3 +1,4 @@
+import 'package:capstone_sams/models/PresentIllness.dart';
 import 'package:capstone_sams/models/SymptomsModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/SymptomsFieldsProvider.dart';
@@ -16,7 +17,17 @@ import '../../../../models/PatientModel.dart';
 
 class CpoeAnalyzeScreen extends StatefulWidget {
   final Patient patient;
-  CpoeAnalyzeScreen({required this.patient});
+  final String? initialComplaint;
+  final String? initialFindings;
+  final String? initialDiagnosis;
+  final String? initialTreatment;
+  CpoeAnalyzeScreen({
+    required this.patient,
+    this.initialComplaint,
+    this.initialFindings,
+    this.initialDiagnosis,
+    this.initialTreatment,
+  });
 
   @override
   _CpoeAnalyzeScreenState createState() => _CpoeAnalyzeScreenState();
@@ -25,11 +36,18 @@ class CpoeAnalyzeScreen extends StatefulWidget {
 class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
   late String finalPrediction;
   late double finalConfidence;
-
+  late String? _complaint;
+  late String? _findings;
+  late String? _diagnosis;
+  late String? _treatment;
   @override
   void initState() {
     super.initState();
     Provider.of<SymptomFieldsProvider>(context, listen: false).resetState();
+    _complaint = widget.initialComplaint;
+    _findings = widget.initialFindings;
+    _diagnosis = widget.initialDiagnosis;
+    _treatment = widget.initialTreatment;
   }
 
   void _analyzeSymptoms() async {
@@ -61,6 +79,10 @@ class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
                 patient: widget.patient,
                 initialPrediction: finalPrediction,
                 initialConfidence: finalConfidence,
+                initialComplaint: widget.initialComplaint,
+                initialFindings: widget.initialFindings,
+                initialDiagnosis: widget.initialDiagnosis,
+                initialTreatment: widget.initialTreatment,
               );
             },
           );

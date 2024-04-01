@@ -5,9 +5,7 @@ class Medicine {
   String? drugId;
   String? drugCode;
   String? drugName;
-  String? instructions;
-  DateTime? startDate;
-  DateTime? endDate;
+  String? instructions; 
   int? quantity;
 
   Medicine({
@@ -15,9 +13,7 @@ class Medicine {
     this.drugId,
     this.drugCode,
     this.drugName,
-    this.instructions,
-    this.startDate,
-    this.endDate,
+    this.instructions, 
     this.quantity,
   });
 
@@ -25,9 +21,7 @@ class Medicine {
     patient = other.patient;
     drugId = other.drugId;
     drugName = other.drugName;
-    instructions = other.instructions;
-    startDate = other.startDate;
-    endDate = other.endDate;
+    instructions = other.instructions; 
     quantity = other.quantity;
   }
 
@@ -35,9 +29,7 @@ class Medicine {
         'drugId': drugId,
         'drugCode': drugCode,
         'drugName': drugName,
-        'instructions': instructions,
-        'startDate': startDate?.toIso8601String(),
-        'endDate': endDate?.toIso8601String(),
+        'instructions': instructions, 
         'quantity': quantity,
       };
 
@@ -46,9 +38,7 @@ class Medicine {
       drugId: json['drugId'],
       drugCode: json['drugCode'],
       drugName: json['drugName'],
-      instructions: json['instructions'],
-      startDate: json['startDate']!= null ? DateTime.parse(json['startDate']) : null,
-      endDate: json['endDate']!= null ? DateTime.parse(json['endDate']) : null,
+      instructions: json['instructions'], 
       quantity: json['quantity'],
     );
   }

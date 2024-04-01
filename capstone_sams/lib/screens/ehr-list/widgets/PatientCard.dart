@@ -16,13 +16,13 @@ class PatientCard extends StatefulWidget {
   Account? account;
   final Function(String)? callback;
   final Function(String) onSelect;
-  // final int? labresult;
+  final String? labresult;
   PatientCard({
     required this.patient,
     required this.onSelect,
     this.account,
     this.callback,
-    // required this.labresult,
+    required this.labresult,
   });
 
   @override
@@ -95,7 +95,7 @@ class _PatientCardState extends State<PatientCard> {
           MaterialPageRoute(
             builder: (context) => PatientTabsScreen(
               patient: widget.patient,
-              // index: widget.labresult,
+              index: widget.patient.patientID,
             ),
           ),
         );

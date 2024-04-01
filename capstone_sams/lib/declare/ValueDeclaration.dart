@@ -137,6 +137,25 @@ class BottomPatientTabs extends StatelessWidget {
                 ),
               ),
             ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width / 2 - 10,
+              child: Tab(
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: FaIcon(
+                        FontAwesomeIcons.sackDollar,
+                      ),
+                    ),
+                    Text(
+                      'Laboratories',
+                      style: TextStyle(fontSize: Sizing.header6),
+                    ),
+                  ],
+                ),
+              ),
+            ),
 
             // SizedBox(
             //   width: MediaQuery.of(context).size.width / 2 - 10,

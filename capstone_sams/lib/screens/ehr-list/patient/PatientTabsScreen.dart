@@ -1,5 +1,6 @@
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/global-widgets/forms/present-illness/PresentIllnessForm.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/lab/LabScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/present-illness-history/HistoryPresentIllnessScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/past-med-history/PastMedicalHistoryScreen.dart';
 import 'package:flutter/material.dart';
@@ -13,10 +14,11 @@ class PatientTabsScreen extends StatefulWidget {
   final GlobalKey<_PatientTabsScreenState>?
       patientTabsScreenKey; // Add this line
 
-  // final int? index;
+  final String? index;
   const PatientTabsScreen({
     Key? key,
     required this.patient,
+    required this.index,
     this.patientTabsScreenKey, // Add this line
   }) : super(key: key);
   // const PatientTabsScreen({
@@ -39,7 +41,7 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
     // final accountProvider =
     //     Provider.of<AccountProvider>(context, listen: false);
     // int tabCount = accountProvider.role == 'physician' ? 5 : 1;
-    tabController = TabController(length: 3, vsync: this);
+    tabController = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -69,6 +71,8 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
           ),
           HistoryPresentIllness(
             patient: widget.patient,
+          ),
+          LaboratoriesScreen(index: widget.index, 
           ),
         ],
       ),

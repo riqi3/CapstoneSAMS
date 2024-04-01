@@ -19,7 +19,7 @@ class AccountProvider extends ChangeNotifier {
   String? get firstName => _account?.firstName;
   String? get middleName => _account?.middleName;
   String? get lastName => _account?.lastName;
-  String? get suffixTitle => _account?.suffixTitle;
+  // String? get suffixTitle => _account?.suffixTitle;
   String? get role => _account?.accountRole;
   String? get token => _account?.token;
   bool get supera => _account!.isSuperuser;

@@ -1,7 +1,7 @@
 
 from django.db import models
 from api.modules.user.models import Account
-from api.modules.patient.models import Medical_Record, Patient, Health_Record
+from api.modules.patient.models import Medical_Record, Patient, Present_Illness, Health_Record
 from api.modules.disease_prediction.cdssModel.models import HealthSymptom
 
 '''
@@ -25,8 +25,9 @@ class Prescription(models.Model):
     medicines = models.JSONField(blank = True, default=None)
     account = models.ForeignKey(Account, on_delete = models.CASCADE)
     # health_record = models.ForeignKey(Health_Record, on_delete = models.CASCADE)
-    patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
-    # disease = models.CharField(max_length=255, null=True, blank=True)
+    patient = models.ForeignKey(Patient, on_delete = models.CASCADE) 
+    # disease = models.CharField(max_length=255, null=True, blank=True)    
+    illness = models.ForeignKey(Present_Illness, on_delete = models.CASCADE) 
 
     class Meta:
         verbose_name = "Prescription Record"
