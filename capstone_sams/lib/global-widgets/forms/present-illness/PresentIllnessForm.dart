@@ -76,7 +76,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
       final medicineProvider = context.read<MedicineProvider>();
 
       final illnessProvider = context.read<PresentIllnessProvider>();
-      final s = await illnessProvider.fetchComplaint(token, illness_id);
+      final s = await illnessProvider.fetchComplaint(token, illnessProvider.id);
       var medicines = medicineProvider.medicines;
       final patientID = widget.patient.patientID;
 

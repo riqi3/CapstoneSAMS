@@ -280,7 +280,7 @@ class PresentIllnessView(viewsets.ViewSet):
             complaint = Present_Illness.objects.filter(patient=patient)
             serializer = PresentIllnessSerializer(complaint, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        except PresentIllnessSerializer.DoesNotExist:
+        except Present_Illness.DoesNotExist:
             return Response({"message": "Complaints does not exist."}, status=status.HTTP_404_NOT_FOUND)
     
     @api_view(['GET'])
@@ -290,7 +290,7 @@ class PresentIllnessView(viewsets.ViewSet):
             # complaint = Present_Illness.objects.filter(patient=patient)
             serializer = PresentIllnessSerializer(complaintID)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        except PresentIllnessSerializer.DoesNotExist:
+        except Present_Illness.DoesNotExist:
             return Response({"message": "Complaint does not exist."}, status=status.HTTP_404_NOT_FOUND)
     
 
@@ -302,6 +302,7 @@ class PresentIllnessView(viewsets.ViewSet):
             account = Account.objects.get(pk=accountID) 
             illness_data = json.loads(request.body)
             illness = Present_Illness.objects.create(
+                illnessID = illness_data['illnessID'],
                 illnessName = illness_data['illnessName'],
                 complaint = illness_data['complaint'],
                 findings = illness_data['findings'],

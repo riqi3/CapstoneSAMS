@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 class PresentIllnessProvider extends ChangeNotifier {
   PresentIllness? _presentIllness;
   PresentIllness? get presentIllness => _presentIllness;
-  String? get id => _presentIllness!.illnessID;
+  String? get id => _presentIllness?.illnessID;
   String? get illnessName => _presentIllness?.illnessName;
   String? get complaint => _presentIllness?.complaint;
   String? get findings => _presentIllness?.findings;
@@ -95,8 +95,9 @@ class PresentIllnessProvider extends ChangeNotifier {
       );
       await Future.delayed(Duration(milliseconds: 1000));
       if (response.statusCode == 201) {
-        fetchComplaints(token, patientID);
+        _presentIllness = presentIllness;
         notifyListeners();
+        // fetchComplaints(token, patientID);
         return true;
       } else {
         print('cannot add complaint record!');
