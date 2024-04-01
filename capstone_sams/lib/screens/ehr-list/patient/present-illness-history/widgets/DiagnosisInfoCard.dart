@@ -202,7 +202,8 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                         children: [
                                           Expanded(
                                             child: Text(
-                                              '${account.firstName} ${middleInitial}. ${account.lastName}, ${account.suffixTitle}',
+                                              '${account.firstName} ${middleInitial}. ${account.lastName}',
+                                              // ${account.suffixTitle}
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
                                                   color: Pallete.greyColor,
@@ -212,7 +213,9 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                         ],
                                       )
                                     : Text(
-                                        '${account.firstName} ${middleInitial}. ${account.lastName}, ${account.suffixTitle}',
+                                        '${account.firstName} ${middleInitial}. ${account.lastName}',
+                                        // , ${account.suffixTitle}
+                                        
                                         style:
                                             TextStyle(color: Pallete.greyColor),
                                       ),
@@ -431,7 +434,8 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                         children: [
                                           Expanded(
                                             child: Text(
-                                              '${account.firstName} ${middleInitial}. ${account.lastName}, ${account.suffixTitle}',
+                                              '${account.firstName} ${middleInitial}. ${account.lastName}',
+                                              //  ${account.suffixTitle}
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
                                                   color: Pallete.greyColor,
@@ -441,7 +445,8 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                         ],
                                       )
                                     : Text(
-                                        '${account.firstName} ${middleInitial}. ${account.lastName}, ${account.suffixTitle}',
+                                        '${account.firstName} ${middleInitial}. ${account.lastName}',
+                                        // ${account.suffixTitle}
                                         style:
                                             TextStyle(color: Pallete.greyColor),
                                       ),
