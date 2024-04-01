@@ -11,7 +11,7 @@ class PrescriptionProvider with ChangeNotifier {
   Prescription? _prescription;
   Prescription? get prescription => _prescription;
   List<Prescription> get prescriptions => _prescriptions;
-  int? get presNum => _prescription?.presNum;
+  String? get presNum => _prescription?.presNum;
   int? get acc => _prescription?.account;
   String? get patientID => _prescription?.patientID;
   String? get illnessID => _prescription?.illnessID;

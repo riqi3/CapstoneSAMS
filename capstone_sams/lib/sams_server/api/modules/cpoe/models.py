@@ -3,7 +3,7 @@ from django.db import models
 from api.modules.user.models import Account
 from api.modules.patient.models import Medical_Record, Patient, Present_Illness, Health_Record
 from api.modules.disease_prediction.cdssModel.models import HealthSymptom
-
+import uuid 
 '''
 This model represent the comments that
 each user will inputted and stored into the system.
@@ -21,7 +21,8 @@ physicians will input and store into the system.
 '''
 class Prescription(models.Model):
     #Prescription Attributes
-    presNum = models.AutoField(primary_key = True)
+    presNum = models.UUIDField(primary_key = True, default = uuid.uuid4, 
+         editable = False)
     medicines = models.JSONField(blank = True, default=None)
     account = models.ForeignKey(Account, on_delete = models.CASCADE)
     # health_record = models.ForeignKey(Health_Record, on_delete = models.CASCADE)

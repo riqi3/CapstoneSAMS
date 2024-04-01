@@ -133,7 +133,6 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
     token = context.read<AccountProvider>().token!;
     Provider.of<MedicineProvider>(context, listen: false).resetState();
     selectedDisease = widget.initialDisease;
-
     illness_id = Uuid().v4();
     _complaintController.text = widget.initialComplaint ?? '';
     _findingsController.text = widget.initialFindings ?? '';
