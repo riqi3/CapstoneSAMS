@@ -135,7 +135,7 @@ class UserCreationForm(forms.ModelForm):
     password2 = forms.CharField(
         label="Password confirmation", widget=forms.PasswordInput
     )
-    suffixTitle = forms.CharField(max_length=10, required=False)
+    # suffixTitle = forms.CharField(max_length=10, required=False)
 
     class Meta:
         model = Account
@@ -246,7 +246,7 @@ class UserChangeForm(forms.ModelForm):
             "firstName",
             "middleName",
             "lastName",
-            'suffixTitle',
+            # 'suffixTitle',
             "accountRole",
             "is_active",
             "is_staff",
@@ -272,7 +272,7 @@ class UserAdmin(BaseUserAdmin):
         "firstName",
         "middleName",
         "lastName",
-        'suffixTitle',
+        # 'suffixTitle',
         "accountRole",
         "is_active",
         "is_staff",
@@ -289,7 +289,7 @@ class UserAdmin(BaseUserAdmin):
                     "firstName",
                     "middleName",
                     "lastName",
-                    'suffixTitle',
+                    # 'suffixTitle',
                     "accountRole",
                 )
             },
@@ -308,7 +308,7 @@ class UserAdmin(BaseUserAdmin):
                     "middleName",
                     "lastName",
                     "accountRole",
-                    'suffixTitle',
+                    # 'suffixTitle',
                     # "is_active",
                     # "is_staff",
                     # "is_superuser",
