@@ -135,7 +135,7 @@ class UserCreationForm(forms.ModelForm):
     password2 = forms.CharField(
         label="Password confirmation", widget=forms.PasswordInput
     )
-    suffixTitle = forms.CharField(max_length=10, required=False)
+    # suffixTitle = forms.CharField(max_length=10, required=False)
 
     class Meta:
         model = Account
@@ -145,7 +145,7 @@ class UserCreationForm(forms.ModelForm):
             "firstName",
             "middleName",
             "lastName",
-            'suffixTitle',
+            # 'suffixTitle',
             "accountRole",
             "is_active",
             "is_staff",
@@ -173,8 +173,8 @@ class UserCreationForm(forms.ModelForm):
         user = super(UserCreationForm, self).save(commit=False)
         user.set_password(self.cleaned_data["password1"]) 
         user.accountID = Account.objects.latest('accountID').accountID + 1 if Account.objects.exists() else 1
-        if user.accountRole == 'physician':
-            user.suffixTitle = 'MD'
+        # if user.accountRole == 'physician':
+        #     user.suffixTitle = 'MD'
         if user.accountRole == 'admin':
             user.is_staff = True
             user.is_superuser = True
@@ -246,7 +246,7 @@ class UserChangeForm(forms.ModelForm):
             "firstName",
             "middleName",
             "lastName",
-            'suffixTitle',
+            # 'suffixTitle',
             "accountRole",
             "is_active",
             "is_staff",
@@ -272,7 +272,7 @@ class UserAdmin(BaseUserAdmin):
         "firstName",
         "middleName",
         "lastName",
-        'suffixTitle',
+        # 'suffixTitle',
         "accountRole",
         "is_active",
         "is_staff",
@@ -289,7 +289,7 @@ class UserAdmin(BaseUserAdmin):
                     "firstName",
                     "middleName",
                     "lastName",
-                    'suffixTitle',
+                    # 'suffixTitle',
                     "accountRole",
                 )
             },
@@ -308,7 +308,7 @@ class UserAdmin(BaseUserAdmin):
                     "middleName",
                     "lastName",
                     "accountRole",
-                    'suffixTitle',
+                    # 'suffixTitle',
                     # "is_active",
                     # "is_staff",
                     # "is_superuser",
