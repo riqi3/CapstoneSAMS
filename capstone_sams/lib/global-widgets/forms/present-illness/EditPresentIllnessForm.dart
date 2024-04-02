@@ -262,21 +262,7 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
         ),
         content: Column(
           children: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return ChangeNotifierProvider<HealthCheckProvider>(
-                        create: (context) => HealthCheckProvider(),
-                        child: HealthCheckScreen(patient: widget.patient),
-                      );
-                    },
-                  ),
-                );
-              },
-              child: Text('Evaluation'),
-            ),
+            SizedBox(height: Sizing.sectionSymmPadding),
             FormTextField(
               initialvalue: widget.presentIllness.illnessName,
               onchanged: (value) => widget.presentIllness.illnessName = value,
