@@ -96,6 +96,10 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
 
       if (recipeSuccess || medicines.isEmpty) {
         int routesCount = 0;
+        setState(() {
+          illness_id = '';
+        _presIllnessInfo.illnessID = illness_id;
+        });
 
         Navigator.pushAndRemoveUntil(
           context,
@@ -245,12 +249,11 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
                                         );
                                         final accountID =
                                             context.read<AccountProvider>().id;
-                                        final presentIllnessProvider =
-                                            Provider.of<PresentIllnessProvider>(
-                                                context,
-                                                listen: false);
+                                        // final presentIllnessProvider =
+                                        //     Provider.of<PresentIllnessProvider>(
+                                        //         context, listen: true);
                                         final presentIllnessSuccess =
-                                            presentIllnessProvider
+                                            context.read<PresentIllnessProvider>()
                                                 .createComplaint(
                                                     presentIllnessRecord,
                                                     token,
