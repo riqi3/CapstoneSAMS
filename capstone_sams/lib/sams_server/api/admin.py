@@ -506,8 +506,16 @@ This represent the table that will be shown to the admin looking at the currentl
 '''
 class MedicineAdmin(admin.ModelAdmin):
     form = MedicineAdminForm
-    list_display = ("drugId", "drugCode", "drugName")
-    search_fields = ("drugId", "drugCode", "drugName")
+    list_display = (
+        # "drugId", 
+                    "drugCode", 
+                    "drugName",
+                    )
+    search_fields = (
+        # "drugId", 
+                     "drugCode", 
+                     "drugName",
+                     )
 
     def get_urls(self):
         urls = super().get_urls()
@@ -527,9 +535,9 @@ class MedicineAdmin(admin.ModelAdmin):
             for x in csv_data:
                 fields = x.split(",")
                 created = Medicine.objects.update_or_create(
-                    drugId=fields[0],
-                    drugCode=fields[1],
-                    drugName=fields[2],
+                    # drugId=fields[0],
+                    drugCode=fields[0],
+                    drugName=fields[1],
                 )
             url = reverse("admin:index")
             return HttpResponseRedirect(url)

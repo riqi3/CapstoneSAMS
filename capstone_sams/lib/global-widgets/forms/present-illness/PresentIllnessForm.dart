@@ -6,6 +6,7 @@ import 'package:capstone_sams/global-widgets/forms/FormTemplate.dart';
 import 'package:capstone_sams/global-widgets/snackbars/Snackbars.dart';
 import 'package:capstone_sams/global-widgets/text-fields/Textfields.dart';
 import 'package:capstone_sams/global-widgets/texts/FormTitleWidget.dart';
+import 'package:capstone_sams/global-widgets/texts/TitleValueText.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/models/PresentIllness.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
@@ -98,7 +99,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
         int routesCount = 0;
         setState(() {
           illness_id = '';
-        _presIllnessInfo.illnessID = illness_id;
+          _presIllnessInfo.illnessID = illness_id;
         });
 
         Navigator.pushAndRemoveUntil(
@@ -129,8 +130,9 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
 
   TextEditingController _complaintController = TextEditingController();
   TextEditingController _findingsController = TextEditingController();
-  TextEditingController _treatmentController = TextEditingController();
+  TextEditingController _illnessNameController = TextEditingController();
   TextEditingController _diagnosisController = TextEditingController();
+  TextEditingController _treatmentController = TextEditingController();
 
   @override
   void initState() {
@@ -141,14 +143,17 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
     illness_id = Uuid().v4();
     _complaintController.text = widget.initialComplaint ?? '';
     _findingsController.text = widget.initialFindings ?? '';
-    _treatmentController.text = widget.initialTreatment ?? '';
+    _illnessNameController.text = widget.initialTreatment ?? '';
     _diagnosisController.text = widget.initialTreatment ?? '';
+    _treatmentController.text = widget.initialTreatment ?? '';
   }
 
   @override
   void dispose() {
     _complaintController.dispose();
     _findingsController.dispose();
+    _illnessNameController.dispose();
+    _diagnosisController.dispose();
     _treatmentController.dispose();
     super.dispose();
   }
@@ -221,7 +226,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
                             currentStep == 3
                                 ? Expanded(
                                     child: FormSubmitButton(
-                                      title: currentStep == 3 ? 'woah' : 'Next',
+                                      title: currentStep == 3 ? 'Next' : 'Next',
                                       icon: isLastStep
                                           ? Icons.upload
                                           : Icons.chevron_right,
@@ -253,13 +258,13 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
                                         // final presentIllnessProvider =
                                         //     Provider.of<PresentIllnessProvider>(
                                         //         context, listen: true);
-                                        final presentIllnessSuccess =
-                                            context.read<PresentIllnessProvider>()
-                                                .createComplaint(
-                                                    presentIllnessRecord,
-                                                    token,
-                                                    widget.patient.patientID,
-                                                    accountID);
+                                        final presentIllnessSuccess = context
+                                            .read<PresentIllnessProvider>()
+                                            .createComplaint(
+                                                presentIllnessRecord,
+                                                token,
+                                                widget.patient.patientID,
+                                                accountID);
                                         getID = presentIllnessRecord.illnessID!;
                                         print('GET THE ID ${getID}');
                                         setState(() {
@@ -399,6 +404,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
             ),
             SizedBox(height: Sizing.formSpacing),
             FormTextField(
+              controller: _illnessNameController,
               onchanged: (value) => _presIllnessInfo.illnessName = value,
               labeltext: 'Illness Name*',
               initialvalue: selectedDisease,
@@ -521,9 +527,36 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
         content: Column(
           children: [
             SizedBox(height: Sizing.formSpacing),
-            Text(
-              'Findings: $displayFindings',
-              style: TextStyle(fontSize: 20),
+            TitleValueText(
+              title: 'Complaint: ',
+              value: '${_complaintController.text}',
+            ),
+            SizedBox(height: Sizing.formSpacing / 2),
+            TitleValueText(
+              title: 'Findings: ',
+              value: '${_findingsController.text}',
+            ),
+            SizedBox(height: Sizing.formSpacing / 2),
+            TitleValueText(
+              title: 'Diagnosis: ',
+              value:
+                  '${_illnessNameController.text} | ${_diagnosisController.text}',
+            ),
+            SizedBox(height: Sizing.formSpacing / 2),
+            TitleValueText(
+              title: 'Treatment: ',
+              value: '${_treatmentController.text}',
+            ),
+            SizedBox(height: Sizing.formSpacing / 2),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: medicineProvider.medicines
+                  .map(
+                    (medicine) => Text(
+                      '${medicine.quantity} x ${medicine.drugName}: ${medicine.instructions}',
+                    ),
+                  )
+                  .toList(),
             ),
             SizedBox(height: Sizing.sectionSymmPadding),
           ],

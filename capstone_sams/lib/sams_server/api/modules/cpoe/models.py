@@ -40,7 +40,9 @@ stored into the system.
 '''
 class Medicine(models.Model):
     #Medicine Attributes
-    drugId = models.CharField(primary_key = True)
+    # drugId = models.CharField(primary_key = True)
+    drugId = models.UUIDField(primary_key = True, default = uuid.uuid4, 
+         editable = False)
     drugCode = models.CharField(blank = False)
     drugName = models.CharField(blank = False)
 
