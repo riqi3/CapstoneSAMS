@@ -106,7 +106,8 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
           MaterialPageRoute(
             builder: (context) => PatientTabsScreen(
               patient: widget.patient,
-              index: '',
+              index: widget.patient.patientID,
+              selectedPage: 2,
             ),
           ),
           (Route<dynamic> route) {

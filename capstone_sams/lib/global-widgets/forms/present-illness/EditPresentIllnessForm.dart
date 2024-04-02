@@ -97,6 +97,7 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
             builder: (context) => PatientTabsScreen(
               patient: widget.patient,
               index: widget.patient.patientID,
+              selectedPage: 2,
             ),
           ),
           (Route<dynamic> route) {
