@@ -536,10 +536,11 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
               title: 'Findings: ',
               value: '${_findingsController.text}',
             ),
-            SizedBox(height: Sizing.formSpacing / 2), 
+            SizedBox(height: Sizing.formSpacing / 2),
             TitleValueText(
               title: 'Diagnosis: ',
-              value: '${_illnessNameController.text} | ${_diagnosisController.text}',
+              value:
+                  '${_illnessNameController.text} | ${_diagnosisController.text}',
             ),
             SizedBox(height: Sizing.formSpacing / 2),
             TitleValueText(

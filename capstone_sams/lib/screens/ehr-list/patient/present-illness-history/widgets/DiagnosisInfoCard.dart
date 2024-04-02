@@ -473,8 +473,8 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                             if (prescription.illnessID ==
                                                 illness.illnessID) {
                                               return ListTile(
-                                                title: Text(
-                                                    'Prescription ${prescription.presNum}'),
+                                                // title: Text(
+                                                //     'Prescription ${prescription.presNum}'),
                                                 subtitle: Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
