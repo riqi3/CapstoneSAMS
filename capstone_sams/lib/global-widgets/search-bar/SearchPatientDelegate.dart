@@ -68,6 +68,7 @@ class SearchPatientDelegate extends SearchDelegate {
                     builder: (context) => PatientTabsScreen(
                       patient: patient1,
                       index: patient1.patientID,
+                      selectedPage: 0,
                       // index: labresult
                     ),
                   ),

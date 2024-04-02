@@ -321,7 +321,7 @@ class UserAdmin(BaseUserAdmin):
     search_fields = ("username",)
     ordering = ("username",)
     filter_horizontal = () 
-
+    
     def delete_queryset(self, request, queryset):
          for obj in queryset:
             folder_path = 'upload-photo/'

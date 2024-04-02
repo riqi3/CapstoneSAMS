@@ -1,7 +1,7 @@
 import 'package:capstone_sams/models/MedicineModel.dart';
 
 class Prescription {
-  final int? presNum;
+  final String? presNum;
   final List<dynamic>? medicines;
   final int? account;
   final String? patientID; 

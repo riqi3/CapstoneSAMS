@@ -96,6 +96,7 @@ class _PatientCardState extends State<PatientCard> {
             builder: (context) => PatientTabsScreen(
               patient: widget.patient,
               index: widget.patient.patientID,
+              selectedPage: 0,
             ),
           ),
         );

@@ -316,6 +316,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
         builder: (context) => PatientTabsScreen(
           patient: widget.patient,
           index: widget.patient.patientID,
+          selectedPage: 2,
         ),
       ),
       (Route<dynamic> route) {

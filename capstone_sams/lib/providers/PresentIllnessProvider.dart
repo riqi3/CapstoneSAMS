@@ -37,6 +37,8 @@ class PresentIllnessProvider extends ChangeNotifier {
           headers: header);
       await Future.delayed(Duration(milliseconds: 1000));
       if (response.statusCode == 200) {
+        _presentIllness = null;
+        notifyListeners();
         return PresentIllness.fromJson(
             jsonDecode(response.body) as Map<String, dynamic>);
       } else {
@@ -97,7 +99,7 @@ class PresentIllnessProvider extends ChangeNotifier {
       if (response.statusCode == 201) {
         _presentIllness = presentIllness;
         notifyListeners();
-        // fetchComplaints(token, patientID);
+        await Future.delayed(Duration(milliseconds: 1000));
         return true;
       } else {
         print('cannot add complaint record!');

@@ -96,13 +96,18 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
 
       if (recipeSuccess || medicines.isEmpty) {
         int routesCount = 0;
+        setState(() {
+          illness_id = '';
+        _presIllnessInfo.illnessID = illness_id;
+        });
 
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
             builder: (context) => PatientTabsScreen(
               patient: widget.patient,
-              index: '',
+              index: widget.patient.patientID,
+              selectedPage: 2,
             ),
           ),
           (Route<dynamic> route) {
@@ -133,7 +138,6 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
     token = context.read<AccountProvider>().token!;
     Provider.of<MedicineProvider>(context, listen: false).resetState();
     selectedDisease = widget.initialDisease;
-
     illness_id = Uuid().v4();
     _complaintController.text = widget.initialComplaint ?? '';
     _findingsController.text = widget.initialFindings ?? '';
@@ -246,12 +250,11 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
                                         );
                                         final accountID =
                                             context.read<AccountProvider>().id;
-                                        final presentIllnessProvider =
-                                            Provider.of<PresentIllnessProvider>(
-                                                context,
-                                                listen: false);
+                                        // final presentIllnessProvider =
+                                        //     Provider.of<PresentIllnessProvider>(
+                                        //         context, listen: true);
                                         final presentIllnessSuccess =
-                                            presentIllnessProvider
+                                            context.read<PresentIllnessProvider>()
                                                 .createComplaint(
                                                     presentIllnessRecord,
                                                     token,

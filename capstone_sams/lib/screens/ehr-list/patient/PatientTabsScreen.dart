@@ -9,17 +9,17 @@ import '../../../constants/theme/sizing.dart';
 import '../../../models/PatientModel.dart';
 import 'health-record/HealthRecordScreen.dart';
 
+// ignore: must_be_immutable
 class PatientTabsScreen extends StatefulWidget {
+  int selectedPage;
   final Patient patient;
-  final GlobalKey<_PatientTabsScreenState>?
-      patientTabsScreenKey; // Add this line
 
   final String? index;
-  const PatientTabsScreen({
+  PatientTabsScreen({
     Key? key,
     required this.patient,
     required this.index,
-    this.patientTabsScreenKey, // Add this line
+    required this.selectedPage,
   }) : super(key: key);
   // const PatientTabsScreen({
   //   super.key,
@@ -41,7 +41,11 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
     // final accountProvider =
     //     Provider.of<AccountProvider>(context, listen: false);
     // int tabCount = accountProvider.role == 'physician' ? 5 : 1;
-    tabController = TabController(length: 4, vsync: this);
+    tabController = TabController(
+      initialIndex: widget.selectedPage == 0 ? 0 : widget.selectedPage,
+      length: 4,
+      vsync: this,
+    );
   }
 
   @override
@@ -72,7 +76,8 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
           HistoryPresentIllness(
             patient: widget.patient,
           ),
-          LaboratoriesScreen(index: widget.index, 
+          LaboratoriesScreen(
+            index: widget.index,
           ),
         ],
       ),
