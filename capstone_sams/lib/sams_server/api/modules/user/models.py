@@ -1,3 +1,4 @@
+import uuid 
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import  AbstractBaseUser, BaseUserManager, PermissionsMixin 
@@ -20,6 +21,7 @@ class AccountManager(BaseUserManager):
     def create_superuser(self, username, password, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('accountRole', 'admin')
         return self.create_user(username, password, **extra_fields)
     
  
@@ -59,7 +61,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     isDeleted = models.BooleanField(default = False)
 
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['accountID','accountRole']
+    # REQUIRED_FIELDS = ['accountID','accountRole']
 
     objects = AccountManager()
  
