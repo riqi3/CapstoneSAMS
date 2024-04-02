@@ -57,9 +57,8 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
         .fetchComplaints(token, widget.patient.patientID));
     final provider = Provider.of<PrescriptionProvider>(context, listen: false);
     prescriptions =
-        provider.fetchPrescriptions(widget.patient.patientID, token); 
+        provider.fetchPrescriptions(widget.patient.patientID, token);
   }
- 
 
   @override
   Widget build(BuildContext context) {
@@ -479,11 +478,14 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                                 subtitle: Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
-                                                  children: prescription
-                                                      .medicines!
-                                                      .map((medicine) => Text(
-                                                          '${medicine.quantity} x ${medicine.drugName}: ${medicine.instructions}'))
-                                                      .toList(),
+                                                  children:
+                                                      prescription.medicines!
+                                                          .map(
+                                                            (medicine) => Text(
+                                                              '${medicine.quantity} x ${medicine.drugName}: ${medicine.instructions}',
+                                                            ),
+                                                          )
+                                                          .toList(),
                                                 ),
                                               ); // Skip rendering if illnessID doesn't match
                                             }
