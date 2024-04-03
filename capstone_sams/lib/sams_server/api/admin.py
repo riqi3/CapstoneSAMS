@@ -178,7 +178,7 @@ class UserCreationForm(forms.ModelForm):
         if user.accountRole == 'admin':
             user.is_staff = True
             user.is_superuser = True
-        elif user.accountRole == 'nurse':
+        elif user.accountRole == 'nurse' or user.accountRole == 'physician':
             user.is_staff = True
         print(user.accountID)
         photo = self.photo_generator(user)
