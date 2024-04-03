@@ -21,7 +21,7 @@ physicians will input and store into the system.
 '''
 class Prescription(models.Model):
     #Prescription Attributes
-    presNum = models.UUIDField(primary_key = True, default = uuid.uuid4, 
+    presID = models.UUIDField(primary_key = True, default = uuid.uuid4, 
          editable = False)
     medicines = models.JSONField(blank = True, default=None)
     account = models.ForeignKey(Account, on_delete = models.CASCADE)

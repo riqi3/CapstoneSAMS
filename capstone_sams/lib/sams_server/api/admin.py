@@ -596,7 +596,7 @@ class PrescriptionAdmin(admin.ModelAdmin):
     form = PrescriptionAdminForm
     autocomplete_fields = ["patient"]
     list_display = (
-        "presNum",
+        "presID",
         # "disease",
         "medicines",
         "account",
@@ -604,7 +604,7 @@ class PrescriptionAdmin(admin.ModelAdmin):
         
     )
     list_filter = ("account", "patient")
-    search_fields = ("presNum",)
+    search_fields = ("presID",)
     autocomplete_fields = ["account", "patient"]
     formfield_overrides = {
         JSONField: {'widget': JSONEditorWidget,},

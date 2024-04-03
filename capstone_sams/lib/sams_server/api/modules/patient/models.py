@@ -49,7 +49,7 @@ class Patient(models.Model):
     isDeleted = models.BooleanField(default = False)
     
     def __str__(self):
-        return f"{self.patientID} - {self.firstName} {self.middleInitial} {self.lastName}"
+        return f"{self.studNumber} | {self.firstName} {self.middleInitial} {self.lastName}"
     
     class Meta:
         verbose_name = "Patient Record"
@@ -107,4 +107,6 @@ class Present_Illness(models.Model):
     patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
     created_by = models.ForeignKey(Account, null=True, on_delete = models.CASCADE)
     isDeleted = models.BooleanField(default = False)
- 
+    def __str__(self):
+        return f"{self.illnessName} | {self.patient.studNumber} | {self.patient.firstName} {self.patient.middleInitial} {self.patient.lastName}"
+    

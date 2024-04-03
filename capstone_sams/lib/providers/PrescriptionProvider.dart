@@ -11,7 +11,7 @@ class PrescriptionProvider with ChangeNotifier {
   Prescription? _prescription;
   Prescription? get prescription => _prescription;
   List<Prescription> get prescriptions => _prescriptions;
-  String? get presNum => _prescription?.presNum;
+  String? get presID => _prescription?.presID;
   int? get acc => _prescription?.account;
   String? get patientID => _prescription?.patientID;
   String? get illnessID => _prescription?.illnessID;
@@ -61,7 +61,7 @@ class PrescriptionProvider with ChangeNotifier {
   //     final response = await http.put(
   //       Uri.parse(
   //         _getUrl(
-  //             'cpoe/prescription/get-prescription/update/${prescription.presNum}'),
+  //             'cpoe/prescription/get-prescription/update/${prescription.presID}'),
   //       ),
   //       headers: header,
   //       body: jsonEncode(prescription),
@@ -88,7 +88,7 @@ class PrescriptionProvider with ChangeNotifier {
   //     final response = await http.put(
   //       Uri.parse(
   //         _getUrl(
-  //             'cpoe/prescription/get-prescription/update-amount/${prescription.presNum}'),
+  //             'cpoe/prescription/get-prescription/update-amount/${prescription.presID}'),
   //       ),
   //       headers: header,
   //       body: jsonEncode(prescription),
@@ -114,7 +114,7 @@ class PrescriptionProvider with ChangeNotifier {
   //   try {
   //     final response = await http.delete(
   //       Uri.parse(_getUrl(
-  //           'cpoe/prescription/get-prescription/delete/${prescription.presNum}')),
+  //           'cpoe/prescription/get-prescription/delete/${prescription.presID}')),
   //       headers: header,
   //       body: body,
   //     );
@@ -138,7 +138,7 @@ class PrescriptionProvider with ChangeNotifier {
   //   try {
   //     final response = await http.delete(
   //       Uri.parse(_getUrl(
-  //           'cpoe/prescription/get-prescription-${prescription.presNum}/delete-medicine/${drugId}')),
+  //           'cpoe/prescription/get-prescription-${prescription.presID}/delete-medicine/${drugId}')),
   //       headers: header,
   //       body: body,
   //     );

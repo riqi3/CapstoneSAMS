@@ -1,14 +1,14 @@
 import 'package:capstone_sams/models/MedicineModel.dart';
 
 class Prescription {
-  final String? presNum;
+  final String? presID;
   final List<dynamic>? medicines;
   final int? account;
   final String? patientID; 
   final String? illnessID; 
 
   Prescription({
-    required this.presNum,
+    required this.presID,
     required this.medicines,
     required this.account,
     required this.patientID, 
@@ -17,7 +17,7 @@ class Prescription {
 
   Map<String, dynamic> toJson() {
     return {
-      'presNum': presNum,
+      'presID': presID,
       'medicines': medicines,
       'account': account,
       'patient': patientID, 
@@ -27,7 +27,7 @@ class Prescription {
 
   factory Prescription.fromJson(Map<String, dynamic> json) {
     return Prescription(
-      presNum: json['presNum'],
+      presID: json['presID'],
       // medicines: json['medicines'] ,
       // medicines: (json['medicines'] as List)
       //     .map((medicineJson) => Medicine.fromJson(medicineJson))
