@@ -117,9 +117,9 @@ class MedicineView(viewsets.ModelViewSet):
             return Response({"message": "Failed to fetch medicine.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
     @api_view(['GET'])
-    def fetch_medicine_through_prescription(request, presNum):
+    def fetch_medicine_through_prescription(request, presID):
         try:
-            prescription = Prescription.objects.get(pk=presNum)
+            prescription = Prescription.objects.get(pk=presID)
             prescribed_medicines = Prescribed_Medicine.objects.filter(prescription=prescription)
             medicines = [prescribed_medicine.medicine for prescribed_medicine in prescribed_medicines]
             serializer = MedicineSerializer(medicines, many=True)
@@ -162,10 +162,10 @@ class PrescriptionView(viewsets.ViewSet):
         
     @api_view(['PUT'])
     # @permission_classes([IsAuthenticated])
-    def update_prescription_amount(request, presNum):
+    def update_prescription_amount(request, presID):
         try:
             prescription_data = json.loads(request.body)
-            prescription = Prescription.objects.get(pk=presNum)
+            prescription = Prescription.objects.get(pk=presID)
             if 'medicines' in prescription_data:
                 prescription.medicines = prescription_data['medicines']
             if 'account' in prescription_data:
@@ -189,10 +189,10 @@ class PrescriptionView(viewsets.ViewSet):
 
     @api_view(['PUT'])
     # @permission_classes([IsAuthenticated])
-    def update_prescription(request, presNum):
+    def update_prescription(request, presID):
         try:
             prescription_data = json.loads(request.body)
-            prescription = Prescription.objects.get(pk=presNum)
+            prescription = Prescription.objects.get(pk=presID)
             if 'medicines' in prescription_data:
                 prescription.medicines = prescription_data['medicines']
             if 'account' in prescription_data:
@@ -216,9 +216,9 @@ class PrescriptionView(viewsets.ViewSet):
 
     @api_view(['DELETE'])
     # @permission_classes([IsAuthenticated])
-    def delete_prescription(request, presNum):
+    def delete_prescription(request, presID):
         try:
-            prescription = Prescription.objects.get(presNum = presNum)
+            prescription = Prescription.objects.get(presID = presID)
             data_log = Data_Log.objects.create(
                 event = f"{prescription.account.username} deleted prescription code {prescription}",
                 type = "User Deleted Prescription",
@@ -231,9 +231,9 @@ class PrescriptionView(viewsets.ViewSet):
 
     @api_view(['DELETE'])
     # @permission_classes([IsAuthenticated])
-    def delete_medicine(request, presNum, drugId):
+    def delete_medicine(request, presID, drugId):
         try:
-            prescription = Prescription.objects.get(presNum = presNum)
+            prescription = Prescription.objects.get(presID = presID)
             medicines = prescription.medicines
             for medicine in medicines:
                 if medicine['drugId'] == drugId:
