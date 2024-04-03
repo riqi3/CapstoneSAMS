@@ -358,50 +358,53 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
         ),
         content: Column(
           children: [
-            Row(
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return ChangeNotifierProvider<HealthCheckProvider>(
-                            create: (context) => HealthCheckProvider(),
-                            child: HealthCheckScreen(
-                              patient: widget.patient,
-                              initialComplaint: _presIllnessInfo.complaint,
-                              initialFindings: _presIllnessInfo.findings,
-                              initialDiagnosis: _presIllnessInfo.diagnosis,
-                              initialTreatment: _presIllnessInfo.treatment,
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                  child: Text('EDP'),
-                ),
-                SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return CpoeAnalyzeScreen(
-                            patient: widget.patient,
-                            initialComplaint: _presIllnessInfo.complaint,
-                            initialFindings: _presIllnessInfo.findings,
-                            initialDiagnosis: _presIllnessInfo.diagnosis,
-                            initialTreatment: _presIllnessInfo.treatment,
-                          );
-                        },
-                      ),
-                    );
-                  },
-                  child: Text('SDP'),
-                ),
-              ],
+Center(
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      ElevatedButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return ChangeNotifierProvider<HealthCheckProvider>(
+                  create: (context) => HealthCheckProvider(),
+                  child: HealthCheckScreen(
+                    patient: widget.patient,
+                    initialComplaint: _presIllnessInfo.complaint,
+                    initialFindings: _presIllnessInfo.findings,
+                    initialDiagnosis: _presIllnessInfo.diagnosis,
+                    initialTreatment: _presIllnessInfo.treatment,
+                  ),
+                );
+              },
             ),
+          );
+        },
+        child: Text('EDP'),
+      ),
+      SizedBox(width: 10),
+      ElevatedButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return CpoeAnalyzeScreen(
+                  patient: widget.patient,
+                  initialComplaint: _presIllnessInfo.complaint,
+                  initialFindings: _presIllnessInfo.findings,
+                  initialDiagnosis: _presIllnessInfo.diagnosis,
+                  initialTreatment: _presIllnessInfo.treatment,
+                );
+              },
+            ),
+          );
+        },
+        child: Text('SDP'),
+      ),
+    ],
+  ),
+),
             SizedBox(height: Sizing.formSpacing),
             FormTextField(
               controller: _illnessNameController,
