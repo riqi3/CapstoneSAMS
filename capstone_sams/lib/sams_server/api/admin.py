@@ -106,7 +106,6 @@ def create_data_log_for_deletion(sender, instance, using, **kwargs):
             )
             data_log.save()
 
-
 '''
 This is a signal that will create a data log if an admin user deletes
 any data.

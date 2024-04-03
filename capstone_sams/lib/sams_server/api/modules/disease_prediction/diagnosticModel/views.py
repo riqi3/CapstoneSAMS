@@ -1,6 +1,8 @@
 
+import json
 import os
 import pickle
+
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from django.shortcuts import render
@@ -16,6 +18,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import OneHotEncoder
+from api.modules.user.models import Account, Data_Log
 
 def train_model():
     try:

@@ -34,13 +34,6 @@ import warnings
 
 def train_disease_prediction_model():
     try:
-        account_id = data["accountID"] 
-        account = Account.objects.get(pk=account_id)
-        data_log = Data_Log.objects.create(
-            event=f"{account.username} has trained the model",
-            type="Model Training",
-            account=account,
-            )
         # Folder Directory
         pickle_folder = 'api/modules/disease_prediction/cdssModel'
         
@@ -117,7 +110,7 @@ def train_disease_prediction_model():
         pickle.dump(final_rf_model, open(os.path.join(pickle_folder, 'final_rf_model.pkl'), 'wb'))
         pickle.dump(encoder, open(os.path.join(pickle_folder, 'encoder.pkl'), 'wb'))
 
-        return True, "Model training completed successfully."
+        return True, f"Model training completed successfully. SVM Testing Data Accuracy: {svm_test_accuracy}, NB Testing Data Accuracy: {nb_test_accuracy}, RF Testing Data Accuracy: {rf_test_accuracy}"
     except Exception as e:
         return False, str(e)
 
@@ -235,7 +228,7 @@ def get_latest_record_id(request):
 
 @api_view(['DELETE'])
 def delete_symptom_record(request, record_id):
-    try:
+    try:   
         health_symptom = HealthSymptom.objects.get(pk=record_id)
         health_symptom.delete()
         return JsonResponse({}, status=204)
@@ -248,7 +241,6 @@ def delete_symptom_record(request, record_id):
 @api_view(['POST'])
 def update_prognosis(request, record_id):
     try:
-        
         health_symptom = HealthSymptom.objects.get(id=record_id)
 
         
