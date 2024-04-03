@@ -12,6 +12,7 @@ import 'package:capstone_sams/global-widgets/snackbars/Snackbars.dart';
 import 'package:capstone_sams/global-widgets/texts/NoDataTextWidget.dart';
 import 'package:capstone_sams/global-widgets/texts/RichTextTemplate.dart';
 import 'package:capstone_sams/models/AccountModel.dart';
+import 'package:capstone_sams/models/MedicineModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/models/PresentIllness.dart';
@@ -100,7 +101,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
             physics: BouncingScrollPhysics(),
             itemCount: presentIllnessList.length,
             itemBuilder: (context, index) {
-              final illness = presentIllnessList[index];
+              final illness = presentIllnessList[index]; 
               final illnessIndex = '${presentIllnessList.length - index}';
 
               return FutureBuilder<Account?>(
@@ -215,7 +216,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                     color: Colors.transparent,
                                   )
                                 : popupActionWidget(
-                                    illness,
+                                    illness, 
                                     illnessIndex,
                                     account,
                                     accountProvider,
@@ -241,7 +242,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
   }
 
   PopupMenuButton<dynamic> popupActionWidget(
-      PresentIllness illness,
+      PresentIllness illness, 
       String illnessIndex,
       Account account,
       AccountProvider accountProvider,

@@ -8,11 +8,16 @@ import 'package:capstone_sams/global-widgets/snackbars/Snackbars.dart';
 import 'package:capstone_sams/global-widgets/text-fields/Textfields.dart';
 import 'package:capstone_sams/global-widgets/texts/FormTitleWidget.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
+import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/models/PresentIllness.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/HealthCheckProvider.dart';
+import 'package:capstone_sams/providers/MedicineProvider.dart';
+import 'package:capstone_sams/providers/PrescriptionProvider.dart';
 import 'package:capstone_sams/providers/PresentIllnessProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/PatientTabsScreen.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/AddMedicineDialog.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/MedicineCard.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -34,11 +39,13 @@ class EditPresentMedHistoryForm extends StatefulWidget {
 
 class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
   final _presIllnessInfoFormKey = GlobalKey<FormState>();
-  // final _presIllnessInfo = PresentIllness();
+  late Future<List<Prescription>> prescriptions;
   final DateTime? updatedAt = DateTime.now();
   int currentStep = 0;
   int? maxLines = 4;
 
+  late String token = context.read<AccountProvider>().token!;
+  bool checkboxValue1 = false;
   var incompleteInputs = dangerSnackbar('${Strings.incompleteInputs}');
   var failedUpdateComplaint = dangerSnackbar('${Strings.dangerAdd} diagnosis.');
   var successfulUpdateComplaint =
@@ -119,6 +126,15 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    token = context.read<AccountProvider>().token!;
+    final provider = Provider.of<PrescriptionProvider>(context, listen: false);
+    prescriptions =
+        provider.fetchPrescriptions(widget.patient.patientID, token);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FormTemplate(
       onpressed: () => Navigator.pop(context),
@@ -159,9 +175,9 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
                           });
                         }
                       },
-                      onStepTapped: (step) => setState(() {
-                        currentStep = step;
-                      }),
+                      // onStepTapped: (step) => setState(() {
+                      //   currentStep = step;
+                      // }),
                       steps: getSteps(),
                       controlsBuilder:
                           (BuildContext context, ControlsDetails details) {
@@ -211,6 +227,8 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
   }
 
   List<Step> getSteps() {
+    final medicineProvider =
+        Provider.of<MedicineProvider>(context, listen: false);
     return <Step>[
       Step(
         state: currentStep > 0 ? StepState.complete : StepState.indexed,
@@ -292,15 +310,122 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
               fontSize: Sizing.header4,
               fontWeight: FontWeight.w600),
         ),
-        content: FormTextField(
-          initialvalue: widget.presentIllness.treatment,
-          onchanged: (value) => widget.presentIllness.treatment = value,
-          labeltext: '',
-          validator: Strings.requiredField,
-          maxlines: maxLines,
-          type: TextInputType.text,
+        content: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CheckboxListTile(
+              value: checkboxValue1,
+              onChanged: (bool? value) {
+                setState(() {
+                  checkboxValue1 = value!;
+                });
+              },
+              title: const Text('Create Medication Order'),
+            ),
+            checkboxValue1 == true
+                ? EditPrescriptionSection(medicineProvider)
+                : SizedBox(width: Sizing.spacing),
+            SizedBox(height: Sizing.spacing),
+            FormTextField(
+              initialvalue: widget.presentIllness.treatment,
+              onchanged: (value) => widget.presentIllness.treatment = value,
+              labeltext: '',
+              validator: Strings.requiredField,
+              maxlines: maxLines,
+              type: TextInputType.text,
+            ),
+          ],
         ),
       ),
     ];
+  }
+
+  Column EditPrescriptionSection(MedicineProvider medicineProvider) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          height: MediaQuery.of(context).size.height / 4,
+          child: FutureBuilder<List<Prescription>>(
+              future: prescriptions,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  final prescriptions = snapshot.data!;
+                  return ListView.builder(
+                    itemCount: prescriptions.length,
+                    itemBuilder: (context, index) {
+                      final prescription = prescriptions[index];
+                      if (prescription.illnessID ==
+                          widget.presentIllness.illnessID) {
+                        return ListTile(
+                          subtitle: Column(
+                            children: prescription.medicines!
+                                .map((medicine) => Column(
+                                      children: [
+                                        Text('${medicine.drugCode}'),
+                                        Text('${medicine.drugName}'),
+                                      ],
+                                    ))
+                                .toList(),
+                          ),
+                        );
+                      }
+                      return SizedBox.shrink();
+                    },
+                  );
+                }
+              }),
+        ),
+        Container(
+          padding: EdgeInsets.all(Sizing.sectionSymmPadding),
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+            color: Pallete.lightGreyColor2,
+            borderRadius: BorderRadius.circular(Sizing.borderRadius / 3),
+          ),
+          child: Column(
+            children: [
+              ElevatedButton.icon(
+                onPressed: () => showDialog(
+                  context: context,
+                  builder: (ctx) => AddMedicineDialog(),
+                ),
+                icon: Icon(Icons.edit),
+                label: Text('Write Rx'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Pallete.mainColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(Sizing.borderRadius),
+                  ),
+                ),
+              ),
+              if (medicineProvider.medicines.isEmpty)
+                Text(
+                  '\n\nNo current orders\n\n',
+                  style: TextStyle(color: Pallete.greyColor),
+                )
+              else
+                Column(
+                  children: [
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: medicineProvider.medicines.length,
+                      itemBuilder: (ctx, index) => MedicineCard(
+                        medicine: medicineProvider.medicines[index],
+                        patient: widget.patient,
+                        index: index,
+                      ),
+                    ),
+                  ],
+                ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }
