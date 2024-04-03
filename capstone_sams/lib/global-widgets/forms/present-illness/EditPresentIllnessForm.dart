@@ -101,7 +101,7 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
             ),
           ),
           (Route<dynamic> route) {
-            if (routesCount < 2) {
+            if (routesCount < 3) {
               routesCount++;
               return false;
             }
