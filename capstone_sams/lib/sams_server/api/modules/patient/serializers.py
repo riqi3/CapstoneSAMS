@@ -44,7 +44,7 @@ class MedicalRecordSerializer(serializers.ModelSerializer):
             'allergies',
             'pastDiseases',
             'familyHistory',
-            'lastMensPeriod',
+            # 'lastMensPeriod',
             'patient',
         ]
 

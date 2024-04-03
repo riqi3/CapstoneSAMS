@@ -204,7 +204,7 @@ class MedicalRecordView(viewsets.ViewSet):
                 allergies = record_data['allergies'],
                 pastDiseases = record_data['pastDiseases'],
                 familyHistory = record_data['familyHistory'],
-                lastMensPeriod = record_data['lastMensPeriod'],
+                # lastMensPeriod = record_data['lastMensPeriod'],
                 patient = patient
             )
             return Response({"message": "Health record created successfully."}, status=status.HTTP_201_CREATED)
@@ -223,7 +223,7 @@ class MedicalRecordView(viewsets.ViewSet):
             record.allergies = record_data['allergies']
             record.pastDiseases = record_data['pastDiseases']
             record.familyHistory = record_data['familyHistory']
-            record.lastMensPeriod = record_data['lastMensPeriod']
+            # record.lastMensPeriod = record_data['lastMensPeriod']
             record.save()
             return Response({"message": "Health Record updated successfully."}, status=status.HTTP_200_OK)
         except Medical_Record.DoesNotExist:

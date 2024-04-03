@@ -78,7 +78,7 @@ class Medical_Record(models.Model):
     allergies = models.JSONField(blank = True, default=None, null=True)
     pastDiseases = models.JSONField(blank = True, default=None, null=True)
     familyHistory = models.JSONField(blank = True, default=None, null=True)
-    lastMensPeriod = models.CharField(max_length=100, blank = True, default=None)
+    # lastMensPeriod = models.CharField(max_length=100, blank = True, default=None)
     
 
     class Meta:

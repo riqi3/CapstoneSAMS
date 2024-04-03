@@ -13,6 +13,8 @@ from IPython.display import display, HTML
 from PIL import Image, ImageDraw, ImageFont 
 import random   
 import os 
+from django.db.models import JSONField
+from django_json_widget.widgets import JSONEditorWidget
 from api.modules.disease_prediction.cdssModel.forms import CsvImportHealthSymptomForm 
 from django.urls import reverse
 from django.http import HttpResponseRedirect, JsonResponse
@@ -353,6 +355,9 @@ class MedicalRecordInline(admin.StackedInline):
     model = Medical_Record 
     extra = 1
     can_delete = False
+    formfield_overrides = {
+        JSONField: {'widget': JSONEditorWidget},
+    }
     def has_add_permission(self, request, obj):
         if obj is None:
             return True
@@ -406,7 +411,7 @@ class PatientAdmin(admin.ModelAdmin):
         # 'department',
         "email",
         # 'assignedPhysician',
-    )
+    ) 
 
     def get_urls(self):
         urls = super().get_urls()
@@ -580,6 +585,10 @@ class PrescriptionAdminForm(forms.ModelForm):
     class Meta:
         model = Prescription
         fields = "__all__"
+        # fields = ('medicines','account','patient','illness') 
+        widgets = {
+            'medicines': JSONEditorWidget
+        }
 
 '''
 This represent the table that will be shown to the admin looking at the currently stored prescriptions.
@@ -598,6 +607,9 @@ class PrescriptionAdmin(admin.ModelAdmin):
     list_filter = ("account", "patient")
     search_fields = ("presNum",)
     autocomplete_fields = ["account", "patient"]
+    formfield_overrides = {
+        JSONField: {'widget': JSONEditorWidget,},
+    }
     def has_add_permission(self, request, obj=None):
         return False
 
