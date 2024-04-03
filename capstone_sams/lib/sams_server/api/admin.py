@@ -526,7 +526,7 @@ class MedicineAdmin(admin.ModelAdmin):
 
     def upload_csv(self, request):
         if request.method == "POST":
-            csv_file = request.FILES.get("csv_upload")  # Use .get() to avoid KeyError
+            csv_file = request.FILES.get("csv_upload")
             if not csv_file:
                 messages.warning(request, "No file was uploaded")
                 return HttpResponseRedirect(request.path_info)
@@ -539,13 +539,12 @@ class MedicineAdmin(admin.ModelAdmin):
             csv_data = file_data.split("\n")
             for x in csv_data:
                 fields = x.split(",")
-                if len(fields) >= 2:  # Check if there are at least 2 fields
+                if len(fields) >= 2: 
                     created = Medicine.objects.update_or_create(
                         drugCode=fields[0],
                         drugName=fields[1],
                     )
                 else:
-                    # Handle case where there are fewer than 2 fields
                     messages.warning(request, f"Skipping row. Not enough fields.")
                 
             url = reverse("admin:index")
