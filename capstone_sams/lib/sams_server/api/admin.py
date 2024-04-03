@@ -347,11 +347,12 @@ class UserAdmin(BaseUserAdmin):
 '''
 This represent the forms that will be shown to the admin when creating a new patient
 and updating existing patients.
-'''  
+'''   
 
 class MedicalRecordInline(admin.StackedInline):
     model = Medical_Record 
     extra = 1
+    can_delete = False
     def has_add_permission(self, request, obj):
         if obj is None:
             return True
@@ -360,6 +361,7 @@ class MedicalRecordInline(admin.StackedInline):
 class ContactInline(admin.StackedInline):
     model = Contact_Person
     extra = 1
+    can_delete = False
     def has_add_permission(self, request, obj):
         if obj is None:
             return True
