@@ -313,6 +313,11 @@ class PresentIllnessView(viewsets.ViewSet):
                 patient = patient,
                 created_by = account, 
             )
+            data_log = Data_Log.objects.create(
+                event=f"{account.username} created new complaint",
+                type="User Created Complaint",
+                account=account
+                )
             return Response({"message": "Complaint created successfully."}, status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response({"message": "Failed to create complaint.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
@@ -321,6 +326,7 @@ class PresentIllnessView(viewsets.ViewSet):
     def update_complaint(request, illnessID, accountID):
         try:
             present_illness = Present_Illness.objects.get(pk = illnessID)
+            account = Account.objects.get(pk=accountID) 
             illness_data = json.loads(request.body)
             present_illness.illnessName = illness_data['illnessName']
             present_illness.complaint = illness_data['complaint']
@@ -330,7 +336,11 @@ class PresentIllnessView(viewsets.ViewSet):
             present_illness.created_at = illness_data['created_at']
             present_illness.updated_at = illness_data['updated_at'] 
             present_illness.save()
-            account = Account.objects.get(pk=accountID) 
+            data_log = Data_Log.objects.create(
+                event=f"{account.username} updated omplaint",
+                type="User Updated Complaint",
+                account=account
+                )
             return Response({"message": "Complaint updated successfully."}, status=status.HTTP_200_OK)
         except Present_Illness.DoesNotExist:
             return Response({"message": "Complaint does not exist."}, status=status.HTTP_404_NOT_FOUND)
