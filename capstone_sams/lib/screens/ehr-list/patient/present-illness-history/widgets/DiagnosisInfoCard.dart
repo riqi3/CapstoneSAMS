@@ -286,7 +286,12 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                       "Deleting a patient's illness history record is irreversable and cannot be undone.",
                   buttonTitle: 'Remove diagnosis',
                   onpressed: () => removeComplaintMethod(
-                      provider, illness, accountProvider, token, context),
+                    provider,
+                    illness,
+                    accountProvider,
+                    token,
+                    context,
+                  ),
                 ),
               );
             },
@@ -473,23 +478,71 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                             if (prescription.illnessID ==
                                                 illness.illnessID) {
                                               return ListTile(
-                                                // title: Text(
-                                                //     'Prescription ${prescription.presNum}'),
+                                                tileColor:
+                                                    Pallete.lightGreyColor,
                                                 subtitle: Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children:
                                                       prescription.medicines!
                                                           .map(
-                                                            (medicine) => Text(
-                                                              '${medicine.quantity} x ${medicine.drugName}: ${medicine.instructions}',
+                                                            (medicine) =>
+                                                                Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Text(
+                                                                  '${medicine.drugCode}',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize: Sizing
+                                                                        .header6,
+                                                                  ),
+                                                                ),
+                                                                Row(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    Expanded(
+                                                                      child:
+                                                                          Column(
+                                                                        children: [
+                                                                          Text(
+                                                                            '${medicine.quantity} x ${medicine.drugName}',
+                                                                            style:
+                                                                                TextStyle(
+                                                                              color: Pallete.mainColor,
+                                                                              fontSize: Sizing.header6,
+                                                                              fontWeight: FontWeight.bold,
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                    Expanded(
+                                                                      child:
+                                                                          Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          Text(
+                                                                            '${medicine.instructions}',
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
                                                             ),
                                                           )
                                                           .toList(),
                                                 ),
-                                              ); // Skip rendering if illnessID doesn't match
+                                              );
                                             }
-                                            // Render ListTile only for prescriptions matching the illnessID
+
                                             return SizedBox.shrink();
                                           },
                                         );

@@ -178,7 +178,7 @@ class UserCreationForm(forms.ModelForm):
         if user.accountRole == 'admin':
             user.is_staff = True
             user.is_superuser = True
-        elif user.accountRole == 'nurse':
+        elif user.accountRole == 'nurse' or user.accountRole == 'physician':
             user.is_staff = True
         print(user.accountID)
         photo = self.photo_generator(user)
@@ -526,24 +526,34 @@ class MedicineAdmin(admin.ModelAdmin):
 
     def upload_csv(self, request):
         if request.method == "POST":
-            csv_file = request.FILES["csv_upload"]
+            csv_file = request.FILES.get("csv_upload")
+            if not csv_file:
+                messages.warning(request, "No file was uploaded")
+                return HttpResponseRedirect(request.path_info)
+            
             if not csv_file.name.endswith(".csv"):
                 messages.warning(request, "The wrong file type was uploaded")
                 return HttpResponseRedirect(request.path_info)
+            
             file_data = csv_file.read().decode("utf-8")
             csv_data = file_data.split("\n")
             for x in csv_data:
                 fields = x.split(",")
-                created = Medicine.objects.update_or_create(
-                    # drugId=fields[0],
-                    drugCode=fields[0],
-                    drugName=fields[1],
-                )
+                if len(fields) >= 2: 
+                    created = Medicine.objects.update_or_create(
+                        drugCode=fields[0],
+                        drugName=fields[1],
+                    )
+                else:
+                    messages.warning(request, f"Skipping row. Not enough fields.")
+                
             url = reverse("admin:index")
             return HttpResponseRedirect(url)
+        
         form = CsvImportMedicineForm()
         data = {"form": form}
         return render(request, "admin/csv_upload.html", data)
+
 
 '''
 This represent the forms that will be shown to the admin when creating a new health record

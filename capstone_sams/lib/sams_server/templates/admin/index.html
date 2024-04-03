@@ -1,25 +1,28 @@
-{% extends "admin/index.html" %} {% load static %} {% block content %} 
+{% extends "admin/index.html" %}
+{% load static i18n %}
+{% block content %}
 
-
-{% if user.is_staff and user.is_superuser %} {{ block.super }} {% endif %} 
-
+{% if user.is_staff and user.is_superuser %}
+  {{ block.super }}
+{% endif %}
 
 {% if user.is_staff and not user.is_superuser %}
-
-<div class="col py-3">
-  <div class="model-links">
-    <p>
-      <a class="upload-button" href="{% url 'upload_pdf' %}"
-        >Upload Laboratory Result</a
-      >
+<div class="row">
+  <div class="col-md-6 py-3">
+    <div class="model-links">
       <p>
-        <a class="upload-button" href="{% url 'all_select_pdf' %}"
-          >Select A Laboratory Result to Scan</a
-        >
+        <a class="btn btn-lg btn-primary" href="{% url 'upload_pdf' %}">
+          <i class="fas fa-file-upload"></i> Upload Laboratory Result
+        </a>
       </p>
-    </p>
+      <p>
+        <a class="btn btn-lg btn-primary" href="{% url 'all_select_pdf' %}">
+          <i class="fas fa-search"></i> Select A Laboratory Result to Scan
+        </a>
+      </p>
+    </div>
+  </div>
   </div>
 </div>
- 
-
-{% endif %} {% endblock %}
+{% endif %}
+{% endblock %}
