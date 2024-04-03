@@ -198,9 +198,9 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
                           });
                         }
                       },
-                      onStepTapped: (step) => setState(() {
-                        currentStep = step;
-                      }),
+                      // onStepTapped: (step) => setState(() {
+                      //   currentStep = step;
+                      // }),
                       steps: getSteps(),
                       controlsBuilder:
                           (BuildContext context, ControlsDetails details) {
@@ -358,53 +358,53 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
         ),
         content: Column(
           children: [
-Center(
-  child: Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      ElevatedButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) {
-                return ChangeNotifierProvider<HealthCheckProvider>(
-                  create: (context) => HealthCheckProvider(),
-                  child: HealthCheckScreen(
-                    patient: widget.patient,
-                    initialComplaint: _presIllnessInfo.complaint,
-                    initialFindings: _presIllnessInfo.findings,
-                    initialDiagnosis: _presIllnessInfo.diagnosis,
-                    initialTreatment: _presIllnessInfo.treatment,
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return ChangeNotifierProvider<HealthCheckProvider>(
+                              create: (context) => HealthCheckProvider(),
+                              child: HealthCheckScreen(
+                                patient: widget.patient,
+                                initialComplaint: _presIllnessInfo.complaint,
+                                initialFindings: _presIllnessInfo.findings,
+                                initialDiagnosis: _presIllnessInfo.diagnosis,
+                                initialTreatment: _presIllnessInfo.treatment,
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                    child: Text('EDP'),
                   ),
-                );
-              },
+                  SizedBox(width: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return CpoeAnalyzeScreen(
+                              patient: widget.patient,
+                              initialComplaint: _presIllnessInfo.complaint,
+                              initialFindings: _presIllnessInfo.findings,
+                              initialDiagnosis: _presIllnessInfo.diagnosis,
+                              initialTreatment: _presIllnessInfo.treatment,
+                            );
+                          },
+                        ),
+                      );
+                    },
+                    child: Text('SDP'),
+                  ),
+                ],
+              ),
             ),
-          );
-        },
-        child: Text('EDP'),
-      ),
-      SizedBox(width: 10),
-      ElevatedButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) {
-                return CpoeAnalyzeScreen(
-                  patient: widget.patient,
-                  initialComplaint: _presIllnessInfo.complaint,
-                  initialFindings: _presIllnessInfo.findings,
-                  initialDiagnosis: _presIllnessInfo.diagnosis,
-                  initialTreatment: _presIllnessInfo.treatment,
-                );
-              },
-            ),
-          );
-        },
-        child: Text('SDP'),
-      ),
-    ],
-  ),
-),
             SizedBox(height: Sizing.formSpacing),
             FormTextField(
               controller: _illnessNameController,
@@ -449,60 +449,7 @@ Center(
               title: const Text('Create Medication Order'),
             ),
             checkboxValue1 == true
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(Sizing.sectionSymmPadding),
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          color: Pallete.lightGreyColor2,
-                          borderRadius:
-                              BorderRadius.circular(Sizing.borderRadius / 3),
-                        ),
-                        child: Column(
-                          children: [
-                            ElevatedButton.icon(
-                              onPressed: () => showDialog(
-                                context: context,
-                                builder: (ctx) => AddMedicineDialog(),
-                              ),
-                              icon: Icon(Icons.edit),
-                              label: Text('Write Rx'),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Pallete.mainColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      Sizing.borderRadius),
-                                ),
-                              ),
-                            ),
-                            if (medicineProvider.medicines.isEmpty)
-                              Text(
-                                '\n\nNo current orders\n\n',
-                                style: TextStyle(color: Pallete.greyColor),
-                              )
-                            else
-                              Column(
-                                children: [
-                                  ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount:
-                                        medicineProvider.medicines.length,
-                                    itemBuilder: (ctx, index) => MedicineCard(
-                                      medicine:
-                                          medicineProvider.medicines[index],
-                                      patient: widget.patient,
-                                      index: index,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  )
+                ? CreatePrescriptionSection(medicineProvider)
                 : SizedBox(width: Sizing.spacing),
             SizedBox(height: Sizing.spacing),
             FormTextField(
@@ -566,5 +513,58 @@ Center(
         ),
       ),
     ];
+  }
+
+  Column CreatePrescriptionSection(MedicineProvider medicineProvider) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: EdgeInsets.all(Sizing.sectionSymmPadding),
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+            color: Pallete.lightGreyColor2,
+            borderRadius: BorderRadius.circular(Sizing.borderRadius / 3),
+          ),
+          child: Column(
+            children: [
+              ElevatedButton.icon(
+                onPressed: () => showDialog(
+                  context: context,
+                  builder: (ctx) => AddMedicineDialog(),
+                ),
+                icon: Icon(Icons.edit),
+                label: Text('Write Rx'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Pallete.mainColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(Sizing.borderRadius),
+                  ),
+                ),
+              ),
+              if (medicineProvider.medicines.isEmpty)
+                Text(
+                  '\n\nNo current orders\n\n',
+                  style: TextStyle(color: Pallete.greyColor),
+                )
+              else
+                Column(
+                  children: [
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: medicineProvider.medicines.length,
+                      itemBuilder: (ctx, index) => MedicineCard(
+                        medicine: medicineProvider.medicines[index],
+                        patient: widget.patient,
+                        index: index,
+                      ),
+                    ),
+                  ],
+                ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }
