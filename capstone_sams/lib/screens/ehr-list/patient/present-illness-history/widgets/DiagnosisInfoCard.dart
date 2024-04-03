@@ -324,7 +324,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
         ),
       ),
       (Route<dynamic> route) {
-        if (routesCount < 2) {
+        if (routesCount < 3) {
           routesCount++;
           return false;
         }
