@@ -25,7 +25,7 @@ from api.modules.patient.form import CsvImportPatientForm
 from api.modules.cpoe.form import CsvImportMedicineForm
 from api.modules.laboratory.form import PdfImportLabResultForm
 from api.modules.user.models import Account, Data_Log
-from api.modules.patient.models import Patient, Medical_Record,Contact_Person
+from api.modules.patient.models import Patient, Medical_Record,Contact_Person, Present_Illness
 from api.modules.cpoe.models import Medicine, Prescription
 from api.modules.laboratory.models import LabResult
 
@@ -581,6 +581,10 @@ This represent the table that will be shown to the admin looking at the currentl
 #     search_fields = ("recordNum",)
 #     autocomplete_fields = ["patient"]
 
+class PresentIllnessAdmin(admin.ModelAdmin):
+    list_display = ("illnessID", "patient", "illnessName","diagnosis","complaint","findings","treatment", "created_at", "updated_at", "created_by",)
+    search_fields = ("illnessName", "patient__firstName", "patient__middleInitial", "patient__lastName")
+    list_filter = ("created_at", "updated_at", "created_by",)
 
 class PrescriptionAdminForm(forms.ModelForm):
     class Meta:
@@ -1064,6 +1068,7 @@ admin.site.register(Patient, PatientAdmin)
 admin.site.register(Data_Log, DataLogsAdmin)
 admin.site.register(Medicine, MedicineAdmin)
 # admin.site.register(Health_Record, HealthRecordAdmin)
+admin.site.register(Present_Illness, PresentIllnessAdmin)
 admin.site.register(Prescription, PrescriptionAdmin)
 admin.site.register(LabResult, LabResultAdmin)
 admin.site.register(HealthSymptom, HealthSymptomAdmin)
