@@ -109,4 +109,7 @@ class Present_Illness(models.Model):
     isDeleted = models.BooleanField(default = False)
     def __str__(self):
         return f"{self.illnessName} | {self.patient.studNumber} | {self.patient.firstName} {self.patient.middleInitial} {self.patient.lastName}"
+    class Meta:
+        verbose_name = "Illness Record"
+        verbose_name_plural = "Illness Record"   
     
