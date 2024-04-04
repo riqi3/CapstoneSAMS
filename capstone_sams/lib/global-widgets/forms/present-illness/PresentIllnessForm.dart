@@ -130,7 +130,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
 
   TextEditingController _complaintController = TextEditingController();
   TextEditingController _findingsController = TextEditingController();
-  TextEditingController _illnessNameController = TextEditingController();
+  // TextEditingController _illnessNameController = TextEditingController();
   TextEditingController _diagnosisController = TextEditingController();
   TextEditingController _treatmentController = TextEditingController();
 
@@ -143,7 +143,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
     illness_id = Uuid().v4();
     _complaintController.text = widget.initialComplaint ?? '';
     _findingsController.text = widget.initialFindings ?? '';
-    _illnessNameController.text = widget.initialTreatment ?? '';
+    // _illnessNameController.text = widget.initialTreatment ?? '';
     _diagnosisController.text = widget.initialTreatment ?? '';
     _treatmentController.text = widget.initialTreatment ?? '';
   }
@@ -152,7 +152,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
   void dispose() {
     _complaintController.dispose();
     _findingsController.dispose();
-    _illnessNameController.dispose();
+    // _illnessNameController.dispose();
     _diagnosisController.dispose();
     _treatmentController.dispose();
     super.dispose();
@@ -407,7 +407,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
             ),
             SizedBox(height: Sizing.formSpacing),
             FormTextField(
-              controller: _illnessNameController,
+              // controller: _illnessNameController,
               onchanged: (value) => _presIllnessInfo.illnessName = value,
               labeltext: 'Illness Name*',
               initialvalue: selectedDisease,
@@ -490,7 +490,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
             TitleValueText(
               title: 'Diagnosis: ',
               value:
-                  '${_illnessNameController.text} | ${_diagnosisController.text}',
+                  '${_diagnosisController.text}',
             ),
             SizedBox(height: Sizing.formSpacing / 2),
             TitleValueText(
