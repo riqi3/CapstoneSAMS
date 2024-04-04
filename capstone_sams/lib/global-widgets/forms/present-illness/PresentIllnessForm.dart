@@ -130,7 +130,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
 
   TextEditingController _complaintController = TextEditingController();
   TextEditingController _findingsController = TextEditingController();
-  // TextEditingController _illnessNameController = TextEditingController();
+  TextEditingController _illnessNameController = TextEditingController();
   TextEditingController _diagnosisController = TextEditingController();
   TextEditingController _treatmentController = TextEditingController();
 
@@ -141,18 +141,18 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
     Provider.of<MedicineProvider>(context, listen: false).resetState();
     selectedDisease = widget.initialDisease;
     illness_id = Uuid().v4();
-    _complaintController.text = widget.initialComplaint ?? '';
-    _findingsController.text = widget.initialFindings ?? '';
-    // _illnessNameController.text = widget.initialTreatment ?? '';
-    _diagnosisController.text = widget.initialTreatment ?? '';
-    _treatmentController.text = widget.initialTreatment ?? '';
+    _complaintController.text = widget.initialComplaint == null ? '' : widget.initialComplaint!;
+    _findingsController.text = widget.initialFindings == null ? '' : widget.initialFindings!;
+    _illnessNameController.text = selectedDisease == null ? '' : selectedDisease!;
+    _diagnosisController.text = widget.initialDiagnosis == null ? '' : widget.initialDiagnosis!;
+    _treatmentController.text = widget.initialTreatment == null ? '' : widget.initialTreatment!;
   }
 
   @override
   void dispose() {
     _complaintController.dispose();
     _findingsController.dispose();
-    // _illnessNameController.dispose();
+    _illnessNameController.dispose();
     _diagnosisController.dispose();
     _treatmentController.dispose();
     super.dispose();
@@ -243,12 +243,16 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
                                         var presentIllnessRecord =
                                             PresentIllness(
                                           illnessID: illness_id,
-                                          illnessName:
-                                              _presIllnessInfo.illnessName,
-                                          complaint: _presIllnessInfo.complaint,
-                                          findings: _presIllnessInfo.findings,
-                                          diagnosis: _presIllnessInfo.diagnosis,
-                                          treatment: _presIllnessInfo.treatment,
+                                          illnessName: _illnessNameController.text,
+                                              // _presIllnessInfo.illnessName,
+                                          complaint: _complaintController.text,
+                                          // _presIllnessInfo.complaint,
+                                          findings: _findingsController.text, 
+                                          // _presIllnessInfo.findings,
+                                          diagnosis: _diagnosisController.text, 
+                                          // _presIllnessInfo.diagnosis,
+                                          treatment: _treatmentController.text,
+                                          // _presIllnessInfo.treatment,
                                           created_at: formattedDate,
                                           // updated_at: formattedDate,
                                           patient: widget.patient.patientID,
@@ -407,10 +411,10 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
             ),
             SizedBox(height: Sizing.formSpacing),
             FormTextField(
-              // controller: _illnessNameController,
+              controller: _illnessNameController,
               onchanged: (value) => _presIllnessInfo.illnessName = value,
               labeltext: 'Illness Name*',
-              initialvalue: selectedDisease,
+              // initialvalue: selectedDisease,
               validator: Strings.requiredField,
               type: TextInputType.text,
             ),
