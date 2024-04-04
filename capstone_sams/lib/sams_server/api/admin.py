@@ -1,5 +1,6 @@
 import csv
 from django import forms
+from django.db.models import Q
 from django.contrib import admin, messages
 from django.contrib.admin.models import LogEntry
 from django.contrib.auth.models import Group 
@@ -407,7 +408,7 @@ class PatientAdmin(admin.ModelAdmin):
         "middleInitial",
         "lastName",
         "birthDate",
-        # 'department',
+        'course',
         "email",
         # 'assignedPhysician',
     ) 
@@ -593,24 +594,30 @@ class PrescriptionAdminForm(forms.ModelForm):
 This represent the table that will be shown to the admin looking at the currently stored prescriptions.
 '''
 class PrescriptionAdmin(admin.ModelAdmin):
-    form = PrescriptionAdminForm
-    autocomplete_fields = ["patient"]
     list_display = (
         "presID",
-        # "disease",
         "medicines",
-        "account",
         "patient",
-        
+        "account",
     )
-    list_filter = ("account", "patient")
-    search_fields = ("presID",)
-    autocomplete_fields = ["account", "patient"]
-    formfield_overrides = {
-        JSONField: {'widget': JSONEditorWidget,},
-    }
-    def has_add_permission(self, request, obj=None):
-        return False
+    search_fields = ("presID", "patient__firstName", "patient__lastName", "account__username")
+
+    def get_search_results(self, request, queryset, search_term):
+        queryset, use_distinct = super().get_search_results(request, queryset, search_term)
+
+        if search_term:
+            # Construct the search term as a dictionary to match the structure of the data
+            search_dict = {"drugName": search_term}
+            search_dict_code = {"drugCode": search_term}
+            queryset |= self.model.objects.filter(
+                Q(medicines__contains=[search_dict]) |
+                Q(medicines__contains=[search_dict_code]) |
+                Q(patient__firstName__icontains=search_term) |
+                Q(patient__lastName__icontains=search_term) |
+                Q(account__username__icontains=search_term)
+            )
+
+        return queryset, use_distinct
 
 
 class HealthSymptomAdminForm(forms.ModelForm):
