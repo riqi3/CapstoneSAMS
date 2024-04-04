@@ -1,6 +1,7 @@
 import csv
 from django import forms
 from django.db.models import Q
+from django.utils.html import format_html
 from django.contrib import admin, messages
 from django.contrib.admin.models import LogEntry
 from django.contrib.auth.models import Group 
@@ -596,21 +597,39 @@ This represent the table that will be shown to the admin looking at the currentl
 class PrescriptionAdmin(admin.ModelAdmin):
     list_display = (
         "presID",
-        "medicines",
+        "formatted_medicines", 
         "patient",
         "account",
     )
     search_fields = ("presID", "patient__firstName", "patient__lastName", "account__username")
 
+    def formatted_medicines(self, obj):
+        """
+        Formats the medicines JSON data into a more readable HTML string.
+        """
+        medicines = obj.medicines
+        if not medicines:
+            return "No medicines"
+
+
+        formatted_medicines = []
+        for medicine in medicines:
+            formatted_medicine = f"Drug Code: {medicine['drugCode']}<br>Drug Name: {medicine['drugName']}<br>Quantity: {medicine['quantity']}<br>Instructions: {medicine['instructions']}<br><br>"
+            formatted_medicines.append(formatted_medicine)
+
+
+        return format_html(' '.join(formatted_medicines))
+    formatted_medicines.short_description = 'Medicines' 
+    def has_add_permission(self, request):
+        return False
     def get_search_results(self, request, queryset, search_term):
         queryset, use_distinct = super().get_search_results(request, queryset, search_term)
 
         if search_term:
-            # Construct the search term as a dictionary to match the structure of the data
-            search_dict = {"drugName": search_term}
+            search_dict_name = {"drugName": search_term}
             search_dict_code = {"drugCode": search_term}
             queryset |= self.model.objects.filter(
-                Q(medicines__contains=[search_dict]) |
+                Q(medicines__contains=[search_dict_name]) |
                 Q(medicines__contains=[search_dict_code]) |
                 Q(patient__firstName__icontains=search_term) |
                 Q(patient__lastName__icontains=search_term) |
