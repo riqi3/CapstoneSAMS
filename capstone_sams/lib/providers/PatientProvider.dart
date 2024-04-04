@@ -47,7 +47,8 @@ class PatientProvider extends ChangeNotifier {
       await Future.delayed(Duration(milliseconds: 1000));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        List<Patient> patients = data.map<Patient>((json) {
+        List<Patient> patients = data
+            .where((json) => json['isDeleted'] == false).map<Patient>((json) {
           return Patient.fromJson(json);
         }).toList();
         patients = patients.reversed.toList();
