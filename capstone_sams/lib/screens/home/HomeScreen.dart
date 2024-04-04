@@ -54,23 +54,70 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      endDrawer: ValueDashboard(),
-      appBar: PreferredSize(
-        child: ValueHomeAppBar(),
-        preferredSize: Size.fromHeight(kToolbarHeight),
-      ),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        physics: BouncingScrollPhysics(),
-        child: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-            if (constraints.maxWidth >= Dimensions.mobileWidth) {
-              return _tabletView(context, ehrTitle, medNotesTitle);
-            } else {
-              return _mobileView(context, ehrTitle, medNotesTitle);
-            }
-          },
+    void showBackDialog() {
+      showDialog<void>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Are you sure?'),
+              content: const Text(
+                'Are you sure you want to log out?',
+              ),
+              actions: <Widget>[
+                TextButton(
+                  style: TextButton.styleFrom(
+                    textStyle: Theme.of(context).textTheme.labelLarge,
+                  ),
+                  child: const Text('Nevermind'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    textStyle: Theme.of(context).textTheme.labelLarge,
+                  ),
+                  child: const Text('Log Out'),
+                  onPressed: () async {
+                    var success =
+                        await context.read<AccountProvider>().logout();
+
+                    if (success) {
+                      context.read<TodosProvider>().setEmpty();
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, "/", (Route<dynamic> route) => false);
+                    }
+                  },
+                ),
+              ],
+            );
+          });
+    }
+
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (didPop) return;
+        showBackDialog();
+      },
+      child: Scaffold(
+        endDrawer: ValueDashboard(),
+        appBar: PreferredSize(
+          child: ValueHomeAppBar(),
+          preferredSize: Size.fromHeight(kToolbarHeight),
+        ),
+        body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          physics: BouncingScrollPhysics(),
+          child: LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              if (constraints.maxWidth >= Dimensions.mobileWidth) {
+                return _tabletView(context, ehrTitle, medNotesTitle);
+              } else {
+                return _mobileView(context, ehrTitle, medNotesTitle);
+              }
+            },
+          ),
         ),
       ),
     );
