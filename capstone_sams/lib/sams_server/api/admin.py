@@ -40,9 +40,17 @@ This is a signal that will create a data log if a user logs in.
 '''
 @receiver(user_logged_in)
 def log_admin_login(sender, request, user, **kwargs):
+    # Check if the user is a superuser
+    if user.is_superuser:
+        event_message = f"Admin logged in: {user.username}"
+        log_type = "Admin Login"
+    else:
+        event_message = f"User logged in: {user.username}"
+        log_type = "User Login"
+
     data_log = Data_Log(
-        event=f"Admin logged in: {user.username}",
-        type="Admin Login",
+        event=event_message,
+        type=log_type,
         account=user,
     )
     data_log.save()
@@ -52,9 +60,17 @@ This is a signal that will create a data log if a user logs out.
 '''
 @receiver(user_logged_out)
 def log_admin_logout(sender, request, user, **kwargs):
+     
+    if user.is_superuser:
+        event_message = f"Admin logged out: {user.username}"
+        log_type = "Admin Logout"
+    else:
+        event_message = f"User logged out: {user.username}"
+        log_type = "User Logout"
+   
     data_log = Data_Log(
-        event=f"Admin logged out: {user.username}",
-        type="Admin Logout",
+        event=event_message,
+        type=log_type,
         account=user,
     )
     data_log.save()
@@ -582,9 +598,11 @@ This represent the table that will be shown to the admin looking at the currentl
 #     autocomplete_fields = ["patient"]
 
 class PresentIllnessAdmin(admin.ModelAdmin):
-    list_display = ("illnessID", "patient", "illnessName","diagnosis","complaint","findings","treatment", "created_at", "updated_at", "created_by",)
+    list_display = ("illnessID", "patient", "illnessName","diagnosis","complaint","findings", "created_at", "updated_at", "created_by",)
     search_fields = ("illnessName", "patient__firstName", "patient__middleInitial", "patient__lastName")
     list_filter = ("created_at", "updated_at", "created_by",)
+    def has_add_permission(self, request):
+        return False
 
 class PrescriptionAdminForm(forms.ModelForm):
     class Meta:
@@ -605,8 +623,8 @@ class PrescriptionAdmin(admin.ModelAdmin):
         "patient",
         "account",
     )
-    search_fields = ("presID", "patient__firstName", "patient__lastName", "account__username")
-
+    search_fields = ("presID", "patient__firstName", "patient__lastName", "account__username", "patient__studNumber")
+    list_filter = ("account","patient__studNumber")
     def formatted_medicines(self, obj):
         """
         Formats the medicines JSON data into a more readable HTML string.
@@ -636,10 +654,10 @@ class PrescriptionAdmin(admin.ModelAdmin):
                 Q(medicines__contains=[search_dict_name]) |
                 Q(medicines__contains=[search_dict_code]) |
                 Q(patient__firstName__icontains=search_term) |
+                Q(patient__studNumber__icontains=search_term) |
                 Q(patient__lastName__icontains=search_term) |
                 Q(account__username__icontains=search_term)
             )
-
         return queryset, use_distinct
 
 
