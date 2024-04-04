@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/MedicalNotesModel.dart';
 import '../../providers/MedicalNotesProvider.dart';
+import 'package:capstone_sams/screens/medical_notes/MedicalNotesScreen.dart';
 
 class EditTodoPage extends StatefulWidget {
   final Todo todo;
@@ -55,7 +56,21 @@ class _EditTodoPageState extends State<EditTodoPage> {
 
         if (mounted) {
           // Only update the UI if the widget is still mounted
-          Navigator.of(context).pop();
+          // Navigator.of(context).pop();
+        int routesCount = 0;
+
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MedicalNotes(),
+          ),
+          (Route<dynamic> route) {
+            if (routesCount < 3) {
+              routesCount++;
+              return false;
+            }
+            return true;
+          },);
 
           final snackBar = SnackBar(
             backgroundColor: Pallete.successColor,

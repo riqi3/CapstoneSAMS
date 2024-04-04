@@ -86,12 +86,26 @@ class _AddTodoPageState extends State<AddTodoPage> {
           _isAddingTodo = false;
         });
         // Navigator.of(context).pop();
-        Navigator.pushReplacement(
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => MedicalNotes(),
+        //   ),
+        // );
+        int routesCount = 0;
+
+        Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
             builder: (context) => MedicalNotes(),
           ),
-        );
+          (Route<dynamic> route) {
+            if (routesCount < 2) {
+              routesCount++;
+              return false;
+            }
+            return true;
+          },);
         const snackBar = SnackBar(
           backgroundColor: Pallete.successColor,
           content: Text(

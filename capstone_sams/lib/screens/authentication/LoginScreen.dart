@@ -69,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
       usernameController.clear();
       passwordController.clear();
 
-      Navigator.pushNamed(context, '/home');
+      Navigator.pushReplacementNamed(context, '/home');
       // Navigator.pushReplacement(
       //   context,
       //   MaterialPageRoute(

@@ -1,5 +1,7 @@
 import csv
 from django import forms
+from django.db.models import Q
+from django.utils.html import format_html
 from django.contrib import admin, messages
 from django.contrib.admin.models import LogEntry
 from django.contrib.auth.models import Group 
@@ -23,7 +25,7 @@ from api.modules.patient.form import CsvImportPatientForm
 from api.modules.cpoe.form import CsvImportMedicineForm
 from api.modules.laboratory.form import PdfImportLabResultForm
 from api.modules.user.models import Account, Data_Log
-from api.modules.patient.models import Patient, Medical_Record,Contact_Person
+from api.modules.patient.models import Patient, Medical_Record,Contact_Person, Present_Illness
 from api.modules.cpoe.models import Medicine, Prescription
 from api.modules.laboratory.models import LabResult
 
@@ -407,7 +409,7 @@ class PatientAdmin(admin.ModelAdmin):
         "middleInitial",
         "lastName",
         "birthDate",
-        # 'department',
+        'course',
         "email",
         # 'assignedPhysician',
     ) 
@@ -579,6 +581,10 @@ This represent the table that will be shown to the admin looking at the currentl
 #     search_fields = ("recordNum",)
 #     autocomplete_fields = ["patient"]
 
+class PresentIllnessAdmin(admin.ModelAdmin):
+    list_display = ("illnessID", "patient", "illnessName","diagnosis","complaint","findings","treatment", "created_at", "updated_at", "created_by",)
+    search_fields = ("illnessName", "patient__firstName", "patient__middleInitial", "patient__lastName")
+    list_filter = ("created_at", "updated_at", "created_by",)
 
 class PrescriptionAdminForm(forms.ModelForm):
     class Meta:
@@ -593,24 +599,48 @@ class PrescriptionAdminForm(forms.ModelForm):
 This represent the table that will be shown to the admin looking at the currently stored prescriptions.
 '''
 class PrescriptionAdmin(admin.ModelAdmin):
-    form = PrescriptionAdminForm
-    autocomplete_fields = ["patient"]
     list_display = (
         "presID",
-        # "disease",
-        "medicines",
-        "account",
+        "formatted_medicines", 
         "patient",
-        
+        "account",
     )
-    list_filter = ("account", "patient")
-    search_fields = ("presID",)
-    autocomplete_fields = ["account", "patient"]
-    formfield_overrides = {
-        JSONField: {'widget': JSONEditorWidget,},
-    }
-    def has_add_permission(self, request, obj=None):
+    search_fields = ("presID", "patient__firstName", "patient__lastName", "account__username")
+
+    def formatted_medicines(self, obj):
+        """
+        Formats the medicines JSON data into a more readable HTML string.
+        """
+        medicines = obj.medicines
+        if not medicines:
+            return "No medicines"
+
+
+        formatted_medicines = []
+        for medicine in medicines:
+            formatted_medicine = f"Drug Code: {medicine['drugCode']}<br>Drug Name: {medicine['drugName']}<br>Quantity: {medicine['quantity']}<br>Instructions: {medicine['instructions']}<br><br>"
+            formatted_medicines.append(formatted_medicine)
+
+
+        return format_html(' '.join(formatted_medicines))
+    formatted_medicines.short_description = 'Medicines' 
+    def has_add_permission(self, request):
         return False
+    def get_search_results(self, request, queryset, search_term):
+        queryset, use_distinct = super().get_search_results(request, queryset, search_term)
+
+        if search_term:
+            search_dict_name = {"drugName": search_term}
+            search_dict_code = {"drugCode": search_term}
+            queryset |= self.model.objects.filter(
+                Q(medicines__contains=[search_dict_name]) |
+                Q(medicines__contains=[search_dict_code]) |
+                Q(patient__firstName__icontains=search_term) |
+                Q(patient__lastName__icontains=search_term) |
+                Q(account__username__icontains=search_term)
+            )
+
+        return queryset, use_distinct
 
 
 class HealthSymptomAdminForm(forms.ModelForm):
@@ -1038,6 +1068,7 @@ admin.site.register(Patient, PatientAdmin)
 admin.site.register(Data_Log, DataLogsAdmin)
 admin.site.register(Medicine, MedicineAdmin)
 # admin.site.register(Health_Record, HealthRecordAdmin)
+admin.site.register(Present_Illness, PresentIllnessAdmin)
 admin.site.register(Prescription, PrescriptionAdmin)
 admin.site.register(LabResult, LabResultAdmin)
 admin.site.register(HealthSymptom, HealthSymptomAdmin)

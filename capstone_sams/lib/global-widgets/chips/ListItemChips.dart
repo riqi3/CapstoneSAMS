@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 // ignore: must_be_immutable
 class ListItemChip extends StatefulWidget {
   List<String> list;
+  final Function(List<String>) onListChange;
   ListItemChip({
     super.key,
     required this.list,
+    required this.onListChange,
   });
 
   @override
@@ -18,6 +20,7 @@ class _ListItemChipState extends State<ListItemChip> {
     int index = list.indexOf(item);
     setState(() {
       list.removeAt(index);
+      widget.onListChange(list);
     });
   }
 
