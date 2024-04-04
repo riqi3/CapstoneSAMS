@@ -703,6 +703,31 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
   }
 
   Column MedicalInfoFormSection() {
+    void updateSelectedPastDiseases(List<String> updatedList) {
+      setState(() {
+        _selectedPastDiseases = updatedList;
+        otherPastDiseases.text = '';
+      });
+    }
+    void updateSelectedFamilyHistory(List<String> updatedList) {
+      setState(() {
+        _selectedFamHistory = updatedList;
+        otherFamHistory.text = '';
+      });
+    }
+    void updateSelectedAllergy(List<String> updatedList) {
+      setState(() {
+        _selectedAllergy = updatedList;
+        otherAllergies.text = '';
+      });
+    }
+    void updateSelectedIllnesses(List<String> updatedList) {
+      setState(() {
+        _selectedIllnesses = updatedList;
+        otherIllnesses.text = '';
+      });
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -731,7 +756,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                 label: Text('Select Past Disease'),
               ),
             ),
-            ListItemChip(list: _selectedPastDiseases),
+            ListItemChip(list: _selectedPastDiseases, onListChange: updateSelectedPastDiseases,),
             Visibility(
               visible: _isPastDiseaseInvalid,
               child: Text(
@@ -768,7 +793,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                 label: Text('Select Family History Illnesses'),
               ),
             ),
-            ListItemChip(list: _selectedFamHistory),
+            ListItemChip(list: _selectedFamHistory, onListChange: updateSelectedFamilyHistory,),
             Visibility(
               visible: _isFamHistoryInvalid,
               child: Text(
@@ -805,7 +830,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                 label: Text('Select Allergy'),
               ),
             ),
-            ListItemChip(list: _selectedAllergy),
+            ListItemChip(list: _selectedAllergy, onListChange: updateSelectedAllergy,),
             Visibility(
               visible: _isAllergyInvalid,
               child: Text(
@@ -842,7 +867,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                 label: Text('Select Illnesses'),
               ),
             ),
-            ListItemChip(list: _selectedIllnesses),
+            ListItemChip(list: _selectedIllnesses, onListChange: updateSelectedIllnesses,),
             Visibility(
               visible: _isIllnessInvalid,
               child: Text(
