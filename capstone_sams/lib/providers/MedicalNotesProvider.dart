@@ -36,8 +36,10 @@ class TodosProvider extends ChangeNotifier {
       );
       if (response.statusCode == 200) {
         final items = json.decode(response.body).cast<Map<String, dynamic>>();
-        List<Todo> list =
-            items.map<Todo>((json) => Todo.fromJson(json)).toList();
+        List<Todo> list = items
+            .where((json) => json['isDeleted'] == false)
+            .map<Todo>((json) => Todo.fromJson(json))
+            .toList();
         _todos = list;
         _isLoading = false;
         notifyListeners();
