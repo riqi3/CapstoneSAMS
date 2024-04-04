@@ -64,7 +64,9 @@ class PresentIllnessProvider extends ChangeNotifier {
       await Future.delayed(Duration(milliseconds: 2000));
       if (response.statusCode == 200) {
         final items = json.decode(response.body);
-        List<PresentIllness> presentIllness = items.map<PresentIllness>((json) {
+        List<PresentIllness> presentIllness = items
+            .where((json) => json['isDeleted'] == false)
+            .map<PresentIllness>((json) {
           return PresentIllness.fromJson(json);
         }).toList();
         presentIllness = presentIllness.reversed.toList();
