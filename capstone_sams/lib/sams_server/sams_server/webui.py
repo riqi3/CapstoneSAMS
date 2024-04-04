@@ -80,12 +80,14 @@ JAZZMIN_SETTINGS = {
     "navigation_expanded": True, 
 
     "icons": {
+        "api.diagnosticfields": "fa fa-stethoscope",
         "api.health_record": "fa fa-file-medical",
         "api.labresult": "fa fa-flask", 
         "api.medicine": "fas fa-pills",
         "api.patient": "fas fa-bed",
         "api.prescription": "fa fa-file-prescription",
-        "api.healthsymptom": "fa fa-head-side-cough",
+        "api.present_illness": "fa fa-head-side-cough",
+        "api.healthsymptom": "fa fa-lungs-virus",
         "user.account": "fa fa-user",
         "user.data_log": "fa fa-hourglass-half",
         # "auth.Group": "fas fa-users",
