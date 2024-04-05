@@ -127,8 +127,16 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                       Flexible(
                         child: FormTextField(
                           initialvalue: widget.medicine.quantity.toString(),
-                          onchanged: (value) =>
-                              _editedMedicine.quantity = value,
+                          // onchanged: (value) =>
+                          //     _editedMedicine.quantity = int.parse(value),
+                          onchanged: (value) {
+                            try {
+                              _editedMedicine.quantity = int.parse(value);
+                            } catch (e) {
+                              // Handle parsing error, e.g., show a message to the user
+                              print("Error parsing quantity: $e");
+                            }
+                          },
                           labeltext: '',
                           validator: Strings.requiredField,
                           type: TextInputType.number,
