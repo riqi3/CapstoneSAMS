@@ -609,9 +609,9 @@ class PrescriptionAdminForm(forms.ModelForm):
         model = Prescription
         fields = "__all__"
         # fields = ('medicines','account','patient','illness') 
-        widgets = {
-            'medicines': JSONEditorWidget
-        }
+        # widgets = {
+        #     'medicines': JSONEditorWidget
+        # }
 
 '''
 This represent the table that will be shown to the admin looking at the currently stored prescriptions.
@@ -625,6 +625,10 @@ class PrescriptionAdmin(admin.ModelAdmin):
     )
     search_fields = ("presID", "patient__firstName", "patient__lastName", "account__username", "patient__studNumber")
     list_filter = ("account","patient__studNumber")
+    
+    formfield_overrides = {
+        JSONField: {'widget': JSONEditorWidget},
+    }
     def formatted_medicines(self, obj):
         """
         Formats the medicines JSON data into a more readable HTML string.
