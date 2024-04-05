@@ -79,10 +79,10 @@ class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
                 patient: widget.patient,
                 initialPrediction: finalPrediction,
                 initialConfidence: finalConfidence,
-                initialComplaint: widget.initialComplaint,
-                initialFindings: widget.initialFindings,
-                initialDiagnosis: widget.initialDiagnosis,
-                initialTreatment: widget.initialTreatment,
+                initialComplaint: _complaint,
+                initialFindings: _findings,
+                initialDiagnosis: _diagnosis,
+                initialTreatment: _treatment,
               );
             },
           );
