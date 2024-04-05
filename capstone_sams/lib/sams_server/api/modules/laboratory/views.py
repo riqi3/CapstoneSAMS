@@ -277,7 +277,8 @@ class ProcessPdf(APIView):
                 messages.info(request, 'Check results on the SAMS application.')
             return HttpResponseRedirect("../../admin") 
         else: 
-            pdf_list = LabResult.objects.all() 
+            # pdf_list = LabResult.objects.all()
+            pdf_list = LabResult.objects.filter(isDeleted=False) 
             return render(
                 request, "laboratory/select/pdf_all_select.html", {"pdf_list": pdf_list}
             )
@@ -285,7 +286,9 @@ class ProcessPdf(APIView):
     def delete_pdf(request, pdfId):
         try:
             pdf = LabResult.objects.get(pdfId=pdfId)
-            pdf.delete()
+            pdf.isDeleted = True
+            # pdf.delete()
+            pdf.save()
             return JsonResponse({'success': True})
         except LabResult.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'PDF not found'})
@@ -320,7 +323,7 @@ class LabResultView(viewsets.ModelViewSet):
     @api_view(["GET"])
     def fetch_pdf(request):
         try:
-            queryset = LabResult.objects.all()
+            queryset = LabResult.objects.filter(isDeleted=False)
             serializer = LabResultSerializer(queryset, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
