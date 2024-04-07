@@ -136,6 +136,12 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
     prescriptions =
         provider.fetchPrescriptions(widget.patient.patientID, token);
     prescriptID = provider.presID ?? '';
+
+    if (prescriptID == '') {
+      setState(() {
+        checkboxValue1 = true;
+      });
+    }
   }
 
   @override
