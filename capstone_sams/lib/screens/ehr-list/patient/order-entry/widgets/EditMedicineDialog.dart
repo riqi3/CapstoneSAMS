@@ -117,6 +117,7 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                           _editedMedicine.drugId = data?.drugId.toString();
                           _editedMedicine.drugName = data?.drugName.toString();
                           _editedMedicine.drugCode = data?.drugCode.toString();
+                          print(_editedMedicine.drugCode);
                         },
                       ),
                       SizedBox(height: 10),
@@ -175,34 +176,6 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                                         listen: false)
                                     .editMedicine(
                                         widget.index, _editedMedicine);
-
-                                //                           Medicine modifiedMedicine = Medicine(
-                                //                             drugId: _editedMedicine.drugId,
-                                //                             drugCode: _editedMedicine.drugCode,
-                                //                             drugName: _editedMedicine.drugName,
-                                //                             instructions: _editedMedicine.instructions,
-                                //                             quantity: _editedMedicine.quantity,
-                                //                           );
-
-                                //                           List<dynamic> updatedMedicines =
-                                //                               List.from(medicines!);
-
-                                //                           updatedMedicines[widget.index] = modifiedMedicine;
-
-                                // final provider =
-                                //     Provider.of<PrescriptionProvider>(context, listen: false);
-                                // provider.updatePrescription(
-                                //   Prescription(
-                                //     presID: widget.,
-                                //     medicines: updatedMedicines,
-                                //     account: widget.prescription.account,
-                                //     patientID: widget.prescription.patientID,
-                                //     // health_record: widget.prescription.health_record,
-                                //     // disease: widget.prescription.disease,
-                                //   ),
-                                //   widget.patient.patientID,
-                                //   token,
-                                // );
 
                                 print('TEST YO ${widget.index}');
 

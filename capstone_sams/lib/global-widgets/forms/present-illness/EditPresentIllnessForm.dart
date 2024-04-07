@@ -178,10 +178,7 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
                             currentStep += 1;
                           });
                         }
-                      },
-                      // onStepTapped: (step) => setState(() {
-                      //   currentStep = step;
-                      // }),
+                      }, 
                       steps: getSteps(),
                       controlsBuilder:
                           (BuildContext context, ControlsDetails details) {
@@ -374,7 +371,7 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
               title: 'Treatment: ',
               value: '${widget.presentIllness.treatment}',
             ),
-            SizedBox(height: Sizing.formSpacing / 2), 
+            SizedBox(height: Sizing.formSpacing / 2),
             Container(
               height: MediaQuery.of(context).size.height / 4,
               child: FutureBuilder<List<Prescription>>(
