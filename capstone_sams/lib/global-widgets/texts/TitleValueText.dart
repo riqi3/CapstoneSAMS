@@ -1,3 +1,4 @@
+import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:flutter/material.dart';
 
 class TitleValueText extends StatelessWidget {
@@ -22,6 +23,38 @@ class TitleValueText extends StatelessWidget {
         Text(
           value,
           overflow: TextOverflow.ellipsis,
+        ),
+      ],
+    );
+  }
+}
+
+class NullTitleValueText extends StatelessWidget {
+  const NullTitleValueText({
+    Key? key,
+    required this.title,
+    required this.value,
+  }) : super(key: key);
+
+  final String title, value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Text(
+          title,
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        Text(
+          value,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            color: Pallete.dangerColor,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
       ],
     );

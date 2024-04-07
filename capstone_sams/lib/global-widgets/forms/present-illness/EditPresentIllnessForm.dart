@@ -98,7 +98,6 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
           await presentIllnessProvider.updateComplaint(
               presentIllnessRecord, widget.patient.patientID, accountID, token);
 
-              
       if (presentIllnessSuccess || recipeSuccess) {
         int routesCount = 0;
 
@@ -141,7 +140,6 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
 
   @override
   Widget build(BuildContext context) {
-     
     return FormTemplate(
       onpressed: () => Navigator.pop(context),
       column: Column(
@@ -180,7 +178,7 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
                             currentStep += 1;
                           });
                         }
-                      }, 
+                      },
                       steps: getSteps(),
                       controlsBuilder:
                           (BuildContext context, ControlsDetails details) {
@@ -206,7 +204,9 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
                             Expanded(
                               child: FormSubmitButton(
                                 title: isLastStep ? 'Submit' : 'Next',
-                                icon: Icons.upload,
+                                icon: isLastStep
+                                    ? Icons.upload
+                                    : Icons.chevron_right,
                                 isLoading: _isLoading,
                                 onpressed: isLastStep
                                     ? _isLoading
@@ -430,7 +430,6 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
   }
 
   Column EditPrescriptionSection(MedicineProvider medicineProvider) {
-    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -498,7 +497,8 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
                         itemBuilder: (context, index) {
                           final prescription = prescriptions[index];
                           if (prescription.illnessID ==
-                              widget.presentIllness.illnessID) {
+                                  widget.presentIllness.illnessID ||
+                              prescription.medicines![index] != 0) {
                             return MedicineCard(
                               medicine: prescription.medicines![index],
                               patient: widget.patient,
