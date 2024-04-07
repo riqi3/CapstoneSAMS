@@ -51,6 +51,32 @@ class PrescriptionProvider with ChangeNotifier {
     }
   }
 
+
+
+  Future<Prescription> fetchPrescription(String token, String? presID) async {
+    final header = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token',
+    };
+    try {
+      final response = await http.get(
+          Uri.parse(
+              '${Env.prefix}/cpoe/prescription/get-prescription/${presID}'),
+          headers: header);
+      await Future.delayed(Duration(milliseconds: 1000));
+      if (response.statusCode == 200) {
+        _prescription = null;
+        notifyListeners();
+        return Prescription.fromJson(
+            jsonDecode(response.body) as Map<String, dynamic>);
+      } else {
+        return throw Exception('Failed to load prescription');
+      }
+    } catch (e) {
+      print('WHY PRESCRIPTION ${e}');
+      return throw Exception('Failed to load prescription');
+    }
+  }
   // Future updatePrescription(
   //     Prescription prescription, String? patientID, String token) async {
   //   final header = <String, String>{

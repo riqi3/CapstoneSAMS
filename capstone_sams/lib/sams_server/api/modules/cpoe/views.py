@@ -187,31 +187,91 @@ class PrescriptionView(viewsets.ViewSet):
             return Response({"message": "Failed to update prescription amount", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
-    @api_view(['PUT'])
-    # @permission_classes([IsAuthenticated])
-    def update_prescription(request, presID):
+   
+    @api_view(['GET'])
+    def fetch_prescription_by_id(request, presID):
         try:
-            prescription_data = json.loads(request.body)
+            presriptID = Prescription.objects.get(pk=presID) 
+            serializer = PrescriptionSerializer(presriptID)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Present_Illness.DoesNotExist:
+            return Response({"message": "Prescription does not exist."}, status=status.HTTP_404_NOT_FOUND)
+    
+    @api_view(['PUT'])
+    def update_prescription(request, presID, accountID, patientID, illnessID):
+        try:
+        # Retrieve necessary objects from IDs
+            account = Account.objects.get(pk=accountID)
+            patient = Patient.objects.get(pk=patientID)
+            present_illness = Present_Illness.objects.get(pk=illnessID)
+
+        # Retrieve existing prescription
             prescription = Prescription.objects.get(pk=presID)
-            if 'medicines' in prescription_data:
-                prescription.medicines = prescription_data['medicines']
-            if 'account' in prescription_data:
-                account_id = prescription_data['account']
-                account = get_object_or_404(Account, pk=account_id)
-            if 'health_record' in prescription_data:
-                prescription.health_record_id = prescription_data['health_record']
-            if 'patient' in prescription_data:
-                prescription.patient_id = prescription_data['patient']
+
+        # Parse request body for updated prescription data
+            prescription_data = json.loads(request.body)
+
+        # Update prescription fields
+            prescription.medicines = prescription_data.get('medicines', prescription.medicines)  # Update medicines if provided
+            prescription.patient = patient
+            prescription.account = account
+            prescription.illness = present_illness
+
+        # Save updated prescription to database
             prescription.save()
+
+        # Create a data log for the update event
             data_log = Data_Log.objects.create(
                 event=f"{account.username} updated prescription",
                 type="User Updated Prescription",
                 account=account
-                )
+            )
+
             return Response({"message": "Prescription updated successfully"}, status=status.HTTP_200_OK)
+
+        except Prescription.DoesNotExist:
+            return Response({"message": "Prescription not found"}, status=status.HTTP_404_NOT_FOUND)
+
         except Exception as e:
-            print(e)
             return Response({"message": "Failed to update prescription", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+    # @api_view(['PUT'])
+    # # @permission_classes([IsAuthenticated])
+    # def update_prescription(request, presID, accountID, patientID, illnessID):
+    #     try:
+    #         present_illness = Present_Illness.objects.get(pk=illnessID)
+    #         account = Account.objects.get(pk=accountID) 
+    #         patient = Patient.objects.get(pk=patientID) 
+    #         prescription = Prescription.objects.get(pk=presID)
+    #         prescription_data = json.loads(request.body)
+    #         prescription.presID = prescription
+    #         prescription.medicines = prescription_data['medicines']
+    #         prescription.patient = patient
+    #         prescription.account = account
+    #         prescription.illness = present_illness
+            
+    #         # if 'medicines' in prescription_data:
+    #         #     prescription.medicines = prescription_data['medicines']
+    #         # if 'account' in prescription_data:
+    #         #     account_id = prescription_data['account']
+    #         #     account = get_object_or_404(Account, pk=account_id)
+    #         # # if 'health_record' in prescription_data:
+    #         # #     prescription.health_record_id = prescription_data['health_record']
+    #         # if 'patient' in prescription_data:
+    #         #     prescription.patient_id = prescription_data['patient']
+    #         # if 'illness' in prescription_data:
+    #         #     prescription.illness = prescription_data['illness']
+    #         prescription.save()
+    #         data_log = Data_Log.objects.create(
+    #             event=f"{account.username} updated prescription",
+    #             type="User Updated Prescription",
+    #             account=account
+    #             )
+    #         return Response({"message": "Prescription updated successfully"}, status=status.HTTP_200_OK)
+    #     except Exception as e:
+    #         print(e)
+    #         return Response({"message": "Failed to update prescription", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
     @api_view(['DELETE'])

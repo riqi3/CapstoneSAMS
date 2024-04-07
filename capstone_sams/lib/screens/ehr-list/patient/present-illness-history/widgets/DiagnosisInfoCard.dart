@@ -261,7 +261,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                 MaterialPageRoute(
                   builder: (context) => EditPresentMedHistoryForm(
                     presentIllness: illness,
-                    patient: widget.patient,
+                    patient: widget.patient, 
                   ),
                 ),
               );
@@ -522,6 +522,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                                                         ],
                                                                       ),
                                                                     ),
+                                                                    SizedBox(width: Sizing.sectionSymmPadding),
                                                                     Expanded(
                                                                       child:
                                                                           Column(

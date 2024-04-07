@@ -141,11 +141,16 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
     Provider.of<MedicineProvider>(context, listen: false).resetState();
     selectedDisease = widget.initialDisease;
     illness_id = Uuid().v4();
-    _complaintController.text = widget.initialComplaint == null ? '' : widget.initialComplaint!;
-    _findingsController.text = widget.initialFindings == null ? '' : widget.initialFindings!;
-    _illnessNameController.text = selectedDisease == null ? '' : selectedDisease!;
-    _diagnosisController.text = widget.initialDiagnosis == null ? '' : widget.initialDiagnosis!;
-    _treatmentController.text = widget.initialTreatment == null ? '' : widget.initialTreatment!;
+    _complaintController.text =
+        widget.initialComplaint == null ? '' : widget.initialComplaint!;
+    _findingsController.text =
+        widget.initialFindings == null ? '' : widget.initialFindings!;
+    _illnessNameController.text =
+        selectedDisease == null ? '' : selectedDisease!;
+    _diagnosisController.text =
+        widget.initialDiagnosis == null ? '' : widget.initialDiagnosis!;
+    _treatmentController.text =
+        widget.initialTreatment == null ? '' : widget.initialTreatment!;
   }
 
   @override
@@ -243,13 +248,14 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
                                         var presentIllnessRecord =
                                             PresentIllness(
                                           illnessID: illness_id,
-                                          illnessName: _illnessNameController.text,
-                                              // _presIllnessInfo.illnessName,
+                                          illnessName:
+                                              _illnessNameController.text,
+                                          // _presIllnessInfo.illnessName,
                                           complaint: _complaintController.text,
                                           // _presIllnessInfo.complaint,
-                                          findings: _findingsController.text, 
+                                          findings: _findingsController.text,
                                           // _presIllnessInfo.findings,
-                                          diagnosis: _diagnosisController.text, 
+                                          diagnosis: _diagnosisController.text,
                                           // _presIllnessInfo.diagnosis,
                                           treatment: _treatmentController.text,
                                           // _presIllnessInfo.treatment,
@@ -493,8 +499,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
             SizedBox(height: Sizing.formSpacing / 2),
             TitleValueText(
               title: 'Diagnosis: ',
-              value:
-                  '${_diagnosisController.text}',
+              value: '${_diagnosisController.text}',
             ),
             SizedBox(height: Sizing.formSpacing / 2),
             TitleValueText(

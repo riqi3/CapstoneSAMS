@@ -104,6 +104,7 @@ class MedicineCard extends StatelessWidget {
               builder: (context) => EditMedicineDialog(
                 medicine: medicine,
                 index: index,
+                patient: patient,
               ),
             );
           },
@@ -176,6 +177,7 @@ class MedicineCard extends StatelessWidget {
                 builder: (context) => EditMedicineDialog(
                   medicine: medicine,
                   index: index,
+                  patient: patient,
                 ),
               );
             },

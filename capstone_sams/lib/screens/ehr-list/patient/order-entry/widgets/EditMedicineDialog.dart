@@ -1,8 +1,12 @@
 import 'package:capstone_sams/constants/Strings.dart';
 import 'package:capstone_sams/global-widgets/text-fields/Textfields.dart';
 import 'package:capstone_sams/models/MedicineModel.dart';
+import 'package:capstone_sams/models/PatientModel.dart';
+import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/MedicineProvider.dart';
+import 'package:capstone_sams/providers/PrescriptionProvider.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/PatientTabsScreen.dart';
 import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +17,11 @@ import '../../../../../constants/theme/sizing.dart';
 
 class EditMedicineDialog extends StatefulWidget {
   final Medicine medicine;
+  final Patient patient;
   final int index;
 
-  EditMedicineDialog({required this.medicine, required this.index});
+  EditMedicineDialog(
+      {required this.medicine, required this.patient, required this.index});
 
   @override
   _EditMedicineDialogState createState() => _EditMedicineDialogState();
@@ -24,6 +30,8 @@ class EditMedicineDialog extends StatefulWidget {
 class _EditMedicineDialogState extends State<EditMedicineDialog> {
   final _formKey = GlobalKey<FormState>();
   late Medicine _editedMedicine;
+
+  late List<dynamic>? medicines;
 
   int? maxLines = 4;
   late String token = context.read<AccountProvider>().token!;
@@ -115,7 +123,7 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                       Flexible(
                         child: FormTextField(
                           initialvalue: widget.medicine.instructions,
-                          onchanged: (value) =>
+                          onchanged: (value) => widget.medicine.instructions =
                               _editedMedicine.instructions = value,
                           labeltext: '',
                           validator: Strings.requiredField,
@@ -162,10 +170,42 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
+
                                 Provider.of<MedicineProvider>(context,
                                         listen: false)
                                     .editMedicine(
                                         widget.index, _editedMedicine);
+
+                                //                           Medicine modifiedMedicine = Medicine(
+                                //                             drugId: _editedMedicine.drugId,
+                                //                             drugCode: _editedMedicine.drugCode,
+                                //                             drugName: _editedMedicine.drugName,
+                                //                             instructions: _editedMedicine.instructions,
+                                //                             quantity: _editedMedicine.quantity,
+                                //                           );
+
+                                //                           List<dynamic> updatedMedicines =
+                                //                               List.from(medicines!);
+
+                                //                           updatedMedicines[widget.index] = modifiedMedicine;
+
+                                // final provider =
+                                //     Provider.of<PrescriptionProvider>(context, listen: false);
+                                // provider.updatePrescription(
+                                //   Prescription(
+                                //     presID: widget.,
+                                //     medicines: updatedMedicines,
+                                //     account: widget.prescription.account,
+                                //     patientID: widget.prescription.patientID,
+                                //     // health_record: widget.prescription.health_record,
+                                //     // disease: widget.prescription.disease,
+                                //   ),
+                                //   widget.patient.patientID,
+                                //   token,
+                                // );
+
+                                print('TEST YO ${widget.index}');
+
                                 Navigator.pop(context);
                               }
                             },

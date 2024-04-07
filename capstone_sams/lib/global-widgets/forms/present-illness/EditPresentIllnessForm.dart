@@ -3,7 +3,6 @@ import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/global-widgets/buttons/FormSubmitButton.dart';
 import 'package:capstone_sams/global-widgets/forms/FormTemplate.dart';
-import 'package:capstone_sams/global-widgets/forms/healthcheckscreen.dart';
 import 'package:capstone_sams/global-widgets/snackbars/Snackbars.dart';
 import 'package:capstone_sams/global-widgets/text-fields/Textfields.dart';
 import 'package:capstone_sams/global-widgets/texts/FormTitleWidget.dart';
@@ -12,7 +11,6 @@ import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/models/PresentIllness.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
-import 'package:capstone_sams/providers/HealthCheckProvider.dart';
 import 'package:capstone_sams/providers/MedicineProvider.dart';
 import 'package:capstone_sams/providers/PrescriptionProvider.dart';
 import 'package:capstone_sams/providers/PresentIllnessProvider.dart';
@@ -39,26 +37,22 @@ class EditPresentMedHistoryForm extends StatefulWidget {
 }
 
 class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
-  final _presIllnessInfoFormKey = GlobalKey<FormState>();
-  late Future<List<Prescription>> prescriptions;
-  final DateTime? updatedAt = DateTime.now();
-  int currentStep = 0;
-  int? maxLines = 4;
-
   late String token = context.read<AccountProvider>().token!;
-  bool checkboxValue1 = false;
+  late Future<List<Prescription>> prescriptions;
+  late bool _autoValidate = false;
+  late String? prescriptID;
+  final _presIllnessInfoFormKey = GlobalKey<FormState>();
+  final DateTime? updatedAt = DateTime.now();
+
   var incompleteInputs = dangerSnackbar('${Strings.incompleteInputs}');
   var failedUpdateComplaint = dangerSnackbar('${Strings.dangerAdd} diagnosis.');
   var successfulUpdateComplaint =
       successSnackbar('${Strings.successfulUpdate} diagnosis.');
-  TextEditingController _complaintController = TextEditingController();
-  TextEditingController _findingsController = TextEditingController();
-  TextEditingController _diagnosisController = TextEditingController();
-  TextEditingController _treatmentController = TextEditingController();
 
+  int currentStep = 0;
+  int? maxLines = 4;
+  bool checkboxValue1 = false;
   bool _isLoading = false;
-
-  late bool _autoValidate = false;
 
   void _onSubmit() async {
     setState(() => _isLoading = true);
@@ -71,7 +65,13 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
 
       return;
     } else {
-      // String getDate = DateFormat.yMMMd('en_US').format(createdAt as DateTime);
+      final accountID = context.read<AccountProvider>().id;
+      final token = context.read<AccountProvider>().token!;
+      final patientID = widget.patient.patientID;
+      final presentIllnessProvider =
+          Provider.of<PresentIllnessProvider>(context, listen: false);
+      final medicineProvider =
+          Provider.of<MedicineProvider>(context, listen: false);
 
       String formattedDate = updatedAt != null
           ? DateFormat('yyyy-MM-dd HH:mm').format(updatedAt!)
@@ -89,18 +89,16 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
         patient: widget.patient.patientID,
       );
 
-      final accountID = context.read<AccountProvider>().id;
+      print('PRESCRIPTION ID ${prescriptID}');
 
-      final presentIllnessProvider =
-          Provider.of<PresentIllnessProvider>(context, listen: false);
-
-      final token = context.read<AccountProvider>().token!;
+      final recipeSuccess = await medicineProvider.updatePrescription(
+          accountID, patientID, widget.presentIllness.illnessID, prescriptID);
 
       final presentIllnessSuccess =
           await presentIllnessProvider.updateComplaint(
               presentIllnessRecord, widget.patient.patientID, accountID, token);
 
-      if (presentIllnessSuccess) {
+      if (presentIllnessSuccess || recipeSuccess) {
         int routesCount = 0;
 
         Navigator.pushAndRemoveUntil(
@@ -137,6 +135,7 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
     final provider = Provider.of<PrescriptionProvider>(context, listen: false);
     prescriptions =
         provider.fetchPrescriptions(widget.patient.patientID, token);
+    prescriptID = provider.presID ?? '';
   }
 
   @override
@@ -375,17 +374,7 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
               title: 'Treatment: ',
               value: '${widget.presentIllness.treatment}',
             ),
-            SizedBox(height: Sizing.formSpacing / 2),
-            // Column(
-            //   crossAxisAlignment: CrossAxisAlignment.start,
-            //   children: medicineProvider.medicines
-            //       .map(
-            //         (medicine) => Text(
-            //           '${medicine.quantity} x ${medicine.drugName}: ${medicine.instructions}',
-            //         ),
-            //       )
-            //       .toList(),
-            // ),
+            SizedBox(height: Sizing.formSpacing / 2), 
             Container(
               height: MediaQuery.of(context).size.height / 4,
               child: FutureBuilder<List<Prescription>>(
@@ -402,6 +391,7 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
                       itemCount: prescriptions.length,
                       itemBuilder: (context, index) {
                         final prescription = prescriptions[index];
+                        prescriptID = prescription.presID;
                         if (prescription.illnessID ==
                             widget.presentIllness.illnessID) {
                           // return MedicineCard(
@@ -411,10 +401,15 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
                           // );
                           return ListTile(
                             subtitle: Column(
-                              children: prescription.medicines!
+                              children: medicineProvider.medicines
                                   .map(
-                                    (medicine) => Text(
-                                      '${medicine.quantity} x ${medicine.drugName}: ${medicine.instructions}',
+                                    (medicine) => Column(
+                                      children: [
+                                        Text('${medicine.drugCode}'),
+                                        Text(
+                                          '${medicine.quantity} x ${medicine.drugName}: ${medicine.instructions}',
+                                        ),
+                                      ],
                                     ),
                                   )
                                   .toList(),
