@@ -13,7 +13,8 @@ urlpatterns = [
     path('prescription/save/', PrescriptionView.save_prescription, name='save_prescription'),
     path('prescription/get-patient/<str:patientID>/', PrescriptionView.fetch_prescription_by_patientIds, name='fetch_prescription'),
     path('prescription/get-prescription/update-amount/<str:presID>', PrescriptionView.update_prescription_amount, name='update_prescription_amount'),
-    path('prescription/get-prescription/update/<str:presID>', PrescriptionView.update_prescription, name='update_prescription'), 
+    path('prescription/get-prescription/<str:presID>', PrescriptionView.fetch_prescription_by_id, name='fetch_prescription_by_id'), 
+    path('prescription/get-prescription/update/<str:presID>/<str:accountID>/<str:patientID>/<str:illnessID>', PrescriptionView.update_prescription, name='update_prescription'), 
     path('prescription/get-prescription/delete/<str:presID>', PrescriptionView.delete_prescription, name='delete_prescription'), #API Endpoint for note deletion
     path('prescription/get-prescription-<str:presID>/delete-medicine/<str:drugId>', PrescriptionView.delete_medicine, name='delete_medicine'), #API Endpoint for note deletion
 ]

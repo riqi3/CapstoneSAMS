@@ -101,7 +101,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
             physics: BouncingScrollPhysics(),
             itemCount: presentIllnessList.length,
             itemBuilder: (context, index) {
-              final illness = presentIllnessList[index]; 
+              final illness = presentIllnessList[index];
               final illnessIndex = '${presentIllnessList.length - index}';
 
               return FutureBuilder<Account?>(
@@ -216,7 +216,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                     color: Colors.transparent,
                                   )
                                 : popupActionWidget(
-                                    illness, 
+                                    illness,
                                     illnessIndex,
                                     account,
                                     accountProvider,
@@ -242,7 +242,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
   }
 
   PopupMenuButton<dynamic> popupActionWidget(
-      PresentIllness illness, 
+      PresentIllness illness,
       String illnessIndex,
       Account account,
       AccountProvider accountProvider,
@@ -476,6 +476,8 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                           itemBuilder: (context, index) {
                                             final prescription =
                                                 prescriptions[index];
+                                            // prescription.illnessID ==
+                                            //   illness.illnessID
                                             if (prescription.illnessID ==
                                                 illness.illnessID) {
                                               return ListTile(
@@ -493,13 +495,28 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                                                   CrossAxisAlignment
                                                                       .start,
                                                               children: [
-                                                                Text(
-                                                                  '${medicine.drugCode}',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontSize: Sizing
-                                                                        .header6,
-                                                                  ),
+                                                                Row(
+                                                                  children: [
+                                                                    Text(
+                                                                      '${medicine.drugCode}',
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontSize:
+                                                                            Sizing.header6,
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                        width: Sizing
+                                                                            .spacing),
+                                                                    Expanded(
+                                                                        child:
+                                                                            Divider(
+                                                                      color: Pallete
+                                                                          .greyColor,
+                                                                      thickness:
+                                                                          1,
+                                                                    )),
+                                                                  ],
                                                                 ),
                                                                 Row(
                                                                   crossAxisAlignment:
@@ -522,6 +539,9 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                                                         ],
                                                                       ),
                                                                     ),
+                                                                    SizedBox(
+                                                                        width: Sizing
+                                                                            .sectionSymmPadding),
                                                                     Expanded(
                                                                       child:
                                                                           Column(
@@ -543,7 +563,6 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                                 ),
                                               );
                                             }
-
                                             return SizedBox.shrink();
                                           },
                                         );

@@ -48,17 +48,15 @@ class PresentIllnessForm extends StatefulWidget {
 }
 
 class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
-  final findings = TextEditingController();
-  String displayFindings = '';
-  String? selectedDisease;
   final _presIllnessInfoFormKey = GlobalKey<FormState>();
   final _presIllnessInfo = PresentIllness();
   final DateTime? createdAt = DateTime.now();
-  int currentStep = 0;
-  int? maxLines = 4;
+  final findings = TextEditingController();
+
   late String token;
   late String illness_id;
-  // final illness_id = Uuid().v4();
+  late bool _autoValidate = false;
+
   var getID = '';
   var incompleteInputs = dangerSnackbar('${Strings.incompleteInputs}');
   var failedCreatedComplaint =
@@ -66,10 +64,13 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
   var successfulCreatedComplaint =
       successSnackbar('${Strings.successfulAdd} diagnosis.');
 
+  String displayFindings = '';
+  String? selectedDisease;
   bool checkboxValue1 = false;
   bool _isLoading = false;
-
-  late bool _autoValidate = false;
+  bool _isIllnessIDCreated = false;
+  int currentStep = 0;
+  int? maxLines = 4;
 
   void _onSubmit() async {
     setState(() => _isLoading = true);
@@ -141,11 +142,16 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
     Provider.of<MedicineProvider>(context, listen: false).resetState();
     selectedDisease = widget.initialDisease;
     illness_id = Uuid().v4();
-    _complaintController.text = widget.initialComplaint == null ? '' : widget.initialComplaint!;
-    _findingsController.text = widget.initialFindings == null ? '' : widget.initialFindings!;
-    _illnessNameController.text = selectedDisease == null ? '' : selectedDisease!;
-    _diagnosisController.text = widget.initialDiagnosis == null ? '' : widget.initialDiagnosis!;
-    _treatmentController.text = widget.initialTreatment == null ? '' : widget.initialTreatment!;
+    _complaintController.text =
+        widget.initialComplaint == null ? '' : widget.initialComplaint!;
+    _findingsController.text =
+        widget.initialFindings == null ? '' : widget.initialFindings!;
+    _illnessNameController.text =
+        selectedDisease == null ? '' : selectedDisease!;
+    _diagnosisController.text =
+        widget.initialDiagnosis == null ? '' : widget.initialDiagnosis!;
+    _treatmentController.text =
+        widget.initialTreatment == null ? '' : widget.initialTreatment!;
   }
 
   @override
@@ -232,49 +238,80 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
                                           : Icons.chevron_right,
                                       isLoading: _isLoading,
                                       onpressed: () {
-                                        String formattedDate = createdAt != null
-                                            ? DateFormat('yyyy-MM-dd HH:mm')
-                                                .format(createdAt!)
-                                            : '';
+                                        setState(() => _isLoading = true);
+                                        final isValid = _presIllnessInfoFormKey
+                                            .currentState!
+                                            .validate();
 
-                                        print(
-                                            'create illnes form ${illness_id}');
+                                        if (!isValid) {
+                                          setState(() => _isLoading = false);
 
-                                        var presentIllnessRecord =
-                                            PresentIllness(
-                                          illnessID: illness_id,
-                                          illnessName: _illnessNameController.text,
-                                              // _presIllnessInfo.illnessName,
-                                          complaint: _complaintController.text,
-                                          // _presIllnessInfo.complaint,
-                                          findings: _findingsController.text, 
-                                          // _presIllnessInfo.findings,
-                                          diagnosis: _diagnosisController.text, 
-                                          // _presIllnessInfo.diagnosis,
-                                          treatment: _treatmentController.text,
-                                          // _presIllnessInfo.treatment,
-                                          created_at: formattedDate,
-                                          // updated_at: formattedDate,
-                                          patient: widget.patient.patientID,
-                                        );
-                                        final accountID =
-                                            context.read<AccountProvider>().id;
-                                        // final presentIllnessProvider =
-                                        //     Provider.of<PresentIllnessProvider>(
-                                        //         context, listen: true);
-                                        final presentIllnessSuccess = context
-                                            .read<PresentIllnessProvider>()
-                                            .createComplaint(
-                                                presentIllnessRecord,
-                                                token,
-                                                widget.patient.patientID,
-                                                accountID);
-                                        getID = presentIllnessRecord.illnessID!;
-                                        print('GET THE ID ${getID}');
-                                        setState(() {
-                                          currentStep += 1;
-                                          details.onStepContinue;
-                                        });
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(incompleteInputs);
+
+                                          return;
+                                        } else {
+                                          String formattedDate = createdAt !=
+                                                  null
+                                              ? DateFormat('yyyy-MM-dd HH:mm')
+                                                  .format(createdAt!)
+                                              : '';
+
+                                          print(
+                                              'create illnes form ${illness_id}');
+
+                                          var presentIllnessRecord =
+                                              PresentIllness(
+                                            illnessID: illness_id,
+                                            illnessName:
+                                                _illnessNameController.text,
+                                            // _presIllnessInfo.illnessName,
+                                            complaint:
+                                                _complaintController.text,
+                                            // _presIllnessInfo.complaint,
+                                            findings: _findingsController.text,
+                                            // _presIllnessInfo.findings,
+                                            diagnosis:
+                                                _diagnosisController.text,
+                                            // _presIllnessInfo.diagnosis,
+                                            treatment:
+                                                _treatmentController.text,
+                                            // _presIllnessInfo.treatment,
+                                            created_at: formattedDate,
+                                            // updated_at: formattedDate,
+                                            patient: widget.patient.patientID,
+                                          );
+                                          final accountID = context
+                                              .read<AccountProvider>()
+                                              .id;
+                                          // final presentIllnessProvider =
+                                          //     Provider.of<PresentIllnessProvider>(
+                                          //         context, listen: true);
+
+                                          getID =
+                                              presentIllnessRecord.illnessID!;
+                                          print('GET THE ID ${getID}');
+                                          if (_complaintController.text != '' ||
+                                              _findingsController.text != '' ||
+                                              _diagnosisController.text != '' ||
+                                              _treatmentController.text != '') {
+                                            final presentIllnessSuccess = context
+                                                .read<PresentIllnessProvider>()
+                                                .createComplaint(
+                                                    presentIllnessRecord,
+                                                    token,
+                                                    widget.patient.patientID,
+                                                    accountID);
+                                            setState(() {
+                                              _isLoading = false;
+                                              currentStep += 1;
+                                              details.onStepContinue;
+                                            });
+                                          } else {
+                                            setState(() => _isLoading = false);
+                                            print('object');
+                                          }
+                                        }
                                       },
                                     ),
                                   )
@@ -479,28 +516,48 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
           ),
         ),
         content: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: Sizing.formSpacing),
-            TitleValueText(
-              title: 'Complaint: ',
-              value: '${_complaintController.text}',
-            ),
+            _complaintController.text == ''
+                ? NullTitleValueText(
+                    title: 'Complaint: ',
+                    value: '${Strings.requiredField}',
+                  )
+                : TitleValueText(
+                    title: 'Complaint: ',
+                    value: '${_complaintController.text}',
+                  ),
             SizedBox(height: Sizing.formSpacing / 2),
-            TitleValueText(
-              title: 'Findings: ',
-              value: '${_findingsController.text}',
-            ),
+            _findingsController.text == ''
+                ? NullTitleValueText(
+                    title: 'Findings: ',
+                    value: '${Strings.requiredField}',
+                  )
+                : TitleValueText(
+                    title: 'Findings: ',
+                    value: '${_findingsController.text}',
+                  ),
             SizedBox(height: Sizing.formSpacing / 2),
-            TitleValueText(
-              title: 'Diagnosis: ',
-              value:
-                  '${_diagnosisController.text}',
-            ),
+            _diagnosisController.text == ''
+                ? NullTitleValueText(
+                    title: 'Diagnosis: ',
+                    value: '${Strings.requiredField}',
+                  )
+                : TitleValueText(
+                    title: 'Diagnosis: ',
+                    value: '${_diagnosisController.text}',
+                  ),
             SizedBox(height: Sizing.formSpacing / 2),
-            TitleValueText(
-              title: 'Treatment: ',
-              value: '${_treatmentController.text}',
-            ),
+            _treatmentController.text == ''
+                ? NullTitleValueText(
+                    title: 'Treatment: ',
+                    value: '${Strings.requiredField}',
+                  )
+                : TitleValueText(
+                    title: 'Treatment: ',
+                    value: '${_treatmentController.text}',
+                  ),
             SizedBox(height: Sizing.formSpacing / 2),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

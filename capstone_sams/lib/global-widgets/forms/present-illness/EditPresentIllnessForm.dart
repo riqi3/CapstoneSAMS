@@ -3,15 +3,14 @@ import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/global-widgets/buttons/FormSubmitButton.dart';
 import 'package:capstone_sams/global-widgets/forms/FormTemplate.dart';
-import 'package:capstone_sams/global-widgets/forms/healthcheckscreen.dart';
 import 'package:capstone_sams/global-widgets/snackbars/Snackbars.dart';
 import 'package:capstone_sams/global-widgets/text-fields/Textfields.dart';
 import 'package:capstone_sams/global-widgets/texts/FormTitleWidget.dart';
+import 'package:capstone_sams/global-widgets/texts/TitleValueText.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/models/PresentIllness.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
-import 'package:capstone_sams/providers/HealthCheckProvider.dart';
 import 'package:capstone_sams/providers/MedicineProvider.dart';
 import 'package:capstone_sams/providers/PrescriptionProvider.dart';
 import 'package:capstone_sams/providers/PresentIllnessProvider.dart';
@@ -38,22 +37,22 @@ class EditPresentMedHistoryForm extends StatefulWidget {
 }
 
 class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
-  final _presIllnessInfoFormKey = GlobalKey<FormState>();
-  late Future<List<Prescription>> prescriptions;
-  final DateTime? updatedAt = DateTime.now();
-  int currentStep = 0;
-  int? maxLines = 4;
-
   late String token = context.read<AccountProvider>().token!;
-  bool checkboxValue1 = false;
+  late Future<List<Prescription>> prescriptions;
+  late bool _autoValidate = false;
+  late String? prescriptID;
+  final _presIllnessInfoFormKey = GlobalKey<FormState>();
+  final DateTime? updatedAt = DateTime.now();
+
   var incompleteInputs = dangerSnackbar('${Strings.incompleteInputs}');
   var failedUpdateComplaint = dangerSnackbar('${Strings.dangerAdd} diagnosis.');
   var successfulUpdateComplaint =
       successSnackbar('${Strings.successfulUpdate} diagnosis.');
 
+  int currentStep = 0;
+  int? maxLines = 4;
+  bool checkboxValue1 = false;
   bool _isLoading = false;
-
-  late bool _autoValidate = false;
 
   void _onSubmit() async {
     setState(() => _isLoading = true);
@@ -66,7 +65,13 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
 
       return;
     } else {
-      // String getDate = DateFormat.yMMMd('en_US').format(createdAt as DateTime);
+      final accountID = context.read<AccountProvider>().id;
+      final token = context.read<AccountProvider>().token!;
+      final patientID = widget.patient.patientID;
+      final presentIllnessProvider =
+          Provider.of<PresentIllnessProvider>(context, listen: false);
+      final medicineProvider =
+          Provider.of<MedicineProvider>(context, listen: false);
 
       String formattedDate = updatedAt != null
           ? DateFormat('yyyy-MM-dd HH:mm').format(updatedAt!)
@@ -84,18 +89,16 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
         patient: widget.patient.patientID,
       );
 
-      final accountID = context.read<AccountProvider>().id;
+      print('PRESCRIPTION ID ${prescriptID}');
 
-      final presentIllnessProvider =
-          Provider.of<PresentIllnessProvider>(context, listen: false);
-
-      final token = context.read<AccountProvider>().token!;
+      final recipeSuccess = await medicineProvider.updatePrescription(
+          accountID, patientID, widget.presentIllness.illnessID, prescriptID);
 
       final presentIllnessSuccess =
           await presentIllnessProvider.updateComplaint(
               presentIllnessRecord, widget.patient.patientID, accountID, token);
 
-      if (presentIllnessSuccess) {
+      if (presentIllnessSuccess || recipeSuccess) {
         int routesCount = 0;
 
         Navigator.pushAndRemoveUntil(
@@ -132,6 +135,13 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
     final provider = Provider.of<PrescriptionProvider>(context, listen: false);
     prescriptions =
         provider.fetchPrescriptions(widget.patient.patientID, token);
+    prescriptID = provider.presID ?? '';
+
+    if (prescriptID == '') {
+      setState(() {
+        checkboxValue1 = true;
+      });
+    }
   }
 
   @override
@@ -175,9 +185,6 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
                           });
                         }
                       },
-                      // onStepTapped: (step) => setState(() {
-                      //   currentStep = step;
-                      // }),
                       steps: getSteps(),
                       controlsBuilder:
                           (BuildContext context, ControlsDetails details) {
@@ -203,7 +210,9 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
                             Expanded(
                               child: FormSubmitButton(
                                 title: isLastStep ? 'Submit' : 'Next',
-                                icon: Icons.upload,
+                                icon: isLastStep
+                                    ? Icons.upload
+                                    : Icons.chevron_right,
                                 isLoading: _isLoading,
                                 onpressed: isLastStep
                                     ? _isLoading
@@ -337,6 +346,96 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
           ],
         ),
       ),
+      Step(
+        state: currentStep > 4 ? StepState.complete : StepState.indexed,
+        isActive: currentStep >= 4,
+        title: Text(
+          'Summary',
+          style: TextStyle(
+            color: Pallete.mainColor,
+            fontSize: Sizing.header4,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        content: Column(
+          children: [
+            SizedBox(height: Sizing.formSpacing),
+            TitleValueText(
+              title: 'Complaint: ',
+              value: '${widget.presentIllness.complaint}',
+            ),
+            SizedBox(height: Sizing.formSpacing / 2),
+            TitleValueText(
+              title: 'Findings: ',
+              value: '${widget.presentIllness.findings}',
+            ),
+            SizedBox(height: Sizing.formSpacing / 2),
+            TitleValueText(
+              title: 'Diagnosis: ',
+              value: '${widget.presentIllness.diagnosis}',
+            ),
+            SizedBox(height: Sizing.formSpacing / 2),
+            TitleValueText(
+              title: 'Treatment: ',
+              value: '${widget.presentIllness.treatment}',
+            ),
+            SizedBox(height: Sizing.formSpacing / 2),
+            Container(
+              height: MediaQuery.of(context).size.height / 4,
+              child: FutureBuilder<List<Prescription>>(
+                future: prescriptions,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    final prescriptions = snapshot.data!;
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: prescriptions.length,
+                      itemBuilder: (context, index) {
+                        final prescription = prescriptions[index];
+                        if (prescription.illnessID ==
+                            widget.presentIllness.illnessID) {
+                          // return MedicineCard(
+                          //   medicine: prescription.medicines![index],
+                          //   patient: widget.patient,
+                          //   index: index,
+                          // );
+
+                          prescriptID = prescription.presID;
+                          print(' crypto ${prescription.presID}');
+                          return ListTile(
+                            subtitle: Column(
+                              children: medicineProvider.medicines
+                                  .map(
+                                    (medicine) => Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text('${medicine.drugCode}'),
+                                        Text(
+                                          '${medicine.quantity} x ${medicine.drugName}: ${medicine.instructions}',
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                          );
+                        }
+                        return SizedBox.shrink();
+                      },
+                    );
+                  }
+                },
+              ),
+            ),
+            SizedBox(height: Sizing.sectionSymmPadding),
+          ],
+        ),
+      ),
     ];
   }
 
@@ -344,87 +443,84 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          height: MediaQuery.of(context).size.height / 4,
-          child: FutureBuilder<List<Prescription>>(
-              future: prescriptions,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  final prescriptions = snapshot.data!;
-                  return ListView.builder(
-                    itemCount: prescriptions.length,
-                    itemBuilder: (context, index) {
-                      final prescription = prescriptions[index];
-                      if (prescription.illnessID ==
-                          widget.presentIllness.illnessID) {
-                        return ListTile(
-                          subtitle: Column(
-                            children: prescription.medicines!
-                                .map((medicine) => Column(
-                                      children: [
-                                        Text('${medicine.drugCode}'),
-                                        Text('${medicine.drugName}'),
-                                      ],
-                                    ))
-                                .toList(),
-                          ),
-                        );
-                      }
-                      return SizedBox.shrink();
-                    },
-                  );
-                }
-              }),
-        ),
-        Container(
-          padding: EdgeInsets.all(Sizing.sectionSymmPadding),
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-            color: Pallete.lightGreyColor2,
-            borderRadius: BorderRadius.circular(Sizing.borderRadius / 3),
-          ),
-          child: Column(
-            children: [
-              ElevatedButton.icon(
-                onPressed: () => showDialog(
-                  context: context,
-                  builder: (ctx) => AddMedicineDialog(),
+        medicineProvider.medicines.isNotEmpty
+            ? Container(
+                padding: EdgeInsets.all(Sizing.sectionSymmPadding),
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  color: Pallete.lightGreyColor2,
+                  borderRadius: BorderRadius.circular(Sizing.borderRadius / 3),
                 ),
-                icon: Icon(Icons.edit),
-                label: Text('Write Rx'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Pallete.mainColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(Sizing.borderRadius),
-                  ),
-                ),
-              ),
-              if (medicineProvider.medicines.isEmpty)
-                Text(
-                  '\n\nNo current orders\n\n',
-                  style: TextStyle(color: Pallete.greyColor),
-                )
-              else
-                Column(
+                child: Column(
                   children: [
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: medicineProvider.medicines.length,
-                      itemBuilder: (ctx, index) => MedicineCard(
-                        medicine: medicineProvider.medicines[index],
-                        patient: widget.patient,
-                        index: index,
+                    ElevatedButton.icon(
+                      onPressed: () => showDialog(
+                        context: context,
+                        builder: (ctx) => AddMedicineDialog(),
+                      ),
+                      icon: Icon(Icons.edit),
+                      label: Text('Write Rx'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Pallete.mainColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(Sizing.borderRadius),
+                        ),
                       ),
                     ),
+                    if (medicineProvider.medicines.isEmpty)
+                      Text(
+                        '\n\nNo current orders\n\n',
+                        style: TextStyle(color: Pallete.greyColor),
+                      )
+                    else
+                      Column(
+                        children: [
+                          ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: medicineProvider.medicines.length,
+                            itemBuilder: (ctx, index) => MedicineCard(
+                              medicine: medicineProvider.medicines[index],
+                              patient: widget.patient,
+                              index: index,
+                            ),
+                          ),
+                        ],
+                      ),
                   ],
                 ),
-            ],
-          ),
-        ),
+              )
+            : Container(
+                height: MediaQuery.of(context).size.height / 4,
+                child: FutureBuilder<List<Prescription>>(
+                  future: prescriptions,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      final prescriptions = snapshot.data!;
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: prescriptions.length,
+                        itemBuilder: (context, index) {
+                          final prescription = prescriptions[index];
+                          if (prescription.illnessID ==
+                              widget.presentIllness.illnessID) {
+                            return MedicineCard(
+                              medicine: prescription.medicines![index],
+                              patient: widget.patient,
+                              index: index,
+                            );
+                          }
+                          return SizedBox.shrink();
+                        },
+                      );
+                    }
+                  },
+                ),
+              ),
       ],
     );
   }

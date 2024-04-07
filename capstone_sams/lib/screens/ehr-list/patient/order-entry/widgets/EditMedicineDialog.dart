@@ -1,6 +1,12 @@
+import 'package:capstone_sams/constants/Strings.dart';
+import 'package:capstone_sams/global-widgets/text-fields/Textfields.dart';
 import 'package:capstone_sams/models/MedicineModel.dart';
+import 'package:capstone_sams/models/PatientModel.dart';
+import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/MedicineProvider.dart';
+import 'package:capstone_sams/providers/PrescriptionProvider.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/PatientTabsScreen.dart';
 import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -11,9 +17,11 @@ import '../../../../../constants/theme/sizing.dart';
 
 class EditMedicineDialog extends StatefulWidget {
   final Medicine medicine;
+  final Patient patient;
   final int index;
 
-  EditMedicineDialog({required this.medicine, required this.index});
+  EditMedicineDialog(
+      {required this.medicine, required this.patient, required this.index});
 
   @override
   _EditMedicineDialogState createState() => _EditMedicineDialogState();
@@ -22,14 +30,17 @@ class EditMedicineDialog extends StatefulWidget {
 class _EditMedicineDialogState extends State<EditMedicineDialog> {
   final _formKey = GlobalKey<FormState>();
   late Medicine _editedMedicine;
-  DateTime? _selectedStartDate;
-  DateTime? _selectedEndDate;
+
+  late List<dynamic>? medicines;
+
+  int? maxLines = 4;
   late String token = context.read<AccountProvider>().token!;
 
+  late bool _autoValidate = false;
   @override
   void initState() {
     super.initState();
-    _editedMedicine = Medicine.copy(widget.medicine); 
+    _editedMedicine = Medicine.copy(widget.medicine);
   }
 
   @override
@@ -69,6 +80,9 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                 SizedBox(height: 10),
                 Form(
                   key: _formKey,
+                  autovalidateMode: _autoValidate
+                      ? AutovalidateMode.always
+                      : AutovalidateMode.disabled,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
@@ -80,155 +94,88 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                         clearButtonProps: ClearButtonProps(isVisible: true),
                         popupProps: PopupProps.modalBottomSheet(
                           showSearchBox: true,
-                          // showSelectedItems: true,
                         ),
+                        selectedItem: widget.medicine,
                         asyncItems: (String filter) async {
                           var response = await Dio().get(
                             '${Env.prefix}/cpoe/medicines/',
-                            queryParameters: {"filter": filter,},
+                            queryParameters: {
+                              "filter": filter,
+                            },
                             options: Options(headers: {
                               "Content-Type": "application/json",
                               "Authorization": "Bearer $token",
                             }),
                           );
-                          // var models = Medicine.fromJson(response.data);
                           var models = List<Medicine>.from(response.data
                               .map((json) => Medicine.fromJson(json)));
                           return models;
                         },
                         itemAsString: (Medicine medicine) =>
                             medicine.drugName.toString(),
-                        onChanged: (Medicine? data) {
-                          _editedMedicine.drugName = data?.drugName.toString();
+                        onSaved: (Medicine? data) {
+                          if (data != null) {
+                            setState(() {
+                              _editedMedicine.drugId = data.drugId;
+                              _editedMedicine.drugCode = data.drugCode;
+                              _editedMedicine.drugName = data.drugName;
+                            });
+                          } else { 
+                            setState(() {
+                              _editedMedicine.drugId = widget.medicine.drugId;
+                              _editedMedicine.drugCode =
+                                  widget.medicine.drugCode;
+                              _editedMedicine.drugName =
+                                  widget.medicine.drugName;
+                            });
+                          }
                         },
+                        // {
+                        //   setState(() {
+                        //     widget.medicine.drugId =
+                        //         _editedMedicine.drugId = data?.drugId;
+                        //     widget.medicine.drugCode =
+                        //         _editedMedicine.drugCode = data?.drugCode;
+                        //     widget.medicine.drugName =
+                        //         _editedMedicine.drugName = data?.drugName;
+
+                        //     print(
+                        //         'Selected Medicine: ${data?.drugName}, ${data?.drugCode}');
+                        //     print(
+                        //         'Edited Medicine: ${_editedMedicine.drugName}, ${_editedMedicine.drugCode}');
+                        //   });
+                        // },
                       ),
                       SizedBox(height: 10),
                       Flexible(
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            labelText: 'Instructions',
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Pallete.primaryColor,
-                              ),
-                            ),
-                            filled: true,
-                            fillColor: Pallete.palegrayColor,
-                          ),
-                          minLines: 4,
-                          maxLines: null,
-                          keyboardType: TextInputType.multiline,
-                          onSaved: (value) =>
+                        child: FormTextField(
+                          initialvalue: widget.medicine.instructions,
+                          onchanged: (value) => widget.medicine.instructions =
                               _editedMedicine.instructions = value,
+                          labeltext: '',
+                          validator: Strings.requiredField,
+                          maxlines: maxLines,
+                          type: TextInputType.text,
                         ),
                       ),
                       SizedBox(height: 10),
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'Start Date',
-                                border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Pallete.primaryColor,
-                                  ),
-                                ),
-                                filled: true,
-                                fillColor: Pallete.palegrayColor,
-                                suffixIcon: Icon(Icons.calendar_today),
-                              ),
-                              readOnly: true,
-                              onTap: () {
-                                showDatePicker(
-                                  context: context,
-                                  initialDate: DateTime.now(),
-                                  firstDate: DateTime.now(),
-                                  lastDate:
-                                      DateTime.now().add(Duration(days: 365)),
-                                ).then((selectedDate) {
-                                  if (selectedDate != null) {
-                                    setState(() {
-                                      _selectedStartDate = selectedDate;
-                                    });
-                                  }
-                                });
-                              },
-                              controller: TextEditingController(
-                                text: _selectedStartDate != null
-                                    ? _selectedStartDate!
-                                        .toLocal()
-                                        .toString()
-                                        .split(' ')[0]
-                                    : '',
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                          Expanded(
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'End Date',
-                                border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Pallete.primaryColor,
-                                  ),
-                                ),
-                                filled: true,
-                                fillColor: Pallete.palegrayColor,
-                                suffixIcon: Icon(Icons.calendar_today),
-                              ),
-                              readOnly: true,
-                              onTap: () {
-                                showDatePicker(
-                                  context: context,
-                                  initialDate:
-                                      _selectedStartDate ?? DateTime.now(),
-                                  firstDate:
-                                      _selectedStartDate ?? DateTime.now(),
-                                  lastDate:
-                                      DateTime.now().add(Duration(days: 365)),
-                                ).then((selectedDate) {
-                                  if (selectedDate != null) {
-                                    setState(() {
-                                      _selectedEndDate = selectedDate;
-                                    });
-                                  }
-                                });
-                              },
-                              controller: TextEditingController(
-                                text: _selectedEndDate != null
-                                    ? _selectedEndDate!
-                                        .toLocal()
-                                        .toString()
-                                        .split(' ')[0]
-                                    : '',
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 10),
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'Quantity',
-                                border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Pallete.primaryColor,
-                                  ),
-                                ),
-                                filled: true,
-                                fillColor: Pallete.palegrayColor,
-                              ),
-                              keyboardType: TextInputType.number,
-                              onSaved: (value) => _editedMedicine.quantity =
-                                  int.tryParse(value ?? ''),
-                            ),
-                          ),
-                        ],
+                      Flexible(
+                        child: FormTextField(
+                          initialvalue: widget.medicine.quantity.toString(),
+                          // onchanged: (value) =>
+                          //     _editedMedicine.quantity = int.parse(value),
+                          onchanged: (value) {
+                            try {
+                              _editedMedicine.quantity = int.parse(value);
+                            } catch (e) {
+                              // Handle parsing error, e.g., show a message to the user
+                              print("Error parsing quantity: $e");
+                            }
+                          },
+                          labeltext: '',
+                          validator: Strings.requiredField,
+                          type: TextInputType.number,
+                        ),
                       ),
                       SizedBox(height: 10),
                       Row(
@@ -249,11 +196,16 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                             child: Text('Submit'),
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
-                                _formKey.currentState!.save(); 
                                 Provider.of<MedicineProvider>(context,
                                         listen: false)
                                     .editMedicine(
                                         widget.index, _editedMedicine);
+
+                                _formKey.currentState!.save();
+
+                                print(
+                                    'TEST YO ${widget.index} ${widget.medicine.drugCode}');
+
                                 Navigator.pop(context);
                               }
                             },

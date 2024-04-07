@@ -81,7 +81,7 @@ class MedicineProvider with ChangeNotifier {
     };
     final medicinesJson =
         _medicines.map((medicine) => medicine.toJson()).toList();
- 
+
     final data = <String, dynamic>{
       'medicines': medicinesJson,
       'account': accountId,
@@ -91,8 +91,8 @@ class MedicineProvider with ChangeNotifier {
     };
     print(patientId);
     print(accountId);
-    
-      print('illnes provuider ${illnessId}');
+
+    print('illnes provuider ${illnessId}');
     try {
       final response = await http.post(
         Uri.parse('${Env.prefix}/cpoe/prescription/save/'),
@@ -107,6 +107,45 @@ class MedicineProvider with ChangeNotifier {
         print(response.statusCode);
         print(response.reasonPhrase);
         print(response.body);
+        return false;
+      }
+    } on Exception catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> updatePrescription(
+    int? accountId,
+    String? patientId,
+    String? illnessId,
+    String? presId,
+  ) async {
+    final headers = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
+    final medicinesJson =
+        _medicines.map((medicine) => medicine.toJson()).toList();
+
+    final data = <String, dynamic>{
+      'medicines': medicinesJson,
+      'account': accountId,
+      'patient': patientId,
+      'illness': illnessId,
+      'presId': presId,
+    };
+    try {
+      final response = await http.put(
+        Uri.parse(
+            '${Env.prefix}/cpoe/prescription/get-prescription/update/${presId}/${accountId}/${patientId}/${illnessId}'),
+        headers: headers,
+        body: jsonEncode(data),
+      );
+      await Future.delayed(Duration(milliseconds: 3000));
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        print('cannot update medicine!');
         return false;
       }
     } on Exception catch (e) {

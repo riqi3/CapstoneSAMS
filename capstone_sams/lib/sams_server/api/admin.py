@@ -373,7 +373,7 @@ class MedicalRecordInline(admin.StackedInline):
     extra = 1
     can_delete = False
     formfield_overrides = {
-        JSONField: {'widget': JSONEditorWidget},
+        JSONField: {'widget': JSONEditorWidget(attrs={'style': 'width: 100%;, height: 50%;'}),},
     }
     def has_add_permission(self, request, obj):
         if obj is None:
@@ -627,7 +627,7 @@ class PrescriptionAdmin(admin.ModelAdmin):
     list_filter = ("account","patient__studNumber")
     
     formfield_overrides = {
-        JSONField: {'widget': JSONEditorWidget},
+        JSONField: {'widget': JSONEditorWidget(attrs={'style': 'width: 100%;, height: 50%;'}),},
     }
     def formatted_medicines(self, obj):
         """

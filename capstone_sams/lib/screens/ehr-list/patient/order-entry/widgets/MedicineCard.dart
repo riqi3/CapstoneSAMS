@@ -47,15 +47,7 @@ class MedicineCard extends StatelessWidget {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Text(
-                //   '${_formatDate(medicine.startDate)} - ${_formatDate(medicine.endDate)}',
-                //   style: TextStyle(
-                //       color: Pallete.mainColor,
-                //       fontSize: 12,
-                //       fontWeight: FontWeight.bold),
-                // ),
-                // SizedBox(height: 5),
+              children: [ 
                 Text(
                   '${medicine.drugName.toString()}',
                   style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
@@ -104,6 +96,7 @@ class MedicineCard extends StatelessWidget {
               builder: (context) => EditMedicineDialog(
                 medicine: medicine,
                 index: index,
+                patient: patient,
               ),
             );
           },
@@ -176,6 +169,7 @@ class MedicineCard extends StatelessWidget {
                 builder: (context) => EditMedicineDialog(
                   medicine: medicine,
                   index: index,
+                  patient: patient,
                 ),
               );
             },

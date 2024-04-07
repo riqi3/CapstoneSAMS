@@ -209,7 +209,9 @@ class HealthCheckScreen extends StatelessWidget {
                           provider.top3Predictions.first['disease'];
                       onDiseaseSelected?.call(selectedDisease);
                       provider.setFirstResultDisease(selectedDisease);
-                      Navigator.push(
+                      int routesCount = 0;
+
+                      Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
                           builder: (context) => PresentIllnessForm(
@@ -221,6 +223,13 @@ class HealthCheckScreen extends StatelessWidget {
                             initialTreatment: initialTreatment,
                           ),
                         ),
+                        (Route<dynamic> route) {
+                          if (routesCount < 3) {
+                            routesCount++;
+                            return false;
+                          }
+                          return true;
+                        },
                       );
                     },
                     style: ElevatedButton.styleFrom(
@@ -239,7 +248,33 @@ class HealthCheckScreen extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      // Navigator.of(context).pop();
+                      String selectedDisease =
+                          provider.top3Predictions.first['disease'];
+                      onDiseaseSelected?.call(selectedDisease);
+                      provider.setFirstResultDisease(selectedDisease);
+                      int routesCount = 0;
+
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PresentIllnessForm(
+                            patient: patient,
+                            initialDisease: selectedDisease,
+                            initialComplaint: initialComplaint,
+                            initialFindings: initialFindings,
+                            initialDiagnosis: initialDiagnosis,
+                            initialTreatment: initialTreatment,
+                          ),
+                        ),
+                        (Route<dynamic> route) {
+                          if (routesCount < 3) {
+                            routesCount++;
+                            return false;
+                          }
+                          return true;
+                        },
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Pallete.mainColor,

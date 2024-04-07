@@ -155,7 +155,7 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                                 if (_medicine.drugName!.isNotEmpty) {
                                   Provider.of<MedicineProvider>(context,
                                           listen: false)
-                                      .addMedicine(_medicine); 
+                                      .addMedicine(_medicine);
                                   Navigator.pop(context);
                                 }
                               } else {

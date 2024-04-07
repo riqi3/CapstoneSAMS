@@ -16,7 +16,7 @@ class Strings {
   static const incompleteInputs =
       'Incomplete form inputs! Please double check inputs.';
   static const checkboxSelect = 'Please select at least one';
-  static const requiredField = 'Please enter required field.';
+  static const requiredField = 'Enter required field.';
   static const textValidation2 = 'Please enter at least one';
 
   const Strings._();
