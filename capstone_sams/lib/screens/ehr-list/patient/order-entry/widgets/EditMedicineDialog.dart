@@ -113,12 +113,38 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                         },
                         itemAsString: (Medicine medicine) =>
                             medicine.drugName.toString(),
-                        onChanged: (Medicine? data) {
-                          _editedMedicine.drugId = data?.drugId.toString();
-                          _editedMedicine.drugName = data?.drugName.toString();
-                          _editedMedicine.drugCode = data?.drugCode.toString();
-                          print(_editedMedicine.drugCode);
+                        onSaved: (Medicine? data) {
+                          if (data != null) {
+                            setState(() {
+                              _editedMedicine.drugId = data.drugId;
+                              _editedMedicine.drugCode = data.drugCode;
+                              _editedMedicine.drugName = data.drugName;
+                            });
+                          } else { 
+                            setState(() {
+                              _editedMedicine.drugId = widget.medicine.drugId;
+                              _editedMedicine.drugCode =
+                                  widget.medicine.drugCode;
+                              _editedMedicine.drugName =
+                                  widget.medicine.drugName;
+                            });
+                          }
                         },
+                        // {
+                        //   setState(() {
+                        //     widget.medicine.drugId =
+                        //         _editedMedicine.drugId = data?.drugId;
+                        //     widget.medicine.drugCode =
+                        //         _editedMedicine.drugCode = data?.drugCode;
+                        //     widget.medicine.drugName =
+                        //         _editedMedicine.drugName = data?.drugName;
+
+                        //     print(
+                        //         'Selected Medicine: ${data?.drugName}, ${data?.drugCode}');
+                        //     print(
+                        //         'Edited Medicine: ${_editedMedicine.drugName}, ${_editedMedicine.drugCode}');
+                        //   });
+                        // },
                       ),
                       SizedBox(height: 10),
                       Flexible(
@@ -170,14 +196,15 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                             child: Text('Submit'),
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
-                                _formKey.currentState!.save();
-
                                 Provider.of<MedicineProvider>(context,
                                         listen: false)
                                     .editMedicine(
                                         widget.index, _editedMedicine);
 
-                                print('TEST YO ${widget.index}');
+                                _formKey.currentState!.save();
+
+                                print(
+                                    'TEST YO ${widget.index} ${widget.medicine.drugCode}');
 
                                 Navigator.pop(context);
                               }

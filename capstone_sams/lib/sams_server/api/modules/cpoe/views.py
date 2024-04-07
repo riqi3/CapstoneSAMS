@@ -204,23 +204,18 @@ class PrescriptionView(viewsets.ViewSet):
             account = Account.objects.get(pk=accountID)
             patient = Patient.objects.get(pk=patientID)
             present_illness = Present_Illness.objects.get(pk=illnessID)
-
-        # Retrieve existing prescription
+ 
             prescription = Prescription.objects.get(pk=presID)
-
-        # Parse request body for updated prescription data
+ 
             prescription_data = json.loads(request.body)
-
-        # Update prescription fields
-            prescription.medicines = prescription_data.get('medicines', prescription.medicines)  # Update medicines if provided
+ 
+            prescription.medicines = prescription_data.get('medicines')   
             prescription.patient = patient
             prescription.account = account
             prescription.illness = present_illness
-
-        # Save updated prescription to database
+ 
             prescription.save()
-
-        # Create a data log for the update event
+ 
             data_log = Data_Log.objects.create(
                 event=f"{account.username} updated prescription",
                 type="User Updated Prescription",
