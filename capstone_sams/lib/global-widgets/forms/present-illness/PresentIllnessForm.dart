@@ -295,7 +295,6 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
                                               _findingsController.text != '' ||
                                               _diagnosisController.text != '' ||
                                               _treatmentController.text != '') {
-                                            setState(() => _isLoading = false);
                                             final presentIllnessSuccess = context
                                                 .read<PresentIllnessProvider>()
                                                 .createComplaint(
@@ -304,6 +303,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
                                                     widget.patient.patientID,
                                                     accountID);
                                             setState(() {
+                                              _isLoading = false;
                                               currentStep += 1;
                                               details.onStepContinue;
                                             });
