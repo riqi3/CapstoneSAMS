@@ -153,7 +153,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
       itemCount: dataToShow.length,
       itemBuilder: (context, index) {
         final patient = dataToShow[index];
-        // assignedPhysician = patient.assignedPhysician; 
+        // assignedPhysician = patient.assignedPhysician;
         return PatientCard(
           patient: patient,
           account: account,
@@ -181,7 +181,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
       physics: const BouncingScrollPhysics(),
       itemCount: dataToShow.length,
       itemBuilder: (context, index) {
-        final patient = dataToShow[index];  
+        final patient = dataToShow[index];
         return PatientCard(
           patient: patient,
           onSelect: (patientId) {
@@ -229,7 +229,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
       },
       child: const FaIcon(FontAwesomeIcons.chevronLeft),
       style: ElevatedButton.styleFrom(
-        primary: Pallete.mainColor,
+        backgroundColor: Pallete.mainColor,
         elevation: 3,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(100.0),
@@ -252,7 +252,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
       },
       child: const FaIcon(FontAwesomeIcons.chevronRight),
       style: ElevatedButton.styleFrom(
-        primary: Pallete.mainColor,
+        backgroundColor: Pallete.mainColor,
         elevation: 3,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(100.0),

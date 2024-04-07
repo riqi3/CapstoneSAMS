@@ -73,19 +73,28 @@ class _ChangeValueDialogState extends State<ChangeValueDialog> {
                       await ApiService.updateDisease(context, newDisease);
 
                   if (isSuccess) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PresentIllnessForm(
-                          patient: widget.patient,
-                          initialDisease: newDisease,
-                          initialComplaint: widget.initialComplaint,
-                          initialFindings: widget.initialFindings,
-                          initialDiagnosis: widget.initialDiagnosis,
-                          initialTreatment: widget.initialTreatment,
+                      int routesCount = 0;
+
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PresentIllnessForm(
+                            patient:  widget.patient,
+                            initialDisease: newDisease,
+                            initialComplaint: widget.initialComplaint,
+                            initialFindings: widget.initialFindings,
+                            initialDiagnosis: widget.initialDiagnosis,
+                            initialTreatment: widget.initialTreatment,
+                          ),
                         ),
-                      ),
-                    );
+                        (Route<dynamic> route) {
+                          if (routesCount < 4) {
+                            routesCount++;
+                            return false;
+                          }
+                          return true;
+                        },
+                      );
                   } else {
                     print('Failed to update diagnosis.');
                   }
