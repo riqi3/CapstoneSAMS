@@ -390,7 +390,6 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
                       itemCount: prescriptions.length,
                       itemBuilder: (context, index) {
                         final prescription = prescriptions[index];
-                        prescriptID = prescription.presID;
                         if (prescription.illnessID ==
                             widget.presentIllness.illnessID) {
                           // return MedicineCard(
@@ -398,11 +397,16 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
                           //   patient: widget.patient,
                           //   index: index,
                           // );
+
+                          prescriptID = prescription.presID;
+                          print(' crypto ${prescription.presID}');
                           return ListTile(
                             subtitle: Column(
                               children: medicineProvider.medicines
                                   .map(
                                     (medicine) => Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text('${medicine.drugCode}'),
                                         Text(
@@ -497,8 +501,7 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
                         itemBuilder: (context, index) {
                           final prescription = prescriptions[index];
                           if (prescription.illnessID ==
-                                  widget.presentIllness.illnessID ||
-                              prescription.medicines![index] != 0) {
+                              widget.presentIllness.illnessID) {
                             return MedicineCard(
                               medicine: prescription.medicines![index],
                               patient: widget.patient,
