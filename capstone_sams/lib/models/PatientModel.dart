@@ -1,4 +1,3 @@
-
 class Patient {
   String? patientID;
   String? firstName;
@@ -7,13 +6,13 @@ class Patient {
   int? age;
   String? gender;
   String? patientStatus;
-  String? birthDate; 
-  String? course;
+  String? birthDate;
+  String? department;
   int? yrLevel;
   String? studNumber;
   String? address;
   double? height;
-  double? weight; 
+  double? weight;
   String? phone;
   String? email;
   // int? assignedPhysician;
@@ -26,13 +25,13 @@ class Patient {
     this.age,
     this.gender,
     this.patientStatus,
-    this.birthDate, 
-    this.course,
+    this.birthDate,
+    this.department,
     this.yrLevel,
     this.studNumber,
     this.address,
     this.height,
-    this.weight, 
+    this.weight,
     this.phone,
     this.email,
     // this.assignedPhysician,
@@ -46,10 +45,10 @@ class Patient {
       'lastName': lastName,
       'age': age,
       'gender': gender,
-      'patientStatus':patientStatus,
+      'patientStatus': patientStatus,
       'birthDate': birthDate.toString(),
       // 'department': department,
-      'course': course,
+      'department': department,
       'yrLevel': yrLevel,
       'studNumber': studNumber,
       'address': address,
@@ -71,13 +70,13 @@ class Patient {
       age: json['age'],
       gender: json['gender'],
       patientStatus: json['patientStatus'],
-      birthDate: json['birthDate'], 
-      course: json['course'],
+      birthDate: json['birthDate'],
+      department: json['department'],
       yrLevel: json['yrLevel'],
       studNumber: json['studNumber'],
       address: json['address'],
       height: json['height'],
-      weight: json['weight'], 
+      weight: json['weight'],
       phone: json['phone'],
       email: json['email'],
       // assignedPhysician: json['assignedPhysician'],

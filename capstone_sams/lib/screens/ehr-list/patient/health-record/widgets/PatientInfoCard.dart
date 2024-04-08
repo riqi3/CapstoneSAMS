@@ -36,31 +36,31 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
     token = context.read<AccountProvider>().token!;
   }
 
-  String course() {
-    String course = '';
-    if (widget.patient.course == 'Nursery') {
-      course = 'Nursery';
+  String department() {
+    String department = '';
+    if (widget.patient.department == 'Nursery') {
+      department = 'Nursery';
     }
 
-    if (widget.patient.course == 'Kindergarten') {
-      course = 'Kindergarten';
+    if (widget.patient.department == 'Kindergarten') {
+      department = 'Kindergarten';
     }
 
-    if (widget.patient.course == 'Elementary' ||
-        widget.patient.course == 'Junior High School' ||
-        widget.patient.course == 'Senior High School') {
-      course = 'Grade';
+    if (widget.patient.department == 'Elementary' ||
+        widget.patient.department == 'Junior High School' ||
+        widget.patient.department == 'Senior High School') {
+      department = 'Grade';
     }
 
-    if (widget.patient.course == 'Tertiary') {
-      course = '${widget.patient.course}';
+    if (widget.patient.department == 'Tertiary') {
+      department = '${widget.patient.department}';
     }
 
-    if (widget.patient.course == 'Law School') {
-      course = '${widget.patient.course}';
+    if (widget.patient.department == 'Law School') {
+      department = '${widget.patient.department}';
     }
 
-    return course;
+    return department;
   }
 
   Map<String, int> calculateAge(DateTime currentDate, DateTime birthDate) {
@@ -178,14 +178,26 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
               ],
             ),
             TableRow(
-              children: <Widget>[
+              children: <Widget>[ 
                 TitleValueText(
-                  title: 'Course/Year:',
+                  title: 'Department: ',
                   value: '',
                 ),
                 TitleValueText(
                   title: '',
-                  value: '${course()}${widget.patient.yrLevel}',
+                  value: '${widget.patient.department}',
+                ),
+              ],
+            ),
+            TableRow(
+              children: <Widget>[ 
+                TitleValueText(
+                  title: 'Year: ',
+                  value: '',
+                ),
+                TitleValueText(
+                  title: '',
+                  value: '${widget.patient.yrLevel}',
                 ),
               ],
             ),
@@ -317,8 +329,12 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
                   content: '${widget.patient.studNumber}',
                 ),
                 TitleValueText(
-                  title: 'Course/Year: ',
-                  value: '${course()} ${widget.patient.yrLevel}',
+                  title: 'Department: ',
+                  value: '${widget.patient.department}',
+                ),
+                TitleValueText(
+                  title: 'Year: ',
+                  value: '${widget.patient.yrLevel}',
                 ),
               ],
             ),

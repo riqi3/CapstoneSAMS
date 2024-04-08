@@ -403,7 +403,7 @@ class PatientAdmin(admin.ModelAdmin):
         "gender",
         "birthDate",
         # 'department',
-        'course',
+        'department',
         'yrLevel',
         'studNumber',
         'address',
@@ -425,7 +425,7 @@ class PatientAdmin(admin.ModelAdmin):
         "middleInitial",
         "lastName",
         "birthDate",
-        'course',
+        'department',
         "email",
         # 'assignedPhysician',
     ) 
