@@ -20,6 +20,7 @@ class PrescriptionSerializer(serializers.ModelSerializer):
                   'patient', 
                 #   , 'disease'
                 'illness',
+            'isDeleted', 
                   ]
 
 '''

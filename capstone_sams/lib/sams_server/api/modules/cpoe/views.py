@@ -269,7 +269,7 @@ class PrescriptionView(viewsets.ViewSet):
     #         return Response({"message": "Failed to update prescription", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
-    @api_view(['DELETE'])
+    @api_view(['POST'])
     # @permission_classes([IsAuthenticated])
     def delete_prescription(request, presID):
         try:
@@ -279,12 +279,14 @@ class PrescriptionView(viewsets.ViewSet):
                 type = "User Deleted Prescription",
                 account = prescription.account 
             )
-            prescription.delete()
+            # prescription.delete()
+            prescription.isDeleted = True
+            prescription.save()
             return Response({"message": "Prescription successfully deleted"}, status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
              return Response({"message": "Failed to delete prescription", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-    @api_view(['DELETE'])
+    @api_view(['POST'])
     # @permission_classes([IsAuthenticated])
     def delete_medicine(request, presID, drugId):
         try:
