@@ -19,13 +19,26 @@ class Patient(models.Model):
         ('Separated', 'Separated'),
         ('Widowed', 'Widowed')
     } 
+    # DEPARTMENT_OPTIONS = {
+    #     ('Nursery', 'Nursery'),
+    #     ('Kindergarten', 'Kindergarten'),
+    #     ('Junior High School','Junior High School'),
+    #     ('Senior High School','Senior High School'),
+    #     ('Tertiary','Tertiary'),
+    #     ('Law School','Law School')
+    # } 
     DEPARTMENT_OPTIONS = {
         ('Nursery', 'Nursery'),
         ('Kindergarten', 'Kindergarten'),
         ('Junior High School','Junior High School'),
         ('Senior High School','Senior High School'),
-        ('Tertiary','Tertiary'),
-        ('Law School','Law School')
+        ('SCS','SCS'),
+        ('SBM','SBM'),
+        ('SAMS','SAMS'),
+        ('SOE','SOE'),
+        ('SED','SED'),
+        ('SAS','SAS'),
+        ('SOL','SOL')
     } 
 
     #Patient Indentification
@@ -38,7 +51,7 @@ class Patient(models.Model):
     gender = models.CharField(choices = GENDER_OPTIONS)
     patientStatus = models.CharField(choices = STATUS_OPTIONS)
     birthDate = models.DateField(blank = False)  
-    department = models.CharField(max_length=300, blank = False)
+    department = models.CharField(choices = DEPARTMENT_OPTIONS)
     yrLevel = models.IntegerField(blank = False)
     studNumber = models.CharField(max_length=100, blank = False)
     address = models.CharField(blank= False)

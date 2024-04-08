@@ -6,6 +6,7 @@ import 'package:capstone_sams/global-widgets/buttons/RadioTileButton.dart';
 import 'package:capstone_sams/global-widgets/buttons/FormSubmitButton.dart';
 import 'package:capstone_sams/global-widgets/chips/ListItemChips.dart';
 import 'package:capstone_sams/global-widgets/datepicker/Datepicker.dart';
+import 'package:capstone_sams/global-widgets/dropdown/MenuDropdown.dart';
 import 'package:capstone_sams/global-widgets/forms/FormTemplate.dart';
 import 'package:capstone_sams/global-widgets/snackbars/Snackbars.dart';
 import 'package:capstone_sams/global-widgets/text-fields/Textfields.dart';
@@ -68,6 +69,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
   bool _isIllnessInvalid = false;
   bool _isGenderInvalid = false;
   bool _isBirthdateInvalid = false;
+  bool _isDepartmentInvalid = false;
   bool _isLoading = false;
 
   late bool _autoValidate = false;
@@ -77,12 +79,28 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
   DateTime? _birthDate;
   final currentDate = DateTime.now();
   String? _selectedGender = '';
+  String? _selectedDepartment = '';
   List<String> statusList = [
     'Single',
     'Married',
     'Divorced',
     'Separated',
     'Widowed'
+  ];
+
+  List<String> departmentList = [
+    'Nursery',
+    'Kindergarten',
+    'Elementary',
+    'Junior High School',
+    'Senior High School',
+    'SCS',
+    'SBM',
+    'SAMS',
+    'SOE',
+    'SED',
+    'SAS',
+    'SOL',
   ];
 
   void _onSubmit() async {
@@ -101,6 +119,9 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
 
       updateInvalidState(_selectedGender == '', (bool value) {
         _isGenderInvalid = value;
+      });
+      updateInvalidState(_selectedDepartment == '', (bool value) {
+        _isDepartmentInvalid = value;
       });
       updateInvalidState(_birthDate == null, (bool value) {
         _isBirthdateInvalid = value;
@@ -152,7 +173,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
         gender: _selectedGender,
         patientStatus: statustValue,
         birthDate: formattedDate,
-        department: _genInfo.department,
+        department: _selectedDepartment,
         yrLevel: _genInfo.yrLevel,
         studNumber: _genInfo.studNumber,
         height: _genInfo.height,
@@ -368,6 +389,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
   }
 
   late String statustValue = statusList.first;
+  late String departmentValue;
 
   @override
   void dispose() {
@@ -477,29 +499,28 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Text(
-                        'Status*',
+                        'Civil Status*',
                         style: TextStyle(
                           color: Pallete.greyColor,
                         ),
                       ),
                       Flexible(
-                        child: DropdownMenu<String>(
-                          hintText: 'Status*',
-                          initialSelection: statustValue,
-                          onSelected: (String? value) {
-                            setState(() {
-                              statustValue = value!;
-                            });
-                          },
-                          dropdownMenuEntries: statusList
-                              .map<DropdownMenuEntry<String>>((String value) {
-                            return DropdownMenuEntry<String>(
-                              value: value,
-                              label: value,
-                            );
-                          }).toList(),
-                        ),
-                      ),
+                          child: MenuDropdown(
+                        title: 'Civil Status*',
+                        initialseletion: statustValue,
+                        list: statusList
+                            .map<DropdownMenuEntry<String>>((String value) {
+                          return DropdownMenuEntry<String>(
+                            value: value,
+                            label: value,
+                          );
+                        }).toList(),
+                        onselected: (String? value) {
+                          setState(() {
+                            statustValue = value!;
+                          });
+                        },
+                      )),
                     ],
                   ),
                   SizedBox(width: Sizing.formSpacing),
@@ -596,15 +617,84 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
               SizedBox(height: Sizing.formSpacing),
               Row(
                 children: <Widget>[
-                  Flexible(
-                    child: FormTextField(
-                      onchanged: (value) {
-                        _genInfo.department = value;
-                      },
-                      labeltext: 'Department*',
-                      validator: Strings.requiredField,
-                      type: TextInputType.text,
-                    ),
+                  // Flexible(
+                  //   child: FormTextField(
+                  //     onchanged: (value) {
+                  //       _genInfo.department = value;
+                  //     },
+                  //     labeltext: 'Department*',
+                  //     validator: Strings.requiredField,
+                  //     type: TextInputType.text,
+                  //   ),
+                  // ),
+                  Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          // Text(
+                          //   'Status*',
+                          //   style: TextStyle(
+                          //     color: Pallete.greyColor,
+                          //   ),
+                          // ),
+                          Flexible(
+                            child: MenuDropdown(
+                              title: 'Department*',
+                              isInvalid: _isDepartmentInvalid,
+                              list: departmentList
+                                  .map<DropdownMenuEntry<String>>(
+                                      (String value) {
+                                return DropdownMenuEntry<String>(
+                                  value: value,
+                                  label: value,
+                                );
+                              }).toList(),
+                              onselected: (String? value) {
+                                setState(() {
+                                  _selectedDepartment = value!;
+                                });
+                              },
+                            ),
+
+                            // DropdownMenu<String>(
+                            //   hintText: 'Department*',
+                            //   inputDecorationTheme: InputDecorationTheme(
+                            //       border: OutlineInputBorder(
+                            //         borderSide: BorderSide(
+                            //             color: isInvalid == true
+                            //                 ? Pallete.dangerColor
+                            //                 : Pallete.textSecondaryColor),
+                            //       ),
+                            //       fillColor: Pallete.palegrayColor,
+                            //       filled: true),
+                            //   initialSelection: '',
+                            //   onSelected: (String? value) {
+                            //     setState(() {
+                            //       departmentValue = value!;
+                            //     });
+                            //   },
+                            //   dropdownMenuEntries: departmentList
+                            //       .map<DropdownMenuEntry<String>>(
+                            //           (String value) {
+                            //     return DropdownMenuEntry<String>(
+                            //       value: value,
+                            //       label: value,
+                            //     );
+                            //   }).toList(),
+                            // ),
+                          ),
+                          Visibility(
+                            visible: _isDepartmentInvalid,
+                            child: Text(
+                              Strings.requiredField,
+                              style: TextStyle(color: Pallete.dangerColor),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                   SizedBox(width: Sizing.formSpacing),
                   Flexible(

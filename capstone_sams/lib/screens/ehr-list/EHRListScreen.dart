@@ -31,7 +31,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
   // int? assignedPhysician = 0;
   double? totalPatients = 0;
   double pages1 = 0;
-  final double items = 24;
+  final double items = 25;
 
   String selectedPatientId = '';
 
@@ -136,7 +136,7 @@ class _EhrListScreenState extends State<EhrListScreen> {
           children: [
             ChevronPrev(),
             Text(
-              '${currentPageIndex + 1} out of $pageRounded ',
+              '${currentPageIndex + 1} out of ${pageRounded}',
             ),
             ChevronNext(),
           ],
