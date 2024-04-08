@@ -598,7 +598,9 @@ This represent the table that will be shown to the admin looking at the currentl
 #     autocomplete_fields = ["patient"]
 
 class PresentIllnessAdmin(admin.ModelAdmin):
-    list_display = ("illnessID", "patient", "illnessName","diagnosis","complaint","findings", "created_at", "updated_at", "created_by",)
+    list_display = (
+        # "illnessID", 
+                    "patient", "illnessName","diagnosis","complaint","findings", "created_at", "updated_at", "created_by",)
     search_fields = ("illnessName", "patient__firstName", "patient__middleInitial", "patient__lastName")
     list_filter = ("created_at", "updated_at", "created_by",)
     def has_add_permission(self, request):
@@ -618,10 +620,11 @@ This represent the table that will be shown to the admin looking at the currentl
 '''
 class PrescriptionAdmin(admin.ModelAdmin):
     list_display = (
-        "presID",
+        # "presID",
         "formatted_medicines", 
         "patient",
         "account",
+        'illness',
     )
     search_fields = ("presID", "patient__firstName", "patient__lastName", "account__username", "patient__studNumber")
     list_filter = ("account","patient__studNumber")
