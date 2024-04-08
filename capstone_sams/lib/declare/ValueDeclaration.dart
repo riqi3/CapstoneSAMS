@@ -145,11 +145,11 @@ class BottomPatientTabs extends StatelessWidget {
                     Align(
                       alignment: Alignment.center,
                       child: FaIcon(
-                        FontAwesomeIcons.sackDollar,
+                        FontAwesomeIcons.flask,
                       ),
                     ),
                     Text(
-                      'Laboratories',
+                      'Past Laboratories',
                       style: TextStyle(fontSize: Sizing.header6),
                     ),
                   ],
