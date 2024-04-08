@@ -544,9 +544,17 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
                     title: 'Diagnosis: ',
                     value: '${Strings.requiredField}',
                   )
-                : TitleValueText(
-                    title: 'Diagnosis: ',
-                    value: '${_diagnosisController.text}',
+                : Column(
+                    children: [
+                      TitleValueText(
+                        title: 'Illness: ',
+                        value: '${_illnessNameController.text}',
+                      ),
+                      TitleValueText(
+                        title: 'Diagnosis: ',
+                        value: '${_diagnosisController.text}',
+                      ),
+                    ],
                   ),
             SizedBox(height: Sizing.formSpacing / 2),
             _treatmentController.text == ''
