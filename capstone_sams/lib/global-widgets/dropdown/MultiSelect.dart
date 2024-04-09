@@ -1,3 +1,4 @@
+import 'package:capstone_sams/global-widgets/dialogs/AlertDialogTemplate.dart';
 import 'package:flutter/material.dart';
 
 class MultiSelect extends StatefulWidget {
@@ -55,7 +56,22 @@ class _MultiSelectState extends State<MultiSelect> {
           child: const Text('Cancel'),
         ),
         ElevatedButton(
-          onPressed: _submit,
+          onPressed: () {
+            if (_selectedItems.contains('N/A') && _selectedItems.length > 1) {
+              showDialog<String>(
+                context: context,
+                builder: (BuildContext context) => AlertDiaglogTemplate(
+                  title: 'Are you sure?',
+                  content:
+                      "It seems that you've selected N/A and selected an illness.",
+                  buttonTitle: "I'll correct it",
+                  onpressed: () => Navigator.pop(context),
+                ),
+              );
+            } else {
+              _submit();
+            }
+          },
           child: const Text('Submit'),
         ),
       ],
