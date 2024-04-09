@@ -19,6 +19,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final GlobalKey<_HomeScreenState> key = GlobalKey<_HomeScreenState>();
   List<Todo> _userTodos = [];
   String ehrTitle = 'Health Records';
   String medNotesTitle = 'Your Notes';
@@ -125,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _mobileView(context, medNotesTitle, ehrTitle) {
     final todosPreview =
-        _userTodos.length > 3 ? _userTodos.sublist(0, 3) : _userTodos;
+        _userTodos.length > 4 ? _userTodos.sublist(0, 4) : _userTodos;
 
     return Column(
       children: [
@@ -144,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _tabletView(context, ehrTitle, medNotesTitle) {
     final todosPreview =
-        _userTodos.length > 3 ? _userTodos.sublist(0, 3) : _userTodos;
+        _userTodos.length > 4 ? _userTodos.sublist(0, 4) : _userTodos;
 
     return Column(
       children: <Widget>[

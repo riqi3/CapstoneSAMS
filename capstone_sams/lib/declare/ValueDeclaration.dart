@@ -208,7 +208,10 @@ class ValueMedNotes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TitleAppBar(
-      onpressed: () => Navigator.pop(context),
+      onpressed: () => Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen(key: GlobalKey())),
+      ),
       text: 'Your Notes',
       backgroundColor: Pallete.whiteColor,
       iconColorLeading: Pallete.greyColor,
