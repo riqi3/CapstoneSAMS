@@ -92,8 +92,8 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
     'Nursery',
     'Kindergarten',
     'Elementary',
-    'Junior High School',
-    'Senior High School',
+    'Junior HS',
+    'Senior HS',
     'SCS',
     'SBM',
     'SAMS',
@@ -703,6 +703,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                         _genInfo.yrLevel = int.tryParse(value);
                       },
                       labeltext: 'Year*',
+                      maxlength: 1,
                       validator: Strings.requiredField,
                       type: TextInputType.number,
                     ),
@@ -738,6 +739,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                         _genInfo.height = double.tryParse(value);
                       },
                       labeltext: 'Height* (cm)',
+                      maxlength: 3,
                       validator: Strings.requiredField,
                       type: TextInputType.number,
                     ),
@@ -749,6 +751,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                         _genInfo.weight = double.tryParse(value);
                       },
                       labeltext: 'Weight* (kg)',
+                      maxlength: 3,
                       validator: Strings.requiredField,
                       type: TextInputType.number,
                     ),
@@ -762,7 +765,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                   Flexible(
                     child: Column(
                       children: [
-                        FormTextField(
+                        FormTextField2(
                           onchanged: (value) => _genInfo.email = value,
                           labeltext: 'Active Email',
                           type: TextInputType.emailAddress,
@@ -774,7 +777,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
                   Flexible(
                     child: Column(
                       children: [
-                        FormTextField(
+                        FormTextField2(
                           onchanged: (value) => _genInfo.phone = value,
                           labeltext: 'Contact Number',
                           maxlength: 11,
