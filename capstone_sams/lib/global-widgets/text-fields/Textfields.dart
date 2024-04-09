@@ -21,6 +21,11 @@ class ShortTextfield extends StatelessWidget {
         hintText: hintText,
         filled: true,
         fillColor: Pallete.palegrayColor,
+        border: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Pallete.greyColor,
+          ),
+        ),
       ),
     );
   }
@@ -93,6 +98,11 @@ class _PasswordTextfieldState extends State<PasswordTextfield> {
       validator: (value) => value!.isEmpty ? widget.validator : null,
       decoration: InputDecoration(
         hintText: widget.hintText,
+        border: OutlineInputBorder(
+          borderSide: BorderSide( 
+            color: Pallete.greyColor,
+          ),
+        ),
         suffixIcon: IconButton(
           icon: Icon(
             _isObscure ? Icons.visibility : Icons.visibility_off,
@@ -164,7 +174,7 @@ class _FormTextFieldState extends State<FormTextField> {
       controller: widget.controller,
       onChanged: (value) {
         widget.onchanged?.call(value);
-      }, 
+      },
     );
   }
 }
