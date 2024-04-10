@@ -151,7 +151,6 @@ class FormTextField extends StatefulWidget {
 }
 
 class _FormTextFieldState extends State<FormTextField> {
-  
   RegExp alphabeticPattern = RegExp(r'^[a-zA-Z]+$');
   String? _validateInput(String? value) {
     if (value == null || value.isEmpty) {
@@ -170,12 +169,11 @@ class _FormTextFieldState extends State<FormTextField> {
         widget.type == TextInputType.name ||
         widget.type == TextInputType.multiline) {
       if (value.contains(RegExp(r'\d')) ||
-          !alphabeticPattern.hasMatch(value)||
+          !alphabeticPattern.hasMatch(value) ||
           double.tryParse(value) != null) {
         return 'Enter text for ${widget.labeltext}';
       }
     }
- 
 
     return null;
   }
