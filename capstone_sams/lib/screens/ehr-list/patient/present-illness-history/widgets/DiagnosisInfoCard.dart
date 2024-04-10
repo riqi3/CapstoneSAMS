@@ -49,6 +49,13 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
   Account? account = Account(isSuperuser: false);
   var removeComplaint = dangerSnackbar('${Strings.remove} diagnosis.');
 
+  String firstLetterUpper(String role) {
+    String firstLetter = role.substring(0, 1).toUpperCase();
+    String remainingLetters = role.substring(1);
+    String capitalizedWord = firstLetter + remainingLetters;
+    return capitalizedWord;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -194,7 +201,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                             TextStyle(color: Pallete.greyColor),
                                       ),
                                 Text(
-                                  'University Physician',
+                                  'University ${firstLetterUpper(account.accountRole.toString())}',
                                   style: TextStyle(
                                     color: Pallete.greyColor,
                                   ),
@@ -434,7 +441,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                             TextStyle(color: Pallete.greyColor),
                                       ),
                                 Text(
-                                  'University Physician',
+                                  'University ${firstLetterUpper(account.accountRole.toString())}',
                                   style: TextStyle(color: Pallete.greyColor),
                                 ),
                                 SizedBox(height: Sizing.formSpacing * 2),

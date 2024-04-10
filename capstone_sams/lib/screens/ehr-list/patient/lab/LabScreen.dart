@@ -1,4 +1,10 @@
 import 'package:capstone_sams/constants/theme/pallete.dart';
+import 'package:capstone_sams/global-widgets/cards/CardSectionInfoWidget.dart';
+import 'package:capstone_sams/global-widgets/cards/CardTemplate.dart';
+import 'package:capstone_sams/global-widgets/cards/CardTitleWidget.dart';
+import 'package:capstone_sams/global-widgets/loading-indicator/DiagnosisCardLoading.dart';
+import 'package:capstone_sams/global-widgets/scaffolds/ScaffoldTemplate.dart';
+import 'package:capstone_sams/global-widgets/texts/NoDataTextWidget.dart';
 import 'package:capstone_sams/providers/LabResultProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/lab/widgets/LabresultCard.dart';
 import 'package:flutter/material.dart';
@@ -32,63 +38,67 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        padding: EdgeInsets.only(
-          left: Sizing.sectionSymmPadding,
-          right: Sizing.sectionSymmPadding,
-          top: Sizing.sectionSymmPadding * 2,
-          bottom: Sizing.sectionSymmPadding * 4,
-        ),
-        scrollDirection: Axis.vertical,
-        physics: BouncingScrollPhysics(),
-        child: Column(
-          children: [
-            FutureBuilder(
-              future: labresults,
-              builder: (context, snapshot) {
-                List<Labresult> dataToShow = [];
-                int dataLength = 0;
-                if (snapshot.hasError) {
-                  return Center(
-                    child: Text('Error: ${snapshot.error}'),
-                  );
-                } else if (snapshot.connectionState ==
-                    ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.data!.isEmpty) {
-                  return Center(
-                    child: Text(Strings.noLabResults),
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text('Error: ${snapshot.error}'),
-                  );
-                } else if (snapshot.hasData) {
-                  dataToShow = snapshot.data!;
-                  dataLength = dataToShow.length;
-                }
-                return LayoutBuilder(
-                  builder: (BuildContext context, BoxConstraints constraints) {
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      physics: const BouncingScrollPhysics(),
-                      itemCount: dataLength,
-                      itemBuilder: (context, index) {
-                        return _buildList(
-                          dataToShow[index],
-                        );
-                      },
-                    );
-                  },
+    return ScaffoldTemplate(
+      column: Column(
+        children: [
+          CardTemplate(
+            column: Column(
+              children: [
+                CardTitleWidget(title: 'Past Laboratories'),
+                SizedBox(height: Sizing.sectionSymmPadding),
+                CardSectionInfoWidget(
+                  widget: LaboratoriesData(),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  FutureBuilder<List<Labresult>> LaboratoriesData() {
+    return FutureBuilder(
+      future: labresults,
+      builder: (context, snapshot) {
+        List<Labresult> dataToShow = [];
+        int dataLength = 0;
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: ListCardLoading());
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text('Error: ${snapshot.error}'),
+          );
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Center(
+            child: Container(
+              height: 100,
+              child: Center(
+                child: NoDataTextWidget(
+                  text: Strings.noLabResults,
+                ),
+              ),
+            ),
+          );
+        } else {
+          dataToShow = snapshot.data!;
+          dataLength = dataToShow.length;
+        }
+        return LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            return ListView.builder(
+              shrinkWrap: true,
+              physics: const BouncingScrollPhysics(),
+              itemCount: dataLength,
+              itemBuilder: (context, index) {
+                return _buildList(
+                  dataToShow[index],
                 );
               },
-            ),
-          ],
-        ),
-      ),
+            );
+          },
+        );
+      },
     );
   }
 

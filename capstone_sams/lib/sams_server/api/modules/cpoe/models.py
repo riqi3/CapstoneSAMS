@@ -29,6 +29,10 @@ class Prescription(models.Model):
     patient = models.ForeignKey(Patient, on_delete = models.CASCADE) 
     # disease = models.CharField(max_length=255, null=True, blank=True)    
     illness = models.ForeignKey(Present_Illness, on_delete = models.CASCADE) 
+    isDeleted = models.BooleanField(default = False)
+    
+    def __str__(self):
+        return f"{self.illness}"
 
     class Meta:
         verbose_name = "Prescription Record"
@@ -45,6 +49,8 @@ class Medicine(models.Model):
          editable = False)
     drugCode = models.CharField(blank = False)
     drugName = models.CharField(blank = False)
+    def __str__(self):
+        return f"{self.drugCode} | {self.drugName}"
 
     class Meta:
         verbose_name = "Medicine Record"

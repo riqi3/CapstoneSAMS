@@ -196,6 +196,17 @@ class PrescriptionView(viewsets.ViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Present_Illness.DoesNotExist:
             return Response({"message": "Prescription does not exist."}, status=status.HTTP_404_NOT_FOUND)
+        
+    @api_view(['GET'])
+    def fetch_prescription_by_illness_id(request, illnessID):
+        try:
+            illness = Present_Illness.objects.get(pk=illnessID)
+            prescriptions = Prescription.objects.filter(illness=illness) 
+            serializer = PrescriptionSerializer(prescriptions, many = True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Present_Illness.DoesNotExist:
+            return Response({"message": "Prescription does not exist."}, status=status.HTTP_404_NOT_FOUND)
+    
     
     @api_view(['PUT'])
     def update_prescription(request, presID, accountID, patientID, illnessID):
@@ -269,7 +280,7 @@ class PrescriptionView(viewsets.ViewSet):
     #         return Response({"message": "Failed to update prescription", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
-    @api_view(['DELETE'])
+    @api_view(['POST'])
     # @permission_classes([IsAuthenticated])
     def delete_prescription(request, presID):
         try:
@@ -279,12 +290,14 @@ class PrescriptionView(viewsets.ViewSet):
                 type = "User Deleted Prescription",
                 account = prescription.account 
             )
-            prescription.delete()
+            # prescription.delete()
+            prescription.isDeleted = True
+            prescription.save()
             return Response({"message": "Prescription successfully deleted"}, status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
              return Response({"message": "Failed to delete prescription", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-    @api_view(['DELETE'])
+    @api_view(['POST'])
     # @permission_classes([IsAuthenticated])
     def delete_medicine(request, presID, drugId):
         try:
@@ -309,10 +322,10 @@ class PrescriptionView(viewsets.ViewSet):
 
     @api_view(['GET'])
     # @permission_classes([IsAuthenticated])
-    def fetch_prescription_by_patientIds(request, patientID ):
+    def fetch_prescription_by_patientIds(request, patientID):
         try: 
             patient = Patient.objects.get(pk=patientID)    
-            prescriptions = Prescription.objects.filter(patient=patient )  
+            prescriptions = Prescription.objects.filter(patient=patient)  
             prescriptionData = PrescriptionSerializer(prescriptions, many=True)  
             return Response(prescriptionData.data, status=status.HTTP_200_OK)
             # return Response(data_clean, status=status.HTTP_200_OK)

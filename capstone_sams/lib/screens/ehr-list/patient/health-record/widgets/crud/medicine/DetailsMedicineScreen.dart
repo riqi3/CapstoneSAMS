@@ -110,42 +110,42 @@ class _DetailsMedicineScreenState extends State<DetailsMedicineScreen> {
                               cells: <DataCell>[
                                 DataCell(Text('Drug Name')),
                                 DataCell(Text(
-                                    '${widget.prescription.medicines![widget.index]['drugName']}')),
+                                    '${widget.prescription.medicines![widget.index]}')),
                               ],
                             ),
                             DataRow(
                               cells: <DataCell>[
                                 DataCell(Text('Drug Code')),
                                 DataCell(Text(
-                                    '${widget.prescription.medicines![widget.index]['drugCode']}')),
+                                    '${widget.prescription.medicines![widget.index]}')),
                               ],
                             ),
                             DataRow(
                               cells: <DataCell>[
                                 DataCell(Text('Start Date')),
                                 DataCell(Text(
-                                    '${widget.prescription.medicines![widget.index]['startDate']}')),
+                                    '${widget.prescription.medicines![widget.index]}')),
                               ],
                             ),
                             DataRow(
                               cells: <DataCell>[
                                 DataCell(Text('End Date')),
                                 DataCell(Text(
-                                    '${widget.prescription.medicines![widget.index]['endDate']}')),
+                                    '${widget.prescription.medicines![widget.index]}')),
                               ],
                             ),
                             DataRow(
                               cells: <DataCell>[
                                 DataCell(Text('Instructions')),
                                 DataCell(Text(
-                                    '${widget.prescription.medicines![widget.index]['instructions']}')),
+                                    '${widget.prescription.medicines![widget.index]}')),
                               ],
                             ),
                             DataRow(
                               cells: <DataCell>[
                                 DataCell(Text('Quantity')),
                                 DataCell(Text(
-                                    '${widget.prescription.medicines![widget.index]['quantity']}')),
+                                    '${widget.prescription.medicines![widget.index]}')),
                               ],
                             ),
                           ],

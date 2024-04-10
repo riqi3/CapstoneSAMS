@@ -132,11 +132,17 @@ class _LoginScreenState extends State<LoginScreen> {
                           hintText: 'Password',
                         ),
                         SizedBox(height: 20),
-                        FormSubmitButton(
-                          title: 'Login',
-                          icon: Icons.login,
-                          isLoading: _isLoading,
-                          onpressed: _isLoading ? null : _onSubmit,
+                        Row(
+                          children: [
+                            Expanded(
+                              child: FormSubmitButton(
+                                title: 'Login',
+                                icon: Icons.login,
+                                isLoading: _isLoading,
+                                onpressed: _isLoading ? null : _onSubmit,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),

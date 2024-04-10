@@ -30,8 +30,8 @@ class Patient(models.Model):
     DEPARTMENT_OPTIONS = {
         ('Nursery', 'Nursery'),
         ('Kindergarten', 'Kindergarten'),
-        ('Junior High School','Junior High School'),
-        ('Senior High School','Senior High School'),
+        ('Junior HS','Junior HS'),
+        ('Senior HS','Senior HS'),
         ('SCS','SCS'),
         ('SBM','SBM'),
         ('SAMS','SAMS'),

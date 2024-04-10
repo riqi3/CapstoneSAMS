@@ -1,5 +1,9 @@
 // add_medicine_dialog.dart
 
+import 'package:capstone_sams/constants/Strings.dart';
+import 'package:capstone_sams/constants/theme/sizing.dart';
+import 'package:capstone_sams/global-widgets/dialogs/AlertDialogTemplate.dart';
+import 'package:capstone_sams/global-widgets/text-fields/Textfields.dart';
 import 'package:capstone_sams/models/MedicineModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/MedicineProvider.dart';
@@ -10,7 +14,11 @@ import 'package:provider/provider.dart';
 import '../../../../../constants/Env.dart';
 import '../../../../../constants/theme/pallete.dart';
 
-class AddMedicineDialog extends StatefulWidget {
+// ignore: must_be_immutable
+class AddMedicineDialog extends StatefulWidget { 
+  AddMedicineDialog({
+    Key? key, 
+  }) : super(key: key);
   @override
   _AddMedicineDialogState createState() => _AddMedicineDialogState();
 }
@@ -22,7 +30,6 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
 
   late Future<List<Medicine>> medicines;
   late bool _autoValidate = false;
- 
 
   @override
   Widget build(BuildContext context) {
@@ -70,8 +77,11 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                       DropdownSearch<Medicine>(
                         dropdownDecoratorProps: DropDownDecoratorProps(
                           dropdownSearchDecoration:
-                              InputDecoration(labelText: "Medication"),
+                              InputDecoration(labelText: "Medication*"),
                         ),
+                        // autoValidateMode: AutovalidateMode.always,
+                        validator: (value) =>
+                            value == null ? Strings.requiredField : null,
                         clearButtonProps: ClearButtonProps(isVisible: true),
                         popupProps: PopupProps.modalBottomSheet(
                           showSearchBox: true,
@@ -99,40 +109,56 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                       ),
                       SizedBox(height: 10),
                       Flexible(
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            labelText: 'Instructions',
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Pallete.primaryColor,
-                              ),
-                            ),
-                            filled: true,
-                            fillColor: Pallete.palegrayColor,
-                          ),
-                          minLines: 4,
-                          maxLines: null,
-                          keyboardType: TextInputType.multiline,
-                          onSaved: (value) => _medicine.instructions = value,
+                        child: FormTextField(
+                          onchanged: (value) => _medicine.instructions = value,
+                          labeltext: 'Instructions*',
+                          validator: Strings.requiredField,
+                          type: TextInputType.streetAddress,
+                          maxlines: 4,
                         ),
+                        // TextFormField(
+                        //   decoration: InputDecoration(
+                        //     labelText: 'Instructions',
+                        //     border: OutlineInputBorder(
+                        //       borderSide: BorderSide(
+                        //         color: Pallete.primaryColor,
+                        //       ),
+                        //     ),
+                        //     filled: true,
+                        //     fillColor: Pallete.palegrayColor,
+                        //   ),
+                        //   minLines: 4,
+                        //   maxLines: null,
+                        //   keyboardType: TextInputType.multiline,
+                        //   onSaved: (value) => _medicine.instructions = value,
+                        // ),
                       ),
                       SizedBox(height: 10),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Quantity',
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Pallete.primaryColor,
-                            ),
-                          ),
-                          filled: true,
-                          fillColor: Pallete.palegrayColor,
+                      Flexible(
+                        child: FormTextField(
+                          onchanged: (value) =>
+                              _medicine.quantity = int.tryParse(value ?? ''),
+                          labeltext: 'Quantity*',
+                          // validator: Strings.requiredField,
+                          type: TextInputType.number,
                         ),
-                        keyboardType: TextInputType.number,
-                        onSaved: (value) =>
-                            _medicine.quantity = int.tryParse(value ?? ''),
                       ),
-                      SizedBox(height: 10),
+                      // TextFormField(
+                      //   decoration: InputDecoration(
+                      //     labelText: 'Quantity',
+                      //     border: OutlineInputBorder(
+                      //       borderSide: BorderSide(
+                      //         color: Pallete.primaryColor,
+                      //       ),
+                      //     ),
+                      //     filled: true,
+                      //     fillColor: Pallete.palegrayColor,
+                      //   ),
+                      //   keyboardType: TextInputType.number,
+                      //   onSaved: (value) =>
+                      //       _medicine.quantity = int.tryParse(value ?? ''),
+                      // ),
+                      SizedBox(height: Sizing.spacing),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
@@ -151,19 +177,75 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                             child: Text('Submit'),
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
-                                _formKey.currentState!.save();
-                                if (_medicine.drugName!.isNotEmpty) {
+                                  _formKey.currentState!.save();
+
                                   Provider.of<MedicineProvider>(context,
                                           listen: false)
                                       .addMedicine(_medicine);
                                   Navigator.pop(context);
+                                  // if (_medicine.drugName!.isNotEmpty) {}
+                                } else {
+                                  setState(() {
+                                    _autoValidate =
+                                        true; // Enable auto validation
+                                  });
                                 }
-                              } else {
-                                setState(() {
-                                  _autoValidate =
-                                      true; // Enable auto validation
-                                });
-                              }
+                              // if (widget.checkboxValue == true &&
+                              //     (_medicine.drugName == null &&
+                              //         _medicine.drugCode == null &&
+                              //         _medicine.drugId == null) &&
+                              //     _medicine.instructions == null &&
+                              //     _medicine.quantity == null) {
+                              //   showDialog<String>(
+                              //     context: context,
+                              //     builder: (BuildContext context) =>
+                              //         AlertDiaglogTemplate(
+                              //       title: 'Are you sure?',
+                              //       content:
+                              //           "It seems that you've selected decided to add a medicine but the values are empty.",
+                              //       buttonTitle: "I'll correct it",
+                              //       onpressed: () => Navigator.pop(context),
+                              //     ),
+                              //   );
+                              // } else {
+                              //   // _submit();
+                                
+                              //   // Navigator.pop(context);
+                              // }
+
+                              // if (widget.checkboxValue == true &&
+                              //     (_medicine.drugName == null &&
+                              //         _medicine.drugCode == null &&
+                              //         _medicine.drugId == null)) {
+                              //   showDialog<String>(
+                              //     context: context,
+                              //     builder: (BuildContext context) =>
+                              //         AlertDiaglogTemplate(
+                              //       title: 'Are you sure?',
+                              //       content:
+                              //           "It seems that you've checked to add a medicine and did not insert any values.",
+                              //       buttonTitle: "I won't add a medicine",
+                              //       onpressed: () {
+                              //         Navigator.pop(context);
+                              //       },
+                              //     ),
+                              //   );
+                              // } else {
+                              //   if (_formKey.currentState!.validate()) {
+                              //     _formKey.currentState!.save();
+
+                              //     Provider.of<MedicineProvider>(context,
+                              //             listen: false)
+                              //         .addMedicine(_medicine);
+                              //     Navigator.pop(context);
+                              //     // if (_medicine.drugName!.isNotEmpty) {}
+                              //   } else {
+                              //     setState(() {
+                              //       _autoValidate =
+                              //           true; // Enable auto validation
+                              //     });
+                              //   }
+                              // }
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Pallete.mainColor,

@@ -15,12 +15,15 @@ This serializer will convert Prescription objects into jsons.
 class PrescriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Prescription
-        fields = ['presID', 'medicines', 'account', 
-                #   'health_record', 
-                  'patient', 
-                #   , 'disease'
-                'illness',
-                  ]
+        fields = ['presID', 'medicines', 'account', 'patient', 'illness', 'isDeleted']
+        # fields = ['presID', 'medicines', 
+        #           'account',
+        #         #   'health_record', 
+        #           'patient', 
+        #         #   , 'disease'
+        #         'illness',
+        #     'isDeleted', 
+        #           ]
 
 '''
 This serializer will convert Medicine objects into jsons.

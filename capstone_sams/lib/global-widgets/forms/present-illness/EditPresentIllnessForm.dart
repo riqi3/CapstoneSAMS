@@ -7,6 +7,7 @@ import 'package:capstone_sams/global-widgets/snackbars/Snackbars.dart';
 import 'package:capstone_sams/global-widgets/text-fields/Textfields.dart';
 import 'package:capstone_sams/global-widgets/texts/FormTitleWidget.dart';
 import 'package:capstone_sams/global-widgets/texts/TitleValueText.dart';
+import 'package:capstone_sams/models/MedicineModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/models/PresentIllness.dart';
@@ -53,6 +54,7 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
   int? maxLines = 4;
   bool checkboxValue1 = false;
   bool _isLoading = false;
+  List<Medicine> medicineList = [];
 
   void _onSubmit() async {
     setState(() => _isLoading = true);
@@ -132,16 +134,32 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
   void initState() {
     super.initState();
     token = context.read<AccountProvider>().token!;
+    Provider.of<MedicineProvider>(context, listen: false).resetState();
     final provider = Provider.of<PrescriptionProvider>(context, listen: false);
-    prescriptions =
-        provider.fetchPrescriptions(widget.patient.patientID, token);
-    prescriptID = provider.presID ?? '';
-
-    if (prescriptID == '') {
+    prescriptions = provider
+        .fetchPrescriptionsByIllness(widget.presentIllness.illnessID, token)
+        .then((prescriptions) {
+      for (var prescription in prescriptions) {
+        if (prescription.medicines != null) {
+          for (var medicineJson in prescription.medicines!) {
+            if (medicineJson is! Medicine) {
+              Medicine medicine =
+                  Medicine.fromJson(medicineJson as Map<String, dynamic>);
+              medicineList.add(medicine);
+            } else {
+              medicineList.add(medicineJson);
+            }
+          }
+        }
+      }
       setState(() {
-        checkboxValue1 = true;
+        medicineList.isEmpty ? checkboxValue1 = false : checkboxValue1 = true;
       });
-    }
+      return prescriptions;
+    });
+    print(medicineList);
+    Provider.of<MedicineProvider>(context, listen: false)
+        .setMedicines(medicineList);
   }
 
   @override
