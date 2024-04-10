@@ -289,18 +289,20 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
               showDialog<String>(
                 context: context,
                 builder: (BuildContext context) => AlertDiaglogTemplate(
-                  title: 'Are you sure?',
-                  content:
-                      "Deleting a patient's illness history record is irreversable and cannot be undone.",
-                  buttonTitle: 'Remove diagnosis',
-                  onpressed: () => removeComplaintMethod(
-                    provider,
-                    illness,
-                    accountProvider,
-                    token,
-                    context,
-                  ),
-                ),
+                    title: 'Are you sure?',
+                    content:
+                        "Deleting a patient's illness history record is irreversable and cannot be undone.",
+                    buttonTitle: 'Remove diagnosis',
+                    onpressed: () {
+                      removeComplaintMethod(
+                        provider,
+                        illness,
+                        accountProvider,
+                        token,
+                        context,
+                      );
+                      setState(() {});
+                    }),
               );
             },
           ),
