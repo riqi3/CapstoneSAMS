@@ -134,7 +134,7 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
   void initState() {
     super.initState();
     token = context.read<AccountProvider>().token!;
-    // Provider.of<MedicineProvider>(context, listen: false).resetState();
+    Provider.of<MedicineProvider>(context, listen: false).resetState();
     final provider = Provider.of<PrescriptionProvider>(context, listen: false);
     prescriptions = provider
         .fetchPrescriptionsByIllness(widget.presentIllness.illnessID, token)
@@ -152,20 +152,14 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
           }
         }
       }
-      setState(() {});
+      setState(() {
+        medicineList.isEmpty ? checkboxValue1 = false : checkboxValue1 = true;
+      });
       return prescriptions;
     });
     print(medicineList);
     Provider.of<MedicineProvider>(context, listen: false)
         .setMedicines(medicineList);
-    print('${Provider.of<MedicineProvider>(context, listen: false).medicines}');
-    prescriptID = provider.presID ?? '';
-
-    if (prescriptID == '') {
-      setState(() {
-        checkboxValue1 = true;
-      });
-    }
   }
 
   @override

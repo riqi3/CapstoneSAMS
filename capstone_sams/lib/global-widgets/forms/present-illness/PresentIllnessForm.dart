@@ -73,8 +73,6 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
   int currentStep = 0;
   int? maxLines = 4;
 
-  List<Medicine> medicineList = [];
-
   void _onSubmit() async {
     setState(() => _isLoading = true);
     final isValid = _presIllnessInfoFormKey.currentState!.validate();
