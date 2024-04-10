@@ -4,6 +4,7 @@ import 'package:capstone_sams/constants/Strings.dart';
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/global-widgets/SearchAppBar.dart';
 import 'package:capstone_sams/global-widgets/loading-indicator/PatientCardLoading.dart';
+import 'package:capstone_sams/global-widgets/texts/NoDataTextWidget.dart';
 import 'package:capstone_sams/models/AccountModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
@@ -99,7 +100,14 @@ class _EhrListScreenState extends State<EhrListScreen> {
               );
             } else if (snapshot.data!.isEmpty) {
               return Center(
-                child: Text(Strings.noPatientResults),
+                child: Container(
+                  height: 100,
+                  child: Center(
+                    child: NoDataTextWidget(
+                      text: Strings.noPatientResults,
+                    ),
+                  ),
+                ),
               );
             } else if (snapshot.hasData) {
               dataToShow = snapshot.data!;
