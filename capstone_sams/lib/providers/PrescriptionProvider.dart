@@ -24,7 +24,7 @@ class PrescriptionProvider with ChangeNotifier {
   }
 
   Future<List<Prescription>> fetchPrescriptions(
-      String? patientID,  String token) async {
+      String? patientID, String token) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',
@@ -51,7 +51,32 @@ class PrescriptionProvider with ChangeNotifier {
     }
   }
 
+  Future<List<Prescription>> fetchPrescriptionsByIllness(
+      String? illnessID, String token) async {
+    final header = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token',
+    };
+    try {
+      final response = await http.get(
+        Uri.parse(
+          _getUrl('cpoe/prescription/get-illness-prescription/${illnessID}/'),
+        ),
+        headers: header,
+      );
+      await Future.delayed(Duration(milliseconds: 1000));
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonList = jsonDecode(response.body);
 
+        return jsonList.map((json) => Prescription.fromJson(json)).toList();
+      } else {
+        return [];
+      }
+    } catch (e) {
+      print('Failed to fetch patient prescriptions. Error: $e');
+      return [];
+    }
+  }
 
   Future<Prescription> fetchPrescription(String token, String? presID) async {
     final header = <String, String>{
