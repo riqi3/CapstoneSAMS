@@ -125,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _mobileView(context, medNotesTitle, ehrTitle) {
     final todosPreview =
-        _userTodos.length > 3 ? _userTodos.sublist(0, 3) : _userTodos;
+        _userTodos.length > 5 ? _userTodos.sublist(0, 5) : _userTodos;
 
     return Column(
       children: [
@@ -144,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _tabletView(context, ehrTitle, medNotesTitle) {
     final todosPreview =
-        _userTodos.length > 3 ? _userTodos.sublist(0, 3) : _userTodos;
+        _userTodos.length > 5 ? _userTodos.sublist(0, 5) : _userTodos;
 
     return Column(
       children: <Widget>[

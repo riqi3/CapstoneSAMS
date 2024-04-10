@@ -184,6 +184,13 @@ class MedicineProvider with ChangeNotifier {
     }
   }
 
+  void setMedicines(List<Medicine> medicine) {
+    Future.delayed(Duration.zero, () {
+      _medicines = medicine;
+      notifyListeners();
+    });
+  }
+
   void addMedicine(Medicine medicine) {
     _medicines.add(medicine);
     notifyListeners();
