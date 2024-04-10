@@ -165,7 +165,6 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
 
   @override
   Widget build(BuildContext context) {
-    
     final medicineProvider = Provider.of<MedicineProvider>(context);
     return FormTemplate(
       onpressed: () => Navigator.pop(context),
@@ -197,8 +196,8 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
                               currentStep -= 1;
                             }),
                       onStepContinue: () {
-                        bool isLastStep =
-                            (currentStep == getSteps(medicineProvider).length - 1);
+                        bool isLastStep = (currentStep ==
+                            getSteps(medicineProvider).length - 1);
                         if (isLastStep) {
                         } else {
                           setState(() {
@@ -209,7 +208,8 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
                       steps: getSteps(medicineProvider),
                       controlsBuilder:
                           (BuildContext context, ControlsDetails details) {
-                        final isLastStep = currentStep == getSteps(medicineProvider).length - 1;
+                        final isLastStep = currentStep ==
+                            getSteps(medicineProvider).length - 1;
 
                         return Row(
                           children: <Widget>[
@@ -256,7 +256,7 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
     );
   }
 
-  List<Step> getSteps(MedicineProvider medicineProvider) { 
+  List<Step> getSteps(MedicineProvider medicineProvider) {
     return <Step>[
       Step(
         state: currentStep > 0 ? StepState.complete : StepState.indexed,
@@ -274,7 +274,7 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
           labeltext: '',
           validator: Strings.requiredField,
           maxlines: maxLines,
-          type: TextInputType.text,
+          type: TextInputType.streetAddress,
         ),
       ),
       Step(
@@ -293,7 +293,7 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
           labeltext: '',
           validator: Strings.requiredField,
           maxlines: maxLines,
-          type: TextInputType.text,
+          type: TextInputType.streetAddress,
         ),
       ),
       Step(
@@ -314,7 +314,7 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
               onchanged: (value) => widget.presentIllness.illnessName = value,
               labeltext: 'Illness Name*',
               validator: Strings.requiredField,
-              type: TextInputType.text,
+              type: TextInputType.name,
             ),
             SizedBox(height: Sizing.sectionSymmPadding),
             FormTextField(
@@ -323,7 +323,7 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
               labeltext: '',
               validator: Strings.requiredField,
               maxlines: maxLines,
-              type: TextInputType.text,
+              type: TextInputType.streetAddress,
             ),
           ],
         ),
@@ -360,7 +360,7 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
               labeltext: '',
               validator: Strings.requiredField,
               maxlines: maxLines,
-              type: TextInputType.text,
+              type: TextInputType.streetAddress,
             ),
           ],
         ),

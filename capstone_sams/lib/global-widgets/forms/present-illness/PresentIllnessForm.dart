@@ -68,8 +68,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
   String displayFindings = '';
   String? selectedDisease;
   bool checkboxValue1 = false;
-  bool _isLoading = false;
-  bool _isIllnessIDCreated = false;
+  bool _isLoading = false; 
   int currentStep = 0;
   int? maxLines = 4;
 
