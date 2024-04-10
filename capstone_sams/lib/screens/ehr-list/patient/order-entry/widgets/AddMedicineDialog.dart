@@ -15,9 +15,9 @@ import '../../../../../constants/Env.dart';
 import '../../../../../constants/theme/pallete.dart';
 
 // ignore: must_be_immutable
-class AddMedicineDialog extends StatefulWidget { 
+class AddMedicineDialog extends StatefulWidget {
   AddMedicineDialog({
-    Key? key, 
+    Key? key,
   }) : super(key: key);
   @override
   _AddMedicineDialogState createState() => _AddMedicineDialogState();
@@ -177,75 +177,18 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                             child: Text('Submit'),
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
-                                  _formKey.currentState!.save();
+                                _formKey.currentState!.save();
 
-                                  Provider.of<MedicineProvider>(context,
-                                          listen: false)
-                                      .addMedicine(_medicine);
-                                  Navigator.pop(context);
-                                  // if (_medicine.drugName!.isNotEmpty) {}
-                                } else {
-                                  setState(() {
-                                    _autoValidate =
-                                        true; // Enable auto validation
-                                  });
-                                }
-                              // if (widget.checkboxValue == true &&
-                              //     (_medicine.drugName == null &&
-                              //         _medicine.drugCode == null &&
-                              //         _medicine.drugId == null) &&
-                              //     _medicine.instructions == null &&
-                              //     _medicine.quantity == null) {
-                              //   showDialog<String>(
-                              //     context: context,
-                              //     builder: (BuildContext context) =>
-                              //         AlertDiaglogTemplate(
-                              //       title: 'Are you sure?',
-                              //       content:
-                              //           "It seems that you've selected decided to add a medicine but the values are empty.",
-                              //       buttonTitle: "I'll correct it",
-                              //       onpressed: () => Navigator.pop(context),
-                              //     ),
-                              //   );
-                              // } else {
-                              //   // _submit();
-                                
-                              //   // Navigator.pop(context);
-                              // }
-
-                              // if (widget.checkboxValue == true &&
-                              //     (_medicine.drugName == null &&
-                              //         _medicine.drugCode == null &&
-                              //         _medicine.drugId == null)) {
-                              //   showDialog<String>(
-                              //     context: context,
-                              //     builder: (BuildContext context) =>
-                              //         AlertDiaglogTemplate(
-                              //       title: 'Are you sure?',
-                              //       content:
-                              //           "It seems that you've checked to add a medicine and did not insert any values.",
-                              //       buttonTitle: "I won't add a medicine",
-                              //       onpressed: () {
-                              //         Navigator.pop(context);
-                              //       },
-                              //     ),
-                              //   );
-                              // } else {
-                              //   if (_formKey.currentState!.validate()) {
-                              //     _formKey.currentState!.save();
-
-                              //     Provider.of<MedicineProvider>(context,
-                              //             listen: false)
-                              //         .addMedicine(_medicine);
-                              //     Navigator.pop(context);
-                              //     // if (_medicine.drugName!.isNotEmpty) {}
-                              //   } else {
-                              //     setState(() {
-                              //       _autoValidate =
-                              //           true; // Enable auto validation
-                              //     });
-                              //   }
-                              // }
+                                Provider.of<MedicineProvider>(context,
+                                        listen: false)
+                                    .addMedicine(_medicine);
+                                Navigator.pop(context);  
+                              } else {
+                                setState(() {
+                                  _autoValidate =
+                                      true; // Enable auto validation
+                                });
+                              }
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Pallete.mainColor,

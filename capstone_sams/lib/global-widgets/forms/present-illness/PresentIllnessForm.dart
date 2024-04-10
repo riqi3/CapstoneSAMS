@@ -166,6 +166,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
   }
 
   Widget build(BuildContext context) {
+    final medicineProvider = Provider.of<MedicineProvider>(context);
     return FormTemplate(
       onpressed: () => Navigator.pop(context),
       column: Column(
@@ -196,8 +197,8 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
                               currentStep -= 1;
                             }),
                       onStepContinue: () {
-                        bool isLastStep =
-                            (currentStep == getSteps().length - 1);
+                        bool isLastStep = (currentStep ==
+                            getSteps(medicineProvider).length - 1);
                         if (isLastStep) {
                         } else {
                           setState(() {
@@ -208,10 +209,11 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
                       // onStepTapped: (step) => setState(() {
                       //   currentStep = step;
                       // }),
-                      steps: getSteps(),
+                      steps: getSteps(medicineProvider),
                       controlsBuilder:
                           (BuildContext context, ControlsDetails details) {
-                        final isLastStep = currentStep == getSteps().length - 1;
+                        final isLastStep = currentStep ==
+                            getSteps(medicineProvider).length - 1;
 
                         return Row(
                           children: <Widget>[
@@ -344,10 +346,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
     );
   }
 
-  List<Step> getSteps() {
-    final medicineProvider =
-        Provider.of<MedicineProvider>(context, listen: false);
-
+  List<Step> getSteps(MedicineProvider medicineProvider) {
     return <Step>[
       Step(
         state: currentStep > 0 ? StepState.complete : StepState.indexed,
