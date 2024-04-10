@@ -160,10 +160,13 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
     print(medicineList);
     Provider.of<MedicineProvider>(context, listen: false)
         .setMedicines(medicineList);
+    // Provider.of<MedicineProvider>(context, listen: false).resetState();
   }
 
   @override
   Widget build(BuildContext context) {
+    
+    final medicineProvider = Provider.of<MedicineProvider>(context);
     return FormTemplate(
       onpressed: () => Navigator.pop(context),
       column: Column(
@@ -195,7 +198,7 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
                             }),
                       onStepContinue: () {
                         bool isLastStep =
-                            (currentStep == getSteps().length - 1);
+                            (currentStep == getSteps(medicineProvider).length - 1);
                         if (isLastStep) {
                         } else {
                           setState(() {
@@ -203,10 +206,10 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
                           });
                         }
                       },
-                      steps: getSteps(),
+                      steps: getSteps(medicineProvider),
                       controlsBuilder:
                           (BuildContext context, ControlsDetails details) {
-                        final isLastStep = currentStep == getSteps().length - 1;
+                        final isLastStep = currentStep == getSteps(medicineProvider).length - 1;
 
                         return Row(
                           children: <Widget>[
@@ -253,9 +256,7 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
     );
   }
 
-  List<Step> getSteps() {
-    final medicineProvider =
-        Provider.of<MedicineProvider>(context, listen: false);
+  List<Step> getSteps(MedicineProvider medicineProvider) { 
     return <Step>[
       Step(
         state: currentStep > 0 ? StepState.complete : StepState.indexed,
