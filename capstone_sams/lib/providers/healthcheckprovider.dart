@@ -15,7 +15,7 @@ class HealthCheckProvider extends ChangeNotifier {
 
   List<Map<String, dynamic>> top3Predictions = [];
   String? firstResultDisease;
-  Future<void> sendDataToBackend(String token) async {
+  Future<void> sendDataToBackend(String token, int age, String gender) async {
     try {
       final url =
           Uri.parse('${Env.prefix}/diagnostics/create_diagnostic_record/');
