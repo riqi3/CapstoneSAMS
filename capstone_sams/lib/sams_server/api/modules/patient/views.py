@@ -312,7 +312,7 @@ class PresentIllnessView(viewsets.ViewSet):
                 updated_at = illness_data['updated_at'],
                 patient = patient,
                 created_by = account, 
-            )
+            ) 
             data_log = Data_Log.objects.create(
                 event=f"{account.username} created new complaint",
                 type="User Created Complaint",
@@ -337,7 +337,7 @@ class PresentIllnessView(viewsets.ViewSet):
             present_illness.updated_at = illness_data['updated_at'] 
             present_illness.save()
             data_log = Data_Log.objects.create(
-                event=f"{account.username} updated omplaint",
+                event=f"{account.username} updated complaint",
                 type="User Updated Complaint",
                 account=account
                 )

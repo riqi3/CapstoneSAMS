@@ -491,7 +491,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                                 illness.illnessID) {
                                               return ListTile(
                                                 tileColor:
-                                                    Pallete.lightGreyColor,
+                                                    prescription.medicines!.isEmpty ? Colors.transparent : Pallete.lightGreyColor,
                                                 subtitle: Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
