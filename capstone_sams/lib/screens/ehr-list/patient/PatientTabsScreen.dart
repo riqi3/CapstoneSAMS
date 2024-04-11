@@ -1,10 +1,12 @@
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/global-widgets/forms/present-illness/PresentIllnessForm.dart';
+import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/lab/LabScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/present-illness-history/HistoryPresentIllnessScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/past-med-history/PastMedicalHistoryScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import '../../../constants/theme/sizing.dart';
 import '../../../models/PatientModel.dart';
 import 'health-record/HealthRecordScreen.dart';
@@ -56,6 +58,12 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final accountProvider = Provider.of<AccountProvider>(context);
+
+    // ignore: unnecessary_null_comparison
+    final bool canAccessForm = accountProvider == null ||
+        (accountProvider.acc?.accountRole != 'physician' &&
+            accountProvider.acc?.accountRole != 'nurse');
     return Scaffold(
       endDrawer: ValueDashboard(),
       appBar: PreferredSize(
@@ -81,17 +89,19 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => PresentIllnessForm(
-              patient: widget.patient,
+      floatingActionButton: canAccessForm
+          ? null
+          : FloatingActionButton(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PresentIllnessForm(
+                    patient: widget.patient,
+                  ),
+                ),
+              ),
+              child: FaIcon(FontAwesomeIcons.stethoscope),
             ),
-          ),
-        ),
-        child: FaIcon(FontAwesomeIcons.stethoscope),
-      ),
     );
   }
 }

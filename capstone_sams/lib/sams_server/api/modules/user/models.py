@@ -41,6 +41,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     ACCOUNT_ROLE_CHOICES = [
         ('physician', 'Physician'),
         ('nurse', 'Nurse'),
+        ('student nurse', 'Student Nurse'),
         ('admin', 'Admin'),
     ]
 
