@@ -160,7 +160,6 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
     print(medicineList);
     Provider.of<MedicineProvider>(context, listen: false)
         .setMedicines(medicineList);
-    // Provider.of<MedicineProvider>(context, listen: false).resetState();
   }
 
   @override
@@ -462,7 +461,7 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        medicineProvider.medicines.isNotEmpty
+        medicineProvider.medicines.isEmpty
             ? Container(
                 padding: EdgeInsets.all(Sizing.sectionSymmPadding),
                 width: MediaQuery.of(context).size.width,
@@ -509,36 +508,76 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
                   ],
                 ),
               )
-            : Container(
-                height: MediaQuery.of(context).size.height / 4,
-                child: FutureBuilder<List<Prescription>>(
-                  future: prescriptions,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
-                    } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    } else {
-                      final prescriptions = snapshot.data!;
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: prescriptions.length,
-                        itemBuilder: (context, index) {
-                          final prescription = prescriptions[index];
-                          if (prescription.illnessID ==
-                              widget.presentIllness.illnessID) {
-                            return MedicineCard(
-                              medicine: prescription.medicines![index],
-                              patient: widget.patient,
-                              index: index,
-                            );
-                          }
-                          return SizedBox.shrink();
-                        },
-                      );
-                    }
-                  },
-                ),
+            : Column(
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: () => showDialog(
+                      context: context,
+                      builder: (ctx) => AddMedicineDialog(),
+                    ),
+                    icon: Icon(Icons.edit),
+                    label: Text('Write Rx'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Pallete.mainColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(Sizing.borderRadius),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: MediaQuery.of(context).size.height / 4,
+                    child: FutureBuilder<List<Prescription>>(
+                      future: prescriptions,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          final prescriptions = snapshot.data!;
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: prescriptions.length,
+                            itemBuilder: (context, index) {
+                              final prescription = prescriptions[index];
+                              if (prescription.illnessID ==
+                                  widget.presentIllness.illnessID) {
+                                // return MedicineCard(
+                                //   medicine: prescription.medicines![index],
+                                //   patient: widget.patient,
+                                //   index: index,
+                                // );
+                                if (medicineProvider.medicines.isEmpty) {
+                                  return Text('No medicines available');
+                                } else {
+                                  return Container(
+                                    height:
+                                        MediaQuery.of(context).size.height / 4,
+                                    child: ListView.builder(
+                                      itemCount:
+                                          medicineProvider.medicines.length,
+                                      itemBuilder: (context, index) {
+                                        return MedicineCard(
+                                          medicine:
+                                              medicineProvider.medicines[index],
+                                          patient: widget.patient,
+                                          index: index,
+                                        );
+                                      },
+                                    ),
+                                  );
+                                }
+                              }
+                              return SizedBox.shrink();
+                            },
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                ],
               ),
       ],
     );
