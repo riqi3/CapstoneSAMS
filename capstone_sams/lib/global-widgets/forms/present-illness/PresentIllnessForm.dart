@@ -68,7 +68,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
   String displayFindings = '';
   String? selectedDisease;
   bool checkboxValue1 = false;
-  bool _isLoading = false; 
+  bool _isLoading = false;
   int currentStep = 0;
   int? maxLines = 4;
 
@@ -267,28 +267,19 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
                                             illnessID: illness_id,
                                             illnessName:
                                                 _illnessNameController.text,
-                                            // _presIllnessInfo.illnessName,
                                             complaint:
                                                 _complaintController.text,
-                                            // _presIllnessInfo.complaint,
                                             findings: _findingsController.text,
-                                            // _presIllnessInfo.findings,
                                             diagnosis:
                                                 _diagnosisController.text,
-                                            // _presIllnessInfo.diagnosis,
                                             treatment:
                                                 _treatmentController.text,
-                                            // _presIllnessInfo.treatment,
                                             created_at: formattedDate,
-                                            // updated_at: formattedDate,
                                             patient: widget.patient.patientID,
                                           );
                                           final accountID = context
                                               .read<AccountProvider>()
                                               .id;
-                                          // final presentIllnessProvider =
-                                          //     Provider.of<PresentIllnessProvider>(
-                                          //         context, listen: true);
 
                                           getID =
                                               presentIllnessRecord.illnessID!;
@@ -317,20 +308,49 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
                                       },
                                     ),
                                   )
-                                : Expanded(
-                                    child: FormSubmitButton(
-                                      title: isLastStep ? 'Submit' : 'Next',
-                                      icon: isLastStep
-                                          ? Icons.upload
-                                          : Icons.chevron_right,
-                                      isLoading: _isLoading,
-                                      onpressed: isLastStep
-                                          ? _isLoading
-                                              ? null
-                                              : _onSubmit
-                                          : details.onStepContinue,
-                                    ),
-                                  ),
+                                : currentStep == 4
+                                    ? Expanded(
+                                        child: FutureBuilder(
+                                          future: Future.delayed(
+                                              Duration(seconds: 2)),
+                                          builder: (context, snapshot) =>
+                                              snapshot.connectionState !=
+                                                      ConnectionState.done
+                                                  ? DisabledSubmitButton(
+                                                      title: 'Wait',
+                                                      onpressed: () {},
+                                                    )
+                                                  : FormSubmitButton(
+                                                      title: isLastStep
+                                                          ? 'Submit'
+                                                          : 'Next',
+                                                      icon: isLastStep
+                                                          ? Icons.upload
+                                                          : Icons.chevron_right,
+                                                      isLoading: _isLoading,
+                                                      onpressed: isLastStep
+                                                          ? _isLoading
+                                                              ? null
+                                                              : _onSubmit
+                                                          : details
+                                                              .onStepContinue,
+                                                    ),
+                                        ),
+                                      )
+                                    : Expanded(
+                                        child: FormSubmitButton(
+                                          title: isLastStep ? 'Submit' : 'Next',
+                                          icon: isLastStep
+                                              ? Icons.upload
+                                              : Icons.chevron_right,
+                                          isLoading: _isLoading,
+                                          onpressed: isLastStep
+                                              ? _isLoading
+                                                  ? null
+                                                  : _onSubmit
+                                              : details.onStepContinue,
+                                        ),
+                                      ),
                           ],
                         );
                       },
