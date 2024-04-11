@@ -70,6 +70,7 @@ flutter:
   assets:
     - assets/images/sams_single_text1.png
     - assets/images/sams_app_logo.png
+    - assets/images/admin-profilepic.png
     - lib/sams_server/upload-photo/
  
   fonts:

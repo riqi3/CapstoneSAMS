@@ -577,7 +577,14 @@ class MedicineAdmin(admin.ModelAdmin):
         form = CsvImportMedicineForm()
         data = {"form": form}
         return render(request, "admin/csv_upload.html", data)
-
+    
+    def save_model(self, request, obj, form, change): 
+        if Medicine.objects.filter(drugCode=obj.drugCode).exists():
+            messages.error(request, f"Drug with code '{obj.drugCode}' already exists.")
+            return HttpResponseRedirect(request.path_info)
+ 
+        else:
+            super().save_model(request, obj, form, change) 
 
 '''
 This represent the forms that will be shown to the admin when creating a new health record
