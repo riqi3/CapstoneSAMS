@@ -155,7 +155,7 @@ class _EditMedicineDialogState extends State<EditMedicineDialog> {
                           labeltext: '',
                           validator: Strings.requiredField,
                           maxlines: maxLines,
-                          type: TextInputType.text,
+                          type: TextInputType.streetAddress,
                         ),
                       ),
                       SizedBox(height: 10),
