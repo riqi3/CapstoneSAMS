@@ -1,10 +1,7 @@
-import 'package:capstone_sams/models/PresentIllness.dart';
 import 'package:capstone_sams/models/SymptomsModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/SymptomsFieldsProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/CpoeFormScreen.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/order-entry/api/api_service.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/PrognosisUpdateDialog.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/order-entry/widgets/info.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

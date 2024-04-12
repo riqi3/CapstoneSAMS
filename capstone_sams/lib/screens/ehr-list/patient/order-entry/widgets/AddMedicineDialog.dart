@@ -1,8 +1,7 @@
 // add_medicine_dialog.dart
 
 import 'package:capstone_sams/constants/Strings.dart';
-import 'package:capstone_sams/constants/theme/sizing.dart';
-import 'package:capstone_sams/global-widgets/dialogs/AlertDialogTemplate.dart';
+import 'package:capstone_sams/constants/theme/sizing.dart'; 
 import 'package:capstone_sams/global-widgets/text-fields/Textfields.dart';
 import 'package:capstone_sams/models/MedicineModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';

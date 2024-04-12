@@ -6,7 +6,7 @@ import 'package:capstone_sams/global-widgets/forms/FormTemplate.dart';
 import 'package:capstone_sams/global-widgets/snackbars/Snackbars.dart';
 import 'package:capstone_sams/global-widgets/text-fields/Textfields.dart';
 import 'package:capstone_sams/global-widgets/texts/FormTitleWidget.dart';
-import 'package:capstone_sams/global-widgets/texts/TitleValueText.dart'; 
+import 'package:capstone_sams/global-widgets/texts/TitleValueText.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/models/PresentIllness.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
@@ -589,8 +589,60 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: medicineProvider.medicines
                   .map(
-                    (medicine) => Text(
-                      '${medicine.quantity} x ${medicine.drugName}: ${medicine.instructions}',
+                    (medicine) => Container(
+                      color: Pallete.lightGreyColor,
+                      padding: EdgeInsets.all(Sizing.sectionSymmPadding / 2),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                '${medicine.drugCode}',
+                                style: TextStyle(
+                                  fontSize: Sizing.header6,
+                                ),
+                              ),
+                              SizedBox(width: Sizing.spacing),
+                              Expanded(
+                                  child: Divider(
+                                color: Pallete.greyColor,
+                                thickness: 1,
+                              )),
+                            ],
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      '${medicine.quantity} x ${medicine.drugName}',
+                                      style: TextStyle(
+                                        color: Pallete.mainColor,
+                                        fontSize: Sizing.header6,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(width: Sizing.sectionSymmPadding),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '${medicine.instructions}',
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   )
                   .toList(),

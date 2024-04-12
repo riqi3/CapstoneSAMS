@@ -93,7 +93,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                   borderSide: BorderSide.none,
                 ),
                 hintStyle: TextStyle(color: Pallete.greyColor),
-                hintText: 'Search Diagnosis',
+                hintText: '${Strings.search}',
                 prefixIcon: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
@@ -133,38 +133,8 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
     );
   }
 
-  Expanded SearchBarDesign() {
-    return Expanded(
-      child: Row(
-        children: [
-          SizedBox(
-            width: 15,
-          ),
-          FaIcon(
-            FontAwesomeIcons.magnifyingGlass,
-            size: 16,
-            color: Pallete.greyColor,
-          ),
-          SizedBox(
-            width: 5,
-          ),
-          Flexible(
-            child: Text(
-              '${Strings.search} Diagnosis',
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 18,
-                color: Pallete.greyColor,
-                fontWeight: FontWeight.normal,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   StreamBuilder<List<PresentIllness>> PresentIllnessData() {
+    AccountProvider accountProvider = Provider.of<AccountProvider>(context);
     return StreamBuilder(
       stream: presentIllness,
       builder: (context, snapshot) {
@@ -233,8 +203,6 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                   } else {
                     final account = snapshot.data!;
 
-                    AccountProvider accountProvider =
-                        Provider.of<AccountProvider>(context);
                     String middleInitial = account.middleName![0];
                     String createdAt = dateFormatter(illness);
 
@@ -574,119 +542,117 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                   content: '${illness.treatment}',
                                 ),
                                 SizedBox(height: Sizing.formSpacing),
-                                Container(
-                                  height:
-                                      MediaQuery.of(context).size.height / 4,
-                                  child: FutureBuilder<List<Prescription>>(
-                                    future: prescriptions,
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return CircularProgressIndicator();
-                                      } else if (snapshot.hasError) {
-                                        return Text('Error: ${snapshot.error}');
-                                      } else {
-                                        final prescriptions = snapshot.data!;
-                                        return ListView.builder(
-                                          itemCount: prescriptions.length,
-                                          itemBuilder: (context, index) {
-                                            final prescription =
-                                                prescriptions[index];
-                                            // prescription.illnessID ==
-                                            //   illness.illnessID
-                                            if (prescription.illnessID ==
-                                                illness.illnessID) {
-                                              return ListTile(
-                                                tileColor: prescription
-                                                        .medicines!.isEmpty
-                                                    ? Colors.transparent
-                                                    : Pallete.lightGreyColor,
-                                                subtitle: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children:
-                                                      prescription.medicines!
-                                                          .map(
-                                                            (medicine) =>
-                                                                Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Row(
+                                FutureBuilder<List<Prescription>>(
+                                  future: prescriptions,
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return CircularProgressIndicator();
+                                    } else if (snapshot.hasError) {
+                                      return Text('Error: ${snapshot.error}');
+                                    } else {
+                                      final prescriptions = snapshot.data!;
+                                      return ListView.builder(
+                                        shrinkWrap: true,
+                                        physics: BouncingScrollPhysics(),
+                                        itemCount: prescriptions.length,
+                                        itemBuilder: (context, index) {
+                                          final prescription =
+                                              prescriptions[index];
+                                          // prescription.illnessID ==
+                                          //   illness.illnessID
+                                          if (prescription.illnessID ==
+                                              illness.illnessID) {
+                                            return ListTile(
+                                              tileColor: prescription
+                                                      .medicines!.isEmpty
+                                                  ? Colors.transparent
+                                                  : Pallete.lightGreyColor,
+                                              subtitle: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: prescription
+                                                    .medicines!
+                                                    .map(
+                                                      (medicine) => Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              Text(
+                                                                '${medicine.drugCode}',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize: Sizing
+                                                                      .header6,
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                  width: Sizing
+                                                                      .spacing),
+                                                              Expanded(
+                                                                  child:
+                                                                      Divider(
+                                                                color: Pallete
+                                                                    .greyColor,
+                                                                thickness: 1,
+                                                              )),
+                                                            ],
+                                                          ),
+                                                          Row(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Expanded(
+                                                                child: Column(
                                                                   children: [
                                                                     Text(
-                                                                      '${medicine.drugCode}',
+                                                                      '${medicine.quantity} x ${medicine.drugName}',
                                                                       style:
                                                                           TextStyle(
+                                                                        color: Pallete
+                                                                            .mainColor,
                                                                         fontSize:
                                                                             Sizing.header6,
+                                                                        fontWeight:
+                                                                            FontWeight.bold,
                                                                       ),
                                                                     ),
-                                                                    SizedBox(
-                                                                        width: Sizing
-                                                                            .spacing),
-                                                                    Expanded(
-                                                                        child:
-                                                                            Divider(
-                                                                      color: Pallete
-                                                                          .greyColor,
-                                                                      thickness:
-                                                                          1,
-                                                                    )),
                                                                   ],
                                                                 ),
-                                                                Row(
+                                                              ),
+                                                              SizedBox(
+                                                                  width: Sizing
+                                                                      .sectionSymmPadding),
+                                                              Expanded(
+                                                                child: Column(
                                                                   crossAxisAlignment:
                                                                       CrossAxisAlignment
                                                                           .start,
                                                                   children: [
-                                                                    Expanded(
-                                                                      child:
-                                                                          Column(
-                                                                        children: [
-                                                                          Text(
-                                                                            '${medicine.quantity} x ${medicine.drugName}',
-                                                                            style:
-                                                                                TextStyle(
-                                                                              color: Pallete.mainColor,
-                                                                              fontSize: Sizing.header6,
-                                                                              fontWeight: FontWeight.bold,
-                                                                            ),
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                                    SizedBox(
-                                                                        width: Sizing
-                                                                            .sectionSymmPadding),
-                                                                    Expanded(
-                                                                      child:
-                                                                          Column(
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment.start,
-                                                                        children: [
-                                                                          Text(
-                                                                            '${medicine.instructions}',
-                                                                          ),
-                                                                        ],
-                                                                      ),
+                                                                    Text(
+                                                                      '${medicine.instructions}',
                                                                     ),
                                                                   ],
                                                                 ),
-                                                              ],
-                                                            ),
-                                                          )
-                                                          .toList(),
-                                                ),
-                                              );
-                                            }
-                                            return SizedBox.shrink();
-                                          },
-                                        );
-                                      }
-                                    },
-                                  ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    )
+                                                    .toList(),
+                                              ),
+                                            );
+                                          }
+                                          return SizedBox.shrink();
+                                        },
+                                      );
+                                    }
+                                  },
                                 ),
                               ],
                             ),
