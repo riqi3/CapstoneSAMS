@@ -6,6 +6,7 @@ import 'package:capstone_sams/global-widgets/forms/FormTemplate.dart';
 import 'package:capstone_sams/global-widgets/snackbars/Snackbars.dart';
 import 'package:capstone_sams/global-widgets/text-fields/Textfields.dart';
 import 'package:capstone_sams/global-widgets/texts/FormTitleWidget.dart';
+import 'package:capstone_sams/global-widgets/texts/RichTextTemplate.dart';
 import 'package:capstone_sams/global-widgets/texts/TitleValueText.dart';
 import 'package:capstone_sams/models/MedicineModel.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
@@ -378,77 +379,175 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
         content: Column(
           children: [
             SizedBox(height: Sizing.formSpacing),
-            TitleValueText(
-              title: 'Complaint: ',
-              value: '${widget.presentIllness.complaint}',
+            Table(
+              columnWidths: <int, TableColumnWidth>{
+                0: FixedColumnWidth(Sizing.columnWidth1),
+                1: FixedColumnWidth(Sizing.columnWidth3 + 30),
+              },
+              children: [
+                TableRow(
+                  children: <Widget>[
+                    RichTextTemplate(
+                      title: 'Complaint: ',
+                      content: '',
+                    ),
+                    RichTextTemplate(
+                      title: '',
+                      content: '${widget.presentIllness.complaint}',
+                    ),
+                  ],
+                ),
+                TableRow(
+                  children: <Widget>[
+                    RichTextTemplate(
+                      title: 'Findings: ',
+                      content: '',
+                    ),
+                    RichTextTemplate(
+                      title: '',
+                      content: '${widget.presentIllness.findings}',
+                    ),
+                  ],
+                ),
+                TableRow(
+                  children: <Widget>[
+                    RichTextTemplate(
+                      title: 'Illness: ',
+                      content: '',
+                    ),
+                    RichTextTemplate(
+                      title: '',
+                      content: '${widget.presentIllness.illnessName}',
+                    ),
+                  ],
+                ),
+                TableRow(
+                  children: <Widget>[
+                    RichTextTemplate(
+                      title: 'Diagnosis: ',
+                      content: '',
+                    ),
+                    RichTextTemplate(
+                      title: '',
+                      content: '${widget.presentIllness.diagnosis}',
+                    ),
+                  ],
+                ),
+                TableRow(
+                  children: <Widget>[
+                    RichTextTemplate(
+                      title: 'Treatment: ',
+                      content: '',
+                    ),
+                    RichTextTemplate(
+                      title: '',
+                      content: '${widget.presentIllness.treatment}',
+                    ),
+                  ],
+                ),
+              ],
             ),
             SizedBox(height: Sizing.formSpacing / 2),
-            TitleValueText(
-              title: 'Findings: ',
-              value: '${widget.presentIllness.findings}',
-            ),
-            SizedBox(height: Sizing.formSpacing / 2),
-            TitleValueText(
-              title: 'Diagnosis: ',
-              value: '${widget.presentIllness.diagnosis}',
-            ),
-            SizedBox(height: Sizing.formSpacing / 2),
-            TitleValueText(
-              title: 'Treatment: ',
-              value: '${widget.presentIllness.treatment}',
-            ),
-            SizedBox(height: Sizing.formSpacing / 2),
-            Container(
-              height: MediaQuery.of(context).size.height / 4,
-              child: FutureBuilder<List<Prescription>>(
-                future: prescriptions,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    final prescriptions = snapshot.data!;
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: prescriptions.length,
-                      itemBuilder: (context, index) {
-                        final prescription = prescriptions[index];
-                        if (prescription.illnessID ==
-                            widget.presentIllness.illnessID) {
-                          // return MedicineCard(
-                          //   medicine: prescription.medicines![index],
-                          //   patient: widget.patient,
-                          //   index: index,
-                          // );
+            FutureBuilder<List<Prescription>>(
+              future: prescriptions,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  final prescriptions = snapshot.data!;
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: prescriptions.length,
+                    itemBuilder: (context, index) {
+                      final prescription = prescriptions[index];
+                      if (prescription.illnessID ==
+                          widget.presentIllness.illnessID) {
+                        // return MedicineCard(
+                        //   medicine: prescription.medicines![index],
+                        //   patient: widget.patient,
+                        //   index: index,
+                        // );
 
-                          prescriptID = prescription.presID;
-                          print(' crypto ${prescription.presID}');
-                          return ListTile(
-                            subtitle: Column(
-                              children: medicineProvider.medicines
-                                  .map(
-                                    (medicine) => Column(
+                        prescriptID = prescription.presID;
+                        print(' crypto ${prescription.presID}');
+                        return ListTile(
+                          subtitle: Column(
+                            children: medicineProvider.medicines
+                                .map(
+                                  (medicine) => Container(
+                                    color: Pallete.lightGreyColor,
+                                    padding: EdgeInsets.all(
+                                        Sizing.sectionSymmPadding / 2),
+                                    child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text('${medicine.drugCode}'),
-                                        Text(
-                                          '${medicine.quantity} x ${medicine.drugName}: ${medicine.instructions}',
+                                        Row(
+                                          children: [
+                                            Text(
+                                              '${medicine.drugCode}',
+                                              style: TextStyle(
+                                                fontSize: Sizing.header6,
+                                              ),
+                                            ),
+                                            SizedBox(width: Sizing.spacing),
+                                            Expanded(
+                                                child: Divider(
+                                              color: Pallete.greyColor,
+                                              thickness: 1,
+                                            )),
+                                          ],
+                                        ),
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                              child: Column(
+                                                children: [
+                                                  Text(
+                                                    '${medicine.quantity} x ${medicine.drugName}',
+                                                    style: TextStyle(
+                                                      color: Pallete.mainColor,
+                                                      fontSize: Sizing.header6,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            SizedBox(
+                                                width:
+                                                    Sizing.sectionSymmPadding),
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    '${medicine.instructions}',
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
-                                  )
-                                  .toList(),
-                            ),
-                          );
-                        }
-                        return SizedBox.shrink();
-                      },
-                    );
-                  }
-                },
-              ),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        );
+                      }
+                      return SizedBox.shrink();
+                    },
+                  );
+                }
+              },
             ),
             SizedBox(height: Sizing.sectionSymmPadding),
           ],
