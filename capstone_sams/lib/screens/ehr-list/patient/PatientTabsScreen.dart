@@ -92,21 +92,15 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
         );
       } else {
         speedDial = SpeedDial(
-          animatedIcon: AnimatedIcons.add_event,
-          visible: true,
-          children: [
-            SpeedDialChild(
-              child: FaIcon(FontAwesomeIcons.stethoscope),
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => PresentIllnessForm(
-                    patient: widget.patient,
-                  ),
-                ),
+          child: FaIcon(FontAwesomeIcons.stethoscope),
+          onPress: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PresentIllnessForm(
+                patient: widget.patient,
               ),
             ),
-          ],
+          ),
         );
       }
     });
