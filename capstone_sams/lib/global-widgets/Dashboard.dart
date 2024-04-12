@@ -1,11 +1,7 @@
-import 'package:capstone_sams/constants/theme/pallete.dart';
-import 'package:capstone_sams/models/AccountModel.dart';
+import 'package:capstone_sams/constants/theme/pallete.dart'; 
 import 'package:capstone_sams/providers/AccountProvider.dart';
-import 'package:capstone_sams/providers/MedicalNotesProvider.dart';
-import 'package:capstone_sams/screens/authentication/LoginScreen.dart';
-import 'package:capstone_sams/screens/home/HomeScreen.dart';
-
-import 'package:capstone_sams/screens/medical_notes/MedicalNotesScreen.dart';
+import 'package:capstone_sams/providers/MedicalNotesProvider.dart'; 
+ 
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

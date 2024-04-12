@@ -2,13 +2,10 @@ import 'package:capstone_sams/constants/Dimensions.dart';
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/models/MedicalNotesModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
-import 'package:capstone_sams/providers/MedicalNotesProvider.dart';
-import 'package:capstone_sams/screens/ehr-list/EhrListScreen.dart';
+import 'package:capstone_sams/providers/MedicalNotesProvider.dart'; 
 import 'package:capstone_sams/screens/home/widgets/EhrSection.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../constants/theme/sizing.dart';
-import '../medical_notes/MedicalNotesScreen.dart';
+import 'package:provider/provider.dart'; 
 import 'widgets/NotesSection.dart';
 
 class HomeScreen extends StatefulWidget {

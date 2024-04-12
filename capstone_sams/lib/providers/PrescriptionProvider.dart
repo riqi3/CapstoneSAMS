@@ -1,5 +1,4 @@
-import 'dart:convert';
-import 'package:capstone_sams/models/AccountModel.dart';
+import 'dart:convert'; 
 import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
