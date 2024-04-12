@@ -6,6 +6,7 @@ import 'package:capstone_sams/global-widgets/forms/FormTemplate.dart';
 import 'package:capstone_sams/global-widgets/snackbars/Snackbars.dart';
 import 'package:capstone_sams/global-widgets/text-fields/Textfields.dart';
 import 'package:capstone_sams/global-widgets/texts/FormTitleWidget.dart';
+import 'package:capstone_sams/global-widgets/texts/RichTextTemplate.dart';
 import 'package:capstone_sams/global-widgets/texts/TitleValueText.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/models/PresentIllness.dart';
@@ -537,53 +538,74 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: Sizing.formSpacing),
-            _complaintController.text == ''
-                ? NullTitleValueText(
-                    title: 'Complaint: ',
-                    value: '${Strings.requiredField}',
-                  )
-                : TitleValueText(
-                    title: 'Complaint: ',
-                    value: '${_complaintController.text}',
-                  ),
-            SizedBox(height: Sizing.formSpacing / 2),
-            _findingsController.text == ''
-                ? NullTitleValueText(
-                    title: 'Findings: ',
-                    value: '${Strings.requiredField}',
-                  )
-                : TitleValueText(
-                    title: 'Findings: ',
-                    value: '${_findingsController.text}',
-                  ),
-            SizedBox(height: Sizing.formSpacing / 2),
-            _diagnosisController.text == ''
-                ? NullTitleValueText(
-                    title: 'Diagnosis: ',
-                    value: '${Strings.requiredField}',
-                  )
-                : Column(
-                    children: [
-                      TitleValueText(
-                        title: 'Illness: ',
-                        value: '${_illnessNameController.text}',
-                      ),
-                      TitleValueText(
-                        title: 'Diagnosis: ',
-                        value: '${_diagnosisController.text}',
-                      ),
-                    ],
-                  ),
-            SizedBox(height: Sizing.formSpacing / 2),
-            _treatmentController.text == ''
-                ? NullTitleValueText(
-                    title: 'Treatment: ',
-                    value: '${Strings.requiredField}',
-                  )
-                : TitleValueText(
-                    title: 'Treatment: ',
-                    value: '${_treatmentController.text}',
-                  ),
+            Table(
+              columnWidths: <int, TableColumnWidth>{
+                0: FixedColumnWidth(Sizing.columnWidth1),
+                1: FixedColumnWidth(Sizing.columnWidth3 + 30),
+              },
+              children: [
+                TableRow(
+                  children: <Widget>[
+                    RichTextTemplate(
+                      title: 'Complaint: ',
+                      content: '',
+                    ),
+                    RichTextTemplate(
+                      title: '',
+                      content: '${_complaintController.text}',
+                    ),
+                  ],
+                ),
+                TableRow(
+                  children: <Widget>[
+                    RichTextTemplate(
+                      title: 'Findings: ',
+                      content: '',
+                    ),
+                    RichTextTemplate(
+                      title: '',
+                      content: '${_findingsController.text}',
+                    ),
+                  ],
+                ),
+                TableRow(
+                  children: <Widget>[
+                    RichTextTemplate(
+                      title: 'Illness: ',
+                      content: '',
+                    ),
+                    RichTextTemplate(
+                      title: '',
+                      content: '${_illnessNameController.text}',
+                    ),
+                  ],
+                ),
+                TableRow(
+                  children: <Widget>[
+                    RichTextTemplate(
+                      title: 'Diagnosis: ',
+                      content: '',
+                    ),
+                    RichTextTemplate(
+                      title: '',
+                      content: '${_diagnosisController.text}',
+                    ),
+                  ],
+                ),
+                TableRow(
+                  children: <Widget>[
+                    RichTextTemplate(
+                      title: 'Treatment: ',
+                      content: '',
+                    ),
+                    RichTextTemplate(
+                      title: '',
+                      content: '${_treatmentController.text}',
+                    ),
+                  ],
+                ),
+              ],
+            ),
             SizedBox(height: Sizing.formSpacing / 2),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
