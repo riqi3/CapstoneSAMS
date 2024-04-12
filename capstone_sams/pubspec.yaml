@@ -43,6 +43,7 @@ dependencies:
   dropdown_search: ^5.0.6
   dio: ^5.3.0  
   shimmer: ^3.0.0 
+  flutter_speed_dial: ^7.0.0
   
 dev_dependencies:
   flutter_test:
@@ -70,6 +71,7 @@ flutter:
   assets:
     - assets/images/sams_single_text1.png
     - assets/images/sams_app_logo.png
+    - assets/images/admin-profilepic.png
     - lib/sams_server/upload-photo/
  
   fonts:

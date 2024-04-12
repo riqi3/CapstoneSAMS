@@ -1,6 +1,4 @@
-import 'package:capstone_sams/constants/theme/pallete.dart';
-import 'package:capstone_sams/global-widgets/forms/healthcheckscreen.dart';
-import 'package:capstone_sams/global-widgets/forms/present-illness/PresentIllnessForm.dart';
+import 'package:capstone_sams/constants/theme/pallete.dart'; 
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/providers/ContactPersonProvider.dart';
 import 'package:capstone_sams/providers/HealthRecordProvider.dart';
@@ -13,8 +11,7 @@ import 'package:capstone_sams/providers/PresentIllnessProvider.dart';
 import 'package:capstone_sams/providers/SymptomsFieldsProvider.dart';
 import 'package:capstone_sams/providers/healthcheckprovider.dart';
 import 'package:capstone_sams/screens/authentication/LoginScreen.dart';
-import 'package:capstone_sams/screens/ehr-list/EHRListScreen.dart';
-import 'package:capstone_sams/screens/ehr-list/widgets/PatientCard.dart';
+import 'package:capstone_sams/screens/ehr-list/EHRListScreen.dart'; 
 import 'package:capstone_sams/screens/home/HomeScreen.dart';
 import 'package:capstone_sams/screens/medical_notes/MedicalNotesScreen.dart';
 import 'package:flutter/material.dart';

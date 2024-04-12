@@ -86,9 +86,7 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
   @override
   Widget build(BuildContext context) {
     ContactPersonProvider contactPersonProvider =
-        Provider.of<ContactPersonProvider>(context);
-    AccountProvider accountProvider = Provider.of<AccountProvider>(context);
-
+        Provider.of<ContactPersonProvider>(context); 
     return CardTemplate(
       column: Column(
         children: [

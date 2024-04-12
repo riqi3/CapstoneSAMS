@@ -1,12 +1,9 @@
 import 'package:capstone_sams/constants/Strings.dart';
 import 'package:capstone_sams/global-widgets/text-fields/Textfields.dart';
 import 'package:capstone_sams/models/MedicineModel.dart';
-import 'package:capstone_sams/models/PatientModel.dart';
-import 'package:capstone_sams/models/PrescriptionModel.dart';
+import 'package:capstone_sams/models/PatientModel.dart'; 
 import 'package:capstone_sams/providers/AccountProvider.dart';
-import 'package:capstone_sams/providers/MedicineProvider.dart';
-import 'package:capstone_sams/providers/PrescriptionProvider.dart';
-import 'package:capstone_sams/screens/ehr-list/patient/PatientTabsScreen.dart';
+import 'package:capstone_sams/providers/MedicineProvider.dart'; 
 import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';

@@ -26,8 +26,10 @@ class HomeAppBar extends StatelessWidget {
           padding: const EdgeInsets.only(left: Sizing.sectionSymmPadding),
           child: CircleAvatar(
             radius: 20,
-            backgroundImage:
-                AssetImage('lib/sams_server/upload-photo${profile}'),
+            // ignore: unnecessary_null_comparison
+            backgroundImage: profile == null
+                ? AssetImage('assets/images/admin-profilepic.png')
+                : AssetImage('lib/sams_server/upload-photo${profile}'),
             backgroundColor: Colors.transparent,
           ),
         ),

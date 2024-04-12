@@ -47,7 +47,7 @@ class Medicine(models.Model):
     # drugId = models.CharField(primary_key = True)
     drugId = models.UUIDField(primary_key = True, default = uuid.uuid4, 
          editable = False)
-    drugCode = models.CharField(blank = False)
+    drugCode = models.CharField(blank = False, unique=True)
     drugName = models.CharField(blank = False)
     def __str__(self):
         return f"{self.drugCode} | {self.drugName}"

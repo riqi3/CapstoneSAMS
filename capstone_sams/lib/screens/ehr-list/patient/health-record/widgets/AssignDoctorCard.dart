@@ -1,6 +1,5 @@
 import 'package:capstone_sams/constants/theme/pallete.dart';
-import 'package:capstone_sams/constants/theme/sizing.dart';
-import 'package:capstone_sams/models/AccountModel.dart';
+import 'package:capstone_sams/constants/theme/sizing.dart'; 
 import 'package:capstone_sams/models/PrescriptionModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/global-widgets/forms/ChangePhysicianForm.dart';
@@ -15,8 +14,7 @@ class AssignDoctorCard extends StatefulWidget {
   State<AssignDoctorCard> createState() => _AssignDoctorCardState();
 }
 
-class _AssignDoctorCardState extends State<AssignDoctorCard> {
-  final _account = Account(isSuperuser: false);
+class _AssignDoctorCardState extends State<AssignDoctorCard> { 
   late String token = context.read<AccountProvider>().token!;
 
   @override

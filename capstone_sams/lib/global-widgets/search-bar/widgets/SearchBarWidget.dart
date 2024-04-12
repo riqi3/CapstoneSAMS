@@ -57,7 +57,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
         ),
         Flexible(
           child: Text(
-            Strings.searchAPatient,
+            Strings.search ,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               fontSize: 18,

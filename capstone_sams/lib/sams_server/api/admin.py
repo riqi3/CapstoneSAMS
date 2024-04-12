@@ -197,7 +197,7 @@ class UserCreationForm(forms.ModelForm):
         if user.accountRole == 'admin':
             user.is_staff = True
             user.is_superuser = True
-        elif user.accountRole == 'nurse' or user.accountRole == 'physician':
+        elif user.accountRole == 'nurse' or user.accountRole == 'physician' or user.accountRole == 'student nurse':
             user.is_staff = True
         print(user.accountID)
         photo = self.photo_generator(user)
@@ -394,40 +394,35 @@ This represent the table that will be shown to the admin looking at the currentl
 class PatientAdmin(admin.ModelAdmin): 
     # form = PatientAdminForm, HealthRecordAdminForm, ContactAdminForm
     inlines = [MedicalRecordInline, ContactInline] 
-    list_display = (
-        # "patientID",
+    list_display = ( 
         "firstName",
         "middleInitial",
         "lastName",
         "age",
         "gender",
-        "birthDate",
-        # 'department',
+        "birthDate", 
         'department',
         'yrLevel',
         'studNumber',
         'address',
         'height',
-        'weight',
-        # "registration",
+        'weight', 
         "phone",
-        "email", 
-        # 'assignedPhysician',
+        "email",  
     )
-    list_filter = (
-        # "patientID", 
+    list_filter = ( 
+        'studNumber',
         "gender",
-        # 'assignedPhysician'
+        'department', 
         )
-    search_fields = (
-        # "patientID",
+    search_fields = ( 
+        'studNumber',
         "firstName",
         "middleInitial",
         "lastName",
         "birthDate",
         'department',
-        "email",
-        # 'assignedPhysician',
+        "email", 
     ) 
 
     def get_urls(self):
@@ -577,7 +572,14 @@ class MedicineAdmin(admin.ModelAdmin):
         form = CsvImportMedicineForm()
         data = {"form": form}
         return render(request, "admin/csv_upload.html", data)
-
+    
+    def save_model(self, request, obj, form, change): 
+        if Medicine.objects.filter(drugCode=obj.drugCode).exists():
+            messages.error(request, f"Drug with code '{obj.drugCode}' already exists.")
+            return HttpResponseRedirect(request.path_info)
+ 
+        else:
+            super().save_model(request, obj, form, change) 
 
 '''
 This represent the forms that will be shown to the admin when creating a new health record

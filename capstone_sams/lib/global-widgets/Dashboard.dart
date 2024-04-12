@@ -1,26 +1,22 @@
-import 'package:capstone_sams/constants/theme/pallete.dart';
+import 'package:capstone_sams/constants/theme/pallete.dart'; 
 import 'package:capstone_sams/providers/AccountProvider.dart';
-import 'package:capstone_sams/providers/MedicalNotesProvider.dart';
-import 'package:capstone_sams/screens/authentication/LoginScreen.dart';
-import 'package:capstone_sams/screens/home/HomeScreen.dart';
-
-import 'package:capstone_sams/screens/medical_notes/MedicalNotesScreen.dart';
+import 'package:capstone_sams/providers/MedicalNotesProvider.dart'; 
+ 
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../constants/theme/sizing.dart';
-import '../screens/ehr-list/EhrListScreen.dart';
 import 'search-bar/SearchPatientDelegate.dart';
 
+// ignore: must_be_immutable
 class Dashboard extends StatefulWidget {
-  const Dashboard({
+  AccountProvider user;
+  Dashboard({
     super.key,
-    required this.username,
-    required this.profile,
+    required this.user,
   });
-  final String username, profile;
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -52,8 +48,10 @@ class _DashboardState extends State<Dashboard> {
               children: [
                 CircleAvatar(
                   radius: 30,
-                  backgroundImage: AssetImage(
-                      'lib/sams_server/upload-photo${widget.profile}'),
+                  backgroundImage: widget.user.photo == null
+                      ? AssetImage('assets/images/admin-profilepic.png')
+                      : AssetImage(
+                          'lib/sams_server/upload-photo${widget.user.photo}'),
                   backgroundColor: Colors.transparent,
                 ),
                 SizedBox(
@@ -62,7 +60,15 @@ class _DashboardState extends State<Dashboard> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(widget.username),
+                    Text(widget.user.username.toString()),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('${widget.user.firstName.toString()} '),
+                        Text('${widget.user.middleName.toString()} '),
+                        Text(widget.user.lastName.toString()),
+                      ],
+                    ),
                   ],
                 ),
               ],

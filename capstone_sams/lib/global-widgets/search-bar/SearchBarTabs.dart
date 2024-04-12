@@ -72,7 +72,7 @@ class _SearchBarTabsState extends State<SearchBarTabs> {
           width: 5,
         ),
         Text(
-          Strings.searchAPatient,
+          Strings.search,
           style: TextStyle(
             fontSize: 18,
             color: Pallete.greyColor,

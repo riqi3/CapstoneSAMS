@@ -3,11 +3,14 @@ import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/present-illness-history/widgets/DiagnosisInfoCard.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class HistoryPresentIllness extends StatefulWidget {
+  ScrollController controller;
   final Patient patient;
-  const HistoryPresentIllness({
+  HistoryPresentIllness({
     super.key,
     required this.patient,
+    required this.controller,
   });
 
   @override
@@ -15,30 +18,17 @@ class HistoryPresentIllness extends StatefulWidget {
 }
 
 class _HistoryPresentIllnessState extends State<HistoryPresentIllness> {
-  // ScrollController _scrollController = ScrollController();
-
   @override
   Widget build(BuildContext context) {
     return ScaffoldTemplate(
-      // scrollcontroller: _scrollController,
+      scrollcontroller: widget.controller,
       column: Column(
-        children: [
+        children: [ 
           DiagnosisInfoCard(
             patient: widget.patient,
           ),
         ],
       ),
-      // fablocation: FloatingActionButtonLocation.centerFloat,
-      // fab: FloatingActionButton(
-      //   onPressed: () {
-      //     _scrollController.animateTo(
-      //       0,
-      //       duration: Duration(seconds: 1),
-      //       curve: Curves.easeInOut,
-      //     );
-      //   },
-      //   child: Text('test'),
-      // ),
     );
   }
 }
