@@ -66,6 +66,14 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
     );
   }
 
+  void _scrollUp() {
+    _scrollController.animateTo(
+      _scrollController.position.minScrollExtent,
+      duration: Duration(seconds: 2),
+      curve: Curves.fastOutSlowIn,
+    );
+  }
+
   Widget speedDials(int index) {
     setState(() {
       if (index == 2) {
@@ -85,8 +93,11 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
               ),
             ),
             SpeedDialChild(
-              child: FaIcon(FontAwesomeIcons.arrowDown),
-              onTap: () => _scrollDown(),
+              child: FaIcon(FontAwesomeIcons.upDown),
+              onTap: () => _scrollController.offset >
+                      _scrollController.position.minScrollExtent
+                  ? _scrollUp()
+                  : _scrollDown(),
             ),
           ],
         );

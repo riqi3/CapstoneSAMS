@@ -50,7 +50,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
   late String token = context.read<AccountProvider>().token!;
   Account? account = Account(isSuperuser: false);
   var removeComplaint = dangerSnackbar('${Strings.remove} diagnosis.');
-
+  Map<PresentIllness, int> diagnosisIndexMap = {};
   String searchQuery = '';
   List<PresentIllness> filteredIllnessList = [];
 
@@ -98,7 +98,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                   borderSide: BorderSide.none,
                 ),
                 hintStyle: TextStyle(color: Pallete.greyColor),
-                hintText: 'Search Medicine',
+                hintText: 'Search Diagnosis',
                 prefixIcon: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
@@ -172,7 +172,10 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
           );
         } else {
           final presentIllnessList = snapshot.data!;
-
+          for (int i = presentIllnessList.length - 1; i >= 0; i--) {
+            final originalIndex = presentIllnessList.length - i;
+            diagnosisIndexMap[presentIllnessList[i]] = originalIndex;
+          }
           filteredIllnessList = presentIllnessList.where((illness) {
             return illness.illnessName!
                 .toLowerCase()
@@ -193,13 +196,15 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
           }
 
           return ListView.builder(
-            shrinkWrap: true, 
+            shrinkWrap: true,
             physics: BouncingScrollPhysics(),
             itemCount: filteredIllnessList.length,
             itemBuilder: (context, index) {
               final illness = filteredIllnessList[index];
-              final illnessIndex = '${filteredIllnessList.length - index}';
+              final originalIndex = diagnosisIndexMap[illness];
+              // final illnessIndex = '${filteredIllnessList.length - index}';
 
+              final illnessIndex = '${originalIndex}';
               return FutureBuilder<Account?>(
                 future: context
                     .read<AccountProvider>()
