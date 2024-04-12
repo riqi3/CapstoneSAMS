@@ -110,6 +110,24 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                     )
                   ],
                 ),
+                // suffixIcon: searchQuery.isNotEmpty
+                //     ? GestureDetector(
+                //         onTap: () => setState(() {
+                //           searchQuery = '';
+                //         }),
+                //         child: Row(
+                //           mainAxisAlignment: MainAxisAlignment.center,
+                //           mainAxisSize: MainAxisSize.min,
+                //           children: [
+                //             FaIcon(
+                //               FontAwesomeIcons.solidCircleXmark,
+                //               // color: Pallete.greyColor,
+                //               size: Sizing.iconAppBarSize,
+                //             )
+                //           ],
+                //         ),
+                //       )
+                //     : null,
               ),
             ),
           ),

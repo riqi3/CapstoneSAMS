@@ -394,40 +394,35 @@ This represent the table that will be shown to the admin looking at the currentl
 class PatientAdmin(admin.ModelAdmin): 
     # form = PatientAdminForm, HealthRecordAdminForm, ContactAdminForm
     inlines = [MedicalRecordInline, ContactInline] 
-    list_display = (
-        # "patientID",
+    list_display = ( 
         "firstName",
         "middleInitial",
         "lastName",
         "age",
         "gender",
-        "birthDate",
-        # 'department',
+        "birthDate", 
         'department',
         'yrLevel',
         'studNumber',
         'address',
         'height',
-        'weight',
-        # "registration",
+        'weight', 
         "phone",
-        "email", 
-        # 'assignedPhysician',
+        "email",  
     )
-    list_filter = (
-        # "patientID", 
+    list_filter = ( 
+        'studNumber',
         "gender",
-        # 'assignedPhysician'
+        'department', 
         )
-    search_fields = (
-        # "patientID",
+    search_fields = ( 
+        'studNumber',
         "firstName",
         "middleInitial",
         "lastName",
         "birthDate",
         'department',
-        "email",
-        # 'assignedPhysician',
+        "email", 
     ) 
 
     def get_urls(self):
