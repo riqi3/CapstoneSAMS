@@ -46,10 +46,13 @@ class DiagnosisInfoCard extends StatefulWidget {
 
 class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
   late Stream<List<PresentIllness>> presentIllness;
-  late Future<List<Prescription>> prescriptions;  
+  late Future<List<Prescription>> prescriptions;
   late String token = context.read<AccountProvider>().token!;
   Account? account = Account(isSuperuser: false);
   var removeComplaint = dangerSnackbar('${Strings.remove} diagnosis.');
+
+  String searchQuery = '';
+  List<PresentIllness> filteredIllnessList = [];
 
   String firstLetterUpper(String role) {
     String firstLetter = role.substring(0, 1).toUpperCase();
@@ -68,9 +71,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
     final provider = Provider.of<PrescriptionProvider>(context, listen: false);
     prescriptions =
         provider.fetchPrescriptions(widget.patient.patientID, token);
- 
   }
- 
 
   @override
   Widget build(BuildContext context) {
@@ -83,6 +84,11 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
             padding:
                 EdgeInsets.symmetric(horizontal: Sizing.sectionSymmPadding),
             child: TextField(
+              onChanged: (value) {
+                setState(() {
+                  searchQuery = value.trim();
+                });
+              },
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.all(10),
                 filled: true,
@@ -167,14 +173,32 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
         } else {
           final presentIllnessList = snapshot.data!;
 
+          filteredIllnessList = presentIllnessList.where((illness) {
+            return illness.illnessName!
+                .toLowerCase()
+                .contains(searchQuery.toLowerCase());
+          }).toList();
+
+          if (filteredIllnessList.isEmpty) {
+            return Center(
+              child: Container(
+                height: 100,
+                child: Center(
+                  child: NoDataTextWidget(
+                    text: 'No matching illnesses found.',
+                  ),
+                ),
+              ),
+            );
+          }
+
           return ListView.builder(
-            shrinkWrap: true,
-            // controller: widget.controller,
+            shrinkWrap: true, 
             physics: BouncingScrollPhysics(),
-            itemCount: presentIllnessList.length,
+            itemCount: filteredIllnessList.length,
             itemBuilder: (context, index) {
-              final illness = presentIllnessList[index];
-              final illnessIndex = '${presentIllnessList.length - index}';
+              final illness = filteredIllnessList[index];
+              final illnessIndex = '${filteredIllnessList.length - index}';
 
               return FutureBuilder<Account?>(
                 future: context
