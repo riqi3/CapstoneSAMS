@@ -9,6 +9,7 @@ import 'package:capstone_sams/global-widgets/dialogs/AlertDialogTemplate.dart';
 import 'package:capstone_sams/global-widgets/loading-indicator/DiagnosisCardLoading.dart';
 import 'package:capstone_sams/global-widgets/pop-menu-buttons/pop-menu-item/PopMenuItemTemplate.dart';
 import 'package:capstone_sams/global-widgets/snackbars/Snackbars.dart';
+import 'package:capstone_sams/global-widgets/text-fields/Textfields.dart';
 import 'package:capstone_sams/global-widgets/texts/NoDataTextWidget.dart';
 import 'package:capstone_sams/global-widgets/texts/RichTextTemplate.dart';
 import 'package:capstone_sams/models/AccountModel.dart';
@@ -31,10 +32,12 @@ import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class DiagnosisInfoCard extends StatefulWidget {
+  // ScrollController controller;
   final Patient patient;
   DiagnosisInfoCard({
     super.key,
     required this.patient,
+    // required this.controller,
   });
 
   @override
@@ -43,8 +46,7 @@ class DiagnosisInfoCard extends StatefulWidget {
 
 class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
   late Stream<List<PresentIllness>> presentIllness;
-  late Future<List<Prescription>> prescriptions;
-  // late Future<List<Account>> physicians;
+  late Future<List<Prescription>> prescriptions;  
   late String token = context.read<AccountProvider>().token!;
   Account? account = Account(isSuperuser: false);
   var removeComplaint = dangerSnackbar('${Strings.remove} diagnosis.');
@@ -66,7 +68,9 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
     final provider = Provider.of<PrescriptionProvider>(context, listen: false);
     prescriptions =
         provider.fetchPrescriptions(widget.patient.patientID, token);
+ 
   }
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +79,67 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
         children: [
           CardTitleWidget(title: "History of Illnesses"),
           SizedBox(height: Sizing.sectionSymmPadding),
+          Container(
+            padding:
+                EdgeInsets.symmetric(horizontal: Sizing.sectionSymmPadding),
+            child: TextField(
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.all(10),
+                filled: true,
+                fillColor: Pallete.lightGreyColor,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(Sizing.borderRadius * 2),
+                  borderSide: BorderSide.none,
+                ),
+                hintStyle: TextStyle(color: Pallete.greyColor),
+                hintText: 'Search Medicine',
+                prefixIcon: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    FaIcon(
+                      FontAwesomeIcons.magnifyingGlass,
+                      color: Pallete.greyColor,
+                      size: Sizing.iconAppBarSize,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: Sizing.sectionSymmPadding),
           CardSectionInfoWidget(widget: PresentIllnessData()),
+        ],
+      ),
+    );
+  }
+
+  Expanded SearchBarDesign() {
+    return Expanded(
+      child: Row(
+        children: [
+          SizedBox(
+            width: 15,
+          ),
+          FaIcon(
+            FontAwesomeIcons.magnifyingGlass,
+            size: 16,
+            color: Pallete.greyColor,
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          Flexible(
+            child: Text(
+              '${Strings.search} Diagnosis',
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 18,
+                color: Pallete.greyColor,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -105,6 +169,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
 
           return ListView.builder(
             shrinkWrap: true,
+            // controller: widget.controller,
             physics: BouncingScrollPhysics(),
             itemCount: presentIllnessList.length,
             itemBuilder: (context, index) {
@@ -490,8 +555,10 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                             if (prescription.illnessID ==
                                                 illness.illnessID) {
                                               return ListTile(
-                                                tileColor:
-                                                    prescription.medicines!.isEmpty ? Colors.transparent : Pallete.lightGreyColor,
+                                                tileColor: prescription
+                                                        .medicines!.isEmpty
+                                                    ? Colors.transparent
+                                                    : Pallete.lightGreyColor,
                                                 subtitle: Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
