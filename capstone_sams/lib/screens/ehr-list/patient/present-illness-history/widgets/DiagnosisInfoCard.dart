@@ -29,9 +29,11 @@ import 'package:provider/provider.dart';
 class DiagnosisInfoCard extends StatefulWidget {
   // ScrollController controller;
   final Patient patient;
+  bool isReversed;
   DiagnosisInfoCard({
     super.key,
     required this.patient,
+    required this.isReversed,
     // required this.controller,
   });
 
@@ -159,6 +161,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
             final originalIndex = presentIllnessList.length - i;
             diagnosisIndexMap[presentIllnessList[i]] = originalIndex;
           }
+
           filteredIllnessList = presentIllnessList.where((illness) {
             return illness.illnessName!
                 .toLowerCase()
@@ -180,12 +183,15 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
 
           return ListView.builder(
             shrinkWrap: true,
-            physics: BouncingScrollPhysics(),
-            itemCount: filteredIllnessList.length,
-            itemBuilder: (context, index) {
-              final illness = filteredIllnessList[index];
+            physics: BouncingScrollPhysics(), 
+            itemCount: widget.isReversed
+                ? filteredIllnessList.length
+                : filteredIllnessList.reversed.length,
+            itemBuilder: (context, index) { 
+              final illness = widget.isReversed
+                  ? filteredIllnessList[index]
+                  : filteredIllnessList.reversed.toList()[index];
               final originalIndex = diagnosisIndexMap[illness];
-              // final illnessIndex = '${filteredIllnessList.length - index}';
 
               final illnessIndex = '${originalIndex}';
               return FutureBuilder<Account?>(

@@ -6,11 +6,13 @@ import 'package:flutter/material.dart';
 // ignore: must_be_immutable
 class HistoryPresentIllness extends StatefulWidget {
   ScrollController controller;
+  bool isReversed;
   final Patient patient;
   HistoryPresentIllness({
     super.key,
     required this.patient,
     required this.controller,
+    required this.isReversed,
   });
 
   @override
@@ -23,9 +25,10 @@ class _HistoryPresentIllnessState extends State<HistoryPresentIllness> {
     return ScaffoldTemplate(
       scrollcontroller: widget.controller,
       column: Column(
-        children: [ 
+        children: [
           DiagnosisInfoCard(
             patient: widget.patient,
+            isReversed: widget.isReversed,
           ),
         ],
       ),
