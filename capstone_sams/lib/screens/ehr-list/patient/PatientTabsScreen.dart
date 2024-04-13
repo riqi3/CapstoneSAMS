@@ -1,5 +1,6 @@
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/global-widgets/forms/present-illness/PresentIllnessForm.dart';
+import 'package:capstone_sams/models/PresentIllness.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/lab/LabScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/present-illness-history/HistoryPresentIllnessScreen.dart';
@@ -39,19 +40,16 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
   late TabController tabController;
   late SpeedDial speedDial;
   ScrollController _scrollController = ScrollController();
+  bool _isReversed = false;
 
   @override
   void initState() {
     super.initState();
-    // final accountProvider =
-    //     Provider.of<AccountProvider>(context, listen: false);
-    // int tabCount = accountProvider.role == 'physician' ? 5 : 1;
     tabController = TabController(
       initialIndex: widget.selectedPage == 0 ? 0 : widget.selectedPage,
       length: 4,
       vsync: this,
     );
-
     speedDials(tabController.index);
     tabController.addListener(() {
       speedDials(tabController.index);
@@ -78,10 +76,13 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
     setState(() {
       if (index == 2) {
         speedDial = SpeedDial(
+          label: Text('Menu'),
+          activeLabel: Text('Close'),
           animatedIcon: AnimatedIcons.menu_close,
           visible: true,
           children: [
             SpeedDialChild(
+              label: 'Diagnose',
               child: FaIcon(FontAwesomeIcons.stethoscope),
               onTap: () => Navigator.push(
                 context,
@@ -93,16 +94,29 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
               ),
             ),
             SpeedDialChild(
+              label: 'Navigate',
               child: FaIcon(FontAwesomeIcons.upDown),
               onTap: () => _scrollController.offset >
                       _scrollController.position.minScrollExtent
                   ? _scrollUp()
                   : _scrollDown(),
             ),
+            SpeedDialChild(
+              label: 'Sort',
+              child: _isReversed
+                  ? FaIcon(FontAwesomeIcons.arrowDown19)
+                  : FaIcon(FontAwesomeIcons.arrowUp91),
+              onTap: () {
+                setState(() {
+                  _isReversed = !_isReversed;
+                });
+              },
+            ),
           ],
         );
       } else {
         speedDial = SpeedDial(
+          label: Text('Diagnose'),
           child: FaIcon(FontAwesomeIcons.stethoscope),
           onPress: () => Navigator.push(
             context,
@@ -152,6 +166,7 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
           HistoryPresentIllness(
             patient: widget.patient,
             controller: _scrollController,
+            isReversed: _isReversed,
           ),
           LaboratoriesScreen(
             index: widget.index,

@@ -50,8 +50,8 @@ input.btn.btn-delete.form-control {
                     <th scope="col" style='text-align:center;'>Select Result</th>
                     <th scope="col">PDF ID</th>   
                     <th scope="col">Title</th>
-                    <th scope="col">Patient ID</th> 
-                    <th scope="col">Patient Name</th> 
+                    <th scope="col">Student ID</th> 
+                    <th scope="col">Full Name</th> 
                   </tr>
                 </thead>
                 {% for pdf in pdf_list%}
@@ -68,7 +68,7 @@ input.btn.btn-delete.form-control {
                     </th>
                     <td>{{pdf.pdfId}}</td>    
                     <td>{{ pdf.title }}</td>
-                    <td>{{ pdf.patient.patientID }}</td>
+                    <td>{{ pdf.patient.studNumber }}</td>
                     <td>{{ pdf.patient.firstName }} {{ pdf.patient.middleName }} {{ pdf.patient.lastName }}</td>
 
                   </tr>

@@ -29,9 +29,11 @@ import 'package:provider/provider.dart';
 class DiagnosisInfoCard extends StatefulWidget {
   // ScrollController controller;
   final Patient patient;
+  bool isReversed;
   DiagnosisInfoCard({
     super.key,
     required this.patient,
+    required this.isReversed,
     // required this.controller,
   });
 
@@ -49,11 +51,18 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
   String searchQuery = '';
   List<PresentIllness> filteredIllnessList = [];
 
-  String firstLetterUpper(String role) {
-    String firstLetter = role.substring(0, 1).toUpperCase();
-    String remainingLetters = role.substring(1);
-    String capitalizedWord = firstLetter + remainingLetters;
-    return capitalizedWord;
+  String capitalizeWords(String input) {
+    List<String> words = input.split(' ');
+
+    List<String> capitalizedWords = words.map((word) {
+      if (word.isEmpty) {
+        return word;
+      }
+      return word.substring(0, 1).toUpperCase() +
+          word.substring(1).toLowerCase();
+    }).toList();
+
+    return capitalizedWords.join(' ');
   }
 
   @override
@@ -155,10 +164,12 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
           );
         } else {
           final presentIllnessList = snapshot.data!;
+
           for (int i = presentIllnessList.length - 1; i >= 0; i--) {
             final originalIndex = presentIllnessList.length - i;
             diagnosisIndexMap[presentIllnessList[i]] = originalIndex;
           }
+
           filteredIllnessList = presentIllnessList.where((illness) {
             return illness.illnessName!
                 .toLowerCase()
@@ -181,11 +192,14 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
           return ListView.builder(
             shrinkWrap: true,
             physics: BouncingScrollPhysics(),
-            itemCount: filteredIllnessList.length,
-            itemBuilder: (context, index) {
-              final illness = filteredIllnessList[index];
+            itemCount: widget.isReversed
+                ? filteredIllnessList.reversed.length
+                : filteredIllnessList.length,
+            itemBuilder: (context, index) { 
+              final illness = widget.isReversed
+                  ? filteredIllnessList.reversed.toList()[index]
+                  : filteredIllnessList[index];
               final originalIndex = diagnosisIndexMap[illness];
-              // final illnessIndex = '${filteredIllnessList.length - index}';
 
               final illnessIndex = '${originalIndex}';
               return FutureBuilder<Account?>(
@@ -205,6 +219,8 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
 
                     String middleInitial = account.middleName![0];
                     String createdAt = dateFormatter(illness);
+                    String fullName =
+                        '${capitalizeWords(account.firstName.toString())} ${capitalizeWords(middleInitial)}. ${capitalizeWords(account.lastName.toString())}';
 
                     return Visibility(
                       visible: illness.isDeleted == true ? false : true,
@@ -258,8 +274,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                         children: [
                                           Expanded(
                                             child: Text(
-                                              '${account.firstName} ${middleInitial}. ${account.lastName}',
-                                              // ${account.suffixTitle}
+                                              '${fullName}',
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
                                                   color: Pallete.greyColor,
@@ -269,14 +284,14 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                         ],
                                       )
                                     : Text(
-                                        '${account.firstName} ${middleInitial}. ${account.lastName}',
+                                        '${fullName}',
                                         // , ${account.suffixTitle}
 
                                         style:
                                             TextStyle(color: Pallete.greyColor),
                                       ),
                                 Text(
-                                  'University ${firstLetterUpper(account.accountRole.toString())}',
+                                  'University ${capitalizeWords(account.accountRole.toString())}',
                                   style: TextStyle(
                                     color: Pallete.greyColor,
                                   ),
@@ -424,6 +439,9 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
     String middleInitial = account.middleName![0];
     String createdAt = dateFormatter(illness);
 
+    String fullName =
+        '${capitalizeWords(account.firstName.toString())} ${capitalizeWords(middleInitial)}. ${capitalizeWords(account.lastName.toString())}';
+
     final prescriptionProvider =
         Provider.of<PrescriptionProvider>(context, listen: false);
 
@@ -501,7 +519,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                         children: [
                                           Expanded(
                                             child: Text(
-                                              '${account.firstName} ${middleInitial}. ${account.lastName}',
+                                              '${fullName}',
                                               //  ${account.suffixTitle}
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
@@ -512,13 +530,13 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                         ],
                                       )
                                     : Text(
-                                        '${account.firstName} ${middleInitial}. ${account.lastName}',
+                                        '${fullName}',
                                         // ${account.suffixTitle}
                                         style:
                                             TextStyle(color: Pallete.greyColor),
                                       ),
                                 Text(
-                                  'University ${firstLetterUpper(account.accountRole.toString())}',
+                                  'University ${capitalizeWords(account.accountRole.toString())}',
                                   style: TextStyle(color: Pallete.greyColor),
                                 ),
                                 SizedBox(height: Sizing.formSpacing * 2),
