@@ -195,7 +195,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
             itemCount: widget.isReversed
                 ? filteredIllnessList.reversed.length
                 : filteredIllnessList.length,
-            itemBuilder: (context, index) { 
+            itemBuilder: (context, index) {
               final illness = widget.isReversed
                   ? filteredIllnessList.reversed.toList()[index]
                   : filteredIllnessList[index];
@@ -580,12 +580,11 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                                           // prescription.illnessID ==
                                           //   illness.illnessID
                                           if (prescription.illnessID ==
-                                              illness.illnessID) {
+                                                  illness.illnessID &&
+                                              prescription
+                                                  .medicines!.isNotEmpty) {
                                             return ListTile(
-                                              tileColor: prescription
-                                                      .medicines!.isEmpty
-                                                  ? Colors.transparent
-                                                  : Pallete.lightGreyColor,
+                                              tileColor: Pallete.lightGreyColor,
                                               subtitle: Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
