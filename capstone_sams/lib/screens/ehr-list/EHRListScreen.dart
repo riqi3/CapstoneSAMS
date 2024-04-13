@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 import 'package:capstone_sams/constants/Dimensions.dart';
 import 'package:capstone_sams/constants/Strings.dart';
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
@@ -137,14 +138,14 @@ class _EhrListScreenState extends State<EhrListScreen> {
       //     FontAwesomeIcons.pencil,
       //   ),
       // ),
-      bottomNavigationBar: Padding(
+      bottomNavigationBar: Container(
         padding: EdgeInsets.symmetric(vertical: Sizing.spacing),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             ChevronPrev(),
             Text(
-              '${currentPageIndex + 1} out of ${pageRounded}',
+              '${currentPageIndex + 1} out of ${pageRounded == 0 ? 1 : pageRounded}',
             ),
             ChevronNext(),
           ],
