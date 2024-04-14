@@ -98,7 +98,7 @@ class CommentView(viewsets.ModelViewSet):
 class MedicineView(viewsets.ModelViewSet):
     
     @api_view(['GET'])
-    # @permission_classes([IsAuthenticated])
+    @permission_classes([IsAuthenticated])
     def fetch_medicine(request):
         try:
             queryset = Medicine.objects.all()
@@ -108,6 +108,7 @@ class MedicineView(viewsets.ModelViewSet):
             return Response({"message": "Failed to fetch medicines.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
     @api_view(['GET'])
+    @permission_classes([IsAuthenticated])
     def fetch_medicine_by_id(request, drugID):
         try:
             queryset = Medicine.objects.filter(pk=drugID)
@@ -117,6 +118,7 @@ class MedicineView(viewsets.ModelViewSet):
             return Response({"message": "Failed to fetch medicine.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
     @api_view(['GET'])
+    @permission_classes([IsAuthenticated])
     def fetch_medicine_through_prescription(request, presID):
         try:
             prescription = Prescription.objects.get(pk=presID)
@@ -130,7 +132,7 @@ class MedicineView(viewsets.ModelViewSet):
 
 class PrescriptionView(viewsets.ViewSet):
     @api_view(['POST'])
-    # @permission_classes([IsAuthenticated])
+    @permission_classes([IsAuthenticated])
     def save_prescription(request):
         try:
             prescription_data = json.loads(request.body)
@@ -161,7 +163,7 @@ class PrescriptionView(viewsets.ViewSet):
             return Response({"message": "Failed to save prescription", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
     @api_view(['PUT'])
-    # @permission_classes([IsAuthenticated])
+    @permission_classes([IsAuthenticated])
     def update_prescription_amount(request, presID):
         try:
             prescription_data = json.loads(request.body)
@@ -189,6 +191,7 @@ class PrescriptionView(viewsets.ViewSet):
 
    
     @api_view(['GET'])
+    @permission_classes([IsAuthenticated])
     def fetch_prescription_by_id(request, presID):
         try:
             presriptID = Prescription.objects.get(pk=presID) 
@@ -198,6 +201,7 @@ class PrescriptionView(viewsets.ViewSet):
             return Response({"message": "Prescription does not exist."}, status=status.HTTP_404_NOT_FOUND)
         
     @api_view(['GET'])
+    @permission_classes([IsAuthenticated])
     def fetch_prescription_by_illness_id(request, illnessID):
         try:
             illness = Present_Illness.objects.get(pk=illnessID)
@@ -209,6 +213,7 @@ class PrescriptionView(viewsets.ViewSet):
     
     
     @api_view(['PUT'])
+    @permission_classes([IsAuthenticated])
     def update_prescription(request, presID, accountID, patientID, illnessID):
         try:
         # Retrieve necessary objects from IDs
@@ -281,7 +286,7 @@ class PrescriptionView(viewsets.ViewSet):
 
 
     @api_view(['POST'])
-    # @permission_classes([IsAuthenticated])
+    @permission_classes([IsAuthenticated])
     def delete_prescription(request, presID):
         try:
             prescription = Prescription.objects.get(presID = presID)
@@ -298,7 +303,7 @@ class PrescriptionView(viewsets.ViewSet):
              return Response({"message": "Failed to delete prescription", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     @api_view(['POST'])
-    # @permission_classes([IsAuthenticated])
+    @permission_classes([IsAuthenticated])
     def delete_medicine(request, presID, drugId):
         try:
             prescription = Prescription.objects.get(presID = presID)
@@ -321,7 +326,7 @@ class PrescriptionView(viewsets.ViewSet):
             return Response({"message": "Failed to delete medicine", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     @api_view(['GET'])
-    # @permission_classes([IsAuthenticated])
+    @permission_classes([IsAuthenticated])
     def fetch_prescription_by_patientIds(request, patientID):
         try: 
             patient = Patient.objects.get(pk=patientID)    

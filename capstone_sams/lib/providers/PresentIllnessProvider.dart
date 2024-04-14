@@ -84,7 +84,7 @@ class PresentIllnessProvider extends ChangeNotifier {
       String? patientID, int? accountID) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
-      // 'Authorization': 'Bearer $token',
+      'Authorization': 'Bearer $token',
     };
 
     try {

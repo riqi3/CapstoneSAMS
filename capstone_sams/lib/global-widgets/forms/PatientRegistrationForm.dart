@@ -45,6 +45,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
   final _genInfo = Patient();
   final _contactInfoFormKey = GlobalKey<FormState>();
   final _contactInfo = ContactPerson();
+  late String token;
 
   var incompleteInputs = dangerSnackbar('${Strings.incompleteInputs}');
   var successfulRegisterPatient =
@@ -210,7 +211,6 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
           Provider.of<MedicalRecordProvider>(context, listen: false);
       final contactRecordProvider =
           Provider.of<ContactPersonProvider>(context, listen: false);
-      final token = context.read<AccountProvider>().token!;
       final role = context.read<AccountProvider>().role!;
       final id = context.read<AccountProvider>().id!;
 
@@ -402,6 +402,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
   @override
   void initState() {
     super.initState();
+    token = context.read<AccountProvider>().token!;
   }
 
   @override

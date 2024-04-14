@@ -46,7 +46,7 @@ class ContactPersonProvider extends ChangeNotifier {
       ContactPerson contactPerson, String? patientID, String token) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
-      // 'Authorization': 'Bearer $token',
+      'Authorization': 'Bearer $token',
     };
     try {
       final response = await http.post(

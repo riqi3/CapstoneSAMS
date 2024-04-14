@@ -62,17 +62,20 @@ class LogInView(viewsets.ModelViewSet):
         user = authenticate(username=username, password=password)
 
         if user is not None:
-            user.generate_token()
+            if user.is_active:
+                user.generate_token()
 
-            data_log = Data_Log.objects.create(
-                event = f"User logged in: {user.username}",
-                type = "User Login",
-                account = user
-            )
-            
-            serializer = AccountSerializer(user)
+                data_log = Data_Log.objects.create(
+                    event = f"User logged in: {user.username}",
+                    type = "User Login",
+                    account = user
+                )
+                
+                serializer = AccountSerializer(user)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response({'error': 'Account is inactive'}, status=400)
 
-            return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid credentials'}, status=400)
         
@@ -107,6 +110,7 @@ class AccountsView(viewsets.ModelViewSet):
 
 class AccountView(viewsets.ModelViewSet):
     @api_view(['GET'])
+    @permission_classes([IsAuthenticated])
     def fetch_user_by_id(request, accountID):
         try:
             account = Account.objects.get(pk = accountID)
@@ -271,7 +275,7 @@ class PersonalNotesView(viewsets.ModelViewSet):
     Certain to exception handlers were coded to ensure continued operations.
     '''
     @api_view(['POST'])
-    # @permission_classes([IsAuthenticated])
+    @permission_classes([IsAuthenticated])
     def delete_personal_note(request, noteNum):
         try:
             note = Personal_Note.objects.get(pk = noteNum)
