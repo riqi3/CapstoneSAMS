@@ -1,5 +1,7 @@
 import 'package:capstone_sams/constants/theme/pallete.dart';
+import 'package:capstone_sams/global-widgets/forms/FormTemplate.dart';
 import 'package:capstone_sams/global-widgets/forms/widgets/changevaluedialog.dart';
+import 'package:capstone_sams/global-widgets/texts/FormTitleWidget.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/providers/healthcheckprovider.dart';
 import 'package:flutter/material.dart';
@@ -29,116 +31,91 @@ class HealthCheckScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final accountProvider = Provider.of<AccountProvider>(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Evaluation Disease Predictor'),
-        backgroundColor: Pallete.mainColor,
-      ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            children: [
-              SizedBox(height: 16),
-              Container(
-                width: 450,
-                padding: EdgeInsets.all(16),
-                margin: EdgeInsets.symmetric(horizontal: 16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 3,
-                      blurRadius: 7,
-                      offset: Offset(0, 3),
+    return FormTemplate(
+      onpressed: () => Navigator.pop(context),
+      column: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          FormTitleWidget(title: 'Evaluation Disease Predictor'),
+          SizedBox(height: 16),
+          Consumer<HealthCheckProvider>(
+            builder: (context, provider, _) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  buildQuestion(
+                      'Does the patient have fever?',
+                      buildDropdown(['Yes', 'No'], provider.feverOption,
+                          (value) => provider.setFeverOption(value))),
+                  buildQuestion(
+                      'Does the patient have cough?',
+                      buildDropdown(['Yes', 'No'], provider.coughOption,
+                          (value) => provider.setCoughOption(value))),
+                  buildQuestion(
+                      'Does the patient have fatigue?',
+                      buildDropdown(['Yes', 'No'], provider.fatigueOption,
+                          (value) => provider.setFatigueOption(value))),
+                  buildQuestion(
+                      'Is the patient experiencing difficulty in breathing?',
+                      buildDropdown(
+                          ['Yes', 'No'],
+                          provider.difficultyBreathingOption,
+                          (value) =>
+                              provider.setDifficultyBreathingOption(value))),
+                  buildQuestion(
+                      'What is the gender of the patient?',
+                      buildDropdown(['Male', 'Female'], provider.genderOption,
+                          (value) => provider.setGenderOption(value))),
+                  buildQuestion(
+                      'What is the age of the patient?',
+                      buildDropdownAge(
+                          provider.age, (value) => provider.setAge(value))),
+                  buildQuestion(
+                      'What is the blood pressure of the patient?',
+                      buildDropdown(
+                          ['Low', 'Normal', 'High'],
+                          provider.bloodPressureOption,
+                          (value) => provider.setBloodPressureOption(value))),
+                  buildQuestion(
+                      'What is the cholesterol level of the patient?',
+                      buildDropdown(
+                          ['Low', 'Normal', 'High'],
+                          provider.cholesterolLevelOption,
+                          (value) =>
+                              provider.setCholesterolLevelOption(value))),
+                  SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () async {
+                      String? token = accountProvider.token;
+                      if (token != null) {
+                        int age = patient.age ?? 0;
+                        String gender = patient.gender ?? '';
+                        await provider.sendDataToBackend(
+                          token,
+                          age,
+                          gender,
+                        );
+                        _showResultPopup(context, provider);
+                      } else {
+                        print('Token is null');
+                      }
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Text(
+                        'Submit',
+                        style: TextStyle(fontSize: 16),
+                      ),
                     ),
-                  ],
-                ),
-                child: Consumer<HealthCheckProvider>(
-                  builder: (context, provider, _) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        buildQuestion(
-                            'Does the patient have fever?',
-                            buildDropdown(['Yes', 'No'], provider.feverOption,
-                                (value) => provider.setFeverOption(value))),
-                        buildQuestion(
-                            'Does the patient have cough?',
-                            buildDropdown(['Yes', 'No'], provider.coughOption,
-                                (value) => provider.setCoughOption(value))),
-                        buildQuestion(
-                            'Does the patient have fatigue?',
-                            buildDropdown(['Yes', 'No'], provider.fatigueOption,
-                                (value) => provider.setFatigueOption(value))),
-                        buildQuestion(
-                            'Is the patient experiencing difficulty in breathing?',
-                            buildDropdown(
-                                ['Yes', 'No'],
-                                provider.difficultyBreathingOption,
-                                (value) => provider
-                                    .setDifficultyBreathingOption(value))),
-                        buildQuestion(
-                            'What is the gender of the patient?',
-                            buildDropdown(
-                                ['Male', 'Female'],
-                                provider.genderOption,
-                                (value) => provider.setGenderOption(value))),
-                        buildQuestion(
-                            'What is the age of the patient?',
-                            buildDropdownAge(provider.age,
-                                (value) => provider.setAge(value))),
-                        buildQuestion(
-                            'What is the blood pressure of the patient?',
-                            buildDropdown(
-                                ['Low', 'Normal', 'High'],
-                                provider.bloodPressureOption,
-                                (value) =>
-                                    provider.setBloodPressureOption(value))),
-                        buildQuestion(
-                            'What is the cholesterol level of the patient?',
-                            buildDropdown(
-                                ['Low', 'Normal', 'High'],
-                                provider.cholesterolLevelOption,
-                                (value) =>
-                                    provider.setCholesterolLevelOption(value))),
-                        SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: () async {
-                            String? token = accountProvider.token;
-                            if (token != null) {
-                              int age = patient.age ?? 0;
-                              String gender = patient.gender ?? '';
-                              await provider.sendDataToBackend(
-                                token,
-                                age,
-                                gender,
-                              );
-                              _showResultPopup(context, provider);
-                            } else {
-                              print('Token is null');
-                            }
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(vertical: 12),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Text(
-                              'Submit',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ),
-            ],
+                  ),
+                ],
+              );
+            },
           ),
-        ),
+        ],
       ),
     );
   }
