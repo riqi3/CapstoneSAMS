@@ -69,7 +69,6 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
       return;
     } else {
       final accountID = context.read<AccountProvider>().id;
-      final token = context.read<AccountProvider>().token!;
       final patientID = widget.patient.patientID;
       final presentIllnessProvider =
           Provider.of<PresentIllnessProvider>(context, listen: false);
@@ -94,8 +93,8 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
 
       print('PRESCRIPTION ID ${prescriptID}');
 
-      final recipeSuccess = await medicineProvider.updatePrescription(
-          accountID, patientID, widget.presentIllness.illnessID, prescriptID);
+      final recipeSuccess = await medicineProvider.updatePrescription(accountID,
+          patientID, widget.presentIllness.illnessID, prescriptID, token);
 
       final presentIllnessSuccess =
           await presentIllnessProvider.updateComplaint(
