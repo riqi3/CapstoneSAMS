@@ -110,6 +110,7 @@ class AccountsView(viewsets.ModelViewSet):
 
 class AccountView(viewsets.ModelViewSet):
     @api_view(['GET'])
+    @permission_classes([IsAuthenticated])
     def fetch_user_by_id(request, accountID):
         try:
             account = Account.objects.get(pk = accountID)
@@ -274,7 +275,7 @@ class PersonalNotesView(viewsets.ModelViewSet):
     Certain to exception handlers were coded to ensure continued operations.
     '''
     @api_view(['POST'])
-    # @permission_classes([IsAuthenticated])
+    @permission_classes([IsAuthenticated])
     def delete_personal_note(request, noteNum):
         try:
             note = Personal_Note.objects.get(pk = noteNum)
