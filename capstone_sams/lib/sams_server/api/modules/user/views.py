@@ -62,17 +62,20 @@ class LogInView(viewsets.ModelViewSet):
         user = authenticate(username=username, password=password)
 
         if user is not None:
-            user.generate_token()
+            if user.is_active:
+                user.generate_token()
 
-            data_log = Data_Log.objects.create(
-                event = f"User logged in: {user.username}",
-                type = "User Login",
-                account = user
-            )
-            
-            serializer = AccountSerializer(user)
+                data_log = Data_Log.objects.create(
+                    event = f"User logged in: {user.username}",
+                    type = "User Login",
+                    account = user
+                )
+                
+                serializer = AccountSerializer(user)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response({'error': 'Account is inactive'}, status=400)
 
-            return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid credentials'}, status=400)
         
