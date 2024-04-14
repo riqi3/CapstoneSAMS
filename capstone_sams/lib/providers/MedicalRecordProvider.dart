@@ -53,7 +53,7 @@ class MedicalRecordProvider with ChangeNotifier {
       String? patientID, MedicalRecord medicalRecord, String token) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
-      // 'Authorization': 'Bearer $token',
+      'Authorization': 'Bearer $token',
     };
 
     print(patientID);

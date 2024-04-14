@@ -26,6 +26,7 @@ class PatientView(viewsets.ModelViewSet):
     Certain to exception handlers were coded to ensure continued operations.
     '''
     @api_view(['POST'])
+    @permission_classes([IsAuthenticated])
     def create_patient(request):
         try:
             patient_data = json.loads(request.body) 
@@ -66,7 +67,7 @@ class PatientView(viewsets.ModelViewSet):
     Certain to exception handlers were coded to ensure continued operations.
     '''
     @api_view(['GET'])
-    # @permission_classes([IsAuthenticated])
+    @permission_classes([IsAuthenticated])
     def fetch_patients(request):
         try:
             queryset = Patient.objects.all()
@@ -80,7 +81,7 @@ class PatientView(viewsets.ModelViewSet):
     Certain to exception handlers were coded to ensure continued operations.
     '''
     @api_view(['GET'])
-    # @permission_classes([IsAuthenticated])
+    @permission_classes([IsAuthenticated])
     def fetch_patient_by_id(request, patientID):
         try:
             queryset = Patient.objects.filter(pk=patientID)
@@ -108,6 +109,7 @@ class PatientView(viewsets.ModelViewSet):
     Certain to exception handlers were coded to ensure continued operations.
     '''
     @api_view(['PUT'])
+    @permission_classes([IsAuthenticated])
     def update_patient(request):
         try:
             patient_data = json.loads(request.body)
@@ -145,7 +147,7 @@ class PatientView(viewsets.ModelViewSet):
             return Response({"message": "Failed to update patient.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST) 
     
     @api_view(['POST'])
-    # @permission_classes([IsAuthenticated])
+    @permission_classes([IsAuthenticated])
     def delete_patient(request, patientID):
         try:
             patient = Patient.objects.get(pk=patientID)
@@ -173,6 +175,7 @@ class MedicalRecordView(viewsets.ViewSet):
     Certain to exception handlers were coded to ensure continued operations.
     '''
     @api_view(['GET'])
+    @permission_classes([IsAuthenticated])
     def fetch_record_by_id(request, patientID):
         try:
             patient = Patient.objects.get(pk=patientID)
@@ -183,6 +186,7 @@ class MedicalRecordView(viewsets.ViewSet):
             return Response({"message": "Health Record does not exist."}, status=status.HTTP_404_NOT_FOUND)
     
     @api_view(['GET'])
+    @permission_classes([IsAuthenticated])
     def fetch_contact_by_id(request, patientID):
         try:
             patient = Patient.objects.get(pk=patientID)
@@ -194,6 +198,7 @@ class MedicalRecordView(viewsets.ViewSet):
    
 
     @api_view(['POST'])
+    @permission_classes([IsAuthenticated])
     def create_health_record(request):
         try:
             record_data = json.loads(request.body)
@@ -212,6 +217,7 @@ class MedicalRecordView(viewsets.ViewSet):
             return Response({"message": "Failed to create health record.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
     @api_view(['PUT'])
+    @permission_classes([IsAuthenticated])
     def update_health_record(request, patientID):
         try:
             patient = Patient.objects.get(pk=patientID)
@@ -233,6 +239,7 @@ class MedicalRecordView(viewsets.ViewSet):
 
 class ContactPersonView(viewsets.ViewSet):
     @api_view(['POST'])
+    @permission_classes([IsAuthenticated])
     def create_contact_person(request):
         try:
             contact_data = json.loads(request.body)
@@ -248,6 +255,7 @@ class ContactPersonView(viewsets.ViewSet):
         except Exception as e:
             return Response({"message": "Failed to create contact record.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST) 
     @api_view(['PUT'])
+    @permission_classes([IsAuthenticated])
     def update_contact_person(request, patientID):
         try:
             patient = Patient.objects.get(pk=patientID)
@@ -265,6 +273,7 @@ class ContactPersonView(viewsets.ViewSet):
         
 class PresentIllnessView(viewsets.ViewSet):
     @api_view(['GET'])
+    @permission_classes([IsAuthenticated])
     def fetch_complaints(request):
         try:
             queryset = Present_Illness.objects.all()
@@ -274,6 +283,7 @@ class PresentIllnessView(viewsets.ViewSet):
             return Response({"message": "Failed to fetch complaints.", "error": str(e)}, status=status.HTTP_404_NOT_FOUND)
 
     @api_view(['GET'])
+    @permission_classes([IsAuthenticated])
     def fetch_allcomplaint_by_patientid(request, patientID):
         try:
             patient = Patient.objects.get(pk=patientID)
@@ -284,6 +294,7 @@ class PresentIllnessView(viewsets.ViewSet):
             return Response({"message": "Complaints does not exist."}, status=status.HTTP_404_NOT_FOUND)
     
     @api_view(['GET'])
+    @permission_classes([IsAuthenticated])
     def fetch_complaint_by_id(request, illnessID):
         try:
             complaintID = Present_Illness.objects.get(pk=illnessID)
@@ -295,6 +306,7 @@ class PresentIllnessView(viewsets.ViewSet):
     
 
     @api_view(['POST'])
+    @permission_classes([IsAuthenticated])
     def create_complaint(request, patientID, accountID ):
         try:
             patient = Patient.objects.get(pk=patientID)
@@ -323,6 +335,7 @@ class PresentIllnessView(viewsets.ViewSet):
             return Response({"message": "Failed to create complaint.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
     @api_view(['PUT'])
+    @permission_classes([IsAuthenticated])
     def update_complaint(request, illnessID, accountID):
         try:
             present_illness = Present_Illness.objects.get(pk = illnessID)
@@ -368,7 +381,7 @@ class PresentIllnessView(viewsets.ViewSet):
     #         return Response({"message": "Failed to delete complaint.", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     @api_view(['POST'])
-    # @permission_classes([IsAuthenticated])
+    @permission_classes([IsAuthenticated])
     def delete_complaint(request):
         try:
             data = json.loads(request.body)

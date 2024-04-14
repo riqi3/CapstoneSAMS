@@ -65,7 +65,7 @@ class PatientProvider extends ChangeNotifier {
       int? accountID, String role, int id) async {
     final header = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
-      // 'Authorization': 'Bearer $token',
+      'Authorization': 'Bearer $token',
     };
     try {
       var body = patient.toJson();
