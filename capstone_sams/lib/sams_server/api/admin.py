@@ -602,7 +602,7 @@ This represent the table that will be shown to the admin looking at the currentl
 class PresentIllnessAdmin(admin.ModelAdmin):
     list_display = (
         # "illnessID", 
-                    "patient", "illnessName","diagnosis","complaint","findings", "created_at", "updated_at", "created_by",)
+                    "patient", "complaint","findings","illnessName","diagnosis", "treatment","created_at", "updated_at", "created_by",)
     search_fields = ("illnessName", "patient__firstName", "patient__middleInitial", "patient__lastName")
     list_filter = ("created_at", "updated_at", "created_by",)
     def has_add_permission(self, request):
