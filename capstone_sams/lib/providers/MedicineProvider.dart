@@ -120,9 +120,11 @@ class MedicineProvider with ChangeNotifier {
     String? patientId,
     String? illnessId,
     String? presId,
+    String token
   ) async {
     final headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token',
     };
     final medicinesJson =
         _medicines.map((medicine) => medicine.toJson()).toList();
