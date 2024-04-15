@@ -191,6 +191,7 @@ class HealthCheckScreen extends StatelessWidget {
                 children: [
                   ElevatedButton(
                     onPressed: () {
+                      ApiService.updateOutcome();
                       String selectedDisease =
                           provider.top3Predictions.first['disease'];
                       onDiseaseSelected?.call(selectedDisease);
@@ -236,7 +237,6 @@ class HealthCheckScreen extends StatelessWidget {
                     onPressed: () {
                       // Navigator.of(context).pop();
                       ApiService.deleteLatestRecord();
-                      Navigator.pop(context);
                       String selectedDisease =
                           provider.top3Predictions.first['disease'];
                       onDiseaseSelected?.call(selectedDisease);

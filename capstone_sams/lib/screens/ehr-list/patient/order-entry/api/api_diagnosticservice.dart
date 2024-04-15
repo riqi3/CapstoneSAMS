@@ -86,4 +86,34 @@ class ApiService {
       return false;
     }
   }
+
+  static Future<bool> updateOutcome() async {
+    try {
+      final latestRecordId = await getLatestRecordId();
+      if (latestRecordId == null) {
+        print('No latest record ID found.');
+        return false;
+      }
+
+      final url = '$apiUrl/update_outcome/$latestRecordId/';
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({'new_outcome': 'Positive'}),
+      );
+
+      if (response.statusCode == 200) {
+        print('Outcome updated successfully.');
+        return true;
+      } else {
+        print('Failed to update outcome.');
+        return false;
+      }
+    } catch (e) {
+      print('Error: $e');
+      return false;
+    }
+  }
 }
