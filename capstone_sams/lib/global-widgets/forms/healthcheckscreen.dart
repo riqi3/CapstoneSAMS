@@ -64,14 +64,6 @@ class HealthCheckScreen extends StatelessWidget {
                           (value) =>
                               provider.setDifficultyBreathingOption(value))),
                   buildQuestion(
-                      'What is the gender of the patient?',
-                      buildDropdown(['Male', 'Female'], provider.genderOption,
-                          (value) => provider.setGenderOption(value))),
-                  buildQuestion(
-                      'What is the age of the patient?',
-                      buildDropdownAge(
-                          provider.age, (value) => provider.setAge(value))),
-                  buildQuestion(
                       'What is the blood pressure of the patient?',
                       buildDropdown(
                           ['Low', 'Normal', 'High'],

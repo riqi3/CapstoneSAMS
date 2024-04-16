@@ -431,10 +431,10 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
                               create: (context) => HealthCheckProvider(),
                               child: HealthCheckScreen(
                                 patient: widget.patient,
-                                initialComplaint: _presIllnessInfo.complaint,
-                                initialFindings: _presIllnessInfo.findings,
-                                initialDiagnosis: _presIllnessInfo.diagnosis,
-                                initialTreatment: _presIllnessInfo.treatment,
+                                initialComplaint: _complaintController.text,
+                                initialFindings: _findingsController.text,
+                                initialDiagnosis: _diagnosisController.text,
+                                initialTreatment: _treatmentController.text,
                               ),
                             );
                           },
@@ -451,10 +451,10 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
                           builder: (context) {
                             return CpoeAnalyzeScreen(
                               patient: widget.patient,
-                              initialComplaint: _presIllnessInfo.complaint,
-                              initialFindings: _presIllnessInfo.findings,
-                              initialDiagnosis: _presIllnessInfo.diagnosis,
-                              initialTreatment: _presIllnessInfo.treatment,
+                              initialComplaint: _complaintController.text,
+                              initialFindings: _findingsController.text,
+                              initialDiagnosis: _diagnosisController.text,
+                              initialTreatment: _treatmentController.text,
                             );
                           },
                         ),

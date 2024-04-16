@@ -58,7 +58,8 @@ class PrognosisUpdateDialog extends StatelessWidget {
                       await ApiService.updatePrognosis(context, newPrognosis);
 
                   if (isSuccess) {
-                    Navigator.push(
+                    int routesCount = 0;
+                    Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
                         builder: (context) => PresentIllnessForm(
@@ -70,6 +71,13 @@ class PrognosisUpdateDialog extends StatelessWidget {
                           initialTreatment: initialTreatment,
                         ),
                       ),
+                      (Route<dynamic> route) {
+                        if (routesCount < 3) {
+                          routesCount++;
+                          return false;
+                        }
+                        return true;
+                      },
                     );
                   } else {
                     print('Failed to update diagnosis.');
