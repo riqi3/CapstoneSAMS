@@ -158,7 +158,7 @@ class _PatientCardState extends State<PatientCard> {
                   Row(
                     children: [
                       TitleValueText(
-                        title: 'Department: ',
+                        title: 'Dept: ',
                         value: '${widget.patient.department}',
                       ),
                       SizedBox(width: Sizing.sectionSymmPadding),
