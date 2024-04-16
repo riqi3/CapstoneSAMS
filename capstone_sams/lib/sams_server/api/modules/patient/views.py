@@ -313,19 +313,34 @@ class PresentIllnessView(viewsets.ViewSet):
             # accountID = account.accountID
             account = Account.objects.get(pk=accountID) 
             illness_data = json.loads(request.body)
-            illness = Present_Illness.objects.create(
-                illnessID = illness_data['illnessID'],
-                illnessName = illness_data['illnessName'],
-                complaint = illness_data['complaint'],
-                findings = illness_data['findings'],
-                diagnosis = illness_data['diagnosis'],
-                treatment = illness_data['treatment'],
-                created_at = illness_data['created_at'],
-                updated_at = illness_data['updated_at'],
-                patient = patient,
-                created_by = account, 
-            ) 
-            data_log = Data_Log.objects.create(
+            illness_id = illness_data['illnessID']
+
+            existing_illness = Present_Illness.objects.filter(illnessID=illness_id, patient=patient).first()
+
+            if existing_illness:
+                # Update the existing complaint
+                existing_illness.illnessName = illness_data['illnessName']
+                existing_illness.complaint = illness_data['complaint']
+                existing_illness.findings = illness_data['findings']
+                existing_illness.diagnosis = illness_data['diagnosis']
+                existing_illness.treatment = illness_data['treatment']
+                existing_illness.updated_at = illness_data['updated_at']
+                existing_illness.save()
+                event_message = f"{account.username} updated existing complaint"
+            else:
+                illness = Present_Illness.objects.create(
+                    illnessID = illness_data['illnessID'],
+                    illnessName = illness_data['illnessName'],
+                    complaint = illness_data['complaint'],
+                    findings = illness_data['findings'],
+                    diagnosis = illness_data['diagnosis'],
+                    treatment = illness_data['treatment'],
+                    created_at = illness_data['created_at'],
+                    updated_at = illness_data['updated_at'],
+                    patient = patient,
+                    created_by = account, 
+                ) 
+            data_lsog = Data_Log.objects.create(
                 event=f"{account.username} created new complaint",
                 type="User Created Complaint",
                 account=account

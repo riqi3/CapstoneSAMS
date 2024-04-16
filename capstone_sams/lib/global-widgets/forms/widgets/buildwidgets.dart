@@ -40,26 +40,3 @@ Widget buildDropdown(
     ),
   );
 }
-
-Widget buildDropdownAge(int value, Function(int?) onChanged) {
-  List<String> ageOptions =
-      List.generate(120, (index) => (index + 1).toString());
-
-  return Container(
-    padding: EdgeInsets.symmetric(horizontal: 12),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(color: Colors.grey),
-    ),
-    child: DropdownButton<int>(
-      value: value,
-      items: ageOptions.map((age) {
-        return DropdownMenuItem<int>(
-          value: int.parse(age),
-          child: Text(age),
-        );
-      }).toList(),
-      onChanged: onChanged,
-    ),
-  );
-}
