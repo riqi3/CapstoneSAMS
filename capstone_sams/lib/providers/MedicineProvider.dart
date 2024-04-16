@@ -115,8 +115,13 @@ class MedicineProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> updatePrescription(int? accountId, String? patientId,
-      String? illnessId, String? presId, String token) async {
+  Future<bool> updatePrescription(
+    int? accountId,
+    String? patientId,
+    String? illnessId,
+    String? presId,
+    String token
+  ) async {
     final headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',

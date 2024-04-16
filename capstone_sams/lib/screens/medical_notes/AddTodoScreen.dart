@@ -21,6 +21,12 @@ class _AddTodoPageState extends State<AddTodoPage> {
   String title = '';
   String description = '';
   bool _isAddingTodo = false;
+  late String token;
+  @override
+  void initState() {
+    super.initState();
+    token = context.read<AccountProvider>().token!;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +86,6 @@ class _AddTodoPageState extends State<AddTodoPage> {
           account: accountID!);
 
       final provider = Provider.of<TodosProvider>(context, listen: false);
-      final token = context.read<AccountProvider>().token!;
       provider.addTodo(todo, accountID, token).then((value) {
         setState(() {
           _isAddingTodo = false;
@@ -105,7 +110,8 @@ class _AddTodoPageState extends State<AddTodoPage> {
               return false;
             }
             return true;
-          },);
+          },
+        );
         const snackBar = SnackBar(
           backgroundColor: Pallete.successColor,
           content: Text(

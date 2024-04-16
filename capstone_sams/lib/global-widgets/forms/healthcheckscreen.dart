@@ -4,6 +4,7 @@ import 'package:capstone_sams/global-widgets/forms/widgets/changevaluedialog.dar
 import 'package:capstone_sams/global-widgets/texts/FormTitleWidget.dart';
 import 'package:capstone_sams/models/PatientModel.dart';
 import 'package:capstone_sams/providers/healthcheckprovider.dart';
+import 'package:capstone_sams/screens/ehr-list/patient/order-entry/api/api_diagnosticservice.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -190,6 +191,7 @@ class HealthCheckScreen extends StatelessWidget {
                 children: [
                   ElevatedButton(
                     onPressed: () {
+                      ApiService.updateOutcome();
                       String selectedDisease =
                           provider.top3Predictions.first['disease'];
                       onDiseaseSelected?.call(selectedDisease);
@@ -234,6 +236,7 @@ class HealthCheckScreen extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       // Navigator.of(context).pop();
+                      ApiService.deleteLatestRecord();
                       String selectedDisease =
                           provider.top3Predictions.first['disease'];
                       onDiseaseSelected?.call(selectedDisease);
