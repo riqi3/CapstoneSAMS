@@ -1,7 +1,7 @@
 // add_medicine_dialog.dart
 
 import 'package:capstone_sams/constants/Strings.dart';
-import 'package:capstone_sams/constants/theme/sizing.dart'; 
+import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/global-widgets/text-fields/Textfields.dart';
 import 'package:capstone_sams/models/MedicineModel.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
@@ -84,6 +84,7 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                         clearButtonProps: ClearButtonProps(isVisible: true),
                         popupProps: PopupProps.modalBottomSheet(
                           showSearchBox: true,
+                          searchFieldProps: TextFieldProps()
                         ),
                         asyncItems: (String filter) async {
                           var response = await Dio().get(
@@ -110,7 +111,7 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                       Flexible(
                         child: FormTextField(
                           onchanged: (value) => _medicine.instructions = value,
-                          labeltext: 'Instructions*',
+                          labeltext: 'Sig*',
                           validator: Strings.requiredField,
                           type: TextInputType.streetAddress,
                           maxlines: 4,
@@ -181,11 +182,11 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                                 Provider.of<MedicineProvider>(context,
                                         listen: false)
                                     .addMedicine(_medicine);
-                                Navigator.pop(context);  
+                                Navigator.pop(context);
                               } else {
                                 setState(() {
                                   _autoValidate =
-                                      true; // Enable auto validation
+                                      true;  
                                 });
                               }
                             },

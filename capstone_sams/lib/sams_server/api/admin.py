@@ -285,18 +285,9 @@ class UserAdmin(BaseUserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm 
     actions = ['delete_model']
-    list_display = ( 
-        # 'accountID',
-        "username",
-        "firstName",
-        "middleName",
-        "lastName",
-        # 'suffixTitle',
-        "accountRole",
-        "is_active",
-        "is_staff",
-        "is_superuser", 
-        
+    list_display = (  
+        "username", "firstName", "middleName", "lastName", "accountRole","is_active",
+        "is_staff", "is_superuser" 
     )
     list_filter = ("accountRole", "is_staff", "is_superuser")
     fieldsets = (
@@ -305,11 +296,7 @@ class UserAdmin(BaseUserAdmin):
             "Personal info",
             {
                 "fields": (
-                    "firstName",
-                    "middleName",
-                    "lastName",
-                    # 'suffixTitle',
-                    "accountRole",
+                    "firstName", "middleName", "lastName", "accountRole",
                 )
             },
         ),
@@ -320,19 +307,9 @@ class UserAdmin(BaseUserAdmin):
             None,
             {
                 "classes": ("wide",),
-                "fields": (
-                    # "accountID",
-                    "username",
-                    "firstName",
-                    "middleName",
-                    "lastName",
-                    "accountRole",
-                    # 'suffixTitle',
-                    # "is_active",
-                    # "is_staff",
-                    # "is_superuser",
-                    "password1",
-                    "password2", 
+                "fields": ( 
+                    "username", "firstName", "middleName", "lastName", "accountRole", 
+                    "password1", "password2", 
                 ),
             },
         ),

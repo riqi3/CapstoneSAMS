@@ -286,8 +286,7 @@ class ProcessPdf(APIView):
     def delete_pdf(request, pdfId):
         try:
             pdf = LabResult.objects.get(pdfId=pdfId)
-            pdf.isDeleted = True
-            # pdf.delete()
+            pdf.isDeleted = True 
             pdf.save()
             return JsonResponse({'success': True})
         except LabResult.DoesNotExist:

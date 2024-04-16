@@ -85,16 +85,16 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
     } else {
       final token = context.read<AccountProvider>().token!;
       final accountID = context.read<AccountProvider>().id;
+      final illnessProvider = context.read<PresentIllnessProvider>();
       final medicineProvider = context.read<MedicineProvider>();
 
-      final illnessProvider = context.read<PresentIllnessProvider>();
-      final s = await illnessProvider.fetchComplaint(token, illnessProvider.id);
+      final complaint =
+          await illnessProvider.fetchComplaint(token, illnessProvider.id);
+          
       var medicines = medicineProvider.medicines;
       final patientID = widget.patient.patientID;
-
-      print('illnes form ${illness_id}');
       final recipeSuccess = await medicineProvider.saveToPrescription(
-          accountID, patientID, token, s.illnessID);
+          accountID, patientID, token, complaint.illnessID);
 
       if (recipeSuccess || medicines.isEmpty) {
         int routesCount = 0;
@@ -283,12 +283,12 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
 
                                           getID =
                                               presentIllnessRecord.illnessID!;
-                                          print('GET THE ID ${getID}');
+
                                           if (_complaintController.text != '' ||
                                               _findingsController.text != '' ||
                                               _diagnosisController.text != '' ||
                                               _treatmentController.text != '') {
-                                            final presentIllnessSuccess = context
+                                            context
                                                 .read<PresentIllnessProvider>()
                                                 .createComplaint(
                                                     presentIllnessRecord,
@@ -301,8 +301,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
                                               details.onStepContinue;
                                             });
                                           } else {
-                                            setState(() => _isLoading = false);
-                                            print('object');
+                                            setState(() => _isLoading = false); 
                                           }
                                         }
                                       },

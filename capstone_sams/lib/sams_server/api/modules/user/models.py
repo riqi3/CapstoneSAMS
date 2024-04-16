@@ -52,8 +52,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     password = models.CharField(max_length=100, blank = False)
     firstName = models.CharField(max_length=100, blank = False) 
     middleName = models.CharField(max_length=100, blank = False)
-    lastName = models.CharField(max_length=100, blank = False)
-    # suffixTitle = models.CharField(max_length=10, blank = False)
+    lastName = models.CharField(max_length=100, blank = False) 
     accountRole = models.CharField(max_length=100, choices=ACCOUNT_ROLE_CHOICES, blank=True)
     token = models.CharField(max_length=255, blank=True, null=True)
     is_active = models.BooleanField(default=True)
@@ -61,8 +60,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     is_superuser = models.BooleanField(default=False)
     isDeleted = models.BooleanField(default = False)
 
-    USERNAME_FIELD = 'username'
-    # REQUIRED_FIELDS = ['accountID','accountRole']
+    USERNAME_FIELD = 'username' 
 
     objects = AccountManager()
  

@@ -111,7 +111,6 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
 
     if (!isValid1 ||
         !isValid2 ||
-        // getAccountID == 0 ||
         _selectedPastDiseases.isEmpty ||
         _selectedFamHistory.isEmpty ||
         _selectedAllergy.isEmpty ||
@@ -139,9 +138,6 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
       updateInvalidState(_selectedIllnesses.isEmpty, (bool value) {
         _isIllnessInvalid = value;
       });
-      // updateInvalidState(getAccountID == 0, (bool value) {
-      //   _isPhysicianInvalid = value;
-      // });
 
       ScaffoldMessenger.of(context).showSnackBar(incompleteInputs);
 
@@ -182,7 +178,6 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
         address: firstAddress.text,
         email: email,
         phone: phone,
-        // assignedPhysician: getAccountID,
       );
 
       var medicalRecord = MedicalRecord(
