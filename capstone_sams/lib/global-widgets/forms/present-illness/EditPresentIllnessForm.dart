@@ -95,7 +95,6 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
 
       final recipeSuccess = await medicineProvider.updatePrescription(accountID,
           patientID, widget.presentIllness.illnessID, prescriptID, token);
-
       final presentIllnessSuccess =
           await presentIllnessProvider.updateComplaint(
               presentIllnessRecord, widget.patient.patientID, accountID, token);

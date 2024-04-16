@@ -186,7 +186,7 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
                               } else {
                                 setState(() {
                                   _autoValidate =
-                                      true; // Enable auto validation
+                                      true;  
                                 });
                               }
                             },
