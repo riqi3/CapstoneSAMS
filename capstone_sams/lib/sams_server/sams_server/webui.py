@@ -20,7 +20,7 @@ JAZZMIN_SETTINGS = {
     "login_logo": "images/sams_horizontal1.png", 
  
     # Hide these models when generating side menu (e.g auth.user)
-    "hide_models": ["api.health_record"],
+    "hide_models": ["api.health_record",],
 
     # Welcome text on the login screen
     "welcome_sign": "Welcome to SAMS Dashboard",
