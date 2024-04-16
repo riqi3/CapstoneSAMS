@@ -381,7 +381,7 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
             Table(
               columnWidths: <int, TableColumnWidth>{
                 0: FixedColumnWidth(Sizing.columnWidth1),
-                1: FixedColumnWidth(Sizing.columnWidth3 + 30),
+                1: FlexColumnWidth(),
               },
               children: [
                 TableRow(

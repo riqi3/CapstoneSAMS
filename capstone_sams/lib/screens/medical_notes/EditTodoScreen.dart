@@ -20,11 +20,13 @@ class _EditTodoPageState extends State<EditTodoPage> {
   late String title;
   late String description;
   bool _isEditingTodo = false;
+  late String token;
   @override
   void initState() {
     super.initState();
     title = widget.todo.title;
     description = widget.todo.content;
+    token = context.read<AccountProvider>().token!;
   }
 
   Future<void> saveTodo() async {
@@ -39,7 +41,6 @@ class _EditTodoPageState extends State<EditTodoPage> {
 
       final accountID = context.read<AccountProvider>().id;
       final provider = Provider.of<TodosProvider>(context, listen: false);
-      final token = context.read<AccountProvider>().token!;
 
       try {
         await provider.updateTodo(
@@ -57,20 +58,21 @@ class _EditTodoPageState extends State<EditTodoPage> {
         if (mounted) {
           // Only update the UI if the widget is still mounted
           // Navigator.of(context).pop();
-        int routesCount = 0;
+          int routesCount = 0;
 
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MedicalNotes(),
-          ),
-          (Route<dynamic> route) {
-            if (routesCount < 3) {
-              routesCount++;
-              return false;
-            }
-            return true;
-          },);
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MedicalNotes(),
+            ),
+            (Route<dynamic> route) {
+              if (routesCount < 3) {
+                routesCount++;
+                return false;
+              }
+              return true;
+            },
+          );
 
           final snackBar = SnackBar(
             backgroundColor: Pallete.successColor,

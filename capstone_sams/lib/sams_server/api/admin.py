@@ -395,6 +395,7 @@ class PatientAdmin(admin.ModelAdmin):
     # form = PatientAdminForm, HealthRecordAdminForm, ContactAdminForm
     inlines = [MedicalRecordInline, ContactInline] 
     list_display = ( 
+        'studNumber',
         "firstName",
         "middleInitial",
         "lastName",
@@ -403,7 +404,6 @@ class PatientAdmin(admin.ModelAdmin):
         "birthDate", 
         'department',
         'yrLevel',
-        'studNumber',
         'address',
         'height',
         'weight', 
@@ -459,6 +459,9 @@ class PatientAdmin(admin.ModelAdmin):
         form = CsvImportPatientForm()
         data = {"form": form}
         return render(request, "admin/csv_upload.html", data)
+    
+    def has_add_permission(self, request):
+        return False
 
 
 class LabResultAdminForm(forms.ModelForm):
@@ -471,7 +474,7 @@ class LabResultAdminForm(forms.ModelForm):
 
 class LabResultAdmin(admin.ModelAdmin):
     form = LabResultAdminForm
-    list_display = ("pdfId", "patient", 'title')
+    list_display = ("patient", "pdfId", 'title')
 
     def get_urls(self):
         urls = super().get_urls()
@@ -490,6 +493,9 @@ class LabResultAdmin(admin.ModelAdmin):
         form = PdfImportLabResultForm()
         data = {"form": form}
         return render(request, "admin/pdf_upload.html", data)
+    
+    def has_add_permission(self, request):
+        return False
 
 '''
 This represent the forms that will be shown to the admin when updating existing data logs.
@@ -602,7 +608,7 @@ This represent the table that will be shown to the admin looking at the currentl
 class PresentIllnessAdmin(admin.ModelAdmin):
     list_display = (
         # "illnessID", 
-                    "patient", "illnessName","diagnosis","complaint","findings", "created_at", "updated_at", "created_by",)
+                    "patient", "complaint","findings","illnessName","diagnosis", "treatment","created_at", "updated_at", "created_by",)
     search_fields = ("illnessName", "patient__firstName", "patient__middleInitial", "patient__lastName")
     list_filter = ("created_at", "updated_at", "created_by",)
     def has_add_permission(self, request):
@@ -611,8 +617,8 @@ class PresentIllnessAdmin(admin.ModelAdmin):
 class PrescriptionAdminForm(forms.ModelForm):
     class Meta:
         model = Prescription
-        fields = "__all__"
-        # fields = ('medicines','account','patient','illness') 
+        # fields = "__all__"
+        fields = ('medicines','account','patient','illness') 
         # widgets = {
         #     'medicines': JSONEditorWidget
         # }
@@ -623,8 +629,8 @@ This represent the table that will be shown to the admin looking at the currentl
 class PrescriptionAdmin(admin.ModelAdmin):
     list_display = (
         # "presID",
-        "formatted_medicines", 
         "patient",
+        "formatted_medicines", 
         "account",
         'illness',
     )
