@@ -832,12 +832,14 @@ class HealthSymptomAdmin(admin.ModelAdmin):
                 return HttpResponseRedirect(request.path_info)
             file_data = csv_file.read().decode("utf-8")
             csv_data = file_data.split("\n")
+            health_symptoms = []
             for x in csv_data[1:]:
                 if not x.strip():
                     continue
                 fields = x.split(",")
                 try:
-                    created = HealthSymptom.objects.update_or_create(
+                    # Create a HealthSymptom object for each line in the CSV
+                    health_symptom = HealthSymptom(
                         itching=fields[0],
                         skin_rash=fields[1],
                         nodal_skin_eruptions=fields[2],
@@ -972,13 +974,16 @@ class HealthSymptomAdmin(admin.ModelAdmin):
                         yellow_crust_ooze=fields[131],
                         prognosis=fields[132]
                     )
+                    health_symptoms.append(health_symptom)
                 except IndexError:
                     continue
+            HealthSymptom.objects.bulk_create(health_symptoms)
             url = reverse("admin:index")
             return HttpResponseRedirect(url)
         form = CsvImportHealthSymptomForm()
         data = {"form": form}
         return render(request, "admin/csv_upload.html", data)
+
     
     def retrain_model(self, request):
         try:
@@ -1044,11 +1049,15 @@ class DiagnosticFieldsAdmin(admin.ModelAdmin):
             file_data = csv_file.read().decode("utf-8")
             csv_data = csv.reader(file_data.splitlines())
             next(csv_data)
+            
+            # List to hold all DiagnosticFields objects to be created
+            diagnostic_fields_list = []
+            
             for row in csv_data:
                 try:
                     disease, fever, cough, fatigue, difficulty_breathing, age, gender, blood_pressure, cholesterol_level, outcome_variable = row
                     age = int(age)
-                    created = DiagnosticFields.objects.update_or_create(
+                    diagnostic_fields = DiagnosticFields(
                         disease=disease, 
                         fever=fever, 
                         cough=cough, 
@@ -1060,11 +1069,17 @@ class DiagnosticFieldsAdmin(admin.ModelAdmin):
                         cholesterol_level=cholesterol_level, 
                         outcome_variable=outcome_variable.strip()
                     )
+                    diagnostic_fields_list.append(diagnostic_fields)
                 except (ValueError, IndexError) as e:
                     print(f"Error: {e}")
                     continue
+            
+            # Use bulk_create to insert all DiagnosticFields objects in a single query
+            DiagnosticFields.objects.bulk_create(diagnostic_fields_list)
+            
             url = reverse("admin:index")
             return HttpResponseRedirect(url)
+        
         form = CsvImportDiagnosticFieldsForm()
         data = {"form": form}
         return render(request, "admin/csv_upload.html", data)

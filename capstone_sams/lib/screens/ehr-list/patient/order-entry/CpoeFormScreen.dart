@@ -101,7 +101,7 @@ class CpoeFormScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               Text(
-                'Confidence score: ${finalConfidence.toStringAsFixed(2)}',
+                'Confidence score: ${finalConfidence.toStringAsFixed(2)}%',
                 style: TextStyle(fontSize: 16),
               ),
               SizedBox(height: 10),
