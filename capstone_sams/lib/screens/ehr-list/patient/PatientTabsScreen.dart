@@ -93,19 +93,19 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
                 ),
               ),
             ),
-            SpeedDialChild(
-              label: 'Navigate',
-              child: FaIcon(FontAwesomeIcons.upDown),
-              onTap: () => _scrollController.offset >
-                      _scrollController.position.minScrollExtent
-                  ? _scrollUp()
-                  : _scrollDown(),
-            ),
+            // SpeedDialChild(
+            //   label: 'Navigate',
+            //   child: FaIcon(FontAwesomeIcons.upDown),
+            //   onTap: () => _scrollController.offset >
+            //           _scrollController.position.minScrollExtent
+            //       ? _scrollUp()
+            //       : _scrollDown(),
+            // ),
             SpeedDialChild(
               label: 'Sort',
               child: _isReversed
-                  ? FaIcon(FontAwesomeIcons.arrowDown19)
-                  : FaIcon(FontAwesomeIcons.arrowUp91),
+                  ? FaIcon(FontAwesomeIcons.arrowUp91)
+                  : FaIcon(FontAwesomeIcons.arrowDown19),
               onTap: () {
                 setState(() {
                   _isReversed = !_isReversed;
