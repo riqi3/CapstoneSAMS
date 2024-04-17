@@ -424,6 +424,9 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
+                      // Provider.of<HealthCheckProvider>(context, listen: false)
+                      //     .resetState();
+
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) {
