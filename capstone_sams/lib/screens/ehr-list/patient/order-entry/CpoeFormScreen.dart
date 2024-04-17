@@ -96,9 +96,12 @@ class CpoeFormScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 15),
-              Text(
-                'Suspected Disease: \n $finalPrediction',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Center(
+                child: Text(
+                  'Suspected Disease: \n $finalPrediction',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
               ),
               Text(
                 'Confidence score: ${finalConfidence.toStringAsFixed(2)}%',
@@ -125,25 +128,6 @@ class CpoeFormScreen extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: ElevatedButton.icon(
-                      onPressed: () => _handleAnalyzeAgain(context),
-                      icon: Icon(Icons.search),
-                      label: Text(
-                        'Analyze Again',
-                        style: TextStyle(
-                          fontSize: 12.5,
-                        ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Pallete.mainColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: ElevatedButton.icon(
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -162,6 +146,25 @@ class CpoeFormScreen extends StatelessWidget {
                       icon: Icon(Icons.check),
                       label: Text(
                         'Use this',
+                        style: TextStyle(
+                          fontSize: 12.5,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Pallete.mainColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () => _handleAnalyzeAgain(context),
+                      icon: Icon(Icons.search),
+                      label: Text(
+                        'Analyze Again',
                         style: TextStyle(
                           fontSize: 12.5,
                         ),
