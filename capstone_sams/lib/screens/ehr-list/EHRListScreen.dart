@@ -4,6 +4,9 @@ import 'package:capstone_sams/constants/Dimensions.dart';
 import 'package:capstone_sams/constants/Strings.dart';
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
 import 'package:capstone_sams/global-widgets/SearchAppBar.dart';
+import 'package:capstone_sams/global-widgets/buttons/IconButton.dart';
+import 'package:capstone_sams/global-widgets/cards/CardTemplate.dart';
+import 'package:capstone_sams/global-widgets/forms/PatientRegistrationForm.dart';
 import 'package:capstone_sams/global-widgets/loading-indicator/PatientCardLoading.dart';
 import 'package:capstone_sams/global-widgets/texts/NoDataTextWidget.dart';
 import 'package:capstone_sams/models/AccountModel.dart';
@@ -23,23 +26,22 @@ class EhrListScreen extends StatefulWidget {
 }
 
 class _EhrListScreenState extends State<EhrListScreen> {
+  late Account? account = context.read<AccountProvider>().acc;
   late Stream<List<Patient>> patients;
   late String role;
   late int id;
   late String token;
+
   ScrollController _controller = ScrollController();
-  int currentPageIndex = 0;
-  int pageRounded = 0;
-  // int? assignedPhysician = 0;
-  double? totalPatients = 0;
-  double pages1 = 0;
-  final double items = 25;
 
   String selectedPatientId = '';
+  int currentPageIndex = 0;
+  int pageRounded = 0;
+  double? totalPatients = 0;
+  double pages1 = 0;
 
+  final double items = 25;
   final start = 0;
-
-  late Account? account = context.read<AccountProvider>().acc;
 
   @override
   void initState() {
@@ -100,14 +102,41 @@ class _EhrListScreenState extends State<EhrListScreen> {
                 },
               );
             } else if (snapshot.data!.isEmpty) {
-              return Center(
-                child: Container(
-                  height: 100,
-                  child: Center(
-                    child: NoDataTextWidget(
-                      text: Strings.noPatientResults,
-                    ),
-                  ),
+              return CardTemplate(
+                column: Column(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(Sizing.sectionSymmPadding),
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 100,
+                            child: Center(
+                              child: NoDataTextWidget(
+                                text: Strings.noPatientResults,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: Sizing.sectionSymmPadding),
+                          IconTextButtons(
+                            onpressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      PatientRegistrationForm(),
+                                ),
+                              );
+                            },
+                            label: 'Add New Patient',
+                            icon: FaIcon(
+                              FontAwesomeIcons.personCirclePlus,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
                 ),
               );
             } else if (snapshot.hasData) {

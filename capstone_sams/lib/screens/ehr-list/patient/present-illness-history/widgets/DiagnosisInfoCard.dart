@@ -1,11 +1,17 @@
+import 'dart:math';
+
 import 'package:capstone_sams/constants/Strings.dart';
 import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/global-widgets/bottomsheet/BottomSheetTitle.dart';
+import 'package:capstone_sams/global-widgets/buttons/IconButton.dart';
+import 'package:capstone_sams/global-widgets/buttons/IllnessesPagination.dart';
 import 'package:capstone_sams/global-widgets/cards/CardSectionInfoWidget.dart';
 import 'package:capstone_sams/global-widgets/cards/CardTemplate.dart';
 import 'package:capstone_sams/global-widgets/cards/CardTitleWidget.dart';
 import 'package:capstone_sams/global-widgets/dialogs/AlertDialogTemplate.dart';
+import 'package:capstone_sams/global-widgets/forms/PatientRegistrationForm.dart';
+import 'package:capstone_sams/global-widgets/forms/present-illness/PresentIllnessForm.dart';
 import 'package:capstone_sams/global-widgets/loading-indicator/DiagnosisCardLoading.dart';
 import 'package:capstone_sams/global-widgets/pop-menu-buttons/pop-menu-item/PopMenuItemTemplate.dart';
 import 'package:capstone_sams/global-widgets/snackbars/Snackbars.dart';
@@ -20,7 +26,9 @@ import 'package:capstone_sams/providers/PrescriptionProvider.dart';
 import 'package:capstone_sams/providers/PresentIllnessProvider.dart';
 import 'package:capstone_sams/global-widgets/forms/present-illness/EditPresentIllnessForm.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/PatientTabsScreen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -45,11 +53,21 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
   late Stream<List<PresentIllness>> presentIllness;
   late Future<List<Prescription>> prescriptions;
   late String token = context.read<AccountProvider>().token!;
-  Account? account = Account(isSuperuser: false);
   var removeComplaint = dangerSnackbar('${Strings.remove} diagnosis.');
+
+  Account? account = Account(isSuperuser: false);
   Map<PresentIllness, int> diagnosisIndexMap = {};
-  String searchQuery = '';
   List<PresentIllness> filteredIllnessList = [];
+
+  String searchQuery = '';
+  int currentPageIndex = 0;
+  int pageRounded = 0;
+  double? totalPatients = 0;
+  double pages1 = 0;
+
+  final double items = 3;
+
+  final start = 0;
 
   String capitalizeWords(String input) {
     List<String> words = input.split(' ');
@@ -87,57 +105,66 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
           Container(
             padding:
                 EdgeInsets.symmetric(horizontal: Sizing.sectionSymmPadding),
-            child: TextField(
-              onChanged: (value) {
-                setState(() {
-                  searchQuery = value.trim();
-                });
-              },
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.all(10),
-                filled: true,
-                fillColor: Pallete.lightGreyColor,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(Sizing.borderRadius * 2),
-                  borderSide: BorderSide.none,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(child: SearchBar()),
+                SizedBox(width: Sizing.spacing),
+                Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ChevronPrev(),
+                      SizedBox(width: Sizing.spacing),
+                      ChevronNext(),
+                    ],
+                  ),
                 ),
-                hintStyle: TextStyle(color: Pallete.greyColor),
-                hintText: '${Strings.search}',
-                prefixIcon: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    FaIcon(
-                      FontAwesomeIcons.magnifyingGlass,
-                      color: Pallete.greyColor,
-                      size: Sizing.iconAppBarSize,
-                    )
-                  ],
-                ),
-                // suffixIcon: searchQuery.isNotEmpty
-                //     ? GestureDetector(
-                //         onTap: () => setState(() {
-                //           searchQuery = '';
-                //         }),
-                //         child: Row(
-                //           mainAxisAlignment: MainAxisAlignment.center,
-                //           mainAxisSize: MainAxisSize.min,
-                //           children: [
-                //             FaIcon(
-                //               FontAwesomeIcons.solidCircleXmark,
-                //               // color: Pallete.greyColor,
-                //               size: Sizing.iconAppBarSize,
-                //             )
-                //           ],
-                //         ),
-                //       )
-                //     : null,
-              ),
+              ],
             ),
           ),
           SizedBox(height: Sizing.sectionSymmPadding),
           CardSectionInfoWidget(widget: PresentIllnessData()),
+          // Container(
+          //   height: 350,
+          //   child: CardSectionInfoWidget(widget: PresentIllnessData()),
+          // ),
+          SizedBox(height: Sizing.sectionSymmPadding / 2),
         ],
+      ),
+    );
+  }
+
+  Container SearchBar() {
+    return Container(
+      child: TextField(
+        onChanged: (value) {
+          setState(() {
+            searchQuery = value.trim();
+          });
+        },
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.all(10),
+          filled: true,
+          fillColor: Pallete.lightGreyColor,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(Sizing.borderRadius * 2),
+            borderSide: BorderSide.none,
+          ),
+          hintStyle: TextStyle(color: Pallete.greyColor),
+          hintText: '${Strings.search}',
+          prefixIcon: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              FaIcon(
+                FontAwesomeIcons.magnifyingGlass,
+                color: Pallete.greyColor,
+                size: Sizing.iconAppBarSize,
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -152,18 +179,55 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
         } else if (snapshot.hasError) {
           return Text('${snapshot.error}');
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(
-            child: Container(
-              height: 100,
-              child: Center(
-                child: NoDataTextWidget(
-                  text: Strings.noRecordedIllnesses,
+          return Column(
+            children: [
+              Container(
+                padding: EdgeInsets.all(Sizing.sectionSymmPadding),
+                child: Column(
+                  children: [
+                    Container(
+                      height: 100,
+                      child: Center(
+                        child: NoDataTextWidget(
+                          text: Strings.noRecordedIllnesses,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: Sizing.sectionSymmPadding),
+                    IconTextButtons(
+                      onpressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PresentIllnessForm(
+                              patient: widget.patient,
+                            ),
+                          ),
+                        );
+                      },
+                      label: 'Diagnose Patient',
+                      icon: FaIcon(
+                        FontAwesomeIcons.stethoscope,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ),
+              )
+            ],
           );
+
+          // Center(
+          //   child: Container(
+          //     height: 100,
+          //     child: Center(
+          //       child: NoDataTextWidget(
+          //         text: Strings.noRecordedIllnesses,
+          //       ),
+          //     ),
+          //   ),
+          // );
         } else {
-          final presentIllnessList = snapshot.data!;
+          var presentIllnessList = snapshot.data!;
 
           for (int i = presentIllnessList.length - 1; i >= 0; i--) {
             final originalIndex = presentIllnessList.length - i;
@@ -175,6 +239,28 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                 .toLowerCase()
                 .contains(searchQuery.toLowerCase());
           }).toList();
+
+          filteredIllnessList.sort((a, b) {
+            if (widget.isReversed) {
+              return DateTime.parse(a.created_at!)
+                  .compareTo(DateTime.parse(b.created_at!));
+            } else {
+              return DateTime.parse(b.created_at!)
+                  .compareTo(DateTime.parse(a.created_at!));
+            }
+          });
+
+          final start = currentPageIndex * items.toInt();
+          final end = min(
+              (currentPageIndex.toInt() * items.toInt()) + items.toInt(),
+              filteredIllnessList.length);
+
+          filteredIllnessList = filteredIllnessList.sublist(start, end);
+          totalPatients = snapshot.data?.length.toDouble();
+          pages1 = (totalPatients! / items);
+
+          if (pages1 > items) pages1++;
+          pageRounded = pages1.ceil();
 
           if (filteredIllnessList.isEmpty) {
             return Center(
@@ -191,17 +277,20 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
 
           return ListView.builder(
             shrinkWrap: true,
-            physics: BouncingScrollPhysics(),
-            itemCount: widget.isReversed
-                ? filteredIllnessList.reversed.length
-                : filteredIllnessList.length,
+            itemCount: filteredIllnessList.length,
             itemBuilder: (context, index) {
-              final illness = widget.isReversed
-                  ? filteredIllnessList.reversed.toList()[index]
-                  : filteredIllnessList[index];
+              final int displayedIndex;
+              if (widget.isReversed) {
+                displayedIndex = filteredIllnessList.length - index;
+              } else {
+                displayedIndex = index + 1;
+              }
+
+              final illness = filteredIllnessList[index];
               final originalIndex = diagnosisIndexMap[illness];
 
               final illnessIndex = '${originalIndex}';
+
               return FutureBuilder<Account?>(
                 future: context
                     .read<AccountProvider>()
@@ -332,9 +421,48 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
     );
   }
 
+  SizedBox ChevronPrev() {
+    return SizedBox(
+      height: 40,
+      width: 40,
+      child: TextButton(
+        child: FaIcon(FontAwesomeIcons.chevronLeft),
+        onPressed: () => {
+          // _scrollUp(),
+          if (currentPageIndex > 0)
+            {
+              setState(() {
+                currentPageIndex -= 1;
+              })
+            }
+        },
+      ),
+    );
+  }
+
+  SizedBox ChevronNext() {
+    return SizedBox(
+      height: 40,
+      width: 40,
+      child: TextButton(
+        child: FaIcon(
+          FontAwesomeIcons.chevronRight,
+        ),
+        onPressed: () => {
+          if (currentPageIndex < pageRounded - 1)
+            {
+              setState(() {
+                currentPageIndex += 1;
+              })
+            }
+        },
+      ),
+    );
+  }
+
   String dateFormatter(PresentIllness illness) {
     DateTime originalDate1 = DateTime.parse(illness.created_at!);
-    String createdAt = DateFormat('MMM d, y | HH:mm').format(originalDate1);
+    String createdAt = DateFormat('MMM d, y | HH:mm:ss').format(originalDate1);
     return createdAt;
   }
 

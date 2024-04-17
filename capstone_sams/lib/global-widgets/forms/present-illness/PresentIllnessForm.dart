@@ -90,7 +90,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
 
       final complaint =
           await illnessProvider.fetchComplaint(token, illnessProvider.id);
-          
+
       var medicines = medicineProvider.medicines;
       final patientID = widget.patient.patientID;
       final recipeSuccess = await medicineProvider.saveToPrescription(
@@ -253,11 +253,12 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
 
                                           return;
                                         } else {
-                                          String formattedDate = createdAt !=
-                                                  null
-                                              ? DateFormat('yyyy-MM-dd HH:mm')
-                                                  .format(createdAt!)
-                                              : '';
+                                          String formattedDate =
+                                              createdAt != null
+                                                  ? DateFormat(
+                                                          'yyyy-MM-dd HH:mm:ss')
+                                                      .format(createdAt!)
+                                                  : '';
 
                                           print(
                                               'create illnes form ${illness_id}');
@@ -301,7 +302,7 @@ class _PresentMedHistoryFormState extends State<PresentIllnessForm> {
                                               details.onStepContinue;
                                             });
                                           } else {
-                                            setState(() => _isLoading = false); 
+                                            setState(() => _isLoading = false);
                                           }
                                         }
                                       },
