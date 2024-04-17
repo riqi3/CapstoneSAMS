@@ -78,39 +78,39 @@ def train_disease_prediction_model():
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
         # Train the models
-        final_svm_model = SVC(probability=True)
+        # final_svm_model = SVC(probability=True)
         final_nb_model = GaussianNB()
         final_rf_model = RandomForestClassifier(random_state=18)
 
-        final_svm_model.fit(X_train, y_train)
+        # final_svm_model.fit(X_train, y_train)
         final_nb_model.fit(X_train, y_train)
         final_rf_model.fit(X_train, y_train)
 
         # Evaluate the models on training data
-        svm_train_accuracy = final_svm_model.score(X_train, y_train)
+        # svm_train_accuracy = final_svm_model.score(X_train, y_train)
         nb_train_accuracy = final_nb_model.score(X_train, y_train)
         rf_train_accuracy = final_rf_model.score(X_train, y_train)
 
         # Evaluate the models on testing data
-        svm_test_accuracy = final_svm_model.score(X_test, y_test)
+        # svm_test_accuracy = final_svm_model.score(X_test, y_test)
         nb_test_accuracy = final_nb_model.score(X_test, y_test)
         rf_test_accuracy = final_rf_model.score(X_test, y_test)
 
         # Print the accuracies
-        print("SVM Training Accuracy: ", svm_train_accuracy)
+        # print("SVM Training Accuracy: ", svm_train_accuracy)
         print("Naive Bayes Training Accuracy: ", nb_train_accuracy)
         print("Random Forest Training Accuracy: ", rf_train_accuracy)
 
-        print("SVM Testing Accuracy: ", svm_test_accuracy)
+        # print("SVM Testing Accuracy: ", svm_test_accuracy)
         print("Naive Bayes Testing Accuracy: ", nb_test_accuracy)
         print("Random Forest Testing Accuracy: ", rf_test_accuracy)
         # Save the models to the specified folder
-        pickle.dump(final_svm_model, open(os.path.join(pickle_folder, 'final_svm_model.pkl'), 'wb'))
+        # pickle.dump(final_svm_model, open(os.path.join(pickle_folder, 'final_svm_model.pkl'), 'wb'))
         pickle.dump(final_nb_model, open(os.path.join(pickle_folder, 'final_nb_model.pkl'), 'wb'))
         pickle.dump(final_rf_model, open(os.path.join(pickle_folder, 'final_rf_model.pkl'), 'wb'))
         pickle.dump(encoder, open(os.path.join(pickle_folder, 'encoder.pkl'), 'wb'))
 
-        return True, f"Model training completed successfully. SVM Testing Data Accuracy: {svm_test_accuracy}, NB Testing Data Accuracy: {nb_test_accuracy}, RF Testing Data Accuracy: {rf_test_accuracy}"
+        return True, f"Model training completed successfully.RF Testing Data Accuracy: {rf_test_accuracy} NB Testing Data Accuracy: {nb_test_accuracy}"
     except Exception as e:
         return False, str(e)
 
@@ -155,8 +155,8 @@ def create_symptom_record(request):
     # Folder directory
     model_folder = os.path.join(project_directory, 'api/modules/disease_prediction/cdssModel')
     
-    svm_model_path = os.path.join(model_folder, "final_svm_model.pkl")
-    final_svm_model = pickle.load(open(svm_model_path, "rb"))
+    # svm_model_path = os.path.join(model_folder, "final_svm_model.pkl")
+    # final_svm_model = pickle.load(open(svm_model_path, "rb"))
 
     nb_model_path = os.path.join(model_folder, "final_nb_model.pkl")
     final_nb_model = pickle.load(open(nb_model_path, "rb"))
@@ -174,17 +174,17 @@ def create_symptom_record(request):
             input_data[index] = 1
     input_data = np.array(input_data).reshape(1, -1)
 
-    svm_prediction = encoder.classes_[final_svm_model.predict(input_data)[0]]
+    # svm_prediction = encoder.classes_[final_svm_model.predict(input_data)[0]]
     nb_prediction = encoder.classes_[final_nb_model.predict(input_data)[0]]
     rf_prediction = encoder.classes_[final_rf_model.predict(input_data)[0]]
 
-    svm_prob = max(final_svm_model.predict_proba(input_data)[0])
+    # svm_prob = max(final_svm_model.predict_proba(input_data)[0])
     nb_prob = max(final_nb_model.predict_proba(input_data)[0])
     rf_prob = max(final_rf_model.predict_proba(input_data)[0])
 
     # Combine predictions and probabilities
     predictions_with_confidence = {
-        "SVM": {"prediction": svm_prediction, "confidence": svm_prob},
+        # "SVM": {"prediction": svm_prediction, "confidence": svm_prob},
         "Naive Bayes": {"prediction": nb_prediction, "confidence": nb_prob},
         "Random Forest": {"prediction": rf_prediction, "confidence": rf_prob},
     }
@@ -213,7 +213,7 @@ def create_symptom_record(request):
         "symptom_record": serializer.data,
         "predictions_with_confidence": sorted_predictions,
         "final_prediction": final_prediction,
-        "final_confidence": final_confidence,
+        "final_confidence": final_confidence  * 100,
     }
     
     return Response(response_data, status=200)

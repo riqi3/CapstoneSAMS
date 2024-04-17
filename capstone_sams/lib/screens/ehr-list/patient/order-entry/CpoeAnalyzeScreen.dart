@@ -55,6 +55,60 @@ class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
     var accountProvider = Provider.of<AccountProvider>(context, listen: false);
     List<String> symptoms = symptomFieldsProvider.symptoms;
 
+    if (symptoms.length < 3) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            child: Container(
+              height: 150,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Insufficient Symptoms',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Pallete.mainColor,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Text('Please add atleast 3 symptoms to analyze.'),
+                    SizedBox(height: 5),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          child: Text(
+                            'OK',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Pallete.mainColor,
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      );
+      return;
+    }
+
     try {
       var requestBody = {'symptoms': symptoms, 'accountID': accountProvider.id};
 
@@ -86,7 +140,7 @@ class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
             },
           );
         }
-        setState(() {}); // Trigger a rebuild to reflect changes in UI
+        setState(() {});
       } else {
         throw Exception('Failed to load predictions');
       }
@@ -100,7 +154,7 @@ class _CpoeAnalyzeScreenState extends State<CpoeAnalyzeScreen> {
     var symptomFieldsProvider = Provider.of<SymptomFieldsProvider>(context);
     List<Widget> _autocompleteFields = symptomFieldsProvider.autocompleteFields;
     bool isAddButtonEnabled = _autocompleteFields.length < 7;
-    bool isAnalyzeButtonEnabled = symptomFieldsProvider.symptoms.length >= 3;
+    bool isAnalyzeButtonEnabled = symptomFieldsProvider.symptoms.length >= 1;
 
     return FormTemplate(
       onpressed: () => Navigator.pop(context),

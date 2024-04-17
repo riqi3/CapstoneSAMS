@@ -105,4 +105,13 @@ class HealthCheckProvider extends ChangeNotifier {
     cholesterolLevelOption = value ?? 'Low';
     notifyListeners();
   }
+
+  void resetState() {
+    setFeverOption(null);
+    setCoughOption(null);
+    setFatigueOption(null);
+    setDifficultyBreathingOption(null);
+    setBloodPressureOption(null);
+    setCholesterolLevelOption(null);
+  }
 }

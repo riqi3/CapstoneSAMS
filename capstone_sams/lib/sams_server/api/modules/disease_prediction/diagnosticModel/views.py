@@ -100,7 +100,7 @@ def train_model():
         print(f"Training Data Accuracy: {train_accuracy}")
         print(f"Testing Data Accuracy: {test_accuracy}")
 
-        return True, f"Model training completed successfully. Training Data Accuracy: {train_accuracy}, Testing Data Accuracy: {test_accuracy}"
+        return True, f"Model training completed successfully. Testing Data Accuracy: {test_accuracy}"
     except Exception as e:
         return False, str(e)
 
