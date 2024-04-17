@@ -76,7 +76,7 @@ class _PresentMedHistoryFormState extends State<EditPresentMedHistoryForm> {
           Provider.of<MedicineProvider>(context, listen: false);
 
       String formattedDate = updatedAt != null
-          ? DateFormat('yyyy-MM-dd HH:mm').format(updatedAt!)
+          ? DateFormat('yyyy-MM-dd HH:mm:ss').format(updatedAt!)
           : '';
 
       var presentIllnessRecord = PresentIllness(

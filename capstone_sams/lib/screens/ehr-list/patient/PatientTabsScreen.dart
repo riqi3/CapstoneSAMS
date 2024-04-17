@@ -78,7 +78,7 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
         speedDial = SpeedDial(
           label: Text('Menu'),
           activeLabel: Text('Close'),
-          animatedIcon: AnimatedIcons.menu_close,
+          animatedIcon: AnimatedIcons.menu_close, 
           visible: true,
           children: [
             SpeedDialChild(
@@ -115,7 +115,7 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
           ],
         );
       } else {
-        speedDial = SpeedDial(
+        speedDial = SpeedDial( 
           label: Text('Diagnose'),
           child: FaIcon(FontAwesomeIcons.stethoscope),
           onPress: () => Navigator.push(
