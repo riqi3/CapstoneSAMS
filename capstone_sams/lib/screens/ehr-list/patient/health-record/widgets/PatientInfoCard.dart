@@ -341,7 +341,7 @@ class _PatientInfoCardState extends State<PatientInfoCard> {
         Table(
           columnWidths: <int, TableColumnWidth>{
             0: FixedColumnWidth(Sizing.columnWidth4),
-            1: FixedColumnWidth(Sizing.columnWidth2),
+            1: FixedColumnWidth(Sizing.columnWidth3),
             2: FixedColumnWidth(Sizing.columnWidth2),
           },
           children: [

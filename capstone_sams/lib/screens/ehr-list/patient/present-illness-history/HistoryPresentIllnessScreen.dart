@@ -27,8 +27,7 @@ class _HistoryPresentIllnessState extends State<HistoryPresentIllness> {
       column: Column(
         children: [
           DiagnosisInfoCard(
-            patient: widget.patient,
-            isReversed: widget.isReversed,
+            patient: widget.patient, 
           ),
         ],
       ),

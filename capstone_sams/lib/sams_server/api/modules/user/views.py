@@ -46,9 +46,9 @@ In addition, it creates a data log for reference.
 Certain to exception handlers were coded to ensure continued operations.
 '''
 class LogInView(viewsets.ModelViewSet):
-    @api_view(['POST'])
-    def photo(request):
-        photo = request.data.get('profile_photo')
+    # @api_view(['POST'])
+    # def photo(request):
+    #     photo = request.data.get('profile_photo')
 
     @api_view(['GET'])
     def logout_view(request):

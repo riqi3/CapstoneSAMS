@@ -109,12 +109,10 @@ class _EhrListScreenState extends State<EhrListScreen> {
                       padding: EdgeInsets.all(Sizing.sectionSymmPadding),
                       child: Column(
                         children: [
-                          Container(
-                            height: 100,
-                            child: Center(
-                              child: NoDataTextWidget(
-                                text: Strings.noPatientResults,
-                              ),
+                          SizedBox(height: Sizing.sectionSymmPadding),
+                          Center(
+                            child: NoDataTextWidget(
+                              text: Strings.noPatientResults,
                             ),
                           ),
                           SizedBox(height: Sizing.sectionSymmPadding),

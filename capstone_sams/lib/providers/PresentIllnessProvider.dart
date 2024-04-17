@@ -35,7 +35,7 @@ class PresentIllnessProvider extends ChangeNotifier {
           Uri.parse(
               '${Env.prefix}/patient/patients/complaint/illness/${illnessID}'),
           headers: header);
-      await Future.delayed(Duration(milliseconds: 1000));
+      await Future.delayed(Duration(milliseconds: 750));
       if (response.statusCode == 200) {
         _presentIllness = null;
         notifyListeners();
