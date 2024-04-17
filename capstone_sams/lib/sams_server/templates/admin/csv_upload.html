@@ -1,90 +1,195 @@
-{% extends 'admin/base.html' %}
+{% extends 'admin/base.html' %} {% block content %}
+<style>
+  div.not-visible {
+    display: none;
+  }
+</style>
 
-{% block content %}
+<div class="container">
+  <div class="file-icon">
+    <i class="fas fa-file"></i>
+  </div>
+  <form
+    id="bulk_upload"
+    name="bulk_upload"
+    action="."
+    method="POST"
+    enctype="multipart/form-data"
+  >
+    {% csrf_token %}
+    <table>
+      {{ form.as_table }}
+    </table>
+  </form>
+  <button type="button" id="openModal" onclick="checkFormFields()">
+    Upload File
+  </button>
+</div>
 
- 
-
-
-    <div class="container">
-      <div class="file-icon">
-        <i class="fas fa-file" ></i>
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">
+        You're about to upload a bulk file!
+      </h5>
     </div>
-        <form id='bulk_upload' name='bulk_upload' action="." method="POST" enctype="multipart/form-data">
-            
-            {% csrf_token %}
-            <table>
-                {{ form.as_table }}
-            </table>
-        </form>
-        <button type="button" id="openModal" onclick="checkFormFields()">Upload File</button>
+
+    <div class="modal-body">
+      <table>
+        {% for row in csv_data %}
+        <tr>
+          {% for cell in row %}
+          <td>{{ cell }}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </table>
+
+      <div id="progress-box" class="not-visible"></div>
+
+      Are you sure to upload this file? This process is permanent and cannot be
+      edited.
     </div>
-
-
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">You're about to upload a bulk file!</h5>
-          </div>
-           
-          <div class="modal-body">
-            <table>
-              {% for row in csv_data %}
-                  <tr>
-                      {% for cell in row %}
-                          <td>{{ cell }}</td>
-                      {% endfor %}
-                  </tr>
-              {% endfor %}
-          </table>
-            Are you sure to upload this file? This process is permanent and cannot be edited.
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeModal">Close</button>
-            <button type="button" class="btn btn-primary" onclick='submitForm()'>Upload Anyway</button>
-          </div>
-        </div>
+    <div class="modal-footer">
+      <div id="cancel-box" class="not-visible">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+          id="cancel-btn"
+        >
+          Cancel
+        </button>
       </div>
 
-    <style>
-
-      </style>
-      
-
+      <button
+        type="button"
+        class="btn btn-secondary"
+        data-dismiss="modal"
+        id="closeModal"
+      >
+        Close
+      </button>
+      <button type="button" class="btn btn-primary" onclick="submitForm()">
+        Upload Anyway
+      </button>
+    </div>
+  </div>
+</div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-  function checkFormFields() { 
+  console.log("testuinging");
+  const bulkUpload = document.getElementById("bulk_upload");
+  const input = document.getElementById("id_csv_upload");
+  console.log(input);
+  const progressBox = document.getElementById("progress-box");
+  const cancelBox = document.getElementById("cancel-box");
+  const cancelBtn = document.getElementById("cancel-btn");
+  const closeModalBtn = document.getElementById("closeModal");
+  const uploadAnywayBtn = document.querySelector(".btn-primary");
+
+  const csrf = document.getElementsByName("csrfmiddlewaretoken");
+
+  function hideCancelButtonBox() {
+    cancelBox.classList.add("not-visible");
+  }
+
+
+  function checkFormFields() {
     var allFieldsFilled = true;
-    $('form#bulk_upload input, form#bulk_upload select').each(function() {
-      if ($(this).val() === '') {
+    $("form#bulk_upload input, form#bulk_upload select").each(function () {
+      if ($(this).val() === "") {
         allFieldsFilled = false;
-        return false;  
+        return false;
+      }
+    });
+
+    if (allFieldsFilled) {
+      $("#myModal").show();hideCancelButtonBox();
+    } else {
+      alert("Please fill in all form fields before proceeding.");
+    }
+  }
+  
+  input.addEventListener("change", () => {
+    progressBox.classList.remove("not-visible");
+    cancelBox.classList.remove("not-visible");
+  });
+  function submitForm() {
+    const form = document.getElementById("bulk_upload");
+    const formData = new FormData(form);
+
+    const xhr = new XMLHttpRequest();
+
+    xhr.open("POST", form.action);
+    xhr.setRequestHeader("X-CSRFToken", csrf[0].value); 
+
+    xhr.upload.addEventListener("progress", (e) => {
+      if (e.lengthComputable) {
+        const percent = (e.loaded / e.total) * 100;
+        console.log(percent);
+        progressBox.innerHTML = `
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: ${percent}%" aria-valuenow="${percent}" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <p>${percent.toFixed(1)}%</p>
+                <div class="spinner-border text-primary" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+            `;
       }
     });
  
-    if (allFieldsFilled) {
-      $("#myModal").show();
-    } else {
-      
-      alert('Please fill in all form fields before proceeding.');
-    }
-  }
-  function submitForm() { 
-    $('form#bulk_upload').submit();
-}
+    cancelBtn.addEventListener("click", () => {
+      xhr.abort(); 
+      progressBox.innerHTML = "";  
+      cancelBox.classList.add("not-visible");   
+      uploadAnywayBtn.style.display = "inline-block";
+      closeModalBtn.style.display = "inline-block";
+    });
 
-  $("#closeModal").click(function() {
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        console.log("Upload completed successfully");
+        $("#myModal").modal("hide");
+        window.location.replace("/admin/");
+      } else {
+        console.log("Upload failed"); 
+      }
+    };
+
+    xhr.onerror = function () {
+      console.log("Error occurred during upload"); 
+    };
+
+    xhr.send(formData);
+  }
+
+ 
+  closeModalBtn.addEventListener("click", () => {
     $("#myModal").hide();
   });
+ 
+  uploadAnywayBtn.addEventListener("click", () => { 
+    uploadAnywayBtn.style.display = "none"; 
+    cancelBox.classList.remove("not-visible"); 
+    closeModalBtn.style.display = "none";
+  });
+   
+  function getCsrfToken() {
+    const csrfToken = document.getElementsByName("csrfmiddlewaretoken");
+    return csrfToken[0].value;
+  }
 
   $('input[type="file"]').change(function () {
-        var fileName = $(this).val().split('\\').pop();
-        if (fileName) {
-            $('.file-icon').fadeIn(300);
-        } else {
-            $('.file-icon').hide();
-        }
-    });
+    var fileName = $(this).val().split("\\").pop();
+    if (fileName) {
+      $(".file-icon").fadeIn(300);
+    } else {
+      $(".file-icon").hide();
+    }
+  });
 </script>
 
 {% endblock %}
