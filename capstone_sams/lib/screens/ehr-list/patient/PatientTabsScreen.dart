@@ -38,7 +38,7 @@ class PatientTabsScreen extends StatefulWidget {
 class _PatientTabsScreenState extends State<PatientTabsScreen>
     with SingleTickerProviderStateMixin {
   late TabController tabController;
-  late SpeedDial speedDial;
+  late SpeedDial speedDial = SpeedDial();
   ScrollController _scrollController = ScrollController();
   bool _isReversed = false;
 
@@ -78,7 +78,7 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
         speedDial = SpeedDial(
           label: Text('Menu'),
           activeLabel: Text('Close'),
-          animatedIcon: AnimatedIcons.menu_close, 
+          animatedIcon: AnimatedIcons.menu_close,
           visible: true,
           children: [
             SpeedDialChild(
@@ -115,7 +115,7 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
           ],
         );
       } else {
-        speedDial = SpeedDial( 
+        speedDial = SpeedDial(
           label: Text('Diagnose'),
           child: FaIcon(FontAwesomeIcons.stethoscope),
           onPress: () => Navigator.push(

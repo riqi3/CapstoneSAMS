@@ -1,7 +1,6 @@
-import 'package:capstone_sams/constants/theme/pallete.dart'; 
+import 'package:capstone_sams/constants/theme/pallete.dart';
 import 'package:capstone_sams/providers/AccountProvider.dart';
-import 'package:capstone_sams/providers/MedicalNotesProvider.dart'; 
- 
+import 'package:capstone_sams/providers/MedicalNotesProvider.dart';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -36,6 +35,20 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
+  String profilePic() {
+    if (widget.user.role == 'physician') {
+      return 'assets/images/phy_profilepic.png';
+    }
+    if (widget.user.role == 'nurse') {
+      return 'assets/images/nur_profilepic.png';
+    }
+    if (widget.user.role == 'working student') {
+      return 'assets/images/ws_profilepic.png';
+    }
+
+    return 'assets/images/nur_profilepic.png';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -48,10 +61,7 @@ class _DashboardState extends State<Dashboard> {
               children: [
                 CircleAvatar(
                   radius: 30,
-                  backgroundImage: widget.user.photo == null
-                      ? AssetImage('assets/images/admin-profilepic.png')
-                      : AssetImage(
-                          'lib/sams_server/upload-photo${widget.user.photo}'),
+                  backgroundImage: AssetImage(profilePic()),
                   backgroundColor: Colors.transparent,
                 ),
                 SizedBox(

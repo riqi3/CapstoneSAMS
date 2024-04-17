@@ -47,7 +47,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     #Account Attributes
     accountID = models.AutoField(primary_key = True)
-    profile_photo = models.ImageField(blank = True, default=None,upload_to ='upload-photo/' ) 
+    # profile_photo = models.ImageField(blank = True, default=None,upload_to ='upload-photo/' ) 
     username = models.CharField(max_length=100, unique=True)
     password = models.CharField(max_length=100, blank = False)
     firstName = models.CharField(max_length=100, blank = False) 

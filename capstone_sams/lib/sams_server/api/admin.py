@@ -169,7 +169,7 @@ class UserCreationForm(forms.ModelForm):
             "is_active",
             "is_staff",
             "is_superuser",
-            "profile_photo",
+            # "profile_photo",
         )
 
     def clean_password2(self):
@@ -199,39 +199,40 @@ class UserCreationForm(forms.ModelForm):
             user.is_superuser = True
         elif user.accountRole == 'nurse':
             user.is_staff = True
-        print(user.accountID)
-        photo = self.photo_generator(user)
-        user.profile_photo = os.path.basename(photo)
+        # print(user.accountID)
+        # photo = self.photo_generator(user)
+        # user.profile_photo = os.path.basename(photo)
         if commit:
             user.save()
         return user
 
      
-    def photo_generator(self, user):
-        width = 300
-        height = 300
-        font_size = 200
-        font_path  = 'sams_server/static/fonts/Poppins-Regular.ttf'
-        fontColor = (255,255,255)
-        arr = []
-        for rand in range(3):
-            rand = random.randint(0,200) 
-            arr.append(rand)
-            backgroundColor = tuple(arr)
-        img = Image.new("RGBA", (width, height), backgroundColor)
-        draw = ImageDraw.Draw(img)
-        font = ImageFont.truetype(font_path, size=font_size)
-        letter = str(user.firstName)[0].upper() 
-        bbox = font.getbbox(letter)
-        x = (width - (bbox[2] - bbox[0])) // 2
-        y = (height - (bbox[3] - bbox[1])) // 2
-        draw.text((x, y - bbox[1]), letter, font=font, fill=fontColor)
-        save_folder = 'upload-photo'
-        os.makedirs(save_folder, exist_ok=True)
-        print(user.accountID)
-        img_path = os.path.join(save_folder, f'{user.accountID}_{user.firstName}{user.lastName}_profilepic.png') 
-        img.save(img_path)
-        return img_path
+    # def photo_generator(self, user):
+    #     width = 300
+    #     height = 300
+    #     font_size = 200
+    #     font_path  = 'sams_server/static/fonts/Poppins-Regular.ttf'
+    #     fontColor = (255,255,255)
+    #     arr = []
+    #     for rand in range(3):
+    #         rand = random.randint(0,200) 
+    #         arr.append(rand)
+    #         backgroundColor = tuple(arr)
+    #     img = Image.new("RGBA", (width, height), backgroundColor)
+    #     draw = ImageDraw.Draw(img)
+    #     font = ImageFont.truetype(font_path, size=font_size)
+    #     letter = str(user.firstName)[0].upper()
+    #     upperLetter = letter.upper()
+    #     bbox = font.getbbox(upperLetter)
+    #     x = (width - (bbox[2] - bbox[0])) // 2
+    #     y = (height - (bbox[3] - bbox[1])) // 2
+    #     draw.text((x, y - bbox[1]), upperLetter, font=font, fill=fontColor)
+    #     save_folder = 'upload-photo'
+    #     os.makedirs(save_folder, exist_ok=True)
+    #     print(user.accountID)
+    #     img_path = os.path.join(save_folder, f'{user.accountID}_{user.firstName}{user.lastName}_profilepic.png') 
+    #     img.save(img_path)
+    #     return img_path
      
 
 

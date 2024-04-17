@@ -16,10 +16,10 @@ class ValueDashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.watch<AccountProvider>(); 
+    final user = context.watch<AccountProvider>();
 
     return Dashboard(
-      user: user, 
+      user: user,
     );
   }
 }
@@ -29,10 +29,9 @@ class ValueHomeAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final filename = context.watch<AccountProvider>().photo;
-
+    final user = context.watch<AccountProvider>();
     return HomeAppBar(
-      profile: '$filename',
+      user: user,
     );
   }
 }

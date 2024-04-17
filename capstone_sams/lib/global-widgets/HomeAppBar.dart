@@ -1,18 +1,39 @@
 import 'package:capstone_sams/constants/theme/sizing.dart';
 import 'package:capstone_sams/global-widgets/pop-menu-buttons/FormCreationPopup.dart';
 import 'package:capstone_sams/global-widgets/search-bar/widgets/SearchBarWidget.dart';
+import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/theme/pallete.dart';
 
 //home app bar
-class HomeAppBar extends StatelessWidget {
-  const HomeAppBar({
+// ignore: must_be_immutable
+class HomeAppBar extends StatefulWidget {
+  AccountProvider user;
+  HomeAppBar({
     super.key,
-    required this.profile,
+    required this.user,
   });
 
-  final String profile;
+  @override
+  State<HomeAppBar> createState() => _HomeAppBarState();
+}
+
+class _HomeAppBarState extends State<HomeAppBar> {
+  String profilePic() {
+    if (widget.user.role == 'physician') {
+      return 'assets/images/phy_profilepic.png';
+    }
+    if (widget.user.role == 'nurse') {
+      return 'assets/images/nur_profilepic.png';
+    }
+    if (widget.user.role == 'working student') {
+      return 'assets/images/ws_profilepic.png';
+    }
+
+    return 'assets/images/nur_profilepic.png';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -26,10 +47,7 @@ class HomeAppBar extends StatelessWidget {
           padding: const EdgeInsets.only(left: Sizing.sectionSymmPadding),
           child: CircleAvatar(
             radius: 20,
-            // ignore: unnecessary_null_comparison
-            backgroundImage: profile == null
-                ? AssetImage('assets/images/admin-profilepic.png')
-                : AssetImage('lib/sams_server/upload-photo${profile}'),
+            backgroundImage: AssetImage(profilePic()),
             backgroundColor: Colors.transparent,
           ),
         ),

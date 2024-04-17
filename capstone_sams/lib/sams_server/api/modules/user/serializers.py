@@ -14,7 +14,7 @@ class AccountSerializer(serializers.ModelSerializer):
         model = Account
         fields = [
             'accountID',
-            'profile_photo',
+            # 'profile_photo',
             'username', 
             'password',
             'firstName',

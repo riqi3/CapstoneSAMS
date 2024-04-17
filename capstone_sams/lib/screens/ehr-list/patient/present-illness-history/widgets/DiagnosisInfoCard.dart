@@ -234,11 +234,17 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
             diagnosisIndexMap[presentIllnessList[i]] = originalIndex;
           }
 
-          filteredIllnessList = presentIllnessList.where((illness) {
-            return illness.illnessName!
-                .toLowerCase()
-                .contains(searchQuery.toLowerCase());
-          }).toList();
+          filteredIllnessList = searchQuery.isEmpty
+              ? presentIllnessList.toList()
+              : presentIllnessList.where((illness) {
+                  return illness.illnessName!
+                      .toLowerCase()
+                      .contains(searchQuery.toLowerCase());
+                }).toList();
+
+          if (searchQuery.isNotEmpty) {
+            currentPageIndex = 0;
+          }
 
           filteredIllnessList.sort((a, b) {
             if (widget.isReversed) {
@@ -254,6 +260,8 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
           final end = min(
               (currentPageIndex.toInt() * items.toInt()) + items.toInt(),
               filteredIllnessList.length);
+          // final end = min((start * items.toInt()) + items.toInt(),
+          //     filteredIllnessList.length);
 
           filteredIllnessList = filteredIllnessList.sublist(start, end);
           totalPatients = snapshot.data?.length.toDouble();
@@ -426,15 +434,16 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
       height: 40,
       width: 40,
       child: TextButton(
-        child: FaIcon(FontAwesomeIcons.chevronLeft),
-        onPressed: () => {
-          // _scrollUp(),
-          if (currentPageIndex > 0)
-            {
-              setState(() {
-                currentPageIndex -= 1;
-              })
-            }
+        child: FaIcon(
+          FontAwesomeIcons.chevronLeft,
+          color: currentPageIndex == 0 ? Pallete.lightGreyColor : Colors.grey,
+        ),
+        onPressed: () {
+          currentPageIndex > 0
+              ? setState(() {
+                  currentPageIndex -= 1;
+                })
+              : null;
         },
       ),
     );
@@ -445,17 +454,19 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
       height: 40,
       width: 40,
       child: TextButton(
+        onPressed: () {
+          currentPageIndex < pageRounded - 1
+              ? setState(() {
+                  currentPageIndex += 1;
+                })
+              : null;
+        },
         child: FaIcon(
           FontAwesomeIcons.chevronRight,
+          color: currentPageIndex == pageRounded - 1
+              ? Pallete.lightGreyColor
+              : Colors.grey,
         ),
-        onPressed: () => {
-          if (currentPageIndex < pageRounded - 1)
-            {
-              setState(() {
-                currentPageIndex += 1;
-              })
-            }
-        },
       ),
     );
   }

@@ -5,7 +5,7 @@ import '../constants/Env.dart';
 class Account {
   int? accountID;
   final String? username;
-  String? profile_photo;
+  // String? profile_photo;
   final String? password;
   final String? firstName;
   final String? middleName;
@@ -20,7 +20,7 @@ class Account {
   Account({
     this.accountID,
     this.username,
-    this.profile_photo,
+    // this.profile_photo,
     this.password,
     this.firstName,
     this.middleName,
@@ -36,7 +36,7 @@ class Account {
   Map<String, dynamic> toJson() => {
         'accountID': accountID,
         'username': username,
-        'profile_photo': profile_photo,
+        // 'profile_photo': profile_photo,
         'password': password,
         'firstName': firstName,
         'middleName': middleName,
@@ -53,7 +53,7 @@ class Account {
     return Account(
       accountID: json['accountID'],
       username: json['username'],
-      profile_photo: json['profile_photo'],
+      // profile_photo: json['profile_photo'],
       password: json['password'],
       firstName: json['firstName'],
       middleName: json['middleName'],
