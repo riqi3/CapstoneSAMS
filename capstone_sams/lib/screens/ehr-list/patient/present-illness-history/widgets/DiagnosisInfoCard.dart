@@ -37,11 +37,9 @@ import 'package:provider/provider.dart';
 class DiagnosisInfoCard extends StatefulWidget {
   // ScrollController controller;
   final Patient patient;
-  bool isReversed;
   DiagnosisInfoCard({
     super.key,
     required this.patient,
-    required this.isReversed,
     // required this.controller,
   });
 
@@ -64,6 +62,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
   int pageRounded = 0;
   double? totalPatients = 0;
   double pages1 = 0;
+  bool isReversed = false;
 
   final double items = 3;
 
@@ -114,6 +113,19 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isReversed = !isReversed;
+                          });
+                        },
+                        child: isReversed
+                            ? FaIcon(FontAwesomeIcons.arrowUp91,
+                                color: Pallete.greyColor)
+                            : FaIcon(FontAwesomeIcons.arrowDown19,
+                                color: Pallete.greyColor),
+                      ),
+                      SizedBox(width: Sizing.spacing),
                       ChevronPrev(),
                       SizedBox(width: Sizing.spacing),
                       ChevronNext(),
@@ -247,7 +259,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
           }
 
           filteredIllnessList.sort((a, b) {
-            if (widget.isReversed) {
+            if (isReversed) {
               return DateTime.parse(a.created_at!)
                   .compareTo(DateTime.parse(b.created_at!));
             } else {
@@ -288,7 +300,7 @@ class _DiagnosisInfoCardState extends State<DiagnosisInfoCard> {
             itemCount: filteredIllnessList.length,
             itemBuilder: (context, index) {
               final int displayedIndex;
-              if (widget.isReversed) {
+              if (isReversed) {
                 displayedIndex = filteredIllnessList.length - index;
               } else {
                 displayedIndex = index + 1;

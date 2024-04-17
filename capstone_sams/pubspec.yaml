@@ -42,8 +42,7 @@ dependencies:
   intl: ^0.18.1
   dropdown_search: ^5.0.6
   dio: ^5.3.0  
-  shimmer: ^3.0.0 
-  flutter_speed_dial: ^7.0.0
+  shimmer: ^3.0.0  
   
 dev_dependencies:
   flutter_test:
@@ -73,8 +72,7 @@ flutter:
     - assets/images/sams_app_logo.png
     - assets/images/nur_profilepic.png
     - assets/images/ws_profilepic.png
-    - assets/images/phy_profilepic.png
-    - lib/sams_server/upload-photo/
+    - assets/images/phy_profilepic.png 
  
   fonts:
     - family: Poppins

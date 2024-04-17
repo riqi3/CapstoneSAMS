@@ -1,12 +1,10 @@
 import 'package:capstone_sams/declare/ValueDeclaration.dart';
-import 'package:capstone_sams/global-widgets/forms/present-illness/PresentIllnessForm.dart';
-import 'package:capstone_sams/models/PresentIllness.dart';
+import 'package:capstone_sams/global-widgets/forms/present-illness/PresentIllnessForm.dart'; 
 import 'package:capstone_sams/providers/AccountProvider.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/lab/LabScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/present-illness-history/HistoryPresentIllnessScreen.dart';
 import 'package:capstone_sams/screens/ehr-list/patient/past-med-history/PastMedicalHistoryScreen.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:flutter/material.dart'; 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import '../../../constants/theme/sizing.dart';
@@ -37,8 +35,7 @@ class PatientTabsScreen extends StatefulWidget {
 
 class _PatientTabsScreenState extends State<PatientTabsScreen>
     with SingleTickerProviderStateMixin {
-  late TabController tabController;
-  late SpeedDial speedDial = SpeedDial();
+  late TabController tabController; 
   ScrollController _scrollController = ScrollController();
   bool _isReversed = false;
 
@@ -50,10 +47,10 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
       length: 4,
       vsync: this,
     );
-    speedDials(tabController.index);
-    tabController.addListener(() {
-      speedDials(tabController.index);
-    });
+    // speedDials(tabController.index);
+    // tabController.addListener(() {
+    //   speedDials(tabController.index);
+    // });
   }
 
   void _scrollDown() {
@@ -72,65 +69,61 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
     );
   }
 
-  Widget speedDials(int index) {
-    setState(() {
-      if (index == 2) {
-        speedDial = SpeedDial(
-          label: Text('Menu'),
-          activeLabel: Text('Close'),
-          animatedIcon: AnimatedIcons.menu_close,
-          visible: true,
-          children: [
-            SpeedDialChild(
-              label: 'Diagnose',
-              child: FaIcon(FontAwesomeIcons.stethoscope),
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => PresentIllnessForm(
-                    patient: widget.patient,
-                  ),
-                ),
-              ),
-            ),
-            // SpeedDialChild(
-            //   label: 'Navigate',
-            //   child: FaIcon(FontAwesomeIcons.upDown),
-            //   onTap: () => _scrollController.offset >
-            //           _scrollController.position.minScrollExtent
-            //       ? _scrollUp()
-            //       : _scrollDown(),
-            // ),
-            SpeedDialChild(
-              label: 'Sort',
-              child: _isReversed
-                  ? FaIcon(FontAwesomeIcons.arrowUp91)
-                  : FaIcon(FontAwesomeIcons.arrowDown19),
-              onTap: () {
-                setState(() {
-                  _isReversed = !_isReversed;
-                });
-              },
-            ),
-          ],
-        );
-      } else {
-        speedDial = SpeedDial(
-          label: Text('Diagnose'),
-          child: FaIcon(FontAwesomeIcons.stethoscope),
-          onPress: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => PresentIllnessForm(
-                patient: widget.patient,
-              ),
-            ),
-          ),
-        );
-      }
-    });
-    return speedDial;
-  }
+  // Widget speedDials(int index) {
+  //   setState(() {
+  //     if (index == 2) {
+  //       speedDial = SpeedDial(
+  //         label: Text('Menu'),
+  //         activeLabel: Text('Close'),
+  //         animatedIcon: AnimatedIcons.menu_close,
+  //         visible: true,
+  //         children: [
+  //           SpeedDialChild(
+  //             label: 'Diagnose',
+  //             child: FaIcon(FontAwesomeIcons.stethoscope),
+  //             onTap: () => Navigator.push(
+  //               context,
+  //               MaterialPageRoute(
+  //                 builder: (context) => PresentIllnessForm(
+  //                   patient: widget.patient,
+  //                 ),
+  //               ),
+  //             ),
+  //           ),
+  //           // SpeedDialChild(
+  //           //   label: 'Navigate',
+  //           //   child: FaIcon(FontAwesomeIcons.upDown),
+  //           //   onTap: () => _scrollController.offset >
+  //           //           _scrollController.position.minScrollExtent
+  //           //       ? _scrollUp()
+  //           //       : _scrollDown(),
+  //           // ),
+  //           SpeedDialChild(
+  //             label: 'Sort',
+  //             child: _isReversed
+  //                 ? FaIcon(FontAwesomeIcons.arrowUp91)
+  //                 : FaIcon(FontAwesomeIcons.arrowDown19),
+
+  //           ),
+  //         ],
+  //       );
+  //     } else {
+  //       speedDial = SpeedDial(
+  //         label: Text('Diagnose'),
+  //         child: FaIcon(FontAwesomeIcons.stethoscope),
+  //         onPress: () => Navigator.push(
+  //           context,
+  //           MaterialPageRoute(
+  //             builder: (context) => PresentIllnessForm(
+  //               patient: widget.patient,
+  //             ),
+  //           ),
+  //         ),
+  //       );
+  //     }
+  //   });
+  //   return speedDial;
+  // }
 
   @override
   void dispose() {
@@ -174,7 +167,21 @@ class _PatientTabsScreenState extends State<PatientTabsScreen>
         ],
       ),
       floatingActionButton:
-          canAccessForm ? null : speedDials(tabController.index),
+          // canAccessForm ? null : speedDials(tabController.index),
+          canAccessForm
+              ? null
+              : FloatingActionButton.extended(
+                  icon: FaIcon(FontAwesomeIcons.stethoscope),
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PresentIllnessForm(
+                        patient: widget.patient,
+                      ),
+                    ),
+                  ),
+                  label: Text('Diagnose'),
+                ),
     );
   }
 }
