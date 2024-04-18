@@ -3,6 +3,17 @@
   div.not-visible {
     display: none;
   }
+  .spinner-border {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    vertical-align: text-bottom;
+    border: 0.15em solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    -webkit-animation: 0.75s linear infinite spinner-border;
+    animation: 0.75s linear infinite spinner-border;
+  }
 </style>
 
 <div class="container">
@@ -95,7 +106,6 @@
     cancelBox.classList.add("not-visible");
   }
 
-
   function checkFormFields() {
     var allFieldsFilled = true;
     $("form#bulk_upload input, form#bulk_upload select").each(function () {
@@ -106,12 +116,13 @@
     });
 
     if (allFieldsFilled) {
-      $("#myModal").show();hideCancelButtonBox();
+      $("#myModal").show();
+      hideCancelButtonBox();
     } else {
       alert("Please fill in all form fields before proceeding.");
     }
   }
-  
+
   input.addEventListener("change", () => {
     progressBox.classList.remove("not-visible");
     cancelBox.classList.remove("not-visible");
@@ -123,7 +134,7 @@
     const xhr = new XMLHttpRequest();
 
     xhr.open("POST", form.action);
-    xhr.setRequestHeader("X-CSRFToken", csrf[0].value); 
+    xhr.setRequestHeader("X-CSRFToken", csrf[0].value);
 
     xhr.upload.addEventListener("progress", (e) => {
       if (e.lengthComputable) {
@@ -133,18 +144,22 @@
                 <div class="progress">
                     <div class="progress-bar" role="progressbar" style="width: ${percent}%" aria-valuenow="${percent}" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
-                <p>${percent.toFixed(1)}%</p>
-                <div class="spinner-border text-primary" role="status">
+                <div style="display:flex;
+                            align-items: center;">
+                    <p style="margin:inherit; 
+                    ">${percent.toFixed(1)}%</p>
+                <div class="spinner-border text-primary" style="margin-left: 10px;" role="status">
                   <span class="sr-only">Loading...</span>
+                </div>
                 </div>
             `;
       }
     });
- 
+
     cancelBtn.addEventListener("click", () => {
-      xhr.abort(); 
-      progressBox.innerHTML = "";  
-      cancelBox.classList.add("not-visible");   
+      xhr.abort();
+      progressBox.innerHTML = "";
+      cancelBox.classList.add("not-visible");
       uploadAnywayBtn.style.display = "inline-block";
       closeModalBtn.style.display = "inline-block";
     });
@@ -155,28 +170,27 @@
         $("#myModal").modal("hide");
         window.location.replace("/admin/");
       } else {
-        console.log("Upload failed"); 
+        console.log("Upload failed");
       }
     };
 
     xhr.onerror = function () {
-      console.log("Error occurred during upload"); 
+      console.log("Error occurred during upload");
     };
 
     xhr.send(formData);
   }
 
- 
   closeModalBtn.addEventListener("click", () => {
     $("#myModal").hide();
   });
- 
-  uploadAnywayBtn.addEventListener("click", () => { 
-    uploadAnywayBtn.style.display = "none"; 
-    cancelBox.classList.remove("not-visible"); 
+
+  uploadAnywayBtn.addEventListener("click", () => {
+    uploadAnywayBtn.style.display = "none";
+    cancelBox.classList.remove("not-visible");
     closeModalBtn.style.display = "none";
   });
-   
+
   function getCsrfToken() {
     const csrfToken = document.getElementsByName("csrfmiddlewaretoken");
     return csrfToken[0].value;
