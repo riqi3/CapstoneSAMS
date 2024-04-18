@@ -553,7 +553,11 @@ class MedicineAdmin(admin.ModelAdmin):
             url = reverse("admin:index")
             return HttpResponseRedirect(url)
         
-        form = CsvImportMedicineForm()
+        form = CsvImportMedicineForm(request.POST or None, request.FILES or None)
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            if form.is_valid():
+                    form.save
+                    return JsonResponse({'message': 'testing yea boi'})
         data = {"form": form}
         return render(request, "admin/csv_upload.html", data)
     
